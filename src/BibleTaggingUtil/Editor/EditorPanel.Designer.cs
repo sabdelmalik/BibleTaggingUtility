@@ -279,6 +279,7 @@ namespace BibleTaggingUtil.Editor
             this.dgvKJV.RowHeadersWidth = 51;
             this.dgvKJV.RowTemplate.Height = 29;
             this.dgvKJV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.dgvKJV.ShowCellToolTips = false;
             this.dgvKJV.Size = new System.Drawing.Size(1299, 235);
             this.dgvKJV.TabIndex = 4;
             // 
@@ -344,6 +345,7 @@ namespace BibleTaggingUtil.Editor
             this.dgvTOTHT.RowHeadersWidth = 51;
             this.dgvTOTHT.RowTemplate.Height = 29;
             this.dgvTOTHT.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.dgvTOTHT.ShowCellToolTips = false;
             this.dgvTOTHT.Size = new System.Drawing.Size(1299, 228);
             this.dgvTOTHT.TabIndex = 4;
             // 
@@ -392,6 +394,7 @@ namespace BibleTaggingUtil.Editor
             this.dgvTarget.RowTemplate.Height = 29;
             this.dgvTarget.SearchTag = null;
             this.dgvTarget.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.dgvTarget.ShowCellToolTips = false;
             this.dgvTarget.Size = new System.Drawing.Size(1299, 224);
             this.dgvTarget.TabIndex = 2;
             // 

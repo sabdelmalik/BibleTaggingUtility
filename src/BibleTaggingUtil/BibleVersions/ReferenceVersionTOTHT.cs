@@ -364,7 +364,7 @@ namespace BibleTaggingUtil.BibleVersions
                 //if (strings.Length == 4)
                 //    englishWord += strings[3];
 
-                strongList.Add(strings[0].Substring(1));
+                strongList.Add(strings[0].Substring(1, 4));
 
                 strongRefs = strongList.ToArray();
                 try

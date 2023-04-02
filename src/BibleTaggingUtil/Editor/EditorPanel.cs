@@ -516,6 +516,7 @@ namespace BibleTaggingUtil.Editor
                     {
                         if (refTag.Contains(tags1[j]) || refTag.Contains(tags2[j]))
                         {
+                            dgv.CurrentCell = dgv.Rows[tagsRow].Cells[i];
                             dgv.Rows[tagsRow].Cells[i].Style.BackColor = Color.Yellow;
                         }
                     }
