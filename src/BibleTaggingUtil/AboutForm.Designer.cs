@@ -48,7 +48,7 @@
             label2.Name = "label2";
             label2.Size = new System.Drawing.Size(534, 23);
             label2.TabIndex = 2;
-            label2.Text = "STEPBible.org under CC BY 4.0";
+            label2.Text = "STEPBible.org under CC BY 4.0 Licence";
             label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             label2.Click += new System.EventHandler(this.label2_Click);
             // 
