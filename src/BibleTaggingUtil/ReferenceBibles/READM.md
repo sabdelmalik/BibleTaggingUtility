@@ -1,0 +1,1 @@
+Contents of TAGNT and TOHT folders are copies from [STEPBible.org](https://www.stepbible.org/) Translators Amalgamated OT+NT [data repository](https://github.com/STEPBible/STEPBible-Data/tree/master/Translators%20Amalgamated%20OT%2BNT) under CC BY 4.0 Licence
