@@ -28,3 +28,23 @@ ot-vpl-file=ot_tagged_text.txt<br>
 nt-vpl-file=nt_tagged_text.txt<br>
 output-file=mybible.xml<br>
 
+#Utility short-cut keys
+Ctrl-S Save<br>
+Ctrl-Y Redo
+Ctrl-Z Undo
+Pg dn Next verse
+Pg up Previous verse
+
+#Drag and Drop behaviour
+When a tag is dragged from a reference verse (top two tables) to the target verse (bottom table), the dragged tag will replace the existing tag(s).<br>
+However, if the dragged tag is dropped while the Ctrl key is pressed, it is added to the existing tag(s).
+
+#Merging two or more target words
+Highlight the target words, then right click on one of them. Click on Merge from the context menu.
+The merged cells must be adjacent words, otherwise you will not see the Merge menu.
+to higlight adjacent words, click on the first word, and while the mouse is down, dag it to the right or left as required.
+#Splitting a multi word cell
+If a target word cell contains more than word, it can be split into seperate words. Click the word cell to select it. Right click the cell and click Split from the contxt menu.
+#swapping two tags
+Select the two words that their tags to be swapped. Right click one of them and click the cell and click Swap from the contxt menu.
+To select two words, click on the first word to select it. While pressing Ctrl, click the second word.
