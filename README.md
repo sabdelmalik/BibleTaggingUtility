@@ -7,23 +7,23 @@ The tagged subfolder should contain only one file which is the version of the ta
 Gen 1:13 And the evening <06153> and the morning <01242> were the third <07992> day <03117>. 
 Following is a sample BiblesConfig.txt
 
-[Tagging]
-taggedBible=mybible.txt
-
-[OSIS]
-osisIDWork=mybible
-osisRefWork=bible
-language=en
-language-type=IETF
-title=My Bible(Tagged)
-contributor-role=ctb
-contributor-name= Simon Peter
-type=Bible
-identifier=AraSVD-Tagged
-description=This work adds Strong's references to ...
-rights= ???
-refSystem=Bible
-ot-vpl-file=ot_tagged_text.txt
-nt-vpl-file=nt_tagged_text.txt
-output-file=mybible.xml
+[Tagging]<br>
+taggedBible=mybible.txt<br>
+<br>
+[OSIS]<br>
+osisIDWork=mybible<br>
+osisRefWork=bible<br>
+language=en<br>
+language-type=IETF<br>
+title=My Bible(Tagged)<br>
+contributor-role=ctb<br>
+contributor-name= Simon Peter<br>
+type=Bible<br>
+identifier=AraSVD-Tagged<br>
+description=This work adds Strong's references to ...<br>
+rights= ???<br>
+refSystem=Bible<br>
+ot-vpl-file=ot_tagged_text.txt<br>
+nt-vpl-file=nt_tagged_text.txt<br>
+output-file=mybible.xml<br>
 
