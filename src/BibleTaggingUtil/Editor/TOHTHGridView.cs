@@ -18,7 +18,7 @@ namespace BibleTaggingUtil.Editor
             {
                 if (e.RowIndex >= 0)
                 {
-                    string text = ((String)this.Rows[3].Cells[e.ColumnIndex].Value).Trim();
+                    string text = ((String)this.Rows[this.RowCount - 1].Cells[e.ColumnIndex].Value).Trim();
                     DragData data = new DragData(1, e.ColumnIndex, text, this);
                     if (text != null)
                     {
@@ -109,7 +109,7 @@ namespace BibleTaggingUtil.Editor
 
                 this.Rows.Add(words.ToArray());
                 this.Rows.Add(hebrew.ToArray());
-                this.Rows.Add(transliteration.ToArray());
+                //this.Rows.Add(transliteration.ToArray());
                 this.Rows.Add(tags.ToArray());
 
                 for (int i = 0; i < words.Count; i++)
@@ -163,7 +163,7 @@ namespace BibleTaggingUtil.Editor
 
             this.Rows.Add(words.ToArray());
             this.Rows.Add(greek.ToArray());
-            this.Rows.Add(transliteration.ToArray());
+//            this.Rows.Add(transliteration.ToArray());
             this.Rows.Add(tags.ToArray());
 
             this.ClearSelection();

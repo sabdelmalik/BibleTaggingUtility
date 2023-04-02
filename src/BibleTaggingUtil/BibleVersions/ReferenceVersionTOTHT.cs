@@ -7,6 +7,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -104,208 +105,6 @@ namespace BibleTaggingUtil.BibleVersions
         {
             ParseLine2(wordLine);
             return;
-
-            #region Skip the header
-            if (string.IsNullOrEmpty(wordLine))
-                return;
-
-            int cnt = wordLine.Count(f => (f == '\t'));
-            if (cnt != 14)
-            {
-                return;
-            }
-
-            if (wordLine.StartsWith("Ref in") || wordLine.StartsWith("======"))
-                return;
-            #endregion Skip the header
-
-
-            string[] lineParts = wordLine.Split('\t');
-            string verseRef = string.Empty;
-
-            // we only consider WLT words
-            if (!lineParts[1].EndsWith("WLT"))
-                return;
-
-            // get verse reference
-            string verRef = lineParts[1].Substring(0, lineParts[1].IndexOf(" : WLT"));
-            string[] verRefParts = verRef.Split('.');
-            string[] verNumParts = verRefParts[2].Split('#');
-            int chapter = 0;
-            int verse = 0;
-            if (!int.TryParse(verRefParts[1], out chapter))
-                Console.WriteLine("Failed to parse chapter number: {0:s}", verRefParts[1]);
-            if (!int.TryParse(verNumParts[0], out verse))
-                Console.WriteLine("Failed to parse verse number: {0:s}", verNumParts[0]);
-//            if (!int.TryParse(verNumParts[1].Replace("w", "").Replace("p", "").Replace("+", ""), out wordNumber))
-//                Console.WriteLine("++++++++++++++++++++++++ Failed to parse word number: {0:s}", verNumParts[1]);
-
-            verseRef = string.Format("{0:s} {1:d}:{2:d}", verRefParts[0], chapter, verse);
-            //Console.WriteLine(string.Format("{0:s} [{1:d}]", verseRef, wordNumber));
-
-            if (string.IsNullOrEmpty(currentVerseRef))
-            {
-                // very firdst verse
-                currentVerseRef = verseRef;
-                verseWords = new Verse();
-            }
-
-
-            if (verseRef != currentVerseRef)
-            {
-                bible.Add(currentVerseRef, verseWords);
-                currentVerseRef = verseRef;
-                verseWords = new Verse();
-
-                currentVerseCount++;
-                container.UpdateProgress( "Loading " + bibleName, (100 * currentVerseCount)/ totalVerses);
-
-            }
-
-            // 1. get Hebrew word parts
-            string hebrewWord = string.Empty;
-            int equalSign = lineParts[2].IndexOf('=');
-            if (equalSign != -1)
-            {
-                hebrewWord = lineParts[2].Substring(0, equalSign);
-            }
-            string[] hebrewWordParts = hebrewWord.Split('/');
-            string[] extendedStrongParts = lineParts[5].Split('/');
-
-            for (int i = 0; i < extendedStrongParts.Length; i++)
-            {
-                string englishWord = string.Empty;
-                string[] strongRefs = null;
-                string hebrew = string.Empty;
-                string transliteration = string.Empty;
-                List<string> strongList = new List<string>();
-                string part = string.Empty;
-                try
-                {
-                    hebrew = hebrewWordParts[i];
-                    part = extendedStrongParts[i];
-                }
-                catch (Exception ex)
-                {
-                    Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
-                }
-
-
-                //string refr = lineParts[1];
-                int idx1 = part.IndexOf('{');
-                if (idx1 == -1)
-                {
-                    idx1 = part.IndexOf('«');
-                    if (idx1 == -1)
-                    {
-                        //Console.WriteLine("++++++++++++++++++++++++ could not find '«' or '{': {0:s}", part);
-                    }
-                }
-                int idx2 = part.IndexOf('}');
-                if (idx2 == -1)
-                {
-                    idx2 = part.IndexOf('»');
-                    if (idx2 == -1)
-                    {
-                        //Console.WriteLine("++++++++++++++++++++++++ could not find '»' or '}': {0:s}", part);
-                        idx2 = part.Length - 1;
-                    }
-                }
-                // H0935G|H0935G«H0935#4=?????=: come»to come (in)|1_come||go_in
-                // H3068G|H0430G«H0430#4=אֱלֹהִים=God»LORD@Gen.1.1-Heb
-                string strong = string.Empty;
-                if (idx1 == -1 || idx2 == -1)
-                    strong = part;
-                else
-                {
-                    strong = part.Substring(idx1 + 1, idx2 - idx1 - 1);
-                    transliteration = lineParts[13];
-                }
-
-                STATE state = STATE.START;
-                string localStrong = string.Empty;
-                string localHebrew = string.Empty;
-                for (int c = 0; c < strong.Length; c++)
-                {
-                    switch (state)
-                    {
-                        case STATE.START:
-                            if (strong[c] == 'H')
-                            {
-                                localStrong = string.Empty;
-                                state = STATE.STRONG;
-                            }
-                            else if (strong[c] == '=')
-                            {
-                                localHebrew = string.Empty;
-                                state = STATE.HEBREW;
-                            }
-                            break;
-
-                        case STATE.STRONG:
-                            if (char.IsDigit(strong[c]))
-                                localStrong += strong[c];
-                            else
-                            {
-                                //Console.WriteLine("Strong = {0:s}", localStrong);
-                                if (!strongList.Contains(localStrong) && !string.IsNullOrEmpty(localStrong))
-                                    strongList.Add(localStrong);
-                                localStrong = string.Empty;
-                                if (strong[c] == '=')
-                                    state = STATE.HEBREW;
-                                else
-                                    state = STATE.START;
-                            }
-                            break;
-
-                        case STATE.HEBREW:
-                            if (strong[c] != '=')
-                                localHebrew += strong[c];
-                            else
-                            {
-                                //Console.WriteLine("Hebrew = {0:s}", localHebrew);
-                                hebrew = localHebrew;
-                                localHebrew = string.Empty;
-                                state = STATE.ENGLISH;
-                            }
-                            break;
-
-                        case STATE.ENGLISH:
-                            if (strong[c] == '»')
-                            {
-                                c = strong.Length; // exit the for loop
-                                break;
-                            }
-                            else
-                            {
-                                englishWord += strong[c];
-                            }
-                            break;
-
-                    }
-                }
-                strongRefs = strongList.ToArray();
-                try
-                {
-                    int wordNumber = verseWords.Count;
-                    if(englishWord.ToLower() != "verseend" && strongRefs[0] != "9001" && strongRefs[0] != "9014" && strongRefs[0] != "9015")
-                        verseWords[wordNumber] = new VerseWord(hebrew, englishWord, strongRefs, transliteration, currentVerseRef);
-                }
-                catch (Exception ex)
-                {
-                    Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
-                }
-
-            }
-
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="wordLine"></param>
-        private void ParseLine2(string wordLine)
-        {
 
             if (string.IsNullOrEmpty(wordLine))
                 return;
@@ -472,6 +271,122 @@ namespace BibleTaggingUtil.BibleVersions
 
         }
 
+        protected void ParseLine2(string wordLine)
+        {
+            if (string.IsNullOrEmpty(wordLine))
+                return;
+
+            /*
+             * Gen.1.1-01	Gen.1.1-01	בְּרֵאשִׁית	בְּ/רֵאשִׁ֖ית	HR/Ncfsa	H9003=ב=in/H7225=רֵאשִׁית=first_§1_beginning
+             * 
+             * [0]	"00 Ref in Heb"	                "Gen.1.1-01"
+             * [1]	"KJV ref : source"	            "Gen.1.1-01"
+             * [2]	"Pointed"                   	"בְּרֵאשִׁית"
+             * [3]	"Accented"	                    "בְּ/רֵאשִׁ֖ית"
+             * [4]	"Morphology"	                "HR/Ncfsa"
+             * [5]	"Extended Strongs "	            "H9003=ב=in/H7225=רֵאשִׁית=first_§1_beginning"
+             */
+
+            Match match = Regex.Match(wordLine, @"^\w\w\w\.\d+\.\d+\-\d+\.?\w?\t");
+            if (!match.Success)
+                return;
+
+            string[] lineParts = wordLine.Split('\t');
+
+            string verseRef = string.Empty;
+
+            // get verse reference
+            // Gen.1.1-01
+            // word number may be followed by
+            // "k" for Ketiv or "q" for Qere or "x" for proposed missing word
+            // we only use k (the version found in the main text)
+            if (lineParts[1].EndsWith('q') || lineParts[1].EndsWith('x'))
+                return;
+            match = Regex.Match(lineParts[1], @"(\w\w\w)\.(\d+)\.(\d+)\-(\d+)\w?");
+            if (!match.Success)
+            {
+                Console.WriteLine(wordLine);
+            }
+
+            verseRef = string.Format("{0} {1}:{2}", match.Groups[1].Value,
+                                                    match.Groups[2].Value.TrimStart('0'),
+                                                    match.Groups[3].Value.TrimStart('0'));
+
+            if (string.IsNullOrEmpty(currentVerseRef))
+            {
+                // very first verse
+                currentVerseRef = verseRef;
+                verseWords = new Verse();
+            }
+
+            if (verseRef != currentVerseRef)
+            {
+                // we are moving to a new verse
+                // save the completed verse
+                //bible.Add(currentVerseRef, verseWords);
+                currentVerseRef = verseRef;
+                verseWords = new Verse();
+
+                currentVerseCount++;
+                container.UpdateProgress("Loading " + bibleName, (100 * currentVerseCount) / totalVerses);
+
+            }
+
+            // 1. get Hebrew word parts
+            // we use the Accented
+            string hebrewWord = lineParts[3];
+            string[] hebrewWordParts = hebrewWord.Split('/');
+            string[] extendedStrongParts = lineParts[5].Split('/');
+
+            for (int i = 0; i < extendedStrongParts.Length; i++)
+            {
+                string englishWord = string.Empty;
+                string hebrew = string.Empty;
+                string[] strongRefs = null;
+
+                List<string> strongList = new List<string>();
+                string part = string.Empty;
+
+                string st = extendedStrongParts[i].Trim();
+                if (string.IsNullOrEmpty(st)) continue;
+
+                string[] strings = st.Split('=');
+                if (strings.Length < 3 && strings.Length > 4)
+                {
+                    Tracing.TraceException(MethodBase.GetCurrentMethod().Name, "Ext strongs does not have three or four parts: " + st);
+                    continue;
+                }
+                hebrew = strings[1];
+                englishWord = strings[2];
+                int at = englishWord.IndexOf('@');
+                if (at > 0)
+                    englishWord = englishWord.Substring(0, at);
+                //if (strings.Length == 4)
+                //    englishWord += strings[3];
+
+                strongList.Add(strings[0].Substring(1));
+
+                strongRefs = strongList.ToArray();
+                try
+                {
+                    int wordNumber = verseWords.Count;
+                    if (englishWord.ToLower() != "verseend" && strongRefs[0] != "9001" && strongRefs[0] != "9014" && strongRefs[0] != "9015")
+                    {
+                        verseWords[wordNumber] = new VerseWord(hebrew, englishWord, strongRefs, "", currentVerseRef);
+                        if (bible.ContainsKey(currentVerseRef))
+                            bible[currentVerseRef] = verseWords;
+                        else
+                            bible.Add(currentVerseRef, verseWords);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
+                }
+
+            }
+
+        }
     }
 }
         

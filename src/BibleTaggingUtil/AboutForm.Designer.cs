@@ -28,50 +28,60 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.textBoxAbout = new System.Windows.Forms.TextBox();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            System.Windows.Forms.Label label2;
+            System.Windows.Forms.Label label3;
+            this.textBoxAbout1 = new System.Windows.Forms.TextBox();
             this.btnOK = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            label2 = new System.Windows.Forms.Label();
+            label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // textBoxAbout
+            // label2
             // 
-            this.textBoxAbout.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxAbout.Font = new System.Drawing.Font("Calibri", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.textBoxAbout.Location = new System.Drawing.Point(0, 0);
-            this.textBoxAbout.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.textBoxAbout.Multiline = true;
-            this.textBoxAbout.Name = "textBoxAbout";
-            this.textBoxAbout.ReadOnly = true;
-            this.textBoxAbout.Size = new System.Drawing.Size(536, 290);
-            this.textBoxAbout.TabIndex = 0;
-            this.textBoxAbout.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            label2.Cursor = System.Windows.Forms.Cursors.Hand;
+            label2.ForeColor = System.Drawing.Color.Blue;
+            label2.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            label2.Location = new System.Drawing.Point(2, 154);
+            label2.MaximumSize = new System.Drawing.Size(554, 0);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(534, 23);
+            label2.TabIndex = 2;
+            label2.Text = "STEPBible.org under CC BY 4.0";
+            label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            label2.Click += new System.EventHandler(this.label2_Click);
             // 
-            // splitContainer1
+            // label3
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            label3.Cursor = System.Windows.Forms.Cursors.Hand;
+            label3.ForeColor = System.Drawing.Color.Blue;
+            label3.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            label3.Location = new System.Drawing.Point(2, 221);
+            label3.MaximumSize = new System.Drawing.Size(554, 0);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(534, 23);
+            label3.TabIndex = 3;
+            label3.Text = "CrossWire Bible Society";
+            label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            label3.Click += new System.EventHandler(this.label3_Click);
             // 
-            // splitContainer1.Panel1
+            // textBoxAbout1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.textBoxAbout);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.btnOK);
-            this.splitContainer1.Size = new System.Drawing.Size(536, 404);
-            this.splitContainer1.SplitterDistance = 290;
-            this.splitContainer1.TabIndex = 1;
+            this.textBoxAbout1.BackColor = System.Drawing.SystemColors.Window;
+            this.textBoxAbout1.Font = new System.Drawing.Font("Calibri", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.textBoxAbout1.Location = new System.Drawing.Point(2, 2);
+            this.textBoxAbout1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.textBoxAbout1.Multiline = true;
+            this.textBoxAbout1.Name = "textBoxAbout1";
+            this.textBoxAbout1.ReadOnly = true;
+            this.textBoxAbout1.Size = new System.Drawing.Size(534, 107);
+            this.textBoxAbout1.TabIndex = 0;
+            this.textBoxAbout1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // btnOK
             // 
-            this.btnOK.Location = new System.Drawing.Point(222, 39);
+            this.btnOK.Location = new System.Drawing.Point(204, 253);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(94, 29);
             this.btnOK.TabIndex = 1;
@@ -79,31 +89,55 @@
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
+            // label1
+            // 
+            this.label1.Location = new System.Drawing.Point(2, 131);
+            this.label1.MaximumSize = new System.Drawing.Size(554, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(534, 23);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "Hebrew and Greek Strong\'s numbers Obtained from";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label4
+            // 
+            this.label4.Location = new System.Drawing.Point(2, 198);
+            this.label4.MaximumSize = new System.Drawing.Size(554, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(534, 23);
+            this.label4.TabIndex = 4;
+            this.label4.Text = "SWORD module generation uses code from";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // AboutForm
             // 
             this.AcceptButton = this.btnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(536, 404);
+            this.BackColor = System.Drawing.SystemColors.Window;
+            this.ClientSize = new System.Drawing.Size(536, 294);
             this.ControlBox = false;
-            this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(label3);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(label2);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.btnOK);
+            this.Controls.Add(this.textBoxAbout1);
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "AboutForm";
             this.Text = "About";
             this.Load += new System.EventHandler(this.About_Load);
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel1.PerformLayout();
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.TextBox textBoxAbout;
-        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.TextBox textBoxAbout1;
         private System.Windows.Forms.Button btnOK;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label4;
     }
 }

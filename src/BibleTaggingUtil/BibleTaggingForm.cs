@@ -38,6 +38,12 @@ namespace BibleTaggingUtil
         private ReferenceVersionTOTHT referenceTOTHT;
         private ReferenceVersionTAGNT referenceTAGNT;
 
+        private string execFolder = string.Empty;
+        private string kjvPath = string.Empty;
+        private string tagntPath = string.Empty;
+        private string tothtPath = string.Empty;
+        private string crosswirePath = string.Empty;
+
 
 
         private bool m_bSaveLayout = true;
@@ -148,8 +154,14 @@ namespace BibleTaggingUtil
             Version version = assemblyName.Version;
             this.Text = "Bible Tagging " + version.ToString();
 
-            string execFolder = Path.GetDirectoryName(assembly.Location);
+            execFolder = Path.GetDirectoryName(assembly.Location);
             Tracing.InitialiseTrace(execFolder);
+
+            crosswirePath = Path.Combine(execFolder, "Crosswire");
+            string refFolder = Path.Combine(execFolder, "ReferenceBibles");
+            kjvPath = Path.Combine(refFolder, "KJV");
+            tagntPath = Path.Combine(refFolder, "TAGNT");
+            tothtPath = Path.Combine(refFolder, "TOTHT");
 
             editorPanel.TargetVersion = target;
 
@@ -169,9 +181,6 @@ namespace BibleTaggingUtil
             progressForm.Location = new Point(
                 this.Location.X + (this.Width / 2) - (progressForm.Width / 2),
                 this.Location.Y + (this.Height / 2) - (progressForm.Height / 2));
-            //waitCursorAnimation.Location = new Point(
-            //    (this.Width / 2) - (waitCursorAnimation.Width / 2), 
-            //    (this.Height / 2) - (waitCursorAnimation.Height / 2));
         }
 
 
@@ -235,7 +244,7 @@ namespace BibleTaggingUtil
   
             string taggedFolder = string.Empty;
 
-            WaitCursorControl(true);
+
 
             string biblesFolder = Properties.Settings.Default.BiblesFolder;
             try
@@ -309,6 +318,8 @@ namespace BibleTaggingUtil
                 Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
             }
 
+            WaitCursorControl(true);
+
             string[] files = Directory.GetFiles(taggedFolder);
             if (files.Length > 0)
             {
@@ -331,40 +342,57 @@ namespace BibleTaggingUtil
 
             StartGui();
 
-            if (string.IsNullOrEmpty(config.KJV) || !System.IO.File.Exists(config.KJV))
+/*            if (string.IsNullOrEmpty(config.KJV) || !System.IO.File.Exists(config.KJV))
             {
                 MessageBox.Show("KJV is missing");
                 CloseForm();
                 return;
             }
+*/
 
             this.Closing += BibleTaggingForm_Closing;
 
-            referenceKJV.LoadBibleFile(config.KJV, true, false);
+            if (!LoadReferenceFiles(kjvPath, referenceKJV)) { CloseForm(); return; }
+            if (!LoadReferenceFiles(tothtPath, referenceTOTHT)) { CloseForm(); return; }
+            if (!LoadReferenceFiles(tagntPath, referenceTAGNT)) { CloseForm(); return; }
+
+
+ /*           bool result = false;
+            files = Directory.GetFiles(kjvPath);
+            for (int i = 0; i < files.Length; i++)
+            {
+                result = referenceKJV.LoadBibleFile(files[i], i == 0, i != (files.Length - 1));
+            }
+
+//            referenceKJV.LoadBibleFile(config.KJV, true, false);
 
             StartGui();
 
-            bool result = false;
-            if (config.HebrewReferences.Count > 0)
+            files = Directory.GetFiles(tothtPath);
+            for (int i = 0; i < files.Length; i++)
             {
-                for (int i = 0; i < config.HebrewReferences.Count; i++)
-                {
-                    result = referenceTOTHT.LoadBibleFile(config.HebrewReferences[i], i == 0, i != (config.HebrewReferences.Count -1));
-                }
+                result = referenceTOTHT.LoadBibleFile(files[i], i == 0, i != (files.Length - 1));
             }
-            if (!result)
+*/
+
+            /*           if (config.HebrewReferences.Count > 0)
+                       {
+                           for (int i = 0; i < config.HebrewReferences.Count; i++)
+                           {
+                               result = referenceTOTHT.LoadBibleFile(config.HebrewReferences[i], i == 0, i != (config.HebrewReferences.Count -1));
+                           }
+                       }*/
+ /*           if (!result)
             {
                 MessageBox.Show("Loading Hebrew reference  failed");
                 CloseForm();
                 return;
             }
 
-            if (config.GreekReferences.Count > 0)
+            files = Directory.GetFiles(tagntPath);
+            for (int i = 0; i < files.Length; i++)
             {
-                for (int i = 0; i < config.GreekReferences.Count; i++)
-                {
-                    result = referenceTAGNT.LoadBibleFile(config.GreekReferences[i], i == 0, i != (config.GreekReferences.Count - 1));
-                }
+                result = referenceTAGNT.LoadBibleFile(files[i], i == 0, i != (files.Length - 1));
             }
             if (!result)
             {
@@ -374,7 +402,7 @@ namespace BibleTaggingUtil
             }
 
             StartGui();
-
+*/
             target.ActivatePeriodicTimer();
 
             WaitCursorControl(false);
@@ -382,6 +410,38 @@ namespace BibleTaggingUtil
             //verseSelectionPanel.CurrentChapter = Properties.Settings.Default.LastChapter;
             //verseSelectionPanel.CurrentVerse = Properties.Settings.Default.LastVerse;
             //verseSelectionPanel.FireVerseChanged();
+        }
+
+        private bool LoadReferenceFiles(string folderPath, BibleVersion reference)
+        {
+            bool result = false;
+
+            string[] files = Directory.GetFiles(folderPath);
+            Dictionary <int,string> fileDict = new Dictionary<int,string>();
+            foreach (string file in files)
+            {
+                int key = 0;
+                string fileName = Path.GetFileName(file);
+                int idx = fileName.IndexOf('.');
+                if(!int.TryParse(fileName.Substring(0,idx), out key) )
+                {
+                    MessageBox.Show("File name in wrong format: " + fileName);
+                }
+                fileDict.Add(key-1, file);
+            }
+            for (int i = 0; i < fileDict.Keys.Count; i++)
+            {
+                result = reference.LoadBibleFile(fileDict[i], i == 0, i != (files.Length - 1));
+            }
+            if (!result)
+            {
+                string refName = Path.GetFileName(folderPath);
+                MessageBox.Show("Loading " + refName + " failed");
+            }
+            else
+               StartGui();
+
+            return result;
         }
 
         private void StartGui()
@@ -1052,9 +1112,7 @@ namespace BibleTaggingUtil
                                     }
 
 
-                string parentFolder = Directory.GetParent(biblesFolder).FullName;
-                string executable = Path.Combine(parentFolder, "osis2mod.exe");
-//                string targetFolder = Path.Combine(biblesFolder, targetFolderName);
+                string executable = Path.Combine(crosswirePath, "osis2mod.exe");
                 string xmlFile = Path.Combine(biblesFolder, sourceFileName);
                 if (!Directory.Exists(targetFolder))
                 {
