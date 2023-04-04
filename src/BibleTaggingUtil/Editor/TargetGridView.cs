@@ -722,7 +722,13 @@ namespace BibleTaggingUtil.Editor
         {
             if (this.RefernceHighlightRequest != null)
             {
-                this.RefernceHighlightRequest(this, tag);
+                bool firstHalf = true;  
+                if(this.SelectedCells.Count == 1) 
+                {
+                    if (this.SelectedCells[0].ColumnIndex > (this.ColumnCount/2))
+                        firstHalf = false;
+                }
+                this.RefernceHighlightRequest(this, tag, firstHalf);
             }
 
         }
@@ -739,7 +745,7 @@ namespace BibleTaggingUtil.Editor
 
     }
     public delegate void VerseViewChangedEventHandler(object sender, EventArgs e);
-    public delegate void RefernceHighlightRequestEventHandler(object sender, string tag);
+    public delegate void RefernceHighlightRequestEventHandler(object sender, string tag, bool firstHalf);
     public delegate void GotoVerseRequestEventHandler(object sender, string reference);
 
 }
