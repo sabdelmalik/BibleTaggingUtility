@@ -21,6 +21,7 @@ using System.Linq.Expressions;
 using static System.Net.WebRequestMethods;
 using Microsoft.VisualBasic.Logging;
 using System.Xml.Linq;
+using System.Text;
 
 namespace BibleTaggingUtil
 {
@@ -466,7 +467,7 @@ namespace BibleTaggingUtil
 
         public void WaitCursorControl(bool wait)
         {
-            Tracing.TraceEntry(MethodBase.GetCurrentMethod().Name);
+            //Tracing.TraceEntry(MethodBase.GetCurrentMethod().Name);
 
             if (InvokeRequired)
             {
@@ -501,6 +502,7 @@ namespace BibleTaggingUtil
                 {
                     this.Cursor = Cursors.Default;
                     //waitCursorAnimation.Visible = false;
+                    progressForm.Progress = 0;
                     progressForm.Visible = false;
                     menuStrip1.Enabled = true;
                     verseSelectionPanel.Enabled = true;
@@ -1076,20 +1078,24 @@ namespace BibleTaggingUtil
         #region usfm2osis
         private void RunOsis2mod(string sourceFileName, string targetFolderName)
         {
+            string executable = string.Empty;
+            string targetFolder = string.Empty;
+            string xmlFile = string.Empty;
+
             try
             {
                 WaitCursorControl(true);
-                UpdateProgress("Creating SWORD Module", 50);
+                UpdateProgress("Creating SWORD Module", -1);
                 string biblesFolder = Properties.Settings.Default.BiblesFolder;
                 string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
                 string modulesFolder = Path.Combine(appData, "Sword\\modules\\texts\\ztext");
                 string backupFolderName = string.Format("{0:s}_{1:s}", targetFolderName, DateTime.Now.ToString("yyyy_MM_dd_HH_mm"));
                 string backupPath = Path.Combine(biblesFolder, backupFolderName);
-                string targetFolder = Path.Combine(modulesFolder, targetFolderName);
+                targetFolder = Path.Combine(modulesFolder, targetFolderName);
                 if (Directory.Exists(targetFolder))
                 {
                     // backup currentModule
-                    if(Directory.Exists(backupPath))
+                    if (Directory.Exists(backupPath))
                     {
                         DialogResult res = ShowMessageBox("Overwrite old backup", "Do you want to overwrite existing Backup folder\r\n" + backupPath, MessageBoxButtons.YesNo);
                         if (res == DialogResult.Yes)
@@ -1109,11 +1115,11 @@ namespace BibleTaggingUtil
                     {
                         System.IO.File.Copy(file, file.Replace(targetFolder, backupPath));
                     }
-                                    }
+                }
 
 
-                string executable = Path.Combine(crosswirePath, "osis2mod.exe");
-                string xmlFile = Path.Combine(biblesFolder, sourceFileName);
+                executable = Path.Combine(crosswirePath, "osis2mod.exe");
+                xmlFile = Path.Combine(biblesFolder, sourceFileName);
                 if (!Directory.Exists(targetFolder))
                 {
                     Directory.CreateDirectory(targetFolder);
@@ -1127,19 +1133,79 @@ namespace BibleTaggingUtil
                     }
                 }
 
-                Process process = new Process();
-                process.StartInfo.FileName = executable;
-                process.StartInfo.Arguments = targetFolder + " " + xmlFile + " -v NRSV -b 4 -z";
-                process.Start();
-                while (!process.HasExited) ;
-
-                WaitCursorControl(false);
-                MessageBox.Show("Module Generation completed!");
-
             }
             catch (Exception ex)
             {
                 Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+
+
+            Process process = new Process();
+                 StringBuilder outputStringBuilder = new StringBuilder();
+                StringBuilder errorStringBuilder = new StringBuilder();
+           try
+            {
+                process.StartInfo.FileName = executable;
+                process.StartInfo.Arguments = targetFolder + " " + xmlFile + " -v NRSV -b 4 -z";
+
+                process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                process.StartInfo.CreateNoWindow = true;
+                process.StartInfo.UseShellExecute = false;
+
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.RedirectStandardError = true;
+
+                process.EnableRaisingEvents = false;
+
+                process.OutputDataReceived += (sender, eventArgs) => outputStringBuilder.AppendLine(eventArgs.Data);
+                process.ErrorDataReceived += (sender, eventArgs) => errorStringBuilder.AppendLine(eventArgs.Data);
+
+                Tracing.TraceInfo(MethodBase.GetCurrentMethod().Name, "osis2mod arguments = " + process.StartInfo.Arguments);
+
+                process.Start();
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
+                var processExited = process.WaitForExit(240000);
+                process.CancelOutputRead();
+
+                int secondCounter = 0;
+                while(errorStringBuilder.Length == 0)
+                {
+                    Thread.Sleep(1000);
+                    if (++secondCounter > 15)
+                        break;
+                }
+                string output = outputStringBuilder.ToString();
+                string error = errorStringBuilder.ToString();
+
+                WaitCursorControl(false);
+                if (processExited == false) // we timed out...
+                {
+                    process.Kill();
+                    MessageBox.Show("Module Generation Timed out!");
+                }
+                else
+                {
+                    if (process.ExitCode == 0)
+                    {
+                        Tracing.TraceInfo(MethodBase.GetCurrentMethod().Name, error);
+                        MessageBox.Show("Module Generation Completed Successfully!");
+                    }
+                    else
+                    {
+                        Tracing.TraceError(MethodBase.GetCurrentMethod().Name, error);
+                        MessageBox.Show("Module Generation failed! " + process.ExitCode.ToString());
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Tracing.TraceException(MethodBase.GetCurrentMethod().Name + ": Executing osis2mod", ex.Message);
+            }
+            finally
+            {
+                process.Close();
             }
             WaitCursorControl(false);
         }
@@ -1161,11 +1227,18 @@ namespace BibleTaggingUtil
         private void reloadTargetToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string taggedFolder = Path.GetDirectoryName(config.TaggedBible);
+            string taggedFolderParent = Path.GetDirectoryName(taggedFolder);
+            string bibleName = Path.GetFileName(taggedFolderParent);
             string[] files = Directory.GetFiles(taggedFolder);
             if (files.Length > 0)
             {
+                WaitCursorControl(true);
+                target.BibleName = bibleName;
                 target.LoadBibleFile(files[0], true, false);
+                WaitCursorControl(false);
+
                 VerseSelectionPanel.SetBookCount(target.BookCount);
+
 
             }
         }
