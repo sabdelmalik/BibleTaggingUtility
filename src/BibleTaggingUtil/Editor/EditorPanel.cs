@@ -446,20 +446,20 @@ namespace BibleTaggingUtil.Editor
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="tag"></param>
-        private void DgvTarget_RefernceHighlightRequest(object sender, string tag)
+        private void DgvTarget_RefernceHighlightRequest(object sender, string tag, bool firstHalf)
         {
-            new Thread(() => { SelectReferenceTags(tag.Trim()); }).Start();
+            new Thread(() => { SelectReferenceTags(tag.Trim(), firstHalf); }).Start();
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="tag"></param>
-        private void SelectReferenceTags(string tag)
+        private void SelectReferenceTags(string tag, bool firstHalf)
         {
             if (InvokeRequired)
             {
-                Action safeWrite = delegate { SelectReferenceTags(tag); };
+                Action safeWrite = delegate { SelectReferenceTags(tag, firstHalf); };
                 Invoke(safeWrite);
             }
             else
@@ -471,8 +471,8 @@ namespace BibleTaggingUtil.Editor
 
                     if (string.IsNullOrEmpty(tag))
                     {
-                        SetHighlightedCell(dgvTOTHT, null, null);
-                        SetHighlightedCell(dgvKJV, null, null);
+                        SetHighlightedCell(dgvTOTHT, null, null, firstHalf);
+                        SetHighlightedCell(dgvKJV, null, null, firstHalf);
                         return;
                     }
 
@@ -487,8 +487,8 @@ namespace BibleTaggingUtil.Editor
                             tags2[i] = tags2[i].Remove(1, 1);
                     }
 
-                    SetHighlightedCell(dgvTOTHT, tags1, tags2);
-                    SetHighlightedCell(dgvKJV, tags1, tags2);
+                    SetHighlightedCell(dgvTOTHT, tags1, tags2, firstHalf);
+                    SetHighlightedCell(dgvKJV, tags1, tags2, firstHalf);
 
                 }
                 catch (Exception ex)
@@ -498,10 +498,12 @@ namespace BibleTaggingUtil.Editor
             }
         }
 
-        private void SetHighlightedCell(DataGridView dgv, string[] tags1, string[] tags2)
+        private void SetHighlightedCell(DataGridView dgv, string[] tags1, string[] tags2, bool firstHalf)
         {
             int count = dgv.ColumnCount;
             int tagsRow = dgv.RowCount - 1;
+            List<int> cells = new List<int>();
+
             for (int i = 0; i < count; i++)
             {
                 dgv.Rows[tagsRow].Cells[i].Style.BackColor = Color.White;
@@ -512,17 +514,42 @@ namespace BibleTaggingUtil.Editor
                 string refTag = (string)dgv.Rows[tagsRow].Cells[i].Value;
 
                 if (!string.IsNullOrEmpty(refTag))
+                {
                     for (int j = 0; j < tags1.Length; j++)
                     {
                         if (refTag.Contains(tags1[j]) || refTag.Contains(tags2[j]))
                         {
-                            dgv.CurrentCell = dgv.Rows[tagsRow].Cells[i];
-                            dgv.Rows[tagsRow].Cells[i].Style.BackColor = Color.Yellow;
+                            cells.Add(i);
                         }
                     }
-            }
 
+                }
+            }
+            if (cells.Count == 1)
+            {
+                dgv.CurrentCell = dgv.Rows[tagsRow].Cells[cells[0]];
+                dgv.Rows[tagsRow].Cells[cells[0]].Style.BackColor = Color.Yellow;
+            }
+            else if (firstHalf)
+            {
+                for (int i = cells.Count - 1; i >= 0; i--)
+                {
+                    dgv.CurrentCell = dgv.Rows[tagsRow].Cells[cells[i]];
+                    dgv.Rows[tagsRow].Cells[cells[i]].Style.BackColor = Color.Yellow;
+                }
+
+            }
+            else
+            {
+                for (int i = 0; i < cells.Count; i++)
+                {
+                    dgv.CurrentCell = dgv.Rows[tagsRow].Cells[cells[i]];
+                    dgv.Rows[tagsRow].Cells[cells[i]].Style.BackColor = Color.Yellow;
+                }
+            }
+            dgv.ClearSelection();
         }
+        
         #endregion Higlight same tag
 
 
