@@ -35,6 +35,7 @@ namespace BibleTaggingUtil
         public const string creator_role = "contributor-role";
         public const string creator_name = "contributor-name";
         public const string subject = "subject";
+        public const string revision = "revision";
         // date use current date
         public const string description = "description";
         public const string publisher = "publisher";

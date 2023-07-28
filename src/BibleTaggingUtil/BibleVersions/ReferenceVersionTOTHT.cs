@@ -48,7 +48,6 @@ namespace BibleTaggingUtil.BibleVersions
         {
             using (StreamWriter outputFile = new StreamWriter(@"C:\temp\toth.txt"))
             {
-
                 for (int i = 0; i < bible.Keys.Count; i++)
                 {
                     string[] keys = bible.Keys.ToArray();
@@ -340,6 +339,134 @@ namespace BibleTaggingUtil.BibleVersions
 
             for (int i = 0; i < extendedStrongParts.Length; i++)
             {
+                string englishWord = string.Empty;
+                string hebrew = string.Empty;
+                string[] strongRefs = null;
+
+                List<string> strongList = new List<string>();
+                string part = string.Empty;
+
+                string st = extendedStrongParts[i].Trim();
+                if (string.IsNullOrEmpty(st)) continue;
+
+                string[] strings = st.Split('=');
+                if (strings.Length < 3 && strings.Length > 4)
+                {
+                    Tracing.TraceException(MethodBase.GetCurrentMethod().Name, "Ext strongs does not have three or four parts: " + st);
+                    continue;
+                }
+                hebrew = strings[1];
+                englishWord = strings[2];
+                int at = englishWord.IndexOf('@');
+                if (at > 0)
+                    englishWord = englishWord.Substring(0, at);
+                //if (strings.Length == 4)
+                //    englishWord += strings[3];
+
+                strongList.Add(strings[0].Substring(1, 4));
+
+                strongRefs = strongList.ToArray();
+                try
+                {
+                    int wordNumber = verseWords.Count;
+                    if (englishWord.ToLower() != "verseend" && strongRefs[0] != "9001" && strongRefs[0] != "9014" && strongRefs[0] != "9015")
+                    {
+                        verseWords[wordNumber] = new VerseWord(hebrew, englishWord, strongRefs, "", currentVerseRef);
+                        if (bible.ContainsKey(currentVerseRef))
+                            bible[currentVerseRef] = verseWords;
+                        else
+                            bible.Add(currentVerseRef, verseWords);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
+                }
+
+            }
+
+        }
+        protected void ParseLine3(string wordLine)
+        {
+            if (string.IsNullOrEmpty(wordLine))
+                return;
+
+            /*
+             * Heb (&Eng) Ref & Type	Hebrew	Transliteration	English translation	dStrongs = Lexical = Gloss	Grammar	Meaning Variants	Spelling Variants	Conjoin word	sStrong+Instance	Alt Strongs
+             * 
+             * Gen.1.1#01=M +T	בְּ/רֵאשִׁ֖ית	be./re.Shit	in/ beginning	H9003=ב=in / {H7225G=רֵאשִׁית=: beginning»first:1_beginning}	HR/Ncfsa			H7225		Gen.1.1-01	Gen.1.1-01	בְּרֵאשִׁית	בְּ/רֵאשִׁ֖ית	HR/Ncfsa	H9003=ב=in/H7225=רֵאשִׁית=first_§1_beginning
+             * 
+             * [0]	Ref in Heb (Eng) & Type         "Gen.1.1#01=M +T"
+             * [1]	Hebrew	                        "בְּ/רֵאשִׁ֖ית"
+             * [2]  Transliteration                 "be./re.Shit"
+             * [3]	English translation             "in/ beginning"
+             * [4]	dStrongs = Lexical = Gloss      "H9003=ב=in / {H7225G=רֵאשִׁית=: beginning»first:1_beginning}"
+             * [5]  Grammar                         "HR/Ncfsa"
+             * [6]  Meaning Variants                ""
+             * [7]  Spelling Variants               ""
+             * [8]  Conjoin word                    "H7225"
+             * [9]  sStrong+Instance                ""
+             * [10] Alt Strongs                     ""
+             */
+
+            Match match = Regex.Match(wordLine, @"^\w\w\w\.\d+\.\d+\#\d+\=");
+            if (!match.Success)
+                return;
+
+            string[] lineParts = wordLine.Split('\t');
+
+            string verseRef = string.Empty;
+
+            // get verse reference
+            // Gen.1.1-01
+            // word number may be followed by
+            // "k" for Ketiv or "q" for Qere or "x" for proposed missing word
+            // we only use k (the version found in the main text)
+            //if (lineParts[1].EndsWith('q') || lineParts[1].EndsWith('x'))
+            //    return;
+
+            match = Regex.Match(lineParts[0], @"(\w\w\w)\.(\d+)\.(\d+)\#(\d+)\=.?");
+            if (!match.Success)
+            {
+                Console.WriteLine(wordLine);
+            }
+
+            verseRef = string.Format("{0} {1}:{2}", match.Groups[1].Value,
+                                                    match.Groups[2].Value.TrimStart('0'),
+                                                    match.Groups[3].Value.TrimStart('0'));
+
+            if (string.IsNullOrEmpty(currentVerseRef))
+            {
+                // very first verse
+                currentVerseRef = verseRef;
+                verseWords = new Verse();
+            }
+
+            if (verseRef != currentVerseRef)
+            {
+                // we are moving to a new verse
+                // save the completed verse
+                //bible.Add(currentVerseRef, verseWords);
+                currentVerseRef = verseRef;
+                verseWords = new Verse();
+
+                currentVerseCount++;
+                container.UpdateProgress("Loading " + bibleName, (100 * currentVerseCount) / totalVerses);
+
+            }
+
+            // 1. get Hebrew word parts
+            // we use the Accented
+            string hebrewWord = lineParts[1];
+            string transliteration = lineParts[2];
+            //string grammer = lineParts[5];
+            string[] hebrewWordParts = hebrewWord.Split('/');
+            string[] extendedStrongParts = lineParts[4].Split('/');
+            string[] grammerParts = lineParts[5].Split('/');
+
+            for (int i = 0; i < extendedStrongParts.Length; i++)
+            {
+                string grammer = string.Empty;
                 string englishWord = string.Empty;
                 string hebrew = string.Empty;
                 string[] strongRefs = null;

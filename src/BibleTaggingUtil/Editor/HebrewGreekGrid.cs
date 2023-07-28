@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace BibleTaggingUtil.Editor
 {
-    internal class TOHTHGridView : DataGridView
+    internal class HebrewGreekGrid : DataGridView
     {
 
         protected override void OnCellMouseDown(DataGridViewCellMouseEventArgs e)
@@ -38,7 +38,7 @@ namespace BibleTaggingUtil.Editor
                             int count = this.SelectedCells.Count;
                             int colIndex = SelectedCells[count - 1].ColumnIndex;
                             text = (string)this[colIndex, this.RowCount - 1].Value;
-                            for (int i = count - 2; i >= 0 ; i--)
+                            for (int i = count - 2; i >= 0; i--)
                             {
                                 text += (" " + this[SelectedCells[i].ColumnIndex, this.RowCount - 1].Value);
                                 if (Math.Abs(SelectedCells[i].ColumnIndex - colIndex) != 1)
@@ -68,6 +68,7 @@ namespace BibleTaggingUtil.Editor
             base.OnCellMouseDown(e);
         }
 
+
         public void Update(Verse verseWords, BibleTestament testament)
         {
             if (testament == BibleTestament.OT)
@@ -75,6 +76,7 @@ namespace BibleTaggingUtil.Editor
             else
                 UpdateNT(verseWords);
         }
+
         private void UpdateOT(Verse verseWords)
         {
             this.Rows.Clear();
@@ -147,13 +149,13 @@ namespace BibleTaggingUtil.Editor
 
                 this.Rows.Add(words.ToArray());
                 this.Rows.Add(hebrew.ToArray());
-                //this.Rows.Add(transliteration.ToArray());
+                this.Rows.Add(transliteration.ToArray());
                 this.Rows.Add(tags.ToArray());
 
                 for (int i = 0; i < words.Count; i++)
                 {
                     string word = (string)this.Rows[1].Cells[i].Value;
-                    string strong = (string)this.Rows[this.RowCount-1].Cells[i].Value;
+                    string strong = (string)this.Rows[this.RowCount - 1].Cells[i].Value;
                     if (word.Contains("יהוה") || strong.Contains("3069") || strong.Contains("3068"))
                     {
                         this.Rows[1].Cells[i].Style.ForeColor = Color.Red;
@@ -178,10 +180,6 @@ namespace BibleTaggingUtil.Editor
 
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="verseWords"></param>
         private void UpdateNT(Verse verseWords)
         {
             this.Rows.Clear();
@@ -194,32 +192,33 @@ namespace BibleTaggingUtil.Editor
             List<string> tags = new List<string>();
 
             try
-            { 
-            for (int i = 0; i < verseWords.Count; i++)
             {
-                VerseWord verseWord = verseWords[i];
-                words.Add(verseWord.Word);
-                greek.Add(verseWord.Greek);
-                transliteration.Add(verseWord.Transliteration);
-                tags.Add("<" + verseWord.Strong[0] + ">");
-            }
+                for (int i = 0; i < verseWords.Count; i++)
+                {
+                    VerseWord verseWord = verseWords[i];
+                    words.Add(verseWord.Word);
+                    greek.Add(verseWord.Greek);
+                    transliteration.Add(verseWord.Transliteration);
+                    tags.Add("<" + verseWord.Strong[0] + ">");
+                }
 
-            this.ColumnCount = verseWords.Count;
+                this.ColumnCount = verseWords.Count;
 
-            this.Rows.Add(words.ToArray());
-            this.Rows.Add(greek.ToArray());
-//            this.Rows.Add(transliteration.ToArray());
-            this.Rows.Add(tags.ToArray());
+                this.Rows.Add(words.ToArray());
+                this.Rows.Add(greek.ToArray());
+                this.Rows.Add(transliteration.ToArray());
+                this.Rows.Add(tags.ToArray());
 
-            this.ClearSelection();
+                this.ClearSelection();
 
-            this.Rows[0].ReadOnly = true;
-            this.Rows[1].ReadOnly = true;
+                this.Rows[0].ReadOnly = true;
+                this.Rows[1].ReadOnly = true;
             }
             catch (Exception ex)
             {
                 Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
             }
         }
+
     }
 }

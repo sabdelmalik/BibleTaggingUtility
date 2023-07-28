@@ -305,6 +305,8 @@ namespace BibleTaggingUtil
                                     case 3: tag = "0" + tag; break;
                                 }
                             }
+                            if (tag == "0000")
+                                tag = "";
                             tags.Add(tag);
                         }
                         catch (Exception ex)
@@ -413,13 +415,15 @@ namespace BibleTaggingUtil
 
                 sw.WriteLine("<revisionDesc>");
                 sw.WriteLine(String.Format("<date>{0}</date>", DateTime.Now.ToString("yyyy-MM-dd")));
-                sw.WriteLine("<p>initial OSIS 2.1.1 version</p>");
+
+                sw.WriteLine("<p>OSIS 2.1.1 version</p>");
+                if (osisConf.ContainsKey(OsisConstants.revision))
+                    sw.WriteLine(String.Format("<p>{0}</p>", osisConf[OsisConstants.revision]));
+
                 sw.WriteLine("</revisionDesc>");
 
                 sw.WriteLine(String.Format("<work osisWork=\"{0}\">", osisConf[OsisConstants.osisIDWork]));
                 // title
-                if (osisConf.ContainsKey(OsisConstants.title))
-                    sw.WriteLine(String.Format("<title>{0}</title>", osisConf[OsisConstants.title]));
                 // contributor
                 if (osisConf.ContainsKey(OsisConstants.contributor_role))
                     if (osisConf.ContainsKey(OsisConstants.contributor_name))

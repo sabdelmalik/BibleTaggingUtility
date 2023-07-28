@@ -266,7 +266,28 @@ namespace BibleTaggingUtil.BibleVersions
                     else
                     {
                         tmpTag += (string.IsNullOrEmpty(tmpTag)) ? verseParts[i] : (" " + verseParts[i]);
-                        tmpTag = tmpTag.Replace(".", "");
+                        tmpTag = tmpTag.Replace(".", "").Replace("?", "").Trim();
+                        if (!string.IsNullOrEmpty(tmpTag))
+                        {
+                            string[] pts = tmpTag.Split(' ');
+                            tmpTag= string.Empty;
+                            foreach (string t in pts)
+                            {
+                                if (t.StartsWith('<'))
+                                {
+                                    int x = t.IndexOf(">");
+                                    if (x > 0)
+                                    {
+                                        string t1 = t.Substring(1, x - 1);
+                                        string t2 = "0000" + t1;
+                                        tmpTag += "<" + t2.Substring(t2.Length - 4) + "> ";
+                                    }
+                                 }
+                                else
+                                    tmpTag += t + " ";
+                            }
+                        }
+                        tmpTag = tmpTag.Trim();
                         if (i == verseParts.Length - 1)
                         {
                             // last word
