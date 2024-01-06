@@ -41,7 +41,7 @@ namespace BibleTaggingUtil
                 catch (Exception ex) { }
             }
             else
-            { 
+            {
                 label.Text = text;
             }
         }
@@ -50,14 +50,14 @@ namespace BibleTaggingUtil
         {
             set
             {
-                if(value < 0)
+                if (value < 0)
                 {
-                    if(timer == null)
+                    if (timer == null)
                     {
                         timer = new System.Timers.Timer();
                         timer.Enabled = false;
                         timer.AutoReset = true;
-                        timer.Interval= 100;
+                        timer.Interval = 100;
                         timer.Elapsed += Timer_Elapsed;
                     }
                     timer.Elapsed -= Timer_Elapsed;
@@ -82,7 +82,7 @@ namespace BibleTaggingUtil
         {
             timedProgress += 5;
             if (timedProgress > 100)
-                timedProgress= 0;
+                timedProgress = 0;
             UpdateProgressBar(timedProgress);
         }
 

@@ -49,7 +49,7 @@ namespace BibleTaggingUtil.BibleVersions
 
         public string BibleName { set { bibleName = value; } }
 
-        public bool LoadBibleFile(string textFilePath, bool newBible, bool more)
+        public virtual bool LoadBibleFile(string textFilePath, bool newBible, bool more)
         {
             if (newBible)
             {
@@ -87,6 +87,10 @@ namespace BibleTaggingUtil.BibleVersions
                                 if (!string.IsNullOrEmpty(textReferencePattern))
                                 {
                                     AddBookName(line);
+                                }
+                                if(line.StartsWith("3Jo 1:15"))
+                                {
+                                    int x = 0;
                                 }
                                 ParseLine(line);
                             }
@@ -242,7 +246,7 @@ namespace BibleTaggingUtil.BibleVersions
                 string versePart = verseParts[i].Trim();
                 if (string.IsNullOrEmpty(versePart))
                     continue; // some extra space
-                if (i == 0 || (versePart[0] != '<' && versePart[0] != '(')) // add i == 0 test because a verse can not start with a tag.
+                if (i == 0 || versePart[0] != '<' ) // add i == 0 test because a verse can not start with a tag.
                 {
                     if (!string.IsNullOrEmpty(tmpTag))
                         tags.Add(tmpTag);
@@ -266,7 +270,39 @@ namespace BibleTaggingUtil.BibleVersions
                     else
                     {
                         tmpTag += (string.IsNullOrEmpty(tmpTag)) ? verseParts[i] : (" " + verseParts[i]);
-                        tmpTag = tmpTag.Replace(".", "");
+                        tmpTag = tmpTag.Replace(".", "").Replace("?", "").Trim();
+                        if (!string.IsNullOrEmpty(tmpTag))
+                        {
+                            string[] pts = tmpTag.Split(' ');
+                            tmpTag= string.Empty;
+                            foreach (string t in pts)
+                            {
+                                if (t.StartsWith('<'))
+                                {
+                                    int x = t.IndexOf(">");
+                                    if (x > 0)
+                                    {
+                                        string t1 = t.Substring(1, x - 1);
+                                        int len = t1.Length;
+                                        if (len == 0) continue;
+                                        char last = t1[len - 1];
+                                        if (char.IsDigit(last))
+                                        {
+                                            string t2 = "0000" + t1;
+                                            tmpTag += "<" + t2.Substring(t2.Length - 4) + "> ";
+                                        }
+                                        else
+                                        {
+                                            string t2 = "0000" + t1;
+                                            tmpTag += "<" + t2.Substring(t2.Length - 5) + "> ";
+                                        }
+                                    }
+                                 }
+                                else
+                                    tmpTag += t + " ";
+                            }
+                        }
+                        tmpTag = tmpTag.Trim();
                         if (i == verseParts.Length - 1)
                         {
                             // last word
@@ -302,6 +338,43 @@ namespace BibleTaggingUtil.BibleVersions
             currentVerseCount++;
             container.UpdateProgress("Loading " + bibleName, (100 * currentVerseCount) / totalVerses);
 
+        }
+
+        public int GetBookIndex(string bookName)
+        {
+            int index = -1;
+            if (bookNamesList.Contains(bookName))
+            {
+                index = Array.IndexOf(bookNamesList.ToArray(), bookName);
+
+                if (bookNamesList.Count == 27)
+                {
+                    // we have NT books only
+                    index += 39;
+
+                }
+            }
+            return index;
+        }
+
+        public string GetCorrectReference(string reference)
+        {
+            string correctReference = string.Empty;
+
+            int space = reference.IndexOf(' ');
+            string book = reference.Substring(0, space);
+            string cv = reference.Substring(space + 1);
+            int offset = 0;
+            if(bookNamesList.Count == 27)
+            {
+                // we have NT books only
+                offset = 39;
+
+            }
+            string correctBook = bookNamesList[Array.IndexOf(Constants.ubsNames, book) -  offset];
+
+            correctReference = string.Format("{0} {1}", correctBook, cv);
+            return correctReference;
         }
 
     }

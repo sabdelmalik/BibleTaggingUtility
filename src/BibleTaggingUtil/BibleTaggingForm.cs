@@ -92,6 +92,7 @@ namespace BibleTaggingUtil
         /// <param name="e"></param>
         private void BibleTaggingForm_Load(object sender, EventArgs e)
         {
+            bool workingOnNIV = false;
             #region WinFormUI setup
             this.dockPanel.Theme = this.vS2013BlueTheme1;
 
@@ -160,7 +161,10 @@ namespace BibleTaggingUtil
 
             crosswirePath = Path.Combine(execFolder, "Crosswire");
             string refFolder = Path.Combine(execFolder, "ReferenceBibles");
-            kjvPath = Path.Combine(refFolder, "KJV");
+            if(workingOnNIV)
+                kjvPath = Path.Combine(refFolder, "NIV");
+            else
+                kjvPath = Path.Combine(refFolder, "KJV");
             tagntPath = Path.Combine(refFolder, "TAGNT");
             tothtPath = Path.Combine(refFolder, "TOTHT");
 
@@ -212,6 +216,8 @@ namespace BibleTaggingUtil
                         dockPanel.SaveAsXml(configFile);
                     else if (System.IO.File.Exists(configFile))
                         System.IO.File.Delete(configFile);
+
+                    e.Cancel = false;
                 }
             }
             catch(Exception ex)
@@ -343,14 +349,15 @@ namespace BibleTaggingUtil
 
             StartGui();
 
-/*            if (string.IsNullOrEmpty(config.KJV) || !System.IO.File.Exists(config.KJV))
-            {
-                MessageBox.Show("KJV is missing");
-                CloseForm();
-                return;
-            }
-*/
+            /*            if (string.IsNullOrEmpty(config.KJV) || !System.IO.File.Exists(config.KJV))
+                        {
+                            MessageBox.Show("KJV is missing");
+                            CloseForm();
+                            return;
+                        }
+            */
 
+            this.Closing -= BibleTaggingForm_Closing;
             this.Closing += BibleTaggingForm_Closing;
 
             if (!LoadReferenceFiles(kjvPath, referenceKJV)) { CloseForm(); return; }
@@ -822,7 +829,7 @@ namespace BibleTaggingUtil
                         bool E = (verseWord.Hebrew.Trim() == "אֱלֹהִים");
                         bool Y = (verseWord.Hebrew.Trim() == "יהוה");
                         bool strongIsE = (verseWord.Strong[0].Trim() == "0430");
-                        bool strongIsY = (verseWord.Strong[0].Trim() == "3068");
+                        bool strongIsY = ((verseWord.Strong[0].Trim() == "3068") || (verseWord.Strong[0].Trim() == "3069"));
 
                         if (E || Y)
                         {
@@ -840,7 +847,7 @@ namespace BibleTaggingUtil
                             for (int j = 1; j < verseWord.Strong.Length; j++)
                             {
                                 strongIsE = (verseWord.Strong[j].Trim() == "0430");
-                                strongIsY = (verseWord.Strong[j].Trim() == "3068");
+                                strongIsY = ((verseWord.Strong[j].Trim() == "3068") || (verseWord.Strong[j].Trim() == "3069"));
                                 if (E || Y)
                                 {
                                     // special treatment for אֱלֹהִים & יהוה
@@ -999,6 +1006,53 @@ namespace BibleTaggingUtil
             }
         }
 
+        public void FindRepetitive()
+        {
+            try
+            {
+                string newRef = editorPanel.CurrentVerse;
+                bool more = true;
+                while (more)
+                {
+                    newRef = verseSelectionPanel.GetNextRef(newRef);
+                    if (newRef == "Rev 22:21")
+                    {
+                        // reached the end
+                        // We may want to go back to Gen 1:1???
+                        verseSelectionPanel.GotoVerse(newRef);
+                        break;
+                    }
+
+                    string text = string.Empty;
+
+                    try
+                    {
+                        string bookName = newRef.Substring(0, 3);
+                        string targetRef = newRef.Replace(bookName, Target[bookName]);
+                        Verse v = Target.Bible[targetRef];
+                        for (int i = 0; i < (v.Count -1); i++)
+                        {
+                            if (v[i].Strong[0] == v[i + 1].Strong[0])
+                            {
+                                verseSelectionPanel.GotoVerse(newRef);
+                                more = false;
+                                break;
+                            }
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
+            }
+        }
+
         #region Generate SWORD Files Main Menu
         private void generateSWORDFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1007,7 +1061,7 @@ namespace BibleTaggingUtil
                 {
                     WaitCursorControl(true);
                     OSIS_Generator generator = new OSIS_Generator(config);
-                    generator.Generate();
+                    generator.Generate(target);
                     WaitCursorControl(false);
                     RunOsis2mod(config.OSIS[OsisConstants.output_file], config.OSIS[OsisConstants.osisIDWork]);
                 }).Start();
@@ -1022,7 +1076,7 @@ namespace BibleTaggingUtil
                 {
                     WaitCursorControl(true);
                     OSIS_Generator generator = new OSIS_Generator(config);
-                    generator.Generate();
+                    generator.Generate(target);
                     WaitCursorControl(false);
                 }).Start();
         }
@@ -1146,6 +1200,7 @@ namespace BibleTaggingUtil
            try
             {
                 process.StartInfo.FileName = executable;
+                process.StartInfo.WorkingDirectory = crosswirePath;
                 process.StartInfo.Arguments = targetFolder + " " + xmlFile + " -v NRSV -b 4 -z";
 
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;

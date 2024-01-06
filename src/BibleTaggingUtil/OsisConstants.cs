@@ -35,6 +35,7 @@ namespace BibleTaggingUtil
         public const string creator_role = "contributor-role";
         public const string creator_name = "contributor-name";
         public const string subject = "subject";
+        public const string revision = "revision";
         // date use current date
         public const string description = "description";
         public const string publisher = "publisher";
@@ -55,6 +56,7 @@ namespace BibleTaggingUtil
         public const string nt_vpl_file = "nt-vpl-file";
         public const string bible_vpl_file = "bible-vpl-file";
         public const string output_file = "output-file";
+        public const string forInjeel = "forInjeel";
 
         public static string[] osisNames =
 {

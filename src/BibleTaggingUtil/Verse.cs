@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,15 +14,15 @@ namespace BibleTaggingUtil
     {
         private Dictionary<int, VerseWord> verse = new Dictionary<int, VerseWord>();
 
-        public Verse() { }  
-       
+        public Verse() { }
+
         /// <summary>
         /// Creates a deep copy of itself
         /// </summary>
         /// <param name="verseToClone"></param>
         public Verse(Verse verseToClone)
         {
-            for(int i = 0; i < verseToClone.Count; i++)
+            for (int i = 0; i < verseToClone.Count; i++)
             {
                 verse[i] = (VerseWord)verseToClone[i].Clone();
             }
@@ -49,13 +50,13 @@ namespace BibleTaggingUtil
         /// <returns></returns>
         public VerseWord this[int index]
         {
-            get 
-            { 
-                return verse[index]; 
+            get
+            {
+                return verse[index];
             }
-            set 
-            { 
-                verse[index] = value; 
+            set
+            {
+                verse[index] = value;
             }
         }
 
@@ -125,7 +126,7 @@ namespace BibleTaggingUtil
             }
             for (int j = k; j < tagsToSplit.Length; j++)
             {
-                strongs[k -1].Add(tagsToSplit[j]);
+                strongs[k - 1].Add(tagsToSplit[j]);
             }
 
 
@@ -141,7 +142,7 @@ namespace BibleTaggingUtil
             // create the new split words 
             for (int i = index; i < (index + splitWords.Length); i++)
             {
-                temp[i] = new VerseWord(splitWords[i - index], strongs[i - index].ToArray(), verse[0].Reference); 
+                temp[i] = new VerseWord(splitWords[i - index], strongs[i - index].ToArray(), verse[0].Reference);
             }
             // copy the remaining words
             for (int i = index + splitWords.Length; i < newCount; i++)
@@ -152,6 +153,24 @@ namespace BibleTaggingUtil
         }
 
 
+
+    }
+
+    /// <summary>
+    /// Represents a verse as a dictionary of verse words
+    /// </summary>
+    public class VerseEx
+    {
+        public VerseEx(Verse verse, int col, int row)
+        {
+            SavedVerse = verse;
+            Colum = col;
+            Row = row;
+        }
+
+        public Verse SavedVerse { get; private set; }
+        public int Colum { get; private set; }
+        public int Row { get; private set; }
 
     }
 }

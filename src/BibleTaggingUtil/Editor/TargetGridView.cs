@@ -25,8 +25,8 @@ namespace BibleTaggingUtil.Editor
         public event RefernceHighlightRequestEventHandler RefernceHighlightRequest;
         public event GotoVerseRequestEventHandler GotoVerseRequest;
 
-        private FixedSizeStack<Verse> undoStack = new FixedSizeStack<Verse>();
-        private FixedSizeStack<Verse> redoStack = new FixedSizeStack<Verse>();
+        private FixedSizeStack<VerseEx> undoStack = new FixedSizeStack<VerseEx>();
+        private FixedSizeStack<VerseEx> redoStack = new FixedSizeStack<VerseEx>();
 
         public TargetGridView()
         {
@@ -204,8 +204,10 @@ namespace BibleTaggingUtil.Editor
         {
             if (e.ClickedItem.Text == MERGE_CONTEXT_MENU)
             {
+                int savedColumn = this.CurrentCell.ColumnIndex;
+                int savedRow = this.CurrentCell.RowIndex;
                 if (this.CurrentVerse != null)
-                    undoStack.Push(new Verse(this.CurrentVerse));
+                    undoStack.Push(new VerseEx(new Verse(this.CurrentVerse), savedColumn, savedRow));
 
                 int firstMergeIndex = this.SelectedCells[0].ColumnIndex;
                 for (int i = 1; i < this.SelectedCells.Count; i++)
@@ -226,8 +228,10 @@ namespace BibleTaggingUtil.Editor
             }
             else if (e.ClickedItem.Text == SWAP_CONTEXT_MENU)
             {
+                int savedColumn = this.CurrentCell.ColumnIndex;
+                int savedRow = this.CurrentCell.RowIndex;
                 if (this.CurrentVerse != null)
-                    undoStack.Push(new Verse(this.CurrentVerse));
+                    undoStack.Push(new VerseEx(new Verse(this.CurrentVerse), savedColumn, savedRow));
 
                 int firstSwapIndex = this.SelectedCells[0].ColumnIndex;
                 int secondSwapIndex = this.SelectedCells[1].ColumnIndex;
@@ -249,8 +253,10 @@ namespace BibleTaggingUtil.Editor
             }
             else if (e.ClickedItem.Text == SPLIT_CONTEXT_MENU)
             {
+                int savedColumn = this.CurrentCell.ColumnIndex;
+                int savedRow = this.CurrentCell.RowIndex;
                 if (this.CurrentVerse != null)
-                    undoStack.Push(new Verse(this.CurrentVerse));
+                    undoStack.Push(new VerseEx(new Verse(this.CurrentVerse), savedColumn, savedRow));
 
                 int splitIndex = this.SelectedCells[0].ColumnIndex;
                 for (int i = 1; i < this.SelectedCells.Count; i++)
@@ -271,8 +277,10 @@ namespace BibleTaggingUtil.Editor
             }
             else if (e.ClickedItem.Text == DELETE_CONTEXT_MENU)
             {
+                int savedColumn = this.CurrentCell.ColumnIndex;
+                int savedRow = this.CurrentCell.RowIndex;
                 if (this.CurrentVerse != null)
-                    undoStack.Push(new Verse(this.CurrentVerse));
+                    undoStack.Push(new VerseEx(new Verse(this.CurrentVerse), savedColumn, savedRow));
 
                 int col = this.SelectedCells[0].ColumnIndex;
                 this.CurrentVerse[col].Strong = new string[] { string.Empty };
@@ -288,8 +296,10 @@ namespace BibleTaggingUtil.Editor
                 string[] strings = ((string)this.SelectedCells[0].Value).Split(' ');
                 if (strings.Length < 2) return;
 
+                int savedColumn = this.CurrentCell.ColumnIndex;
+                int savedRow = this.CurrentCell.RowIndex;
                 if (this.CurrentVerse != null)
-                    undoStack.Push(new Verse(this.CurrentVerse));
+                    undoStack.Push(new VerseEx(new Verse(this.CurrentVerse), savedColumn, savedRow));
 
                 string newText = string.Empty;
                 int col = 0;
@@ -350,6 +360,7 @@ namespace BibleTaggingUtil.Editor
         /// <param name="verse">tagged verse</param>
         public void Update(Verse verse)
         {
+            //«
             try
             {
                 if (verse == null)
@@ -365,6 +376,7 @@ namespace BibleTaggingUtil.Editor
 
                 string[] verseWords = new string[verse.Count];
                 string[] verseTags = new string[verse.Count];
+                oldTestament = (verse[0].Testament == BibleTestament.OT);
                 for (int i = 0; i < verse.Count; i++)
                 {
                     verseWords[i] = verse[i].Word;
@@ -397,24 +409,34 @@ namespace BibleTaggingUtil.Editor
                 {
                     string word = (string)this.Rows[0].Cells[i].Value;
                     string tag = (string)this.Rows[1].Cells[i].Value;
+                    string nextTag = string.Empty;
+                    if(i < verseWords.Length - 1)
+                    {
+                        nextTag = (string)this.Rows[1].Cells[i+1].Value;
+                    }
                     if (tag == null)
                         continue;
 
-                    if (tag.Contains("3068") && oldTestament)
+                    if ((tag.Contains("3068") || tag.Contains("3069")) && oldTestament)
                     {
                         this.Rows[1].Cells[i].Style.ForeColor = Color.Red;
                     }
-                    else if (tag.Contains("0430>") && oldTestament)
+                    if (tag.Contains("0430>") && oldTestament)
                     {
-                        this.Rows[1].Cells[i].Style.BackColor = Color.Green;
-                        this.Rows[1].Cells[i].Style.ForeColor = Color.White;
+                        //this.Rows[1].Cells[i].Style.BackColor = Color.Green;
+                        this.Rows[1].Cells[i].Style.ForeColor = Color.Green;
                     }
-                    else if (tag.Contains("0410>") && oldTestament)
-                        this.Rows[1].Cells[i].Style.BackColor = Color.Yellow;
-                    else if (tag.Contains(tagToHighlight) || tag.Contains("0000") || (tag == string.Empty && tagToHighlight == "<>"))
+
+                    if (tag.Contains("0410>") && oldTestament)
+                        this.Rows[1].Cells[i].Style.ForeColor = Color.Blue;
+
+                    if (tag.Contains(tagToHighlight) || tag.Contains("0000") || (tag == string.Empty && tagToHighlight == "<>"))
                         this.Rows[1].Cells[i].Style.BackColor = Color.LightGray;
-                    else
-                        this.Rows[1].Cells[i].Style.ForeColor = Color.Black;
+                    else if (!string.IsNullOrEmpty(tag) && tag == nextTag)
+                    {
+                        this.Rows[1].Cells[i].Style.BackColor = Color.Yellow;
+                        this.Rows[1].Cells[i+1].Style.BackColor = Color.Yellow;
+                    }
 
                     if (direction.ToLower() == "rtl")
                         this.Columns[i].DisplayIndex = verseWords.Length - i - 1;
@@ -478,6 +500,8 @@ namespace BibleTaggingUtil.Editor
 
                 verse[i] = new VerseWord((string)this[i, 0].Value, tags, reference);
             }
+
+            reference = Bible.GetCorrectReference(reference);
 
             if (Bible.Bible.ContainsKey(reference))
             {
@@ -547,8 +571,10 @@ namespace BibleTaggingUtil.Editor
             {
                 if(this.SelectedCells.Count == 1)
                 {
+                    int savedColumn = this.CurrentCell.ColumnIndex;
+                    int savedRow = this.CurrentCell.RowIndex;
                     if (this.CurrentVerse != null)
-                        undoStack.Push(new Verse(this.CurrentVerse));
+                        undoStack.Push(new VerseEx(new Verse(this.CurrentVerse), savedColumn, savedRow));
 
                     int col = this.SelectedCells[0].ColumnIndex;
                     this[col, 1].Value = string.Empty;
@@ -599,7 +625,7 @@ namespace BibleTaggingUtil.Editor
                     newValue = currentValue;
 
                 // special Handling for Aramaic
-                if (droppedValueParts.Length == 2 && IsCurrentTextAramaic)
+                if (droppedValueParts.Length == 2 && IsCurrentTextAramaic && data.Source is Editor.TOHTHGridView)
                 {
                     droppedValueParts = new string[1] { droppedValueParts[1] };
                 }
@@ -619,8 +645,10 @@ namespace BibleTaggingUtil.Editor
                             newValue += string.IsNullOrEmpty(droppedValue) ? tmp : (" " + tmp);
                     }
                 }
+                int savedColumn = this.CurrentCell.ColumnIndex;
+                int savedRow = this.CurrentCell.RowIndex;
                 if (this.CurrentVerse != null)
-                    undoStack.Push(new Verse(CurrentVerse));
+                    undoStack.Push(new VerseEx(new Verse(this.CurrentVerse), savedColumn, savedRow));
 
                 this[hittest.ColumnIndex, 1].Value = newValue.Trim();
                 this.CurrentVerse[hittest.ColumnIndex].StrongString = newValue.Trim();
@@ -683,13 +711,19 @@ namespace BibleTaggingUtil.Editor
         {
             if (undoStack.Count > 0)
             {
-                redoStack.Push(new Verse(CurrentVerse));
-                Verse verse = undoStack.Pop();
+                int savedColumn = this.CurrentCell.ColumnIndex;
+                int savedRow = this.CurrentCell.RowIndex;
+                redoStack.Push(new VerseEx(new Verse(this.CurrentVerse), savedColumn, savedRow));
+
+                VerseEx verseEx = undoStack.Pop();
+                Verse verse = verseEx.SavedVerse; 
+
                 if (Utils.AreReferencesEqual(CurrentVerseReferece, verse[0].Reference))
                 {
                     Update(verse);
                 }
                 SaveVerse(verse);
+                this.CurrentCell = this[verseEx.Colum, verseEx.Row];
             }
         }
 
@@ -697,12 +731,14 @@ namespace BibleTaggingUtil.Editor
         {
             if (redoStack.Count > 0)
             {
-                Verse verse = redoStack.Pop();
+                VerseEx verseEx = redoStack.Pop();
+                Verse verse = verseEx.SavedVerse;
                 if (Utils.AreReferencesEqual(CurrentVerseReferece, verse[0].Reference))
                 {
                     Update(verse);
                 }
                 SaveVerse(verse);
+                this.CurrentCell = this[verseEx.Colum, verseEx.Row];
             }
         }
 

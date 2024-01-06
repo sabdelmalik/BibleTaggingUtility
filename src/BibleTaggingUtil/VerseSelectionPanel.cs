@@ -40,7 +40,7 @@ namespace BibleTaggingUtil
             for (int i = 0; i < Constants.osisNames.Length; i++)
             {
                 bibleBooks.Add(Constants.ubsNames[i],
-                                    new BibleBook(Constants.fileNames[i], 
+                                    new BibleBook(Constants.fileNames[i],
                                                 Constants.osisAltNames[i],
                                                 Constants.osisAltNames2[i],
                                                 Constants.ubsNames[i],
@@ -59,26 +59,26 @@ namespace BibleTaggingUtil
 
         public void SetBookCount(int count)
         {
-            if(InvokeRequired) 
+            if (InvokeRequired)
             {
                 Invoke(new Action(() => { SetBookCount(count); }));
             }
             else
-            { 
-                BookCount = count; 
+            {
+                BookCount = count;
             }
 
         }
-        public int BookCount 
+        public int BookCount
         {
             get
             {
                 return bookCount;
             }
-            set 
-            { 
+            set
+            {
                 bookCount = value;
-                if(bookCount == 27 )
+                if (bookCount == 27)
                 {
                     lbBookNames.Items.Clear();
                     string[] names = new string[27];
@@ -86,7 +86,7 @@ namespace BibleTaggingUtil
                     lbBookNames.Items.AddRange(names);
                     lbBookNames.SelectedIndex = 0;
                 }
-                else if(bookCount == 39 )
+                else if (bookCount == 39)
                 {
                     lbBookNames.Items.Clear();
                     string[] names = new string[39];
@@ -105,13 +105,13 @@ namespace BibleTaggingUtil
 
         public Dictionary<string, BibleBook> BibleBooks
         {
-            get { return bibleBooks; }  
+            get { return bibleBooks; }
         }
 
         public bool UseAltNames
         {
             get { return useAltNames; }
-        } 
+        }
         private void lbBookNames_SelectedIndexChanged(object sender, EventArgs e)
         {
             string book = lbBookNames.SelectedItem.ToString();
@@ -176,34 +176,34 @@ namespace BibleTaggingUtil
         public int CurrentBook
         {
             get { return lbBookNames.SelectedIndex; }
-            set 
+            set
             {
                 if (value > lbBookNames.Items.Count - 1)
                     lbBookNames.SelectedIndex = 0;
                 else
-                    lbBookNames.SelectedIndex = value; 
+                    lbBookNames.SelectedIndex = value;
             }
         }
         public int CurrentChapter
         {
             get { return lbChapters.SelectedIndex; }
-            set 
+            set
             {
                 if (value > lbChapters.Items.Count - 1)
                     lbChapters.SelectedIndex = 0;
                 else
-                    lbChapters.SelectedIndex = value; 
+                    lbChapters.SelectedIndex = value;
             }
         }
         public int CurrentVerse
         {
             get { return lbVerses.SelectedIndex; }
-            set 
-            { 
+            set
+            {
                 if (value > lbVerses.Items.Count - 1)
                     lbVerses.SelectedIndex = 0;
                 else
-                     lbVerses.SelectedIndex = value; 
+                    lbVerses.SelectedIndex = value;
             }
         }
 
@@ -334,7 +334,7 @@ namespace BibleTaggingUtil
 
                 result = string.Format("{0} {1}:{2}", newBook, newChapter, newVerse);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
             }
@@ -378,22 +378,33 @@ namespace BibleTaggingUtil
 
 
             int currentBook = Array.IndexOf(Constants.ubsNames, book);
+            if (BookCount == 27 && currentBook >= 39)
+            {
+                currentBook -= 39;
+            }
 
-            SetSelectedIndex(currentBook, currentChapter-1, currentVerse-1);
+            SetSelectedIndex(currentBook, currentChapter - 1, currentVerse - 1);
         }
 
         private void SetSelectedIndex(int currentBook, int currentChapter, int currentVerse)
         {
-            if (InvokeRequired)
+            try
             {
-                // Call this same method but append THREAD2 to the text
-                Invoke(delegate { SetSelectedIndex(currentBook, currentChapter, currentVerse); });
+                if (InvokeRequired)
+                {
+                    // Call this same method but append THREAD2 to the text
+                    Invoke(delegate { SetSelectedIndex(currentBook, currentChapter, currentVerse); });
+                }
+                else
+                {
+                    lbBookNames.SelectedIndex = currentBook;
+                    lbChapters.SelectedIndex = currentChapter;
+                    lbVerses.SelectedIndex = currentVerse;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                lbBookNames.SelectedIndex = currentBook;
-                lbChapters.SelectedIndex = currentChapter;
-                lbVerses.SelectedIndex = currentVerse;
+                Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
             }
         }
 
@@ -424,7 +435,7 @@ namespace BibleTaggingUtil
         {
             this.VerseReference = verseReference;
             this.Testament = testament;
-            this.StrongsPrefix = (testament == TestamentEnum.NEW)? "G" : "H";
+            this.StrongsPrefix = (testament == TestamentEnum.NEW) ? "G" : "H";
         }
         public string VerseReference { get; private set; }
         public TestamentEnum Testament { get; private set; }

@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="BibleTaggingUtil.BibleVersions.BibleVersion" Collapsed="true">
+    <Position X="7" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAEAAoIhAAAAAEAECABAQAAQAEAQAAAAAAAIABAAAAA=</HashCode>
+      <FileName>BibleVersions\BibleVersion.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BibleTaggingUtil.BibleVersions.ReferenceVersionKJV" Collapsed="true">
+    <Position X="3.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BibleVersions\ReferenceVersionKJV.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BibleTaggingUtil.BibleVersions.ReferenceVersionTAGNT" Collapsed="true">
+    <Position X="7" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAABEAAAACAAAAEAAAAACAAACABgAEAA=</HashCode>
+      <FileName>BibleVersions\ReferenceVersionTAGNT.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BibleTaggingUtil.BibleVersions.ReferenceVersionTOTHT">
+    <Position X="9.75" Y="2.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="BibleTaggingUtil.BibleVersions.ReferenceVersionTOTHT.STATE" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>BibleVersions\ReferenceVersionTOTHT.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAEAAAACAAAAAAAAAAAAAAAgQAAgAA=</HashCode>
+      <FileName>BibleVersions\ReferenceVersionTOTHT.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BibleTaggingUtil.BibleVersions.TargetVersion" Collapsed="true">
+    <Position X="12" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAgAAAAAAAAAAAAAAAAAAAgAAGAAA=</HashCode>
+      <FileName>BibleVersions\TargetVersion.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

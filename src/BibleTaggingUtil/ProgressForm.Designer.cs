@@ -28,76 +28,75 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.progressBar = new System.Windows.Forms.ProgressBar();
-            this.label = new System.Windows.Forms.Label();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
-            this.SuspendLayout();
+            progressBar = new System.Windows.Forms.ProgressBar();
+            label = new System.Windows.Forms.Label();
+            splitContainer1 = new System.Windows.Forms.SplitContainer();
+            ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
+            splitContainer1.Panel1.SuspendLayout();
+            splitContainer1.Panel2.SuspendLayout();
+            splitContainer1.SuspendLayout();
+            SuspendLayout();
             // 
             // progressBar
             // 
-            this.progressBar.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.progressBar.Location = new System.Drawing.Point(0, 0);
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(209, 32);
-            this.progressBar.TabIndex = 0;
+            progressBar.Dock = System.Windows.Forms.DockStyle.Fill;
+            progressBar.Location = new System.Drawing.Point(0, 0);
+            progressBar.Name = "progressBar";
+            progressBar.Size = new System.Drawing.Size(209, 32);
+            progressBar.TabIndex = 0;
             // 
             // label
             // 
-            this.label.AutoSize = true;
-            this.label.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.label.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label.Location = new System.Drawing.Point(0, 11);
-            this.label.Name = "label";
-            this.label.Size = new System.Drawing.Size(55, 23);
-            this.label.TabIndex = 1;
-            this.label.Text = "label1";
+            label.AutoSize = true;
+            label.Dock = System.Windows.Forms.DockStyle.Bottom;
+            label.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            label.Location = new System.Drawing.Point(0, 11);
+            label.Name = "label";
+            label.Size = new System.Drawing.Size(55, 23);
+            label.TabIndex = 1;
+            label.Text = "label1";
             // 
             // splitContainer1
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            splitContainer1.Location = new System.Drawing.Point(0, 0);
+            splitContainer1.Name = "splitContainer1";
+            splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.label);
+            splitContainer1.Panel1.Controls.Add(label);
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.progressBar);
-            this.splitContainer1.Size = new System.Drawing.Size(209, 70);
-            this.splitContainer1.SplitterDistance = 34;
-            this.splitContainer1.TabIndex = 2;
+            splitContainer1.Panel2.Controls.Add(progressBar);
+            splitContainer1.Size = new System.Drawing.Size(209, 70);
+            splitContainer1.SplitterDistance = 34;
+            splitContainer1.TabIndex = 2;
             // 
             // ProgressForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(209, 70);
-            this.ControlBox = false;
-            this.Controls.Add(this.splitContainer1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.MaximizeBox = false;
-            this.MdiChildrenMinimizedAnchorBottom = false;
-            this.MinimizeBox = false;
-            this.Name = "ProgressForm";
-            this.ShowIcon = false;
-            this.ShowInTaskbar = false;
-            this.Text = "ProgressForm";
-            this.TopMost = true;
-            this.Load += new System.EventHandler(this.ProgressForm_Load);
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel1.PerformLayout();
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(209, 70);
+            ControlBox = false;
+            Controls.Add(splitContainer1);
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            MaximizeBox = false;
+            MdiChildrenMinimizedAnchorBottom = false;
+            MinimizeBox = false;
+            Name = "ProgressForm";
+            ShowIcon = false;
+            ShowInTaskbar = false;
+            Text = "ProgressForm";
+            TopMost = true;
+            Load += ProgressForm_Load;
+            splitContainer1.Panel1.ResumeLayout(false);
+            splitContainer1.Panel1.PerformLayout();
+            splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
+            splitContainer1.ResumeLayout(false);
+            ResumeLayout(false);
         }
 
         #endregion

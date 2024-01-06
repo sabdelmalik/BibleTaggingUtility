@@ -3,3 +3,4 @@ bin/
 Bibles/
 BibleModuleDev/
 !.gitignore
+src/BibleTaggingUtil/ReferenceBibles/NIV/01.NIV11-NT-Strong.txt

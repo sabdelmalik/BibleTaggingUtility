@@ -185,8 +185,9 @@ namespace BibleTaggingUtil.BibleVersions
                             strongA[0] = strong;
                             string greek = lineParts[2].Trim();
                             string english = lineParts[3].Trim();
+                            string morphology = lineParts[5].Trim();
 
-                            verseWords[wordsLineCounter++] = new VerseWord(greek, english, strongA, string.Empty, verseRef);
+                            verseWords[wordsLineCounter++] = new VerseWord(greek, english, strongA, string.Empty, verseRef, morphology);
                         }
                         break;
                 }

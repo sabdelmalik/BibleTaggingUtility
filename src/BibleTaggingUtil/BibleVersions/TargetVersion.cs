@@ -68,37 +68,6 @@ namespace BibleTaggingUtil.BibleVersions
                                 outputFile.WriteLine(line);
                             }
 
-                            //for (int i = 0; i < Constants.ubsNames.Length; i++)
-                            //{
-                            //    // construct reference
-                            //    string bookName = Constants.ubsNames[i];
-                            //    BibleBook book = container.VerseSelectionPanel.BibleBooks[bookName];
-                            //    //if (container.VerseSelectionPanel.UseAltNames)
-                            //    bookName = bookNames[bookName];
-                            //    int[] lastVerses = book.LastVerse;
-                            //    //int idx = 0;
-                            //    for (int chapter = 0; chapter < lastVerses.Length; chapter++)
-                            //    {
-                            //        try
-                            //        {
-                            //            int lastVerse = book.LastVerse[chapter];
-                            //            for (int verse = 1; verse <= lastVerse; verse++)
-                            //            {
-                            //                string verseRef = string.Format("{0:s} {1:d}:{2:d}", bookName, chapter + 1, verse);
-                            //                if (container.Target.Bible.ContainsKey(verseRef))
-                            //                {
-                            //                    string line = string.Format("{0:s} {1:s}", verseRef, Utils.GetVerseText(container.Target.Bible[verseRef], true));
-                            //                    outputFile.WriteLine(line);
-                            //                }
-                            //            }
-                            //        }
-                            //        catch (Exception ex)
-                            //        {
-                            //            Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
-                            //        }
-                            //    }
-
-                            //}
                         }
 
                     }
