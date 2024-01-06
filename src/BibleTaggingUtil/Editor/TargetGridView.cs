@@ -501,6 +501,8 @@ namespace BibleTaggingUtil.Editor
                 verse[i] = new VerseWord((string)this[i, 0].Value, tags, reference);
             }
 
+            reference = Bible.GetCorrectReference(reference);
+
             if (Bible.Bible.ContainsKey(reference))
             {
                 Bible.Bible[reference] = verse;

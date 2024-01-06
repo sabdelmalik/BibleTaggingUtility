@@ -10,7 +10,7 @@ namespace BibleTaggingUtil
 
     public class VerseWord : ICloneable
     {
-        public VerseWord(string ancientWord, string english, string[] strong, string transliteration, string reference)
+        public VerseWord(string ancientWord, string english, string[] strong, string transliteration, string reference, string morphology)
         {
             this.Reference = reference;
             Testament = Utils.GetTestament(reference);
@@ -23,6 +23,7 @@ namespace BibleTaggingUtil
             this.Word = english;
             this.Strong = strong;
             this.Transliteration = transliteration;
+            Morphology = morphology;
         }
 
         public VerseWord(string word, string[] strong, string reference)
@@ -74,6 +75,7 @@ namespace BibleTaggingUtil
         }
         public string Transliteration { get; private set; }
         public string Reference { get; private set; }
+        public string Morphology { get; private set; }
 
         public override string ToString()
         {
@@ -116,7 +118,5 @@ namespace BibleTaggingUtil
         {
             return MemberwiseClone();
         }
-
-
     }
 }

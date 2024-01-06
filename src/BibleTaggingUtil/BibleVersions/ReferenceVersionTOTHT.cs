@@ -254,7 +254,7 @@ namespace BibleTaggingUtil.BibleVersions
                     int wordNumber = verseWords.Count;
                     if (englishWord.ToLower() != "verseend" && strongRefs[0] != "9001" && strongRefs[0] != "9014" && strongRefs[0] != "9015")
                     {
-                        verseWords[wordNumber] = new VerseWord(hebrew, englishWord, strongRefs, transliteration, currentVerseRef);
+                        verseWords[wordNumber] = new VerseWord(hebrew, englishWord, strongRefs, transliteration, currentVerseRef, "");
                         if (bible.ContainsKey(currentVerseRef))
                             bible[currentVerseRef] = verseWords;
                         else
@@ -330,6 +330,7 @@ namespace BibleTaggingUtil.BibleVersions
                 container.UpdateProgress("Loading " + bibleName, (100 * currentVerseCount) / totalVerses);
 
             }
+            string morphology = lineParts[4];
 
             // 1. get Hebrew word parts
             // we use the Accented
@@ -371,7 +372,7 @@ namespace BibleTaggingUtil.BibleVersions
                     int wordNumber = verseWords.Count;
                     if (englishWord.ToLower() != "verseend" && strongRefs[0] != "9001" && strongRefs[0] != "9014" && strongRefs[0] != "9015")
                     {
-                        verseWords[wordNumber] = new VerseWord(hebrew, englishWord, strongRefs, "", currentVerseRef);
+                        verseWords[wordNumber] = new VerseWord(hebrew, englishWord, strongRefs, "", currentVerseRef, morphology);
                         if (bible.ContainsKey(currentVerseRef))
                             bible[currentVerseRef] = verseWords;
                         else
@@ -499,7 +500,7 @@ namespace BibleTaggingUtil.BibleVersions
                     int wordNumber = verseWords.Count;
                     if (englishWord.ToLower() != "verseend" && strongRefs[0] != "9001" && strongRefs[0] != "9014" && strongRefs[0] != "9015")
                     {
-                        verseWords[wordNumber] = new VerseWord(hebrew, englishWord, strongRefs, "", currentVerseRef);
+                        verseWords[wordNumber] = new VerseWord(hebrew, englishWord, strongRefs, "", currentVerseRef,"");
                         if (bible.ContainsKey(currentVerseRef))
                             bible[currentVerseRef] = verseWords;
                         else

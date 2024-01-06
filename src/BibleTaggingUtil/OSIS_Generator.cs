@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Configuration.Internal;
 using System.Windows.Forms;
 using System.Reflection;
+using BibleTaggingUtil.BibleVersions;
 
 namespace BibleTaggingUtil
 {
@@ -40,12 +41,13 @@ namespace BibleTaggingUtil
         /// 
         /// </summary>");
         /// <param name="vplFile">");Verse perline file</param>");
-        public void Generate()
+        public void Generate(TargetVersion targetVersion)
         {
             //string bibleVplFile = string.Empty;
             string otVplFile = string.Empty;
             string ntVplFile = string.Empty;
             string outputFile = string.Empty;
+            bool forInjeel = false;
 
             try
             {
@@ -53,6 +55,12 @@ namespace BibleTaggingUtil
 
                 //                if (osisConf.ContainsKey(OsisConstants.bible_vpl_file))
                 //                    bibleVplFile = osisConf[OsisConstants.bible_vpl_file];
+
+                if (osisConf.ContainsKey(OsisConstants.forInjeel))
+                {
+                    string temp = osisConf[OsisConstants.forInjeel];
+                    forInjeel = (temp.ToLower() == "true");
+                }
 
                 if (osisConf.ContainsKey(OsisConstants.ot_vpl_file))
                     otVplFile = osisConf[OsisConstants.ot_vpl_file];
@@ -97,7 +105,8 @@ namespace BibleTaggingUtil
                             string line = sr.ReadLine();
                             int space = line.IndexOf(' ');
                             string bookName = line.Substring(0, space);
-                            int bookIndex = Array.IndexOf(OsisConstants.osisAltNames, bookName);
+                            // int bookIndex = Array.IndexOf(OsisConstants.osisAltNames, bookName);
+                            int bookIndex = targetVersion.GetBookIndex(bookName);
                             if (bookIndex < 0)
                             {
                                 throw new Exception("book name not found");
@@ -135,7 +144,7 @@ namespace BibleTaggingUtil
                         using (StreamReader sr = new StreamReader(Path.Combine(biblesFolder, otVplFile)))
                         {
 
-                            WriteBible(sr, sw, "H");
+                            WriteBible(sr, sw, "H", targetVersion, forInjeel);
                         }
                     }
 
@@ -145,7 +154,7 @@ namespace BibleTaggingUtil
                         using (StreamReader sr = new StreamReader(Path.Combine(biblesFolder, ntVplFile)))
                         {
 
-                            WriteBible(sr, sw, "G");
+                            WriteBible(sr, sw, "G", targetVersion, forInjeel);
                         }
                     }
 
@@ -160,11 +169,11 @@ namespace BibleTaggingUtil
             }
         }
 
-        private void WriteBible(StreamReader sr, StreamWriter sw, string strongPrefix)
+        private void WriteBible(StreamReader sr, StreamWriter sw, string strongPrefix, TargetVersion targetVersion, bool forInjeel)
         {
             sw.WriteLine("<div type=\"bookGroup\">");
 
-            WriteBibleBooks(sr, sw, strongPrefix);
+            WriteBibleBooks(sr, sw, strongPrefix, targetVersion, forInjeel);
 
             sw.WriteLine("</div>");
 
@@ -174,15 +183,16 @@ namespace BibleTaggingUtil
 
         string currentBook = string.Empty;
         string currentChapter = string.Empty;
-        private void WriteBibleBooks(StreamReader sr, StreamWriter sw, string strongPrefix)
+        private void WriteBibleBooks(StreamReader sr, StreamWriter sw, string strongPrefix, TargetVersion targetVersion, bool forInjeel)
         {
             try
             {
                 while (!sr.EndOfStream)
                 {
                     string line = sr.ReadLine();
-                    string bookName = line.Substring(0, 3);
-                    string bookOsisName = OsisConstants.osisNames[Array.IndexOf(OsisConstants.osisAltNames, bookName)];
+                    int bs = line.IndexOf(' ');
+                    string bookName = line.Substring(0, bs);
+                    string bookOsisName = OsisConstants.osisNames[targetVersion.GetBookIndex(bookName)];    //Array.IndexOf(OsisConstants.osisAltNames, bookName)];
                     int idx1 = line.IndexOf(' ');
                     int idx2 = line.IndexOf(':', idx1 + 1);
                     int idx3 = line.IndexOf(' ', idx2 + 1);
@@ -210,7 +220,7 @@ namespace BibleTaggingUtil
                                 if (currentBook == "Rom")
                                 {
                                     sw.WriteLine(colophonStart);
-                                    sw.WriteLine("كُتِبَتْ إِلَى أَهْلِ رُومِيَةَ مِنْ كُورِنْثُوسَ عَلَى يَدِ فِيبِي خَادِمَةِكَنِيسَةِكَنْخَرِيَا");
+                                    sw.WriteLine("كُتِبَتْ إِلَى أَهْلِ رُومِيَةَ مِنْ كُورِنْثُوسَ عَلَى يَدِ فِيبِي خَادِمَةِ كَنِيسَةِ كَنْخَرِيَا");
                                     sw.WriteLine("</div>");
                                 }
                                 else if (currentBook == "Eph")
@@ -257,6 +267,103 @@ namespace BibleTaggingUtil
                         // start tag for the new chapter
                         sw.WriteLine(string.Format("<chapter osisID='{0}.{1}'>", currentBook, currentChapter));
                     }
+                    // Handle Psalm headers - enclose in <hebrewTitle> tag for Arbic Bible
+                    if(osisConf[OsisConstants.osisIDWork].ToLower().Contains("ara") && 
+                        (currentBook == "Ps" && verse == "1"))
+                    {
+                        int astrisk = verseText.IndexOf(" * ");
+                        if (astrisk > 1)
+                        {
+                            #region extract title without tags
+                            string title = string.Empty;
+                            string temp = verseText.Substring(0, astrisk + 1);
+                            string title1 = GetTaggedVerse(temp, strongPrefix);
+                            int startOfWord = 0;
+                            int startOfTag = 0;
+                            while (true)
+                            {
+                                startOfTag = temp.IndexOf(" <", startOfWord);
+                                if (startOfTag != startOfWord)
+                                {
+                                    if (startOfTag == -1)
+                                    {
+                                        if (startOfWord < temp.Length - 1)
+                                            title = temp.Substring(startOfWord);
+                                        break;
+                                    }
+                                    string segment = temp.Substring(startOfWord, startOfTag - startOfWord);
+                                    title += segment;
+
+                                }
+
+                                startOfWord = temp.IndexOf(">", startOfTag) + 1;
+
+
+                            }
+
+                            #endregion
+                            sw.WriteLine(string.Format("<title canonical=\"true\" type=\"psalm\">{0}</title>", title1));
+
+                            int astrisk2 = verseText.IndexOf(" * <>");
+                            if (astrisk2 > 1)
+                                verseText = verseText.Substring(astrisk2 + 6);
+                            else
+                                verseText = verseText.Substring(astrisk + 4);
+                        }
+
+                    }
+
+                    if(forInjeel)
+                    {
+                        if (currentBook == "Ezra" && currentChapter == "5" && verse == "6")
+                        {
+                            previousText = verseText;
+                            continue;
+                        }
+                        else if (currentBook == "Ezra" && currentChapter == "5" && verse == "7")
+                        {
+                            // need to split, combine, save, the the remainaing text
+                            string endtext = "هكَذَا: <1836>";
+                            int idx = verseText.IndexOf(endtext);
+                            string verse6 = previousText + " " + verseText.Substring(0, idx+endtext.Length);
+                            sw.WriteLine(string.Format("<verse osisID='{0}.{1}.{2}'>{3}</verse>", currentBook, currentChapter, "6", GetTaggedVerse(verse6, strongPrefix)));
+                            previousText = string.Empty;
+                            verseText = verseText.Substring(idx+endtext.Length).Trim();
+                        }
+                        else if (currentBook == "Dan" && currentChapter == "2" && verse == "14")
+                        {
+                            previousText = verseText;
+                            continue;
+                        }
+                        else if (currentBook == "Dan" && currentChapter == "2" && verse == "15")
+                        {
+                            // need to split, combine, save, the the remainaing text
+                            string endtext = "الْمَلِكِ: <4430>";
+                            int idx = verseText.IndexOf(endtext);
+                            string verse14 = previousText + " " + verseText.Substring(0, idx + endtext.Length);
+                            sw.WriteLine(string.Format("<verse osisID='{0}.{1}.{2}'>{3}</verse>", currentBook, currentChapter, "14", GetTaggedVerse(verse14, strongPrefix)));
+                            previousText = string.Empty;
+                            verseText = verseText.Substring(idx + endtext.Length).Trim();
+                        }
+                        else if (currentBook == "1Tim" && currentChapter == "6" && verse == "21")
+                        {
+                            verseText = verseText.Replace(" ٢٢ <>", "");
+                        }
+                        else if (currentBook == "3John" && currentChapter == "1" && verse == "14")
+                        {
+                            previousText = verseText;
+                            continue;
+                        }
+                        else if (currentBook == "3John" && currentChapter == "1" && verse == "15")
+                        {
+                            verseText = previousText + " " + verseText;
+                            previousText = string.Empty;
+                            verse = "14";
+                        }
+
+
+                    }
+
                     sw.WriteLine(string.Format("<verse osisID='{0}.{1}.{2}'>{3}</verse>", currentBook, currentChapter, verse, GetTaggedVerse(verseText, strongPrefix)));
                 }
                 // end tags for the lastchapter / last book
@@ -271,6 +378,7 @@ namespace BibleTaggingUtil
 
         }
 
+        string previousText = string.Empty;
         private string GetTaggedVerse(string verseText, string strongPrefix)
         {
             string result = string.Empty;
@@ -460,6 +568,10 @@ namespace BibleTaggingUtil
                     sw.WriteLine(String.Format("<refSystem>{0}</refSystem>", osisConf[OsisConstants.refSystem]));
 
                 sw.WriteLine(String.Format("</work>"));
+
+                sw.WriteLine("<work osisWork=\"strong\">");
+                sw.WriteLine("<refSystem>Dict.Strongs</refSystem>");
+                sw.WriteLine("</work>");
 
                 sw.WriteLine(String.Format("</header>"));
             }

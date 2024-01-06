@@ -85,6 +85,7 @@ namespace BibleTaggingUtil.Editor
             List<string> hebrew = new List<string>();
             List<string> transliteration = new List<string>();
             List<string> tags = new List<string>();
+            List<string> morphology = new List<string>();
 
             try
             {
@@ -93,6 +94,7 @@ namespace BibleTaggingUtil.Editor
                     VerseWord verseWord = verseWords[i];
                     words.Add(verseWord.Word);
                     hebrew.Add(verseWord.Hebrew);
+                    morphology.Add(verseWord.Morphology);
                     transliteration.Add(verseWord.Transliteration);
                     if (verseWord.Strong.Length > 0)
                     {
@@ -149,6 +151,7 @@ namespace BibleTaggingUtil.Editor
                 this.Rows.Add(hebrew.ToArray());
                 //this.Rows.Add(transliteration.ToArray());
                 this.Rows.Add(tags.ToArray());
+                //this.Rows.Add(morphology.ToArray());
 
                 for (int i = 0; i < words.Count; i++)
                 {
@@ -192,29 +195,32 @@ namespace BibleTaggingUtil.Editor
             List<string> greek = new List<string>();
             List<string> transliteration = new List<string>();
             List<string> tags = new List<string>();
+            List<string> morphology = new List<string>();
 
             try
-            { 
-            for (int i = 0; i < verseWords.Count; i++)
             {
-                VerseWord verseWord = verseWords[i];
-                words.Add(verseWord.Word);
-                greek.Add(verseWord.Greek);
-                transliteration.Add(verseWord.Transliteration);
-                tags.Add("<" + verseWord.Strong[0] + ">");
-            }
+                for (int i = 0; i < verseWords.Count; i++)
+                {
+                    VerseWord verseWord = verseWords[i];
+                    words.Add(verseWord.Word);
+                    greek.Add(verseWord.Greek);
+                    transliteration.Add(verseWord.Transliteration);
+                    tags.Add("<" + verseWord.Strong[0] + ">");
+                    morphology.Add(verseWord.Morphology);
+                }
 
-            this.ColumnCount = verseWords.Count;
+                this.ColumnCount = verseWords.Count;
 
-            this.Rows.Add(words.ToArray());
-            this.Rows.Add(greek.ToArray());
-//            this.Rows.Add(transliteration.ToArray());
-            this.Rows.Add(tags.ToArray());
+                this.Rows.Add(words.ToArray());
+                this.Rows.Add(greek.ToArray());
+                //            this.Rows.Add(transliteration.ToArray());
+                this.Rows.Add(tags.ToArray());
+                //this.Rows.Add(morphology.ToArray());
 
-            this.ClearSelection();
+                this.ClearSelection();
 
-            this.Rows[0].ReadOnly = true;
-            this.Rows[1].ReadOnly = true;
+                this.Rows[0].ReadOnly = true;
+                this.Rows[1].ReadOnly = true;
             }
             catch (Exception ex)
             {

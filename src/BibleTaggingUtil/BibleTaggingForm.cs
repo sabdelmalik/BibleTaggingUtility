@@ -92,6 +92,7 @@ namespace BibleTaggingUtil
         /// <param name="e"></param>
         private void BibleTaggingForm_Load(object sender, EventArgs e)
         {
+            bool workingOnNIV = false;
             #region WinFormUI setup
             this.dockPanel.Theme = this.vS2013BlueTheme1;
 
@@ -160,7 +161,10 @@ namespace BibleTaggingUtil
 
             crosswirePath = Path.Combine(execFolder, "Crosswire");
             string refFolder = Path.Combine(execFolder, "ReferenceBibles");
-            kjvPath = Path.Combine(refFolder, "KJV");
+            if(workingOnNIV)
+                kjvPath = Path.Combine(refFolder, "NIV");
+            else
+                kjvPath = Path.Combine(refFolder, "KJV");
             tagntPath = Path.Combine(refFolder, "TAGNT");
             tothtPath = Path.Combine(refFolder, "TOTHT");
 
@@ -212,6 +216,8 @@ namespace BibleTaggingUtil
                         dockPanel.SaveAsXml(configFile);
                     else if (System.IO.File.Exists(configFile))
                         System.IO.File.Delete(configFile);
+
+                    e.Cancel = false;
                 }
             }
             catch(Exception ex)
@@ -343,14 +349,15 @@ namespace BibleTaggingUtil
 
             StartGui();
 
-/*            if (string.IsNullOrEmpty(config.KJV) || !System.IO.File.Exists(config.KJV))
-            {
-                MessageBox.Show("KJV is missing");
-                CloseForm();
-                return;
-            }
-*/
+            /*            if (string.IsNullOrEmpty(config.KJV) || !System.IO.File.Exists(config.KJV))
+                        {
+                            MessageBox.Show("KJV is missing");
+                            CloseForm();
+                            return;
+                        }
+            */
 
+            this.Closing -= BibleTaggingForm_Closing;
             this.Closing += BibleTaggingForm_Closing;
 
             if (!LoadReferenceFiles(kjvPath, referenceKJV)) { CloseForm(); return; }
@@ -1054,7 +1061,7 @@ namespace BibleTaggingUtil
                 {
                     WaitCursorControl(true);
                     OSIS_Generator generator = new OSIS_Generator(config);
-                    generator.Generate();
+                    generator.Generate(target);
                     WaitCursorControl(false);
                     RunOsis2mod(config.OSIS[OsisConstants.output_file], config.OSIS[OsisConstants.osisIDWork]);
                 }).Start();
@@ -1069,7 +1076,7 @@ namespace BibleTaggingUtil
                 {
                     WaitCursorControl(true);
                     OSIS_Generator generator = new OSIS_Generator(config);
-                    generator.Generate();
+                    generator.Generate(target);
                     WaitCursorControl(false);
                 }).Start();
         }

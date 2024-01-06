@@ -56,6 +56,7 @@ namespace BibleTaggingUtil
         public const string nt_vpl_file = "nt-vpl-file";
         public const string bible_vpl_file = "bible-vpl-file";
         public const string output_file = "output-file";
+        public const string forInjeel = "forInjeel";
 
         public static string[] osisNames =
 {

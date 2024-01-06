@@ -190,6 +190,7 @@ namespace BibleTaggingUtil.Editor
             List<string> greek = new List<string>();
             List<string> transliteration = new List<string>();
             List<string> tags = new List<string>();
+            List<string> morphology = new List<string>();
 
             try
             {
@@ -200,6 +201,7 @@ namespace BibleTaggingUtil.Editor
                     greek.Add(verseWord.Greek);
                     transliteration.Add(verseWord.Transliteration);
                     tags.Add("<" + verseWord.Strong[0] + ">");
+                    morphology.Add(verseWord.Morphology);
                 }
 
                 this.ColumnCount = verseWords.Count;
@@ -208,6 +210,7 @@ namespace BibleTaggingUtil.Editor
                 this.Rows.Add(greek.ToArray());
                 this.Rows.Add(transliteration.ToArray());
                 this.Rows.Add(tags.ToArray());
+                this.Rows.Add(morphology.ToArray());
 
                 this.ClearSelection();
 
