@@ -118,5 +118,13 @@ namespace BibleTaggingUtil
         {
             return MemberwiseClone();
         }
+
+
+        #region OSIS XML Support
+        public int OsisTagIndex { get; internal set; }
+        public int OsisTagLevel { get; internal set; }
+
+        #endregion OSIS XML Support
+
     }
 }
