@@ -73,6 +73,7 @@ namespace BibleTaggingUtil
 
                     if (state == ParseState.TAGGING)
                     {
+                        bool osis = false;
                         string[] parts = line.Split('=');
                         if (parts.Length != 2)
                             continue;
@@ -108,6 +109,10 @@ namespace BibleTaggingUtil
                                 break;
                             case "targettextdirection":
                                 Properties.Settings.Default.TargetTextDirection = parts[1].Trim();
+                                break;
+                            case "osis":
+                                if(parts[1].Trim().ToLower() == "true") osis = true;
+                                Properties.Settings.Default.Osis = osis;
                                 break;
                         }
                     }

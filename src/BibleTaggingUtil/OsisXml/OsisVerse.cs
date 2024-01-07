@@ -15,6 +15,7 @@ namespace BibleTaggingUtil.OsisXml
 {
     internal class OsisVerse
     {
+        private const string zeroWidthSpace = "\u200B";
         List<OsisTag> osisTags = null;
         public OsisVerse(string verseRef, int startIndex, string sid, string verseXml, string  eid)
         {
@@ -49,7 +50,7 @@ namespace BibleTaggingUtil.OsisXml
             VerseXml = TreatOddTags(VerseXml, "l");
 
             XmlDocument document = new XmlDocument();
-            VerseXml = VerseXml.Replace("> <", ">\uEEFF<");
+            VerseXml = VerseXml.Replace("> <", ">" + zeroWidthSpace + "<");
             document.PreserveWhitespace = true;
             try
             {
@@ -65,7 +66,7 @@ namespace BibleTaggingUtil.OsisXml
 
         }
 
-        public string VerseComplteXml
+        public string VerseCompleteXml
         {
             get
             {
@@ -74,7 +75,7 @@ namespace BibleTaggingUtil.OsisXml
                 {
                     verseRebuild += osisTag.ToString();
                 }
-                verseRebuild = verseRebuild.Replace(">\uEEFF<", "> <");
+                verseRebuild = verseRebuild.Replace(">" + zeroWidthSpace + "<", "> <");
 
                 return verseRebuild;
             }

@@ -25,14 +25,14 @@ namespace BibleTaggingUtil.OsisXml
             tagXml = tagXML;
             this.level = level;
             this.index = index;
-
+            string verseRefX = GetVerseRefX(verseRef);
             switch (tagType)
             {
                 case VerseTagType.text:
-                    CreateUntaggedWord(index, tagXML, verseRef);
+                    CreateUntaggedWord(index, tagXML, verseRefX);
                     break;
                 case VerseTagType.w:
-                    CreateTaggedWord(index, tagXML, verseRef);
+                    CreateTaggedWord(index, tagXML, verseRefX);
                     break;
                 case VerseTagType.note:
                 case VerseTagType.milestone:
@@ -50,6 +50,22 @@ namespace BibleTaggingUtil.OsisXml
                     }
                     break;
             }
+        }
+
+        private string GetVerseRefX(string VerseRef)
+        {
+            string verseRefX = string.Empty;
+
+            Match m = Regex.Match(VerseRef, @"([1-9A-Za-z]*)\.(\d{1,3})\.(\d{1,3})");
+            if (m != null)
+            {
+                string book = m.Groups[1].Value;
+                string chapter = m.Groups[2].Value;
+                string verse = m.Groups[3].Value;
+
+                verseRefX = string.Format("{0} {1}:{2}", book, chapter, verse);
+            }
+            return verseRefX;
         }
 
         private void CreateUntaggedWord(int index, XmlNode tagXML, string verseRef)
@@ -124,26 +140,50 @@ namespace BibleTaggingUtil.OsisXml
         public override string ToString()
         {
             string result = string.Empty;
-            switch(tagType)
+            switch (tagType)
             {
                 case VerseTagType.text:
-                    if (verseWord != null)
-                        result = verseWord.Word;
-                    break;
-                case VerseTagType.w:
-                    string lemmaValue = string.Empty;
+
                     if (verseWord != null)
                     {
-                        foreach(string s in verseWord.Strong)
+                        if (verseWord.Strong.Length > 1 ||
+                            (verseWord.Strong.Length == 1 && !string.IsNullOrEmpty(verseWord.Strong[0])))
                         {
-                            lemmaValue += string.Format("strong:{0}{1} ", verseWord.Testament== BibleTestament.OT? "H":"G", s);
+                            string lemmaValue = string.Empty;
+                            foreach (string s in verseWord.Strong)
+                            {
+                                lemmaValue += string.Format("strong:{0}{1} ", verseWord.Testament == BibleTestament.OT ? "H" : "G", s);
+                            }
+                            lemmaValue = lemmaValue.Trim();
+                            result = string.Format("<w lemma=\"{0}\">{1}</w>", lemmaValue, verseWord.Word);
                         }
-                        lemmaValue = lemmaValue.Trim();
-                        XmlNode tagXml1 = tagXml.Clone();
-                        if (tagXml1 != null)
+                        else
+                            result = verseWord.Word;
+                    }
+
+                    break;
+                case VerseTagType.w:
+                    if (verseWord.Strong.Length == 0 ||
+                        (verseWord.Strong.Length == 1 && string.IsNullOrEmpty(verseWord.Strong[0])))
+                    {
+                        result = verseWord.Word;
+                    }
+                    else
+                    {
+                        string lemmaValue = string.Empty;
+                        if (verseWord != null)
                         {
-                            ((XmlElement)tagXml1).SetAttribute("lemma", lemmaValue); // Set to new value.
-                            result = tagXml1.OuterXml;
+                            foreach (string s in verseWord.Strong)
+                            {
+                                lemmaValue += string.Format("strong:{0}{1} ", verseWord.Testament == BibleTestament.OT ? "H" : "G", s);
+                            }
+                            lemmaValue = lemmaValue.Trim();
+                            XmlNode tagXml1 = tagXml.Clone();
+                            if (tagXml1 != null)
+                            {
+                                ((XmlElement)tagXml1).SetAttribute("lemma", lemmaValue); // Set to new value.
+                                result = tagXml1.OuterXml;
+                            }
                         }
                     }
                     break;
@@ -157,13 +197,13 @@ namespace BibleTaggingUtil.OsisXml
                     string temp = tagXml.OuterXml;
                     string marker = tagXml.InnerXml;
                     int idx = temp.IndexOf(marker);
-                    switch(marker)
+                    switch (marker)
                     {
                         case "$start$":
-                            result= temp.Substring(idx+marker.Length);
+                            result = temp.Substring(idx + marker.Length);
                             break;
                         case "$end$":
-                            result= temp.Substring(0,idx);
+                            result = temp.Substring(0, idx);
                             break;
                         default:
                             result = tagXml.OuterXml;
@@ -207,9 +247,29 @@ namespace BibleTaggingUtil.OsisXml
 
         internal void Update(VerseWord verseWord)
         {
+            // Currently we only update Strong's numbers
+
             if(level == verseWord.OsisTagLevel)
             {
-
+                VerseWord w;
+                if (verseWord != null) w = verseWord;
+                else
+                {
+                    w = osisTags[verseWord.OsisTagIndex].verseWord;
+                }
+                w.Strong = verseWord.Strong;
+                if(tagType == VerseTagType.w)
+                {
+                    if(w.Strong.Length == 0 ||
+                        (w.Strong.Length == 1 && string.IsNullOrEmpty(w.Strong[0])))
+                        tagType = VerseTagType.text;
+                }
+                else if(tagType == VerseTagType.text)
+                {
+                    if (w.Strong.Length > 1 ||
+                        (w.Strong.Length == 1 && !string.IsNullOrEmpty(w.Strong[0])))
+                        tagType = VerseTagType.w;
+                }
             }
         }
 

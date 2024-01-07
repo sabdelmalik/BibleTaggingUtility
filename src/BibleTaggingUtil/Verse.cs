@@ -14,7 +14,7 @@ namespace BibleTaggingUtil
     {
         private Dictionary<int, VerseWord> verse = new Dictionary<int, VerseWord>();
 
-        public Verse() { }
+        public Verse() { Dirty = false; }
 
         /// <summary>
         /// Creates a deep copy of itself
@@ -152,6 +152,7 @@ namespace BibleTaggingUtil
             verse = temp;
         }
 
+        public bool Dirty { get; set; }
 
 
     }
@@ -166,11 +167,14 @@ namespace BibleTaggingUtil
             SavedVerse = verse;
             Colum = col;
             Row = row;
+            Dirty = false;
         }
 
         public Verse SavedVerse { get; private set; }
         public int Colum { get; private set; }
         public int Row { get; private set; }
+
+        public bool Dirty { get; set; }
 
     }
 }

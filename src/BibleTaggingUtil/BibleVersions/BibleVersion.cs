@@ -61,7 +61,7 @@ namespace BibleTaggingUtil.BibleVersions
             return LoadBibleFileInternal(textFilePath, more);
         }
 
-        private bool LoadBibleFileInternal(string textFilePath, bool more)
+        protected virtual bool LoadBibleFileInternal(string textFilePath, bool more)
         {
             Tracing.TraceEntry(MethodBase.GetCurrentMethod().Name, textFilePath, more);
             bool result = false;
@@ -133,9 +133,7 @@ namespace BibleTaggingUtil.BibleVersions
                 return bookNamesList.Count;
             }
         }
-        public Dictionary<string, Verse> Bible
-        { get { return bible; } }
-
+        public Dictionary<string, Verse> Bible { get { return bible; } }
 
         public string this[string ubsName]
         {

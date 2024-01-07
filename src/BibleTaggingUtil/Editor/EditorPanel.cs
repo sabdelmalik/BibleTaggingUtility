@@ -16,6 +16,7 @@ using static System.Net.Mime.MediaTypeNames;
 using BibleTaggingUtil.BibleVersions;
 using System.Security.Cryptography.Xml;
 using System.Reflection;
+using System.Xml.Linq;
 
 namespace BibleTaggingUtil.Editor
 {
@@ -32,6 +33,7 @@ namespace BibleTaggingUtil.Editor
         private TestamentEnum testament = TestamentEnum.NEW;
 
         private System.Timers.Timer tempTimer = null;
+        private bool osis = false;
 
 
         public bool TargetDirty { get; set; }
@@ -40,6 +42,12 @@ namespace BibleTaggingUtil.Editor
         {
             get { return dgvTarget.Bible; }
             set { dgvTarget.Bible = value; }
+        }
+
+        public TargetOsisVersion TargetOsisVersion
+        {
+            get { return dgvTarget.OsisBible; }
+            set { dgvTarget.OsisBible = value; }
         }
 
         class VerseDetails
@@ -164,6 +172,8 @@ namespace BibleTaggingUtil.Editor
         }
         private void Verse_VerseChanged(object sender, VerseChangedEventArgs e)
         {
+            osis = Properties.Settings.Default.Osis; 
+
             strongsPrefix = e.StrongsPrefix;
             testament = e.Testament;
 
@@ -243,17 +253,23 @@ namespace BibleTaggingUtil.Editor
                 // Target view
                 if (!string.IsNullOrEmpty(oldReference) && dgvTarget.Columns.Count > 0)
                 {
-                    dgvTarget.SaveVerse(oldReference);
+                    if(osis)
+                    {
+                        // TODO handle osis save
+                    }
+                    else
+                         dgvTarget.SaveVerse(oldReference);
                 }
 
-                actualBookName = container.Target[bookName];
+
+                actualBookName = osis? container.OsisTarget[bookName] : container.Target[bookName];
                 if (!string.IsNullOrEmpty(actualBookName))
                 {
                     string reference = e.VerseReference.Replace(bookName, actualBookName);
                     //targetUpdatedVerse = Utils.GetVerseText(container.Target.Bible[targetRef], true);
                     if (tbTarget.Text.ToLower().Contains("arabic"))
                         DoSepecialHandling(reference);
-                    Verse v = container.Target.Bible[reference];
+                    Verse v = osis? container.OsisTarget.Bible[reference]: container.Target.Bible[reference];
 
                     if (dgvTarget.IsCurrentTextAramaic)
                     {
@@ -309,6 +325,8 @@ namespace BibleTaggingUtil.Editor
         /// <param name="verseReference"></param>
         private void DoSepecialHandling(string verseReference)
         {
+            if (osis) return;
+
             bool changed = false;
             Verse v = container.Target.Bible[verseReference];
             //List<int> merges = new List<int>();
@@ -630,7 +648,13 @@ namespace BibleTaggingUtil.Editor
             }
             else if (e.Control)
             {
-                if (e.KeyCode == Keys.S) container.Target.SaveUpdates();
+                if (e.KeyCode == Keys.S)
+                {
+                    if (osis)
+                        container.OsisTarget.Save("");
+                    else
+                        container.Target.SaveUpdates();
+                }
                 if (e.KeyCode == Keys.Y) dgvTarget.Redo();
                 if (e.KeyCode == Keys.Z) dgvTarget.Undo();
             }
@@ -659,7 +683,10 @@ namespace BibleTaggingUtil.Editor
 
         private void picSave_Click(object sender, EventArgs e)
         {
-            container.Target.SaveUpdates();
+            if (osis)
+                container.OsisTarget.Save("");
+            else
+                container.Target.SaveUpdates();
         }
 
         private void picDecreaseFont_Click(object sender, EventArgs e)
@@ -751,7 +778,7 @@ namespace BibleTaggingUtil.Editor
 
             string reference = tbCurrentReference.Text;
             dgvTarget.SaveVerse(reference);
-            Verse v = container.Target.Bible[reference];
+            Verse v = osis? container.OsisTarget.Bible[reference] : container.Target.Bible[reference];
             dgvTarget.Update(v);
 
             dgvTarget.CurrentCell = dgvTarget[savedColumn, savedRow];

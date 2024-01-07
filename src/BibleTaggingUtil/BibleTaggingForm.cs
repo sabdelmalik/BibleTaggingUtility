@@ -35,6 +35,7 @@ namespace BibleTaggingUtil
         private ProgressForm progressForm;
 
         private TargetVersion target;
+        private TargetOsisVersion osisTarget;
         private ReferenceVersionKJV referenceKJV;
         private ReferenceVersionTOTHT referenceTOTHT;
         private ReferenceVersionTAGNT referenceTAGNT;
@@ -78,6 +79,7 @@ namespace BibleTaggingUtil
 #endif
 
             target = new TargetVersion(this);
+            osisTarget = new TargetOsisVersion(this);
             referenceKJV = new ReferenceVersionKJV(this);
             referenceTOTHT = new ReferenceVersionTOTHT(this);
             referenceTAGNT = new ReferenceVersionTAGNT(this);
@@ -169,6 +171,7 @@ namespace BibleTaggingUtil
             tothtPath = Path.Combine(refFolder, "TOTHT");
 
             editorPanel.TargetVersion = target;
+            editorPanel.TargetOsisVersion = osisTarget;
 
             new Thread(() => { LoadBibles(); }).Start();
         }
@@ -330,7 +333,10 @@ namespace BibleTaggingUtil
             string[] files = Directory.GetFiles(taggedFolder);
             if (files.Length > 0)
             {
-                target.LoadBibleFile(files[0], true, false);
+                if(Properties.Settings.Default.Osis)
+                    osisTarget.LoadBibleFile(files[0], true, false);
+                else
+                    target.LoadBibleFile(files[0], true, false);
                 VerseSelectionPanel.SetBookCount(target.BookCount);
             }
             else
@@ -560,6 +566,7 @@ namespace BibleTaggingUtil
         public EditorPanel EditorPanel { get { return editorPanel; } }  
         public VerseSelectionPanel VerseSelectionPanel { get { return verseSelectionPanel; } }
         public TargetVersion Target { get { return target; } }
+        public TargetOsisVersion OsisTarget { get { return osisTarget; } }
         public ReferenceVersionKJV KJV { get {return referenceKJV; } }
         public ReferenceVersionTOTHT TOTHT { get { return referenceTOTHT; } }
         public ReferenceVersionTAGNT TAGNT { get { return referenceTAGNT; } }
