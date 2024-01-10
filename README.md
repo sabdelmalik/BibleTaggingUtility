@@ -3,16 +3,20 @@
  
 In order to use this utility, you need to create a bible folder on your system e.g. MyBible.
 The folder should contain a configuration file BiblesConfig.txt and a subfolder named tagged
-The tagged subfolder should contain only one file which is the version of the tagged bible to be edited or corrected in a verse per line text file format as in the following example:<br>
+The tagged subfolder should contain only one file which is the version of the tagged bible to be edited or corrected in a verse per line text file format (see note) as in the following example:<br>
 Gen 1:13 And the evening <06153> and the morning <01242> were the third <07992> day <03117>. <br>
+================== <br>
+Note: For release 5, you can use an already tagged OSIS xml file for the purpose of modifying the tag values.<br>
+================== <br>
 <br>
 Refer to [**BibleTaggingPreperation**](https://github.com/sabdelmalik/BibleTaggingPreperation) for generating the initial tagged file.<br>
 <br>
 
-Following is a sample BiblesConfig.txt
+Following is a sample BiblesConfig.txt (for release 5, when using an OSIS XML file, set osis=true, and the OSIS section below needs the "osisIDWork" and the "output-file" entries only)
 
 [Tagging]<br>
 taggedBible=mybible.txt<br>
+osis=false
 <br>
 [OSIS]<br>
 osisIDWork=mybible<br>
