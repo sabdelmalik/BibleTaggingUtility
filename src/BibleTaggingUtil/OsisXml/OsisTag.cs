@@ -115,132 +115,151 @@ namespace BibleTaggingUtil.OsisXml
         public List<VerseWord> GetVerseWords()
         {
             List<VerseWord> verseWords = new List<VerseWord>();
-            switch (tagType)
+            try
             {
-                case VerseTagType.text:
-                case VerseTagType.w:
-                    verseWords.Add(verseWord);
-                    break;
-                default:
-                    {
-                        if (osisTags.Count > 0)
+                switch (tagType)
+                {
+                    case VerseTagType.text:
+                    case VerseTagType.w:
+                        verseWords.Add(verseWord);
+                        break;
+                    default:
                         {
-                            foreach (OsisTag tag in osisTags)
+                            if (osisTags.Count > 0)
                             {
-                                List < VerseWord > verseWords1 = tag.GetVerseWords();
-                                if(verseWords1.Count > 0)
-                                    verseWords.AddRange(verseWords1);
+                                foreach (OsisTag tag in osisTags)
+                                {
+                                    List<VerseWord> verseWords1 = tag.GetVerseWords();
+                                    if (verseWords1.Count > 0)
+                                        verseWords.AddRange(verseWords1);
+                                }
                             }
                         }
-                    }
-                    break;
+                        break;
+                }
             }
+            catch (Exception ex)
+            {
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
+            }
+
             return verseWords;
         }
         public override string ToString()
         {
             string result = string.Empty;
-            switch (tagType)
+            try
             {
-                case VerseTagType.text:
+                switch (tagType)
+                {
+                    case VerseTagType.text:
 
-                    if (verseWord != null)
-                    {
-                        if (verseWord.Strong.Length > 1 ||
-                            (verseWord.Strong.Length == 1 && !string.IsNullOrEmpty(verseWord.Strong[0])))
-                        {
-                            string lemmaValue = string.Empty;
-                            foreach (string s in verseWord.Strong)
-                            {
-                                lemmaValue += string.Format("strong:{0}{1} ", verseWord.Testament == BibleTestament.OT ? "H" : "G", s);
-                            }
-                            lemmaValue = lemmaValue.Trim();
-                            result = string.Format("<w lemma=\"{0}\">{1}</w>", lemmaValue, verseWord.Word);
-                        }
-                        else
-                            result = verseWord.Word;
-                    }
-
-                    break;
-                case VerseTagType.w:
-                    if (verseWord.Strong.Length == 0 ||
-                        (verseWord.Strong.Length == 1 && string.IsNullOrEmpty(verseWord.Strong[0])))
-                    {
-                        result = verseWord.Word;
-                    }
-                    else
-                    {
-                        string lemmaValue = string.Empty;
                         if (verseWord != null)
                         {
-                            foreach (string s in verseWord.Strong)
+                            if (verseWord.Strong.Length > 1 ||
+                                (verseWord.Strong.Length == 1 && !string.IsNullOrEmpty(verseWord.Strong[0])))
                             {
-                                lemmaValue += string.Format("strong:{0}{1} ", verseWord.Testament == BibleTestament.OT ? "H" : "G", s);
-                            }
-                            lemmaValue = lemmaValue.Trim();
-                            XmlNode tagXml1 = tagXml.Clone();
-                            if (tagXml1 != null)
-                            {
-                                ((XmlElement)tagXml1).SetAttribute("lemma", lemmaValue); // Set to new value.
-                                result = tagXml1.OuterXml;
-                            }
-                        }
-                    }
-                    break;
-                case VerseTagType.note:
-                case VerseTagType.milestone:
-                case VerseTagType.b:
-                    result = tagXml.OuterXml;
-                    break;
-
-                case VerseTagType.UNKNOWN:
-                    string temp = tagXml.OuterXml;
-                    string marker = tagXml.InnerXml;
-                    int idx = temp.IndexOf(marker);
-                    switch (marker)
-                    {
-                        case "$start$":
-                            result = temp.Substring(idx + marker.Length);
-                            break;
-                        case "$end$":
-                            result = temp.Substring(0, idx);
-                            break;
-                        default:
-                            result = tagXml.OuterXml;
-                            break;
-                    }
-                    break;
-
-                default:
-                    {
-                        string result1 = string.Empty;
-                        if (osisTags.Count > 0)
-                        {
-                            foreach (OsisTag tag in osisTags)
-                            {
-                                result1 += tag.ToString();
-                            }
-                            XmlNode tagXmlTemp = tagXml.Clone();
-                            tagXmlTemp.InnerXml = result1;
-                            result = tagXmlTemp.OuterXml;
-                            if (tagType == VerseTagType.l)
-                            {
-                                int i = result.IndexOf("$end$");
-                                if (i > 0)
-                                    result = result.Remove(i, "$end$</l>".Length);
-                                i = result.IndexOf("$start$");
-                                if (i > 0)
+                                string lemmaValue = string.Empty;
+                                foreach (string s in verseWord.Strong)
                                 {
-                                    int x = result.LastIndexOf("<l", i);
-                                    result = result.Remove(x, i - x + "$start$".Length);
+                                    lemmaValue += string.Format("strong:{0}{1} ", verseWord.Testament == BibleTestament.OT ? "H" : "G", s);
                                 }
+                                lemmaValue = lemmaValue.Trim();
+                                result = string.Format("<w lemma=\"{0}\">{1}</w>", lemmaValue, verseWord.Word);
                             }
+                            else
+                                result = verseWord.Word;
+                        }
 
+                        break;
+                    case VerseTagType.w:
+                        if (verseWord.Strong.Length == 0 ||
+                            (verseWord.Strong.Length == 1 && string.IsNullOrEmpty(verseWord.Strong[0])))
+                        {
+                            result = verseWord.Word;
                         }
                         else
-                            result = tagXml.OuterXml;
-                    }
-                    break;
+                        {
+                            string lemmaValue = string.Empty;
+                            if (verseWord != null)
+                            {
+                                foreach (string s in verseWord.Strong)
+                                {
+                                    lemmaValue += string.Format("strong:{0}{1} ", verseWord.Testament == BibleTestament.OT ? "H" : "G", s);
+                                }
+                                lemmaValue = lemmaValue.Trim();
+                                XmlNode tagXml1 = tagXml.Clone();
+                                if (tagXml1 != null)
+                                {
+                                    ((XmlElement)tagXml1).SetAttribute("lemma", lemmaValue); // Set to new value.
+                                    result = tagXml1.OuterXml;
+                                }
+                            }
+                        }
+                        break;
+                    case VerseTagType.note:
+                    case VerseTagType.milestone:
+                    case VerseTagType.b:
+                        result = tagXml.OuterXml;
+                        break;
+
+                    case VerseTagType.UNKNOWN:
+                        string temp = tagXml.OuterXml;
+                        string marker = tagXml.InnerXml;
+                        int idx = temp.IndexOf(marker);
+                        switch (marker)
+                        {
+                            case "$start$":
+                                result = temp.Substring(idx + marker.Length);
+                                break;
+                            case "$end$":
+                                result = temp.Substring(0, idx);
+                                break;
+                            default:
+                                result = tagXml.OuterXml;
+                                break;
+                        }
+                        break;
+
+                    default:
+                        {
+                            string result1 = string.Empty;
+                            if (osisTags.Count > 0)
+                            {
+                                foreach (OsisTag tag in osisTags)
+                                {
+                                    result1 += tag.ToString();
+                                }
+                                XmlNode tagXmlTemp = tagXml.Clone();
+                                tagXmlTemp.InnerXml = result1;
+                                result = tagXmlTemp.OuterXml;
+                                if (tagType == VerseTagType.l)
+                                {
+                                    int i = result.IndexOf("$end$");
+                                    if (i > 0)
+                                        result = result.Remove(i, "$end$</l>".Length);
+                                    i = result.IndexOf("$start$");
+                                    if (i > 0)
+                                    {
+                                        int x = result.LastIndexOf("<l", i);
+                                        result = result.Remove(x, i - x + "$start$".Length);
+                                    }
+                                }
+
+                            }
+                            else
+                                result = tagXml.OuterXml;
+                        }
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
             }
             return result;
         }
@@ -248,28 +267,36 @@ namespace BibleTaggingUtil.OsisXml
         internal void Update(VerseWord verseWord)
         {
             // Currently we only update Strong's numbers
-
-            if(level == verseWord.OsisTagLevel)
+            try
             {
-                VerseWord w;
-                if (verseWord != null) w = verseWord;
-                else
+                if (level == verseWord.OsisTagLevel)
                 {
-                    w = osisTags[verseWord.OsisTagIndex].verseWord;
+                    VerseWord w;
+                    if (verseWord != null) w = verseWord;
+                    else
+                    {
+                        w = osisTags[verseWord.OsisTagIndex].verseWord;
+                    }
+                    w.Strong = verseWord.Strong;
+                    if (tagType == VerseTagType.w)
+                    {
+                        if (w.Strong.Length == 0 ||
+                            (w.Strong.Length == 1 && string.IsNullOrEmpty(w.Strong[0])))
+                            tagType = VerseTagType.text;
+                    }
+                    else if (tagType == VerseTagType.text)
+                    {
+                        if (w.Strong.Length > 1 ||
+                            (w.Strong.Length == 1 && !string.IsNullOrEmpty(w.Strong[0])))
+                            tagType = VerseTagType.w;
+                    }
                 }
-                w.Strong = verseWord.Strong;
-                if(tagType == VerseTagType.w)
-                {
-                    if(w.Strong.Length == 0 ||
-                        (w.Strong.Length == 1 && string.IsNullOrEmpty(w.Strong[0])))
-                        tagType = VerseTagType.text;
-                }
-                else if(tagType == VerseTagType.text)
-                {
-                    if (w.Strong.Length > 1 ||
-                        (w.Strong.Length == 1 && !string.IsNullOrEmpty(w.Strong[0])))
-                        tagType = VerseTagType.w;
-                }
+            }
+            catch (Exception ex)
+            {
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
             }
         }
 

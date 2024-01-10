@@ -56,9 +56,11 @@ namespace BibleTaggingUtil.OsisXml
             {
                 document.LoadXml(header + VerseXml + trailer);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                int x = 0;
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
             }
 
 
@@ -85,53 +87,62 @@ namespace BibleTaggingUtil.OsisXml
         {
             string s = string.Format("<{0}>", tag);
             string e = string.Format("</{0}>", tag);
-            string startAdded = string.Format("{0}$start${1}", s,e);
+            string startAdded = string.Format("{0}$start${1}", s, e);
             string endAdded = string.Empty;
 
             int startIndex = 0;
-            while (true)
+            try
             {
-                Regex regex = new Regex(@"(<" + tag + @"[^>]*>)");
-                if (tag == "div" || tag == "l")
-                    regex = new Regex(string.Format(@"(<{0}\s[^>]+>)", tag));
+                while (true)
+                {
+                    Regex regex = new Regex(@"(<" + tag + @"[^>]*>)");
+                    if (tag == "div" || tag == "l")
+                        regex = new Regex(string.Format(@"(<{0}\s[^>]+>)", tag));
 
-                int startP = -1;
-                Match match = regex.Match(VerseXml,startIndex);
-                if (match.Success)
-                {
-                    startP = match.Index;
-                    s = match.Groups[1].Value;
-                }
-                else
-                    startP = VerseXml.IndexOf(s, startIndex);
+                    int startP = -1;
+                    Match match = regex.Match(VerseXml, startIndex);
+                    if (match.Success)
+                    {
+                        startP = match.Index;
+                        s = match.Groups[1].Value;
+                    }
+                    else
+                        startP = VerseXml.IndexOf(s, startIndex);
 
-                endAdded = string.Format("{0}$end${1}", s, e);
+                    endAdded = string.Format("{0}$end${1}", s, e);
 
-                int endP = VerseXml.IndexOf(e, startIndex);
-                if (startP < 0 && endP < 0) break;
-                if (startP < 0 && endP >= 0)
-                {
-                    VerseXml = VerseXml.Remove(endP, e.Length).Insert(endP, startAdded); //Replace(e, startAdded);
-                    startIndex = endP + startAdded.Length;
-                    continue;
+                    int endP = VerseXml.IndexOf(e, startIndex);
+                    if (startP < 0 && endP < 0) break;
+                    if (startP < 0 && endP >= 0)
+                    {
+                        VerseXml = VerseXml.Remove(endP, e.Length).Insert(endP, startAdded); //Replace(e, startAdded);
+                        startIndex = endP + startAdded.Length;
+                        continue;
+                    }
+                    else if (startP >= 0 && endP < 0)
+                    {
+                        VerseXml = VerseXml.Remove(startP, s.Length).Insert(startP, endAdded); //Replace(s, endAdded);
+                        startIndex = startP + endAdded.Length;
+                        continue;
+                    }
+                    else if (startP < endP)
+                    {
+                        startIndex = endP + e.Length;
+                        continue;
+                    }
+                    else if (startP > endP)
+                    {
+                        VerseXml = VerseXml.Remove(endP, e.Length).Insert(endP, startAdded); //Replace(e, startAdded);
+                        startIndex = endP + startAdded.Length;
+                        continue;
+                    }
                 }
-                else if (startP >= 0 && endP < 0)
-                {
-                    VerseXml = VerseXml.Remove(startP, s.Length).Insert(startP, endAdded); //Replace(s, endAdded);
-                    startIndex = startP + endAdded.Length;
-                    continue;
-                }
-                else if(startP < endP)
-                {
-                    startIndex = endP + e.Length;
-                    continue;
-                }
-                else if (startP > endP)
-                {
-                    VerseXml = VerseXml.Remove(endP, e.Length).Insert(endP, startAdded); //Replace(e, startAdded);
-                    startIndex = endP + startAdded.Length;
-                    continue;
-                }
+            }
+            catch (Exception ex)
+            {
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
             }
             return VerseXml;
         }

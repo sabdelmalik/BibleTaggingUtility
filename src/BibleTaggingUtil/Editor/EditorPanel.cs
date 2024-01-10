@@ -170,8 +170,16 @@ namespace BibleTaggingUtil.Editor
                 dgvTarget.SaveVerse(tbCurrentReference.Text);
             }
         }
+
+        private bool firstEvent = true;
         private void Verse_VerseChanged(object sender, VerseChangedEventArgs e)
         {
+            if (firstEvent)
+            {
+                firstEvent = false;
+                picEnableEdit.Hide();
+
+            }
             osis = Properties.Settings.Default.Osis; 
 
             strongsPrefix = e.StrongsPrefix;
@@ -198,7 +206,9 @@ namespace BibleTaggingUtil.Editor
             }
             catch (Exception ex)
             {
-                Tracing.TraceException(MethodBase.GetCurrentMethod().Name + "-KJV", ex.Message);
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
             }
 
             Verse verseWords = null;
@@ -245,7 +255,9 @@ namespace BibleTaggingUtil.Editor
             }
             catch (Exception ex)
             {
-                Tracing.TraceException(MethodBase.GetCurrentMethod().Name + "-TOTHT", ex.Message);
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
             }
 
             try
@@ -308,7 +320,9 @@ namespace BibleTaggingUtil.Editor
             }
             catch (Exception ex)
             {
-                Tracing.TraceException(MethodBase.GetCurrentMethod().Name + "-Target", ex.Message);
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
             }
 
         }
@@ -555,7 +569,9 @@ namespace BibleTaggingUtil.Editor
                 }
                 catch (Exception ex)
                 {
-                    Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
+                    var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                    var name = cm.DeclaringType.FullName + "." + cm.Name;
+                    Tracing.TraceException(name, ex.Message);
                 }
             }
         }

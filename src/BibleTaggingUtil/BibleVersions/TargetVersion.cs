@@ -82,7 +82,9 @@ namespace BibleTaggingUtil.BibleVersions
             }
             catch(Exception ex)
             {
-                Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
             }
             container.WaitCursorControl(false);
 

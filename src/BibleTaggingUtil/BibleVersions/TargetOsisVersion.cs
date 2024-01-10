@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -36,6 +38,7 @@ namespace BibleTaggingUtil.BibleVersions
         /// The offsets speeds up the regex search for verses
         /// </summary>
         private Dictionary<string, int> bookOffsets = new Dictionary<string, int>();
+        private Dictionary<string, Dictionary<string, OsisVerse>> bookTemp = new Dictionary<string, Dictionary<string, OsisVerse>>();
 
         /// <summary>
         /// Key:    Verse reference in the format Gen 1:1 
@@ -52,7 +55,20 @@ namespace BibleTaggingUtil.BibleVersions
             {
                 try
                 {
-                    Load(textFilePath);
+                    //ThreadPool.SetMinThreads(8, 8);
+
+                    var stopwatch = new Stopwatch();
+                    stopwatch.Start();
+                    LoadT(textFilePath);
+                    stopwatch.Stop();
+                    long elapsed_time = stopwatch.ElapsedMilliseconds;
+
+                    foreach (OsisVerse osisVerse in osisBible.Values)
+                    {
+                        Verse verseWords = osisVerse.GetVerseWords();
+                        bible.Add(osisVerse.VerseRefX, verseWords);
+                    }
+
 
                     bookNamesList = bookOffsets.Keys.ToList();
 
@@ -75,7 +91,9 @@ namespace BibleTaggingUtil.BibleVersions
                 }
                 catch (Exception ex)
                 {
-
+                    var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                    var name = cm.DeclaringType.FullName + "." + cm.Name;
+                    Tracing.TraceException(name, ex.Message);
                 }
             }
             return result;
@@ -87,7 +105,11 @@ namespace BibleTaggingUtil.BibleVersions
         private void Load(string fileName)
         {
             // Read the complete OSIS XML file
-            osisDoc = File.ReadAllText(fileName);
+            //osisDoc = File.ReadAllText(fileName);
+            using(StreamReader sr = new StreamReader(fileName))
+            {
+                osisDoc = sr.ReadToEnd();
+            }
 
             // Build the book's offsets map
             BuildBookOffsets();
@@ -107,15 +129,97 @@ namespace BibleTaggingUtil.BibleVersions
                         if (osisVerse != null)
                         {
                             osisBible.Add(osisVerse.VerseRefX, osisVerse);
-                            if (osisVerse.VerseRef == "Gen.9.26")
-                            {
-                                int x = 0;
-                            }
-                            Verse verseWords = osisVerse.GetVerseWords();
-                            bible.Add(osisVerse.VerseRefX, verseWords);
+                            //Verse verseWords = osisVerse.GetVerseWords();
+                            //bible.Add(osisVerse.VerseRefX, verseWords);
                         }
                     }
                 }
+            }
+        }
+
+        private void LoadT(string fileName)
+        {
+            try
+            {
+                // Read the complete OSIS XML file
+                //osisDoc = File.ReadAllText(fileName);
+                using (StreamReader sr = new StreamReader(fileName))
+                {
+                    osisDoc = sr.ReadToEnd();
+                }
+
+                // Build the book's offsets map
+                BuildBookOffsets();
+
+                bookCount = 0;
+                container.UpdateProgress("Loading " + bibleName, (100 * bookCount) / 66);
+                // Create an OSIS Bible Map
+                foreach (string book in bookOffsets.Keys)
+                {
+                    //new Thread(() => { LoadBook(book); }).Start();
+                    ThreadPool.QueueUserWorkItem(LoadBook, book);
+                }
+                while (bookCount < bookOffsets.Keys.Count) ;
+
+                foreach(string book in bookTemp.Keys)
+                {
+                    osisBible = osisBible.Concat(bookTemp[book]).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+                }
+            }
+            catch(Exception ex)
+            {
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
+            }
+        }
+
+        object lockingObject = new object();
+        int bookCount = 0;
+        private void BookLoaded(string book, Dictionary<string, OsisVerse> localBible)
+        {
+            lock (lockingObject)
+            {
+                bookCount++;
+                container.UpdateProgress("Loading " + bibleName, (100 * bookCount) / 66);
+                bookTemp[book] = localBible;
+            }
+        }
+        private void LoadBook(Object threadContext) //string book)
+        {
+            string book = (string)threadContext;
+
+            Dictionary<string, OsisVerse> localBible = new Dictionary<string, OsisVerse>();
+            try
+            {
+                Regex regex = new Regex(
+                    string.Format(@"<verse\s*sID\=""(.*)""\s*osisID\=""{0}\.([0-9]+)\.([0-9]+)""\s*/>", book));
+
+                MatchCollection VerseMatches = regex.Matches(osisDoc, bookOffsets[book]);
+                if (VerseMatches.Count > 0)
+                {
+                    foreach (Match VerseMatch in VerseMatches)
+                    {
+                        OsisVerse? osisVerse = GetVersesTags(book, VerseMatch);
+                        if (osisVerse != null)
+                        {
+                            //lock (this)
+                            {
+                                localBible.Add(osisVerse.VerseRefX, osisVerse);
+                            }
+                            // Verse verseWords = osisVerse.GetVerseWords();
+                            // bible.Add(osisVerse.VerseRefX, verseWords);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                int x = 0;
+            }
+            finally
+            {
+                BookLoaded(book, localBible);
             }
         }
 
@@ -153,8 +257,9 @@ namespace BibleTaggingUtil.BibleVersions
             }
             catch (Exception ex)
             {
-                //Trace(string.Format("{0},Error,{1},{2}", sID, ++errorCounter,ex.Message), Color.Red);
-                //result = string.Format("{0},Error,{1},{2}", sID, ++errorCounter, ex.Message);
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
             }
 
             return result;
@@ -213,8 +318,6 @@ namespace BibleTaggingUtil.BibleVersions
             }
 
             return verseXML;
-            //osisDoc = osisDoc.Remove(startIndex, osisVerse.Length).Insert(startIndex, osisVerse);
-
         }
 
         private void ParseVerse(string verse)
@@ -275,9 +378,11 @@ namespace BibleTaggingUtil.BibleVersions
 
         internal void Save(string fileName)
         {
+            var cm = System.Reflection.MethodBase.GetCurrentMethod();
+            var name = cm.DeclaringType.FullName + "." + cm.Name;
             try
             {
-                Tracing.TraceEntry(MethodBase.GetCurrentMethod().Name);
+                Tracing.TraceEntry(name);
                 lock (this)
                 {
                     if (!container.EditorPanel.TargetDirty)
@@ -330,7 +435,7 @@ namespace BibleTaggingUtil.BibleVersions
                         }
 
                         string baseName = Path.GetFileNameWithoutExtension(container.Config.TaggedBible);
-                        string updatesFileName = string.Format("{0:s}_{1:s}.txt", baseName, DateTime.Now.ToString("yyyy_MM_dd_HH_mm"));
+                        string updatesFileName = string.Format("{0:s}_{1:s}.xml", baseName, DateTime.Now.ToString("yyyy_MM_dd_HH_mm"));
 
                         File.WriteAllText(Path.Combine(taggedFolder, updatesFileName), osisDoc);
                     }
@@ -338,7 +443,7 @@ namespace BibleTaggingUtil.BibleVersions
             }
             catch (Exception ex)
             {
-                Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
+                Tracing.TraceException(name, ex.Message);
             }
             container.WaitCursorControl(false);
         }
@@ -358,6 +463,7 @@ namespace BibleTaggingUtil.BibleVersions
                         int offset = match.Index;
                         string book = match.Groups[1].Value;
                         bookOffsets[book] = offset;
+                        bookTemp[book] = null;
                     }
                     break;
                 }

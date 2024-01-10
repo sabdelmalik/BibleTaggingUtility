@@ -74,7 +74,9 @@ namespace BibleTaggingUtil
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
             }
 
         }

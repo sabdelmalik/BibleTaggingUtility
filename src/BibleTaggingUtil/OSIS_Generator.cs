@@ -164,7 +164,9 @@ namespace BibleTaggingUtil
             }
             catch (Exception ex)
             {
-                Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
                 throw;
             }
         }
@@ -372,7 +374,9 @@ namespace BibleTaggingUtil
             }
             catch (Exception ex)
             {
-                Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
                 throw;
             }
 
@@ -419,7 +423,9 @@ namespace BibleTaggingUtil
                         }
                         catch (Exception ex)
                         {
-                            Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
+                            var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                            var name = cm.DeclaringType.FullName + "." + cm.Name;
+                            Tracing.TraceException(name, ex.Message);
                         }
 
 
@@ -477,7 +483,9 @@ namespace BibleTaggingUtil
             }
             catch (Exception ex)
             {
-                Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
                 throw;
             }
         }
@@ -505,7 +513,9 @@ namespace BibleTaggingUtil
             }
             catch (Exception ex)
             {
-                Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
                 throw;
             }
         }
@@ -577,7 +587,9 @@ namespace BibleTaggingUtil
             }
             catch (Exception ex)
             {
-                Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
                 throw;
             }
         }

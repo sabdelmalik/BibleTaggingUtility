@@ -10,7 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace SM.Bible.Formats.OSIS
+namespace SM.Bible.Formats.USFM2OSIS
 {
     /// <summary>
     /// This code is based on the Python code by Chris Little https://github.com/chrislit/usfm2osis
@@ -146,7 +146,9 @@ namespace SM.Bible.Formats.OSIS
                 }
                 catch (Exception ex)
                 {
-                    Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
+                    var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                    var name = cm.DeclaringType.FullName + "." + cm.Name;
+                    Tracing.TraceException(name, ex.Message);
                 }
 
                 using (StreamReader sr = new StreamReader(filename, encoding))
@@ -177,9 +179,10 @@ namespace SM.Bible.Formats.OSIS
                             }
                             catch (Exception ex)
                             {
-                                Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
+                                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                                Tracing.TraceException(name, ex.Message);
                             }
-
 
                             using (StreamReader sr = new StreamReader(filename, encoding))
                             {

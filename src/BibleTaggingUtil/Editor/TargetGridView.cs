@@ -120,6 +120,9 @@ namespace BibleTaggingUtil.Editor
             if (this.SelectedCells.Count == 0)
                 return;
 
+            if (Properties.Settings.Default.Osis)
+                return;
+
             if (this.SelectedCells.Count > 1)
             {
                 bool sameRow = true;
@@ -464,7 +467,9 @@ namespace BibleTaggingUtil.Editor
             }
             catch (Exception ex)
             {
-                Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
             }
         }
 

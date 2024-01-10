@@ -13,7 +13,7 @@ using System.Threading;
 
 using BibleTaggingUtil.Editor;
 using SM.Bible.Formats.USFM;
-using SM.Bible.Formats.OSIS;
+using SM.Bible.Formats.USFM2OSIS;
 using System.Reflection;
 
 using BibleTaggingUtil.BibleVersions;
@@ -225,7 +225,9 @@ namespace BibleTaggingUtil
             }
             catch(Exception ex)
             {
-                Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
             }
         }
 
@@ -274,6 +276,7 @@ namespace BibleTaggingUtil
 
                     editorPanel.TargetBibleName(Path.GetFileName(biblesFolder));
                     target.BibleName = Path.GetFileName(biblesFolder);
+                    osisTarget.BibleName = Path.GetFileName(biblesFolder);
                     referenceKJV.BibleName = "KJV";
                     referenceTAGNT.BibleName = "TAGNT";
                     referenceTOTHT.BibleName = "TOTHT";
@@ -325,7 +328,9 @@ namespace BibleTaggingUtil
             }
             catch(Exception ex)
             {
-                Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
             }
 
             WaitCursorControl(true);
@@ -333,8 +338,17 @@ namespace BibleTaggingUtil
             string[] files = Directory.GetFiles(taggedFolder);
             if (files.Length > 0)
             {
-                if(Properties.Settings.Default.Osis)
+                if (Properties.Settings.Default.Osis)
+                {
+                    generateOSISToolStripMenuItem.Visible = false;
+                    usfmToolStripMenuItem.Visible = false;
+                    oSISToolStripMenuItem.Visible = true;
+                    generateSWORDFilesToolStripMenuItem.Visible = false;
+                    saveHebrewToolStripMenuItem.Visible = false;
+                    saveKJVPlainToolStripMenuItem.Visible = false;
+
                     osisTarget.LoadBibleFile(files[0], true, false);
+                }
                 else
                     target.LoadBibleFile(files[0], true, false);
                 VerseSelectionPanel.SetBookCount(target.BookCount);
@@ -796,7 +810,9 @@ namespace BibleTaggingUtil
                             }
                             catch (Exception ex)
                             {
-                                Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
+                                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                                Tracing.TraceException(name, ex.Message);
                             }
                         }
                     }
@@ -804,7 +820,9 @@ namespace BibleTaggingUtil
             }
             catch (Exception ex)
             {
-                Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
             }
         }
 
@@ -894,7 +912,9 @@ namespace BibleTaggingUtil
             }
             catch (Exception ex)
             {
-                Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
             }
             return lines;
         }
@@ -950,7 +970,9 @@ namespace BibleTaggingUtil
                                 }
                                 catch (Exception ex)
                                 {
-                                    Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
+                                    var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                                    var name = cm.DeclaringType.FullName + "." + cm.Name;
+                                    Tracing.TraceException(name, ex.Message);
                                 }
                             }
                         }
@@ -960,7 +982,9 @@ namespace BibleTaggingUtil
             }
             catch (Exception ex)
             {
-                Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
             }
         }
 
@@ -988,7 +1012,9 @@ namespace BibleTaggingUtil
                     }
                     catch (Exception ex)
                     {
-                        Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
+                        var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                        var name = cm.DeclaringType.FullName + "." + cm.Name;
+                        Tracing.TraceException(name, ex.Message);
                     }
 
                     if ((string.IsNullOrEmpty(tag) || tag.ToLower() == "<blank>"))
@@ -1009,7 +1035,9 @@ namespace BibleTaggingUtil
             }
             catch(Exception ex)
             {
-                Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
             }
         }
 
@@ -1050,13 +1078,17 @@ namespace BibleTaggingUtil
                     }
                     catch (Exception ex)
                     {
-                        Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
+                        var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                        var name = cm.DeclaringType.FullName + "." + cm.Name;
+                        Tracing.TraceException(name, ex.Message);
                     }
                 }
             }
             catch (Exception ex)
             {
-                Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
             }
         }
 
@@ -1091,6 +1123,16 @@ namespace BibleTaggingUtil
         private void generateSWORDFilesOsisToolStripMenuItem_Click(object sender, EventArgs e)
         {
             target.SaveUpdates();
+
+            if (Properties.Settings.Default.Osis)
+            {
+                // copy last changes to the output xml
+                string taggedFolder = Path.Combine(Properties.Settings.Default.BiblesFolder, "tagged");
+                string LastChanged = Directory.GetFiles(taggedFolder)[0];
+                string outputXml = Path.Combine(Properties.Settings.Default.BiblesFolder, config.OSIS[OsisConstants.output_file]);
+                System.IO.File.Copy(LastChanged, outputXml, true);
+            }
+
             new Thread(
                 () =>
                 {
@@ -1197,7 +1239,9 @@ namespace BibleTaggingUtil
             }
             catch (Exception ex)
             {
-                Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
             }
 
 
@@ -1263,7 +1307,9 @@ namespace BibleTaggingUtil
             }
             catch (Exception ex)
             {
-                Tracing.TraceException(MethodBase.GetCurrentMethod().Name + ": Executing osis2mod", ex.Message);
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
             }
             finally
             {
