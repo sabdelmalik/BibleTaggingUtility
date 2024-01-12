@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -30,14 +32,16 @@ namespace BibleTaggingUtil.BibleVersions
         /// <summary>
         /// The complete OSIS XML file is read into this string
         /// </summary>
-        string osisDoc = string.Empty;
+        private string osisDoc = string.Empty;
 
+        private Dictionary<string, string> osisDocSegments = new Dictionary<string, string>();
+        
         /// <summary>
         /// Key:    Bible book name 
         /// value:  Offset of the bookwithin the osisDoc string
         /// The offsets speeds up the regex search for verses
         /// </summary>
-        private Dictionary<string, int> bookOffsets = new Dictionary<string, int>();
+//        private Dictionary<string, int> bookOffsets = new Dictionary<string, int>();
         private Dictionary<string, Dictionary<string, OsisVerse>> bookTemp = new Dictionary<string, Dictionary<string, OsisVerse>>();
 
         /// <summary>
@@ -50,6 +54,10 @@ namespace BibleTaggingUtil.BibleVersions
 
         protected override bool LoadBibleFileInternal(string textFilePath, bool more)
         {
+            var cm = System.Reflection.MethodBase.GetCurrentMethod();
+            var name = cm.DeclaringType.FullName + "." + cm.Name;
+            Tracing.TraceEntry(name, textFilePath, more);
+
             bool result = false;
             if (File.Exists(textFilePath))
             {
@@ -70,7 +78,9 @@ namespace BibleTaggingUtil.BibleVersions
                     }
 
 
-                    bookNamesList = bookOffsets.Keys.ToList();
+                    //bookNamesList = bookOffsets.Keys.ToList();
+                    bookNamesList = new List<string>();
+                    bookNamesList.AddRange(osisDocSegments.Keys.Skip(1));
 
                     if (bookNamesList.Count == 66 || bookNamesList.Count == 39)
                     {
@@ -91,9 +101,8 @@ namespace BibleTaggingUtil.BibleVersions
                 }
                 catch (Exception ex)
                 {
-                    var cm = System.Reflection.MethodBase.GetCurrentMethod();
-                    var name = cm.DeclaringType.FullName + "." + cm.Name;
                     Tracing.TraceException(name, ex.Message);
+                    throw;
                 }
             }
             return result;
@@ -112,15 +121,18 @@ namespace BibleTaggingUtil.BibleVersions
             }
 
             // Build the book's offsets map
-            BuildBookOffsets();
+            //            BuildBookOffsets();
+            BuildOsisSegments();
 
             // Create an OSIS Bible Map
-            foreach (string book in bookOffsets.Keys)
+            //foreach (string book in bookOffsets.Keys)
+            foreach (string book in osisDocSegments.Keys)
             {
                 Regex regex = new Regex(
                     string.Format(@"<verse\s*sID\=""(.*)""\s*osisID\=""{0}\.([0-9]+)\.([0-9]+)""\s*/>", book));
 
-                MatchCollection VerseMatches = regex.Matches(osisDoc, bookOffsets[book]);
+//                MatchCollection VerseMatches = regex.Matches(osisDoc, bookOffsets[book]);
+                MatchCollection VerseMatches = regex.Matches(osisDocSegments[book]);
                 if (VerseMatches.Count > 0)
                 {
                     foreach (Match VerseMatch in VerseMatches)
@@ -149,19 +161,27 @@ namespace BibleTaggingUtil.BibleVersions
                 }
 
                 // Build the book's offsets map
-                BuildBookOffsets();
+                //BuildBookOffsets();
+                BuildOsisSegments();
 
                 bookCount = 0;
                 container.UpdateProgress("Loading " + bibleName, (100 * bookCount) / 66);
                 // Create an OSIS Bible Map
-                foreach (string book in bookOffsets.Keys)
+                //foreach (string book in bookOffsets.Keys)
+                //{
+                //    //new Thread(() => { LoadBook(book); }).Start();
+                //    ThreadPool.QueueUserWorkItem(LoadBook, book);
+                //}
+                //while (bookCount < bookOffsets.Keys.Count) ;
+
+                foreach (string book in osisDocSegments.Keys.Skip(1))
                 {
                     //new Thread(() => { LoadBook(book); }).Start();
-                    ThreadPool.QueueUserWorkItem(LoadBook, book);
+                    ThreadPool.QueueUserWorkItem(LoadBookFromSegments, book);
                 }
-                while (bookCount < bookOffsets.Keys.Count) ;
+                while (bookCount < osisDocSegments.Keys.Count-1) ;
 
-                foreach(string book in bookTemp.Keys)
+                foreach(string book in osisDocSegments.Keys.Skip(1))
                 {
                     osisBible = osisBible.Concat(bookTemp[book]).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
                 }
@@ -171,6 +191,7 @@ namespace BibleTaggingUtil.BibleVersions
                 var cm = System.Reflection.MethodBase.GetCurrentMethod();
                 var name = cm.DeclaringType.FullName + "." + cm.Name;
                 Tracing.TraceException(name, ex.Message);
+                throw;
             }
         }
 
@@ -185,7 +206,46 @@ namespace BibleTaggingUtil.BibleVersions
                 bookTemp[book] = localBible;
             }
         }
-        private void LoadBook(Object threadContext) //string book)
+        //private void LoadBook(Object threadContext) //string book)
+        //{
+        //    string book = (string)threadContext;
+
+        //    Dictionary<string, OsisVerse> localBible = new Dictionary<string, OsisVerse>();
+        //    try
+        //    {
+        //        Regex regex = new Regex(
+        //            string.Format(@"<verse\s*sID\=""(.*)""\s*osisID\=""{0}\.([0-9]+)\.([0-9]+)""\s*/>", book));
+
+        //        MatchCollection VerseMatches = regex.Matches(osisDoc, bookOffsets[book]);
+        //        if (VerseMatches.Count > 0)
+        //        {
+        //            foreach (Match VerseMatch in VerseMatches)
+        //            {
+        //                OsisVerse? osisVerse = GetVersesTags(book, VerseMatch);
+        //                if (osisVerse != null)
+        //                {
+        //                    //lock (this)
+        //                    {
+        //                        localBible.Add(osisVerse.VerseRefX, osisVerse);
+        //                    }
+        //                    // Verse verseWords = osisVerse.GetVerseWords();
+        //                    // bible.Add(osisVerse.VerseRefX, verseWords);
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        var cm = System.Reflection.MethodBase.GetCurrentMethod();
+        //        var name = cm.DeclaringType.FullName + "." + cm.Name;
+        //        Tracing.TraceException(name, ex.Message);
+        //    }
+        //    finally
+        //    {
+        //        BookLoaded(book, localBible);
+        //    }
+        //}
+        private void LoadBookFromSegments(Object threadContext) //string book)
         {
             string book = (string)threadContext;
 
@@ -195,7 +255,7 @@ namespace BibleTaggingUtil.BibleVersions
                 Regex regex = new Regex(
                     string.Format(@"<verse\s*sID\=""(.*)""\s*osisID\=""{0}\.([0-9]+)\.([0-9]+)""\s*/>", book));
 
-                MatchCollection VerseMatches = regex.Matches(osisDoc, bookOffsets[book]);
+                MatchCollection VerseMatches = regex.Matches(osisDocSegments[book]);
                 if (VerseMatches.Count > 0)
                 {
                     foreach (Match VerseMatch in VerseMatches)
@@ -215,7 +275,10 @@ namespace BibleTaggingUtil.BibleVersions
             }
             catch (Exception ex)
             {
-                int x = 0;
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
+                throw;
             }
             finally
             {
@@ -242,7 +305,8 @@ namespace BibleTaggingUtil.BibleVersions
             try
             {
                 Regex regex = new Regex(string.Format(@"<verse\s*eID\=""{0}""\s*/>", sID));
-                VerseMatch = regex.Match(osisDoc, startIndex);
+//                VerseMatch = regex.Match(osisDoc, startIndex);
+                VerseMatch = regex.Match(osisDocSegments[book]);
                 if (VerseMatch.Success)
                 {
                     endIndex = VerseMatch.Index;
@@ -251,7 +315,8 @@ namespace BibleTaggingUtil.BibleVersions
 
                 string verseXml = string.Empty;
                 if (endIndex > startIndex)
-                    verseXml = osisDoc.Substring(startIndex, endIndex - startIndex);
+                    verseXml = osisDocSegments[book].Substring(startIndex, endIndex - startIndex);
+                //                    verseXml = osisDoc.Substring(startIndex, endIndex - startIndex);
 
                 result = new OsisVerse(verseRef, startIndex, sID, verseXml, eID);
             }
@@ -260,6 +325,7 @@ namespace BibleTaggingUtil.BibleVersions
                 var cm = System.Reflection.MethodBase.GetCurrentMethod();
                 var name = cm.DeclaringType.FullName + "." + cm.Name;
                 Tracing.TraceException(name, ex.Message);
+                throw;
             }
 
             return result;
@@ -273,14 +339,15 @@ namespace BibleTaggingUtil.BibleVersions
             verseRef = "Rev.19.14";
 
             int bookStart = -1;
+            string book = string.Empty;
             Match m = Regex.Match(verseRef, @"([1-9A-Za-z]*)\.(\d{1,3})\.(\d{1,3})");
             if (m != null)
             {
-                string book = m.Groups[1].Value;
+                book = m.Groups[1].Value;
                 string chapter = m.Groups[2].Value;
                 string verse = m.Groups[3].Value;
 
-                bookStart = bookOffsets[book];
+                //bookStart = bookOffsets[book];
             }
 
 
@@ -293,7 +360,8 @@ namespace BibleTaggingUtil.BibleVersions
             string sID = string.Empty;
             string eID = string.Empty;
 
-            Match match = regex.Match(osisDoc, bookStart);
+            //Match match = regex.Match(osisDoc, bookStart);
+            Match match = regex.Match(osisDocSegments[book]);
             if (match.Success)
             {
                 startIndex = match.Index + match.Groups[0].Length;
@@ -303,7 +371,8 @@ namespace BibleTaggingUtil.BibleVersions
             string pattern2 = string.Format(
                 @"<verse\s*eID\=""{0}""\s*/>", sID);
             regex = new Regex(pattern2);
-            match = regex.Match(osisDoc, startIndex);
+            //match = regex.Match(osisDoc, startIndex);
+            match = regex.Match(osisDocSegments[book]);
             if (match.Success)
             {
                 endIndex = match.Index;
@@ -313,7 +382,8 @@ namespace BibleTaggingUtil.BibleVersions
             string osisVerse = string.Empty;
             if (endIndex > startIndex)
             {
-                osisVerse = osisDoc.Substring(startIndex, endIndex - startIndex);
+                //osisVerse = osisDoc.Substring(startIndex, endIndex - startIndex);
+                osisVerse = osisDocSegments[book].Substring(startIndex, endIndex - startIndex);
                 verseXML = new OsisVerse(verseRef, osisVerse.Length, sID, osisVerse, eID);
             }
 
@@ -392,65 +462,163 @@ namespace BibleTaggingUtil.BibleVersions
                     container.EditorPanel.TargetDirty = false;
                     container.EditorPanel.SaveCurrentVerse();
 
-                    if (osisDoc != null)
+                    // 1.Update osisBible' dirty fkag from Bible
+                    foreach (string verseRef in Bible.Keys)
                     {
-                        // 1.Update osisBible from Bible
-                        foreach (string verseRef in Bible.Keys)
+                        Verse v = Bible[verseRef];
+                        if (v.Dirty)
                         {
-                            Verse v = Bible[verseRef];
-                            if (v.Dirty)
-                            {
-                                //osisBible[verseRef].UpdateVerse(v);
-                                osisBible[verseRef].Dirty = true;
-                            }
+                            //osisBible[verseRef].UpdateVerse(v);
+                            osisBible[verseRef].Dirty = true;
                         }
-
-                        // 2. Update osisDoc from osisBible
-                        foreach (OsisVerse osisVerse in osisBible.Values)
-                        {
-                            if (osisVerse.Dirty)
-                            {
-                                osisDoc = osisDoc.Remove(osisVerse.StartIndex, osisVerse.Length)
-                                                 .Insert(osisVerse.StartIndex, osisVerse.VerseCompleteXml);
-                            }
-                        }
-
-                        // construce Updates fileName
-                        string taggedFolder = Path.GetDirectoryName(container.Config.TaggedBible);
-                        string oldTaggedFolder = Path.Combine(taggedFolder, "OldTagged");
-                        if (!Directory.Exists(oldTaggedFolder))
-                            Directory.CreateDirectory(oldTaggedFolder);
-
-                        // move existing tagged files to the old folder
-                        String[] existingTagged = Directory.GetFiles(taggedFolder, "*.*");
-                        foreach (String existingTaggedItem in existingTagged)
-                        {
-                            string fName = Path.GetFileName(existingTaggedItem);
-                            string src = Path.Combine(taggedFolder, fName);
-                            string dst = Path.Combine(oldTaggedFolder, fName);
-                            if (System.IO.File.Exists(dst))
-                                System.IO.File.Delete(src);
-                            else
-                                System.IO.File.Move(src, dst);
-                        }
-
-                        string baseName = Path.GetFileNameWithoutExtension(container.Config.TaggedBible);
-                        string updatesFileName = string.Format("{0:s}_{1:s}.xml", baseName, DateTime.Now.ToString("yyyy_MM_dd_HH_mm"));
-
-                        File.WriteAllText(Path.Combine(taggedFolder, updatesFileName), osisDoc);
                     }
+
+                    // 2. Update osisDoc from osisBible
+                    foreach (OsisVerse osisVerse in osisBible.Values)
+                    {
+                        if (osisVerse.Dirty)
+                        {
+                            osisDocSegments[osisVerse.Book] = osisDocSegments[osisVerse.Book]
+                                             .Remove(osisVerse.StartIndex, osisVerse.Length)
+                                             .Insert(osisVerse.StartIndex, osisVerse.VerseCompleteXml);
+
+                            int diff = osisVerse.VerseCompleteXml.Length - osisVerse.Length;
+                            if (diff != 0)
+                            {
+                                osisVerse.UpdateVerseXml(osisVerse.VerseCompleteXml);
+                                UpdateIndices(osisVerse.Book);
+                            }
+                        }
+                    }
+
+                    // rebuild Document
+                    osisDoc = string.Empty;
+                    foreach(string seg  in osisDocSegments.Values)
+                    {
+                        osisDoc += seg;
+                    }
+
+                    // construce Updates fileName
+                    string taggedFolder = Path.GetDirectoryName(container.Config.TaggedBible);
+                    string oldTaggedFolder = Path.Combine(taggedFolder, "OldTagged");
+                    if (!Directory.Exists(oldTaggedFolder))
+                        Directory.CreateDirectory(oldTaggedFolder);
+
+                    // move existing tagged files to the old folder
+                    String[] existingTagged = Directory.GetFiles(taggedFolder, "*.*");
+                    foreach (String existingTaggedItem in existingTagged)
+                    {
+                        string fName = Path.GetFileName(existingTaggedItem);
+                        string src = Path.Combine(taggedFolder, fName);
+                        string dst = Path.Combine(oldTaggedFolder, fName);
+                        if (System.IO.File.Exists(dst))
+                            System.IO.File.Delete(src);
+                        else
+                            System.IO.File.Move(src, dst);
+                    }
+
+                    string baseName = Path.GetFileNameWithoutExtension(container.Config.TaggedBible);
+                    string updatesFileName = string.Format("{0:s}_{1:s}.xml", baseName, DateTime.Now.ToString("yyyy_MM_dd_HH_mm"));
+
+                    File.WriteAllText(Path.Combine(taggedFolder, updatesFileName), osisDoc);
                 }
             }
             catch (Exception ex)
             {
                 Tracing.TraceException(name, ex.Message);
+                throw;
             }
             container.WaitCursorControl(false);
         }
 
-        private void BuildBookOffsets()
+        private void UpdateIndices(string book)
         {
-            bookOffsets.Clear();
+            try
+            {
+                Regex regex = new Regex(
+                    string.Format(@"<verse\s*sID\=""(.*)""\s*osisID\=""{0}\.([0-9]+)\.([0-9]+)""\s*/>", book));
+
+                MatchCollection VerseMatches = regex.Matches(osisDocSegments[book]);
+                if (VerseMatches.Count > 0)
+                {
+                    foreach (Match VerseMatch in VerseMatches)
+                    {
+                        int startIndex = VerseMatch.Index + VerseMatch.Groups[0].Length;
+                        string verseRefX = string.Format("{0} {1}:{2}", book, VerseMatch.Groups[2].Value, VerseMatch.Groups[3].Value);
+
+                        OsisVerse? osisVerse = osisBible[verseRefX];
+                        osisVerse.UpdateVerseStartIndex(startIndex);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
+                throw;
+            }
+        }
+
+        //private void UpdateBook(Object threadContext) //string book)
+        //{
+        //    string book = (string)threadContext;
+
+        //    try
+        //    {
+        //        Regex regex = new Regex(
+        //            string.Format(@"<verse\s*sID\=""(.*)""\s*osisID\=""{0}\.([0-9]+)\.([0-9]+)""\s*/>", book));
+
+        //        MatchCollection VerseMatches = regex.Matches(osisDocSegments[book]);
+        //        if (VerseMatches.Count > 0)
+        //        {
+        //            foreach (Match VerseMatch in VerseMatches)
+        //            {
+        //                int startIndex = VerseMatch.Index + VerseMatch.Groups[0].Length;
+        //                string verseRefX = string.Format("{0} {1}:{2}", book, VerseMatch.Groups[2].Value, VerseMatch.Groups[3].Value);
+
+        //                OsisVerse? osisVerse = osisBible[verseRefX];
+        //                osisVerse.UpdateVerseStartIndex(startIndex);
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        var cm = System.Reflection.MethodBase.GetCurrentMethod();
+        //        var name = cm.DeclaringType.FullName + "." + cm.Name;
+        //        Tracing.TraceException(name, ex.Message);
+        //    }
+        //    finally
+        //    {
+        //        BookUpdated();
+        //    }
+        //}
+
+
+        //private void BuildBookOffsets()
+        //{
+        //    bookOffsets.Clear();
+        //    while (true)
+        //    {
+        //        // <div osisID="Gen" type="book">
+        //        Regex regex = new Regex(@"<div\s*osisID\=""([1-9A-Za-z]*)""\s*type\=""book"">");
+        //        MatchCollection matches = regex.Matches(osisDoc);
+        //        if (matches.Count > 0)
+        //        {
+        //            foreach (Match match in matches)
+        //            {
+        //                int offset = match.Index;
+        //                string book = match.Groups[1].Value;
+        //                bookOffsets[book] = offset;
+        //                bookTemp[book] = null;
+        //            }
+        //            break;
+        //        }
+        //    }
+        //}
+        private void BuildOsisSegments()
+        {
+            osisDocSegments.Clear();
             while (true)
             {
                 // <div osisID="Gen" type="book">
@@ -458,14 +626,33 @@ namespace BibleTaggingUtil.BibleVersions
                 MatchCollection matches = regex.Matches(osisDoc);
                 if (matches.Count > 0)
                 {
+                    string book = "header";
+                    int start = 0;
+                    
                     foreach (Match match in matches)
                     {
                         int offset = match.Index;
-                        string book = match.Groups[1].Value;
-                        bookOffsets[book] = offset;
-                        bookTemp[book] = null;
+                        try
+                        {
+                            osisDocSegments.Add(book, osisDoc.Substring(start, offset-start));
+                        }
+                        catch (Exception ex)
+                        {
+                            var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                            var name = cm.DeclaringType.FullName + "." + cm.Name;
+                            Tracing.TraceException(name, ex.Message);
+                            throw;
+                        }
+
+                        start = offset;
+                        book = match.Groups[1].Value;
                     }
+                    osisDocSegments.Add(book, osisDoc.Substring(start));
                     break;
+                }
+                else
+                {
+                    throw new Exception("Could not identify any book in the document");
                 }
             }
         }

@@ -799,5 +799,18 @@ namespace BibleTaggingUtil.Editor
 
             dgvTarget.CurrentCell = dgvTarget[savedColumn, savedRow];
         }
+
+        internal void EnableSaveButton(bool v)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => { EnableSaveButton(v); }));
+            }
+            else
+            {
+                picSave.Visible = v;
+            }
+
+        }
     }
 }

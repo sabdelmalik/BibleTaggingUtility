@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -94,6 +95,11 @@ namespace BibleTaggingUtil
             }
 
             verse = temp;
+        }
+
+        public override string ToString()
+        {
+            return Utils.GetVerseText(this, true);
         }
 
         /// <summary>

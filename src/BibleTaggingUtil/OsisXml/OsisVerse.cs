@@ -7,6 +7,7 @@ using System.Reflection.Metadata;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml;
 using static System.Windows.Forms.AxHost;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
@@ -24,6 +25,8 @@ namespace BibleTaggingUtil.OsisXml
                 int x = 0;
             }
             VerseRef = verseRef;
+            int idx = verseRef.IndexOf(".");
+            Book = verseRef.Substring(0, idx);
             StartIndex = startIndex;
             Length = verseXml.Length;
             sID = sid;
@@ -40,8 +43,14 @@ namespace BibleTaggingUtil.OsisXml
             string header = @"<?xml version=""1.0"" encoding=""UTF-8""?><osis>";
             string trailer = @"</osis>";
 
-            // Gen.3.1
-            VerseXml = TreatOddTags(VerseXml, "p");
+            if (VerseRef == "John.1.9")
+            {
+                // &#x2009;
+                int x = 0;
+            }
+
+                // Gen.3.1
+                VerseXml = TreatOddTags(VerseXml, "p");
             // Gen.2.23
             VerseXml = TreatOddTags(VerseXml, "lg");
             // 1Sam.25.1
@@ -52,6 +61,7 @@ namespace BibleTaggingUtil.OsisXml
             XmlDocument document = new XmlDocument();
             VerseXml = VerseXml.Replace("> <", ">" + zeroWidthSpace + "<");
             document.PreserveWhitespace = true;
+            
             try
             {
                 document.LoadXml(header + VerseXml + trailer);
@@ -61,8 +71,9 @@ namespace BibleTaggingUtil.OsisXml
                 var cm = System.Reflection.MethodBase.GetCurrentMethod();
                 var name = cm.DeclaringType.FullName + "." + cm.Name;
                 Tracing.TraceException(name, ex.Message);
+                MessageBox.Show("Exception Encountered\r\n" + ex.Message, "Fatal Error!");
+                throw;
             }
-
 
             osisTags = OsisUtils.Instance.GetOsisTags(document.DocumentElement, VerseRef);
 
@@ -143,6 +154,7 @@ namespace BibleTaggingUtil.OsisXml
                 var cm = System.Reflection.MethodBase.GetCurrentMethod();
                 var name = cm.DeclaringType.FullName + "." + cm.Name;
                 Tracing.TraceException(name, ex.Message);
+                throw;
             }
             return VerseXml;
         }
@@ -191,12 +203,24 @@ namespace BibleTaggingUtil.OsisXml
             }
 
         }
+        internal void UpdateVerseXml(string newCompleteXml)
+        {
+            VerseXml = newCompleteXml;
+            Length = VerseXml.Length;
+        }
+
+        internal void UpdateVerseStartIndex(int newStartIndex)
+        {
+            StartIndex = newStartIndex;
+        }
+
         public string VerseRef { get; }
-        public int StartIndex { get; }
-        public int Length { get; }
+        public int StartIndex { get; private set; }
+        public int Length { get; private set; }
         public string sID { get; }
         public string VerseXml { get; private set; }
         public string eID { get; }
         public bool Dirty { get; set; }
+        public string Book { get; internal set; }
     }
 }

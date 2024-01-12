@@ -498,42 +498,56 @@ namespace BibleTaggingUtil.Editor
         /// <param name="reference"></param>
         public void SaveVerse(string reference)
         {
+            var cm = System.Reflection.MethodBase.GetCurrentMethod();
+            var name = cm.DeclaringType.FullName + "." + cm.Name;
+
             bool osis = Properties.Settings.Default.Osis;
 
             Verse verse = new Verse();
 
-            for (int i = 0; i < this.Columns.Count; i++)
+            try
             {
-                string[] tags;
-                string tag = ((string)this[i, 1].Value);
-                if (string.IsNullOrEmpty(tag))
-                    tags = new string[] { "<>" };
-                else
-                    tags = tag.Split(' ');
-
-                // remove <> from tags
-                for (int j = 0; j < tags.Length; j++)
-                    tags[j] = tags[j].Replace("<", "").Replace(">", "");
-
-                verse[i] = new VerseWord((string)this[i, 0].Value, tags, reference);
-                if (osis)
+                for (int i = 0; i < this.Columns.Count; i++)
                 {
-                    verse[i].OsisTagIndex = CurrentVerse[i].OsisTagIndex;
-                    verse[i].OsisTagLevel = CurrentVerse[i].OsisTagLevel;
-                    verse.Dirty = true;
+                    string[] tags;
+                    string tag = ((string)this[i, 1].Value);
+                    if (string.IsNullOrEmpty(tag))
+                        tags = new string[] { "<>" };
+                    else
+                        tags = tag.Split(' ');
+
+                    // remove <> from tags
+                    for (int j = 0; j < tags.Length; j++)
+                        tags[j] = tags[j].Replace("<", "").Replace(">", "");
+
+                    verse[i] = new VerseWord((string)this[i, 0].Value, tags, reference);
+                    if (osis)
+                    {
+                        verse[i].OsisTagIndex = CurrentVerse[i].OsisTagIndex;
+                        verse[i].OsisTagLevel = CurrentVerse[i].OsisTagLevel;
+                        verse.Dirty = true;
+                    }
+                }
+
+                reference = osis ? OsisBible.GetCorrectReference(reference) : Bible.GetCorrectReference(reference);
+
+                Dictionary<string, Verse> bible = osis ? OsisBible.Bible : Bible.Bible;
+                if (bible.ContainsKey(reference))
+                {
+                    string oldVerse = bible[reference].ToString();
+                    bible[reference] = verse;
+                    Tracing.TraceInfo(name, "OLD: " + oldVerse, "NEW: " + verse.ToString());
+
+                }
+                else
+                {
+                    bible.Add(reference, verse);
                 }
             }
-
-            reference = osis? OsisBible.GetCorrectReference(reference) : Bible.GetCorrectReference(reference);
-
-            Dictionary<string, Verse> bible = osis ? OsisBible.Bible : Bible.Bible;
-            if (bible.ContainsKey(reference))
+            catch (Exception ex)
             {
-                bible[reference] = verse;
-            }
-            else
-            {
-                bible.Add(reference, verse);
+                Tracing.TraceException(name, ex);
+                throw;
             }
         }
         #endregion Save & Update

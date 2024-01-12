@@ -143,6 +143,7 @@ namespace BibleTaggingUtil.OsisXml
                 var cm = System.Reflection.MethodBase.GetCurrentMethod();
                 var name = cm.DeclaringType.FullName + "." + cm.Name;
                 Tracing.TraceException(name, ex.Message);
+                throw;
             }
 
             return verseWords;
@@ -260,6 +261,7 @@ namespace BibleTaggingUtil.OsisXml
                 var cm = System.Reflection.MethodBase.GetCurrentMethod();
                 var name = cm.DeclaringType.FullName + "." + cm.Name;
                 Tracing.TraceException(name, ex.Message);
+                throw;
             }
             return result;
         }
@@ -297,6 +299,7 @@ namespace BibleTaggingUtil.OsisXml
                 var cm = System.Reflection.MethodBase.GetCurrentMethod();
                 var name = cm.DeclaringType.FullName + "." + cm.Name;
                 Tracing.TraceException(name, ex.Message);
+                throw;
             }
         }
 

@@ -38,11 +38,19 @@ namespace BibleTaggingUtil.OsisXml
         public List<OsisTag> GetOsisTags(XmlNode? root, string verseRef, int level=0)
         {
             List<OsisTag> osisTags = new List<OsisTag>();
-
-            foreach (XmlNode node in root.ChildNodes)
+            try
             {
-                osisTags.Add(GetVerseTag(level,osisTags.Count,  node, verseRef));
-            }   
+                foreach (XmlNode node in root.ChildNodes)
+                {
+                    osisTags.Add(GetVerseTag(level, osisTags.Count, node, verseRef));
+                }
+            }
+            catch (Exception ex)
+            {
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
+            }
 
             return osisTags;
         }

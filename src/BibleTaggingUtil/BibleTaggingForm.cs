@@ -1350,5 +1350,10 @@ namespace BibleTaggingUtil
 
             }
         }
+
+        internal void EnableSaveButton(bool v)
+        {
+            editorPanel.EnableSaveButton(v);
+        }
     }
 }
