@@ -18,7 +18,7 @@ using System.Text.RegularExpressions;
 
 namespace BibleTaggingUtil.Editor
 {
-    public class TargetGridView : DataGridView
+    public class OsisTargetGridView : DataGridView
     {
 
         public event VerseViewChangedEventHandler VerseViewChanged;
@@ -28,7 +28,7 @@ namespace BibleTaggingUtil.Editor
         private FixedSizeStack<VerseEx> undoStack = new FixedSizeStack<VerseEx>();
         private FixedSizeStack<VerseEx> redoStack = new FixedSizeStack<VerseEx>();
 
-        public TargetGridView()
+        public OsisTargetGridView()
         {
             this.ContextMenuStrip = new ContextMenuStrip();
             this.ContextMenuStrip.Opening += ContextMenuStrip_Opening;
@@ -42,7 +42,6 @@ namespace BibleTaggingUtil.Editor
         public Verse CurrentVerse { get; set; }
 
         public TargetVersion Bible { get; set; }
-        public TargetOsisVersion OsisBible { get; internal set; }
 
         public bool IsLastWord
         {
@@ -103,7 +102,6 @@ namespace BibleTaggingUtil.Editor
             }
         }
 
-
         #region Context Menue
 
         private const string MERGE_CONTEXT_MENU = "Merge";
@@ -118,9 +116,6 @@ namespace BibleTaggingUtil.Editor
         {
             e.Cancel = true;
             if (this.SelectedCells.Count == 0)
-                return;
-
-            if (Properties.Settings.Default.Osis)
                 return;
 
             if (this.SelectedCells.Count > 1)
@@ -387,11 +382,7 @@ namespace BibleTaggingUtil.Editor
                     verseWords[i] = verse[i].Word;
                     for (int j = 0; j < verse[i].Strong.Length; j++)
                         verseTags[i] += "<" + verse[i].Strong[j] + "> ";
-                    if (verseTags[i] == null)
-                        verseTags[i] = string.Empty;
-                    else
-                        verseTags[i] = verseTags[i].Trim();
-
+                    verseTags[i] = verseTags[i].Trim();
                 }
 
                 int col = -1;
@@ -467,9 +458,7 @@ namespace BibleTaggingUtil.Editor
             }
             catch (Exception ex)
             {
-                var cm = System.Reflection.MethodBase.GetCurrentMethod();
-                var name = cm.DeclaringType.FullName + "." + cm.Name;
-                Tracing.TraceException(name, ex.Message);
+                Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
             }
         }
 
@@ -480,11 +469,7 @@ namespace BibleTaggingUtil.Editor
         /// <param name="verse"></param>
         public void SaveVerse(Verse verse)
         {
-            if (Properties.Settings.Default.Osis)
-                OsisBible.Bible[verse[0].Reference] = verse;
-            else
-                Bible.Bible[verse[0].Reference] = verse;
-
+            Bible.Bible[verse[0].Reference] = verse;
             if (!Utils.AreReferencesEqual(CurrentVerseReferece, verse[0].Reference))
             {
                 FireGotoVerseRequest(verse[0].Reference);
@@ -498,56 +483,33 @@ namespace BibleTaggingUtil.Editor
         /// <param name="reference"></param>
         public void SaveVerse(string reference)
         {
-            var cm = System.Reflection.MethodBase.GetCurrentMethod();
-            var name = cm.DeclaringType.FullName + "." + cm.Name;
-
-            bool osis = Properties.Settings.Default.Osis;
-
             Verse verse = new Verse();
 
-            try
+            for (int i = 0; i < this.Columns.Count; i++)
             {
-                for (int i = 0; i < this.Columns.Count; i++)
-                {
-                    string[] tags;
-                    string tag = ((string)this[i, 1].Value);
-                    if (string.IsNullOrEmpty(tag))
-                        tags = new string[] { "<>" };
-                    else
-                        tags = tag.Split(' ');
-
-                    // remove <> from tags
-                    for (int j = 0; j < tags.Length; j++)
-                        tags[j] = tags[j].Replace("<", "").Replace(">", "");
-
-                    verse[i] = new VerseWord((string)this[i, 0].Value, tags, reference);
-                    if (osis)
-                    {
-                        verse[i].OsisTagIndex = CurrentVerse[i].OsisTagIndex;
-                        verse[i].OsisTagLevel = CurrentVerse[i].OsisTagLevel;
-                        verse.Dirty = true;
-                    }
-                }
-
-                reference = osis ? OsisBible.GetCorrectReference(reference) : Bible.GetCorrectReference(reference);
-
-                Dictionary<string, Verse> bible = osis ? OsisBible.Bible : Bible.Bible;
-                if (bible.ContainsKey(reference))
-                {
-                    string oldVerse = bible[reference].ToString();
-                    bible[reference] = verse;
-                    Tracing.TraceInfo(name, "OLD: " + oldVerse, "NEW: " + verse.ToString());
-
-                }
+                string[] tags;
+                string tag = ((string)this[i, 1].Value);
+                if (string.IsNullOrEmpty(tag))
+                    tags = new string[] { "<>" };
                 else
-                {
-                    bible.Add(reference, verse);
-                }
+                    tags = tag.Split(' ');
+
+                // remove <> from tags
+                for (int j = 0; j < tags.Length; j++)
+                    tags[j] = tags[j].Replace("<", "").Replace(">", "");
+
+                verse[i] = new VerseWord((string)this[i, 0].Value, tags, reference);
             }
-            catch (Exception ex)
+
+            reference = Bible.GetCorrectReference(reference);
+
+            if (Bible.Bible.ContainsKey(reference))
             {
-                Tracing.TraceException(name, ex);
-                throw;
+                Bible.Bible[reference] = verse;
+            }
+            else
+            {
+                Bible.Bible.Add(reference, verse);
             }
         }
         #endregion Save & Update

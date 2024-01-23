@@ -48,8 +48,8 @@ namespace BibleTaggingUtil.Editor
             cbTagToFind = new System.Windows.Forms.ComboBox();
             tbCurrentReference = new System.Windows.Forms.TextBox();
             splitContainerMainEditor = new System.Windows.Forms.SplitContainer();
-            dgvKJV = new KJVGridView();
-            tbKJV = new System.Windows.Forms.TextBox();
+            dgvTopVersion = new TopVersionGridView();
+            tbTopVersion = new System.Windows.Forms.TextBox();
             splitContainer1 = new System.Windows.Forms.SplitContainer();
             dgvTOTHT = new TOHTHGridView();
             tbTH = new System.Windows.Forms.TextBox();
@@ -72,7 +72,7 @@ namespace BibleTaggingUtil.Editor
             splitContainerMainEditor.Panel1.SuspendLayout();
             splitContainerMainEditor.Panel2.SuspendLayout();
             splitContainerMainEditor.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dgvKJV).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dgvTopVersion).BeginInit();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -255,8 +255,8 @@ namespace BibleTaggingUtil.Editor
             // 
             // splitContainerMainEditor.Panel1
             // 
-            splitContainerMainEditor.Panel1.Controls.Add(dgvKJV);
-            splitContainerMainEditor.Panel1.Controls.Add(tbKJV);
+            splitContainerMainEditor.Panel1.Controls.Add(dgvTopVersion);
+            splitContainerMainEditor.Panel1.Controls.Add(tbTopVersion);
             // 
             // splitContainerMainEditor.Panel2
             // 
@@ -265,16 +265,16 @@ namespace BibleTaggingUtil.Editor
             splitContainerMainEditor.SplitterDistance = 266;
             splitContainerMainEditor.TabIndex = 4;
             // 
-            // dgvKJV
+            // dgvTopVersion
             // 
-            dgvKJV.AllowDrop = true;
-            dgvKJV.AllowUserToAddRows = false;
-            dgvKJV.AllowUserToDeleteRows = false;
-            dgvKJV.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-            dgvKJV.BackgroundColor = System.Drawing.SystemColors.ControlLight;
-            dgvKJV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvKJV.ColumnHeadersVisible = false;
-            dgvKJV.Cursor = System.Windows.Forms.Cursors.Hand;
+            dgvTopVersion.AllowDrop = true;
+            dgvTopVersion.AllowUserToAddRows = false;
+            dgvTopVersion.AllowUserToDeleteRows = false;
+            dgvTopVersion.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            dgvTopVersion.BackgroundColor = System.Drawing.SystemColors.ControlLight;
+            dgvTopVersion.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvTopVersion.ColumnHeadersVisible = false;
+            dgvTopVersion.Cursor = System.Windows.Forms.Cursors.Hand;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
@@ -282,33 +282,33 @@ namespace BibleTaggingUtil.Editor
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            dgvKJV.DefaultCellStyle = dataGridViewCellStyle1;
-            dgvKJV.Dock = System.Windows.Forms.DockStyle.Fill;
-            dgvKJV.GridColor = System.Drawing.SystemColors.ControlText;
-            dgvKJV.Location = new System.Drawing.Point(0, 31);
-            dgvKJV.Name = "dgvKJV";
-            dgvKJV.ReadOnly = true;
-            dgvKJV.RowHeadersVisible = false;
-            dgvKJV.RowHeadersWidth = 51;
-            dgvKJV.RowTemplate.Height = 29;
-            dgvKJV.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            dgvKJV.ShowCellToolTips = false;
-            dgvKJV.Size = new System.Drawing.Size(1299, 235);
-            dgvKJV.TabIndex = 4;
+            dgvTopVersion.DefaultCellStyle = dataGridViewCellStyle1;
+            dgvTopVersion.Dock = System.Windows.Forms.DockStyle.Fill;
+            dgvTopVersion.GridColor = System.Drawing.SystemColors.ControlText;
+            dgvTopVersion.Location = new System.Drawing.Point(0, 31);
+            dgvTopVersion.Name = "dgvTopVersion";
+            dgvTopVersion.ReadOnly = true;
+            dgvTopVersion.RowHeadersVisible = false;
+            dgvTopVersion.RowHeadersWidth = 51;
+            dgvTopVersion.RowTemplate.Height = 29;
+            dgvTopVersion.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            dgvTopVersion.ShowCellToolTips = false;
+            dgvTopVersion.Size = new System.Drawing.Size(1299, 235);
+            dgvTopVersion.TabIndex = 4;
             // 
-            // tbKJV
+            // tbTopVersion
             // 
-            tbKJV.BackColor = System.Drawing.SystemColors.MenuHighlight;
-            tbKJV.Dock = System.Windows.Forms.DockStyle.Top;
-            tbKJV.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            tbKJV.ForeColor = System.Drawing.SystemColors.HighlightText;
-            tbKJV.Location = new System.Drawing.Point(0, 0);
-            tbKJV.Name = "tbKJV";
-            tbKJV.ReadOnly = true;
-            tbKJV.Size = new System.Drawing.Size(1299, 31);
-            tbKJV.TabIndex = 3;
-            tbKJV.Text = "KJV";
-            tbKJV.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            tbTopVersion.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            tbTopVersion.Dock = System.Windows.Forms.DockStyle.Top;
+            tbTopVersion.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            tbTopVersion.ForeColor = System.Drawing.SystemColors.HighlightText;
+            tbTopVersion.Location = new System.Drawing.Point(0, 0);
+            tbTopVersion.Name = "tbTopVersion";
+            tbTopVersion.ReadOnly = true;
+            tbTopVersion.Size = new System.Drawing.Size(1299, 31);
+            tbTopVersion.TabIndex = 3;
+            //tbTopVersion.Text = "KJV";
+            tbTopVersion.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // splitContainer1
             // 
@@ -451,7 +451,7 @@ namespace BibleTaggingUtil.Editor
             splitContainerMainEditor.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainerMainEditor).EndInit();
             splitContainerMainEditor.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)dgvKJV).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dgvTopVersion).EndInit();
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel1.PerformLayout();
             splitContainer1.Panel2.ResumeLayout(false);
@@ -471,7 +471,7 @@ namespace BibleTaggingUtil.Editor
         private System.Windows.Forms.SplitContainer splitContainerMainEditor;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private TargetGridView dgvTarget;
-        private KJVGridView dgvKJV;
+        private TopVersionGridView dgvTopVersion;
         private TOHTHGridView dgvTOTHT;
         private System.Windows.Forms.ComboBox cbTagToFind;
         private System.Windows.Forms.PictureBox picNextVerse;
@@ -483,7 +483,7 @@ namespace BibleTaggingUtil.Editor
         private System.Windows.Forms.PictureBox picFindTagForward;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.PictureBox picRedo;
-        private System.Windows.Forms.TextBox tbKJV;
+        private System.Windows.Forms.TextBox tbTopVersion;
         private System.Windows.Forms.TextBox tbTH;
         private System.Windows.Forms.TextBox tbTarget;
         private System.Windows.Forms.PictureBox picRefresh;

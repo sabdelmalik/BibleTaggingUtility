@@ -45,6 +45,7 @@ namespace BibleTaggingUtil
             ParseState state = ParseState.NONE;
             using (StreamReader sr = new StreamReader(configFilePath))
             {
+                bool osis = false;
                 while (sr.Peek() >= 0)
                 {
                     string line = sr.ReadLine().Trim();
@@ -88,6 +89,9 @@ namespace BibleTaggingUtil
                             case "kjv":
                                 KJV = Path.Combine(biblesFolder, parts[1].Trim());
                                 break;
+                            case "topreferenceversion":
+                                TopReferenceVersion = parts[1].Trim();
+                                break;
                             case "hebrewreferences":
                                 {
                                     string[] hebParts = parts[1].Split(',');
@@ -108,6 +112,9 @@ namespace BibleTaggingUtil
                                 break;
                             case "targettextdirection":
                                 Properties.Settings.Default.TargetTextDirection = parts[1].Trim();
+                                break;
+                            case "osis":
+                                if(parts[1].Trim().ToLower() == "true") osis = true;
                                 break;
                         }
                     }
@@ -131,12 +138,15 @@ namespace BibleTaggingUtil
                     }
 
                 }
+
+                Properties.Settings.Default.Osis = osis;
             }
             return string.Empty;
         }
 
         public string UnTaggedBible { get; private set; }
         public string TaggedBible { get; private set; }
+        public string TopReferenceVersion { get; private set; }
 
         public string KJV { get; private set; }
         public List<string> HebrewReferences { get; private set; }

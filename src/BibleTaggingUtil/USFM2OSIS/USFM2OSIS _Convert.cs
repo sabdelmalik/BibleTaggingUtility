@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace SM.Bible.Formats.OSIS
+namespace SM.Bible.Formats.USFM2OSIS
 {
     /// <summary>
     /// This code is based on the Python code by Chris Little https://github.com/chrislit/usfm2osis

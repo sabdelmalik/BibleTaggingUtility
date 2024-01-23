@@ -16,6 +16,7 @@ using static System.Net.Mime.MediaTypeNames;
 using BibleTaggingUtil.BibleVersions;
 using System.Security.Cryptography.Xml;
 using System.Reflection;
+using System.Xml.Linq;
 
 namespace BibleTaggingUtil.Editor
 {
@@ -32,6 +33,7 @@ namespace BibleTaggingUtil.Editor
         private TestamentEnum testament = TestamentEnum.NEW;
 
         private System.Timers.Timer tempTimer = null;
+        private bool osis = false;
 
 
         public bool TargetDirty { get; set; }
@@ -40,6 +42,12 @@ namespace BibleTaggingUtil.Editor
         {
             get { return dgvTarget.Bible; }
             set { dgvTarget.Bible = value; }
+        }
+
+        public TargetOsisVersion TargetOsisVersion
+        {
+            get { return dgvTarget.OsisBible; }
+            set { dgvTarget.OsisBible = value; }
         }
 
         class VerseDetails
@@ -85,8 +93,8 @@ namespace BibleTaggingUtil.Editor
 
         private void EditorPanel_Load(object sender, EventArgs e)
         {
-            int tbKJVHeight = tbKJV.Height;
-            int dgvKJVHeight = dgvKJV.Height;
+            int tbTopVersionHeight = tbTopVersion.Height;
+            int dgvTopVersionHeight = dgvTopVersion.Height;
 
             int tbTHHeight = tbTH.Height;
             int dgvTOTHTHeight = dgvTOTHT.Height;
@@ -107,7 +115,7 @@ namespace BibleTaggingUtil.Editor
             }
 
 
-            dgvKJV.CellContentDoubleClick += Dgv_CellContentDoubleClick;
+            dgvTopVersion.CellContentDoubleClick += Dgv_CellContentDoubleClick;
             dgvTarget.CellContentDoubleClick += Dgv_CellContentDoubleClick;
             dgvTOTHT.CellContentDoubleClick += Dgv_CellContentDoubleClick;
             //dgvTOTHT.CellContentDoubleClick += DgvTOTHTView_CellContentDoubleClick;
@@ -118,7 +126,7 @@ namespace BibleTaggingUtil.Editor
 
             dgvTarget.KeyDown += DgvTarget_KeyDown;
             dgvTarget.KeyUp += DgvTarget_KeyUp;
-            dgvKJV.KeyUp += DgvTarget_KeyUp;
+            dgvTopVersion.KeyUp += DgvTarget_KeyUp;
             dgvTOTHT.KeyUp += DgvTarget_KeyUp;
 
             dgvTarget.SearchTag = cbTagToFind.Text;
@@ -148,8 +156,8 @@ namespace BibleTaggingUtil.Editor
             tbCurrentReference.Text = string.Empty;
             dgvTarget.Rows.Clear();
             dgvTarget.ColumnCount = 0;
-            dgvKJV.Rows.Clear();
-            dgvKJV.ColumnCount = 0;
+            dgvTopVersion.Rows.Clear();
+            dgvTopVersion.ColumnCount = 0;
             dgvTOTHT.Rows.Clear();
             dgvTOTHT.ColumnCount = 0;
         }
@@ -162,8 +170,18 @@ namespace BibleTaggingUtil.Editor
                 dgvTarget.SaveVerse(tbCurrentReference.Text);
             }
         }
+
+        private bool firstEvent = true;
         private void Verse_VerseChanged(object sender, VerseChangedEventArgs e)
         {
+            if (firstEvent)
+            {
+                firstEvent = false;
+                picEnableEdit.Hide();
+
+            }
+            osis = Properties.Settings.Default.Osis; 
+
             strongsPrefix = e.StrongsPrefix;
             testament = e.Testament;
 
@@ -175,20 +193,22 @@ namespace BibleTaggingUtil.Editor
             string actualBookName = string.Empty;
             try
             {
-                // KJV view
-                actualBookName = container.KJV[bookName];
+                // Top Version view
+                actualBookName = container.TopVersion[bookName];
                 if (!string.IsNullOrEmpty(actualBookName))
                 {
                     string reference = e.VerseReference.Replace(bookName, actualBookName);
-                    if (container.KJV.Bible.ContainsKey(reference))
-                        dgvKJV.Update(container.KJV.Bible[reference]);
+                    if (container.TopVersion.Bible.ContainsKey(reference))
+                        dgvTopVersion.Update(container.TopVersion.Bible[reference]);
                     else
-                        dgvKJV.Update(null);
+                        dgvTopVersion.Update(null);
                 }
             }
             catch (Exception ex)
             {
-                Tracing.TraceException(MethodBase.GetCurrentMethod().Name + "-KJV", ex.Message);
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
             }
 
             Verse verseWords = null;
@@ -235,7 +255,9 @@ namespace BibleTaggingUtil.Editor
             }
             catch (Exception ex)
             {
-                Tracing.TraceException(MethodBase.GetCurrentMethod().Name + "-TOTHT", ex.Message);
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
             }
 
             try
@@ -243,17 +265,23 @@ namespace BibleTaggingUtil.Editor
                 // Target view
                 if (!string.IsNullOrEmpty(oldReference) && dgvTarget.Columns.Count > 0)
                 {
-                    dgvTarget.SaveVerse(oldReference);
+                    if(osis)
+                    {
+                        // TODO handle osis save
+                    }
+                    else
+                         dgvTarget.SaveVerse(oldReference);
                 }
 
-                actualBookName = container.Target[bookName];
+
+                actualBookName = osis? container.OsisTarget[bookName] : container.Target[bookName];
                 if (!string.IsNullOrEmpty(actualBookName))
                 {
                     string reference = e.VerseReference.Replace(bookName, actualBookName);
                     //targetUpdatedVerse = Utils.GetVerseText(container.Target.Bible[targetRef], true);
                     if (tbTarget.Text.ToLower().Contains("arabic"))
                         DoSepecialHandling(reference);
-                    Verse v = container.Target.Bible[reference];
+                    Verse v = osis? container.OsisTarget.Bible[reference]: container.Target.Bible[reference];
 
                     if (dgvTarget.IsCurrentTextAramaic)
                     {
@@ -292,7 +320,9 @@ namespace BibleTaggingUtil.Editor
             }
             catch (Exception ex)
             {
-                Tracing.TraceException(MethodBase.GetCurrentMethod().Name + "-Target", ex.Message);
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
             }
 
         }
@@ -309,6 +339,8 @@ namespace BibleTaggingUtil.Editor
         /// <param name="verseReference"></param>
         private void DoSepecialHandling(string verseReference)
         {
+            if (osis) return;
+
             bool changed = false;
             Verse v = container.Target.Bible[verseReference];
             //List<int> merges = new List<int>();
@@ -510,13 +542,13 @@ namespace BibleTaggingUtil.Editor
             {
                 try
                 {
-                    dgvKJV.ClearSelection();
+                    dgvTopVersion.ClearSelection();
                     dgvTOTHT.ClearSelection();
 
                     if (string.IsNullOrEmpty(tag))
                     {
                         SetHighlightedCell(dgvTOTHT, null, null, firstHalf);
-                        SetHighlightedCell(dgvKJV, null, null, firstHalf);
+                        SetHighlightedCell(dgvTopVersion, null, null, firstHalf);
                         return;
                     }
 
@@ -532,12 +564,14 @@ namespace BibleTaggingUtil.Editor
                     }
 
                     SetHighlightedCell(dgvTOTHT, tags1, tags2, firstHalf);
-                    SetHighlightedCell(dgvKJV, tags1, tags2, firstHalf);
+                    SetHighlightedCell(dgvTopVersion, tags1, tags2, firstHalf);
 
                 }
                 catch (Exception ex)
                 {
-                    Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
+                    var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                    var name = cm.DeclaringType.FullName + "." + cm.Name;
+                    Tracing.TraceException(name, ex.Message);
                 }
             }
         }
@@ -630,7 +664,13 @@ namespace BibleTaggingUtil.Editor
             }
             else if (e.Control)
             {
-                if (e.KeyCode == Keys.S) container.Target.SaveUpdates();
+                if (e.KeyCode == Keys.S)
+                {
+                    if (osis)
+                        container.OsisTarget.Save("");
+                    else
+                        container.Target.SaveUpdates();
+                }
                 if (e.KeyCode == Keys.Y) dgvTarget.Redo();
                 if (e.KeyCode == Keys.Z) dgvTarget.Undo();
             }
@@ -659,14 +699,17 @@ namespace BibleTaggingUtil.Editor
 
         private void picSave_Click(object sender, EventArgs e)
         {
-            container.Target.SaveUpdates();
+            if (osis)
+                container.OsisTarget.Save("");
+            else
+                container.Target.SaveUpdates();
         }
 
         private void picDecreaseFont_Click(object sender, EventArgs e)
         {
-            Font font = dgvKJV.DefaultCellStyle.Font;
-            dgvKJV.DefaultCellStyle.Font = new Font(font.Name, font.Size - 1);
-            font = dgvKJV.DefaultCellStyle.Font;
+            Font font = dgvTopVersion.DefaultCellStyle.Font;
+            dgvTopVersion.DefaultCellStyle.Font = new Font(font.Name, font.Size - 1);
+            font = dgvTopVersion.DefaultCellStyle.Font;
             dgvTarget.DefaultCellStyle.Font = new Font(font.Name, font.Size - 1);
             font = dgvTOTHT.DefaultCellStyle.Font;
             dgvTOTHT.DefaultCellStyle.Font = new Font(font.Name, font.Size - 1);
@@ -674,9 +717,9 @@ namespace BibleTaggingUtil.Editor
         }
         private void picIncreaseFont_Click(object sender, EventArgs e)
         {
-            Font font = dgvKJV.DefaultCellStyle.Font;
-            dgvKJV.DefaultCellStyle.Font = new Font(font.Name, font.Size + 1);
-            font = dgvKJV.DefaultCellStyle.Font;
+            Font font = dgvTopVersion.DefaultCellStyle.Font;
+            dgvTopVersion.DefaultCellStyle.Font = new Font(font.Name, font.Size + 1);
+            font = dgvTopVersion.DefaultCellStyle.Font;
             dgvTarget.DefaultCellStyle.Font = new Font(font.Name, font.Size + 1);
             font = dgvTOTHT.DefaultCellStyle.Font;
             dgvTOTHT.DefaultCellStyle.Font = new Font(font.Name, font.Size + 1);
@@ -739,6 +782,19 @@ namespace BibleTaggingUtil.Editor
                 tbTarget.Text = name;
             }
         }
+
+        public void TopReferenceBibleName(string name)
+        {
+            if (InvokeRequired)
+            {
+                Action safeWrite = delegate { TopReferenceBibleName(name); };
+                Invoke(safeWrite);
+            }
+            else
+            {
+                tbTopVersion.Text = name;
+            }
+        }
         private void cbTagToFind_SelectedIndexChanged(object sender, EventArgs e)
         {
             dgvTarget.SearchTag = cbTagToFind.Text;
@@ -751,10 +807,23 @@ namespace BibleTaggingUtil.Editor
 
             string reference = tbCurrentReference.Text;
             dgvTarget.SaveVerse(reference);
-            Verse v = container.Target.Bible[reference];
+            Verse v = osis? container.OsisTarget.Bible[reference] : container.Target.Bible[reference];
             dgvTarget.Update(v);
 
             dgvTarget.CurrentCell = dgvTarget[savedColumn, savedRow];
+        }
+
+        internal void EnableSaveButton(bool v)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => { EnableSaveButton(v); }));
+            }
+            else
+            {
+                picSave.Visible = v;
+            }
+
         }
     }
 }

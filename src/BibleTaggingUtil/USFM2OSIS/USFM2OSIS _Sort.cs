@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SM.Bible.Formats.OSIS
+namespace SM.Bible.Formats.USFM2OSIS
 {
     /// <summary>
     /// This code is based on the Python code by Chris Little https://github.com/chrislit/usfm2osis

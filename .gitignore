@@ -4,3 +4,5 @@ Bibles/
 BibleModuleDev/
 !.gitignore
 src/BibleTaggingUtil/ReferenceBibles/NIV/01.NIV11-NT-Strong.txt
+src/BibleTaggingUtil/ReferenceBibles/NASB2020/1.osis.xml
+src/BibleTaggingUtil/ReferenceBibles/NIV/1.NIV11-NT-Strong.txt
