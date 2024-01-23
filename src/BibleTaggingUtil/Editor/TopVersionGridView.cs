@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace BibleTaggingUtil.Editor
 {
-    internal class KJVGridView : DataGridView
+    internal class TopVersionGridView : DataGridView
     {
         protected override void OnCellMouseDown(DataGridViewCellMouseEventArgs e)
         {

@@ -20,7 +20,7 @@
     <Compile Update="Editor\HebrewGreekGrid.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="Editor\KJVGridView.cs">
+    <Compile Update="Editor\TopVersionGridView.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Update="Editor\TargetGridView.cs">

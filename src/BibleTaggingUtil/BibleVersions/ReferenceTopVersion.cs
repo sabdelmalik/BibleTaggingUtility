@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace BibleTaggingUtil.BibleVersions
 {
-    public class ReferenceVersionKJV : BibleVersion
+    public class ReferenceTopVersion : BibleVersion
     {
-        public ReferenceVersionKJV(BibleTaggingForm container) : base(container, 23145 + 7957) { }
+        public ReferenceTopVersion(BibleTaggingForm container) : base(container, 23145 + 7957) { }
 
         public void Load()
         {

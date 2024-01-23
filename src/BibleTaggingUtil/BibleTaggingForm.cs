@@ -36,12 +36,13 @@ namespace BibleTaggingUtil
 
         private TargetVersion target;
         private TargetOsisVersion osisTarget;
-        private ReferenceVersionKJV referenceKJV;
+        private ReferenceTopVersion referenceTopVersion;
         private ReferenceVersionTOTHT referenceTOTHT;
         private ReferenceVersionTAGNT referenceTAGNT;
 
         private string execFolder = string.Empty;
-        private string kjvPath = string.Empty;
+        private string refFolder = string.Empty;
+        private string topReferencePath = string.Empty;
         private string tagntPath = string.Empty;
         private string tothtPath = string.Empty;
         private string crosswirePath = string.Empty;
@@ -80,7 +81,7 @@ namespace BibleTaggingUtil
 
             target = new TargetVersion(this);
             osisTarget = new TargetOsisVersion(this);
-            referenceKJV = new ReferenceVersionKJV(this);
+            referenceTopVersion = new ReferenceTopVersion(this);
             referenceTOTHT = new ReferenceVersionTOTHT(this);
             referenceTAGNT = new ReferenceVersionTAGNT(this);
         }
@@ -162,11 +163,8 @@ namespace BibleTaggingUtil
             Tracing.InitialiseTrace(execFolder);
 
             crosswirePath = Path.Combine(execFolder, "Crosswire");
-            string refFolder = Path.Combine(execFolder, "ReferenceBibles");
-            if(workingOnNIV)
-                kjvPath = Path.Combine(refFolder, "NIV");
-            else
-                kjvPath = Path.Combine(refFolder, "KJV");
+            refFolder = Path.Combine(execFolder, "ReferenceBibles");
+
             tagntPath = Path.Combine(refFolder, "TAGNT");
             tothtPath = Path.Combine(refFolder, "TOTHT");
 
@@ -274,13 +272,7 @@ namespace BibleTaggingUtil
                         }
                     }
 
-                    editorPanel.TargetBibleName(Path.GetFileName(biblesFolder));
-                    target.BibleName = Path.GetFileName(biblesFolder);
-                    osisTarget.BibleName = Path.GetFileName(biblesFolder);
-                    referenceKJV.BibleName = "KJV";
-                    referenceTAGNT.BibleName = "TAGNT";
-                    referenceTOTHT.BibleName = "TOTHT";
-
+                    // Load configuration
                     config = new ConfigurationHolder();
                     string confResult = config.ReadBiblesConfig(biblesFolder);
                     if (!string.IsNullOrEmpty(confResult))
@@ -325,8 +317,34 @@ namespace BibleTaggingUtil
                         break;
                     }
                 }
+                if (string.IsNullOrEmpty(config.TopReferenceVersion))
+                {
+                    topReferencePath = Path.Combine(refFolder, "KJV");
+                }
+                else
+                {
+                    topReferencePath = Path.Combine(refFolder, config.TopReferenceVersion);
+                    if (!Directory.Exists(topReferencePath))
+                    {
+                        topReferencePath = Path.Combine(refFolder, "KJV");
+                    }
+                }
+
+
+
+                editorPanel.TargetBibleName(Path.GetFileName(biblesFolder));
+                target.BibleName = Path.GetFileName(biblesFolder);
+                osisTarget.BibleName = Path.GetFileName(biblesFolder);
+                string refBibleName = Path.GetFileName(topReferencePath);
+                referenceTopVersion.BibleName = refBibleName;
+                editorPanel.TopReferenceBibleName(refBibleName);
+
+                referenceTAGNT.BibleName = "TAGNT";
+                referenceTOTHT.BibleName = "TOTHT";
+
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 var cm = System.Reflection.MethodBase.GetCurrentMethod();
                 var name = cm.DeclaringType.FullName + "." + cm.Name;
@@ -338,8 +356,13 @@ namespace BibleTaggingUtil
             string[] files = Directory.GetFiles(taggedFolder);
             if (files.Length > 0)
             {
-                if (Properties.Settings.Default.Osis)
+                string ext = Path.GetExtension(files[0]);
+                Properties.Settings.Default.Osis = false;
+                //               if (Properties.Settings.Default.Osis)
+                if (ext.ToLower() == ".xml")
                 {
+                    Properties.Settings.Default.Osis = true;
+
                     generateOSISToolStripMenuItem.Visible = false;
                     usfmToolStripMenuItem.Visible = false;
                     oSISToolStripMenuItem.Visible = true;
@@ -380,19 +403,19 @@ namespace BibleTaggingUtil
             this.Closing -= BibleTaggingForm_Closing;
             this.Closing += BibleTaggingForm_Closing;
 
-            if (!LoadReferenceFiles(kjvPath, referenceKJV)) { CloseForm(); return; }
+            if (!LoadReferenceFiles(topReferencePath, referenceTopVersion)) { CloseForm(); return; }
             if (!LoadReferenceFiles(tothtPath, referenceTOTHT)) { CloseForm(); return; }
             if (!LoadReferenceFiles(tagntPath, referenceTAGNT)) { CloseForm(); return; }
 
 
  /*           bool result = false;
-            files = Directory.GetFiles(kjvPath);
+            files = Directory.GetFiles(topReferencePath);
             for (int i = 0; i < files.Length; i++)
             {
-                result = referenceKJV.LoadBibleFile(files[i], i == 0, i != (files.Length - 1));
+                result = referenceTopVersion.LoadBibleFile(files[i], i == 0, i != (files.Length - 1));
             }
 
-//            referenceKJV.LoadBibleFile(config.KJV, true, false);
+//            referenceTopVersion.LoadBibleFile(config.KJV, true, false);
 
             StartGui();
 
@@ -581,7 +604,7 @@ namespace BibleTaggingUtil
         public VerseSelectionPanel VerseSelectionPanel { get { return verseSelectionPanel; } }
         public TargetVersion Target { get { return target; } }
         public TargetOsisVersion OsisTarget { get { return osisTarget; } }
-        public ReferenceVersionKJV KJV { get {return referenceKJV; } }
+        public ReferenceTopVersion TopVersion { get {return referenceTopVersion; } }
         public ReferenceVersionTOTHT TOTHT { get { return referenceTOTHT; } }
         public ReferenceVersionTAGNT TAGNT { get { return referenceTAGNT; } }
 
@@ -801,9 +824,9 @@ namespace BibleTaggingUtil
                                 for (int verse = 1; verse <= lastVerse; verse++)
                                 {
                                     string verseRef = string.Format("{0:s} {1:d}:{2:d}", bookName, chapter + 1, verse);
-                                    if (referenceKJV.Bible.ContainsKey(verseRef))
+                                    if (referenceTopVersion.Bible.ContainsKey(verseRef))
                                     {
-                                        string line = string.Format("{0:s} {1:s}", verseRef, Utils.GetVerseText(referenceKJV.Bible[verseRef], false));
+                                        string line = string.Format("{0:s} {1:s}", verseRef, Utils.GetVerseText(referenceTopVersion.Bible[verseRef], false));
                                         outputFile.WriteLine(line);
                                     }
                                 }

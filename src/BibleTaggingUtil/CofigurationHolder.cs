@@ -45,6 +45,7 @@ namespace BibleTaggingUtil
             ParseState state = ParseState.NONE;
             using (StreamReader sr = new StreamReader(configFilePath))
             {
+                bool osis = false;
                 while (sr.Peek() >= 0)
                 {
                     string line = sr.ReadLine().Trim();
@@ -73,7 +74,6 @@ namespace BibleTaggingUtil
 
                     if (state == ParseState.TAGGING)
                     {
-                        bool osis = false;
                         string[] parts = line.Split('=');
                         if (parts.Length != 2)
                             continue;
@@ -88,6 +88,9 @@ namespace BibleTaggingUtil
                                 break;
                             case "kjv":
                                 KJV = Path.Combine(biblesFolder, parts[1].Trim());
+                                break;
+                            case "topreferenceversion":
+                                TopReferenceVersion = parts[1].Trim();
                                 break;
                             case "hebrewreferences":
                                 {
@@ -112,7 +115,6 @@ namespace BibleTaggingUtil
                                 break;
                             case "osis":
                                 if(parts[1].Trim().ToLower() == "true") osis = true;
-                                Properties.Settings.Default.Osis = osis;
                                 break;
                         }
                     }
@@ -136,12 +138,15 @@ namespace BibleTaggingUtil
                     }
 
                 }
+
+                Properties.Settings.Default.Osis = osis;
             }
             return string.Empty;
         }
 
         public string UnTaggedBible { get; private set; }
         public string TaggedBible { get; private set; }
+        public string TopReferenceVersion { get; private set; }
 
         public string KJV { get; private set; }
         public List<string> HebrewReferences { get; private set; }

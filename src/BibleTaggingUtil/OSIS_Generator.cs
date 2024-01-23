@@ -450,7 +450,13 @@ namespace BibleTaggingUtil
                                 if (string.IsNullOrEmpty(strongStr))
                                     words.Add(string.Format("<w>{0}</w>", word));
                                 else
-                                    words.Add(string.Format("<w lemma=\"{0}\">{1}</w>", strongStr, word));
+                                {
+                                    //if((strongStr.Contains("H3068") || strongStr.Contains("H3069")) &&
+                                    //        osisConf[OsisConstants.osisIDWork].ToLower().Contains("ara"))
+                                    //    words.Add(string.Format("<hi type=\"bold\"><hi type=\"italic\"><w lemma=\"{0}\">{1}</w></hi></hi>", strongStr, word));
+                                    //else
+                                        words.Add(string.Format("<w lemma=\"{0}\">{1}</w>", strongStr, word));
+                                }
 
                             }
                             word = string.Empty;
@@ -470,7 +476,11 @@ namespace BibleTaggingUtil
                         {
                             strongStr += string.Format(" strong:{0}{1}", strongPrefix, tags[j]);
                         }
-                        words.Add(string.Format("<w lemma=\"{0}\">{1}</w>", strongStr, word));
+                        //if ((strongStr.Contains("H3068") || strongStr.Contains("H3069")) &&
+                        //        osisConf[OsisConstants.osisIDWork].ToLower().Contains("ara"))
+                        //    words.Add(string.Format("<hi type=\"bold\"><hi type=\"italic\"><w lemma=\"{0}\">{1}</w></hi></hi>", strongStr, word));
+                        //else
+                            words.Add(string.Format("<w lemma=\"{0}\">{1}</w>", strongStr, word));
                     }
                 }
 

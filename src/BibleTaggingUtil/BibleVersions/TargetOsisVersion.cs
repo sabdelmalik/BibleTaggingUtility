@@ -21,7 +21,7 @@ namespace BibleTaggingUtil.BibleVersions
     /// 2. Use regex to get offset of each book and create a book/offset map
     /// 3. GetVerse() takes a verse reference (e.g. Rev.19.14) and uses regex to find the offset and size
     ///    of the verse. (regex starts its search from the offset found in the offsets map)
-    /// 4. ParseVerse() takes the verse text enclsed between sID and eID and loads it into a XmlDocument.
+    /// 4. ParseVerse() takes the verse text enclosed between sID and eID and loads it into a XmlDocument.
     ///    This is because the verse content is well formed xml. This makes it easy to extract the verse's 
     ///    words and Strong's tags.
     /// 5. Once the tags has been update, the verse is reconstructed and is replaced in the text
@@ -34,14 +34,19 @@ namespace BibleTaggingUtil.BibleVersions
         /// </summary>
         private string osisDoc = string.Empty;
 
+        /// <summary>
+        /// key: book name
+        /// value: osis segment representing this book
+        /// the first segment is the osis header
+        /// </summary>
         private Dictionary<string, string> osisDocSegments = new Dictionary<string, string>();
         
         /// <summary>
-        /// Key:    Bible book name 
-        /// value:  Offset of the bookwithin the osisDoc string
-        /// The offsets speeds up the regex search for verses
+        /// Key:    book name 
+        /// Value: Dictionary with:
+        ///         Key:    verse reference 
+        ///         value:  Verse
         /// </summary>
-//        private Dictionary<string, int> bookOffsets = new Dictionary<string, int>();
         private Dictionary<string, Dictionary<string, OsisVerse>> bookTemp = new Dictionary<string, Dictionary<string, OsisVerse>>();
 
         /// <summary>
@@ -137,7 +142,7 @@ namespace BibleTaggingUtil.BibleVersions
                 {
                     foreach (Match VerseMatch in VerseMatches)
                     {
-                        OsisVerse? osisVerse = GetVersesTags(book, VerseMatch);
+                        OsisVerse? osisVerse = OsisUtils.Instance.GetVersesTags(book, osisDocSegments[book], VerseMatch);
                         if (osisVerse != null)
                         {
                             osisBible.Add(osisVerse.VerseRefX, osisVerse);
@@ -260,7 +265,7 @@ namespace BibleTaggingUtil.BibleVersions
                 {
                     foreach (Match VerseMatch in VerseMatches)
                     {
-                        OsisVerse? osisVerse = GetVersesTags(book, VerseMatch);
+                        OsisVerse? osisVerse = OsisUtils.Instance.GetVersesTags(book, osisDocSegments[book], VerseMatch);
                         if (osisVerse != null)
                         {
                             //lock (this)
@@ -286,7 +291,8 @@ namespace BibleTaggingUtil.BibleVersions
             }
         }
 
-        private OsisVerse? GetVersesTags(string book, Match VerseMatch)
+
+        private OsisVerse? GetVersesTagsObsolete(string book, string osisSegment, Match VerseMatch)
         {
             OsisVerse result = null;
 
@@ -306,7 +312,7 @@ namespace BibleTaggingUtil.BibleVersions
             {
                 Regex regex = new Regex(string.Format(@"<verse\s*eID\=""{0}""\s*/>", sID));
 //                VerseMatch = regex.Match(osisDoc, startIndex);
-                VerseMatch = regex.Match(osisDocSegments[book]);
+                VerseMatch = regex.Match(osisSegment, startIndex);
                 if (VerseMatch.Success)
                 {
                     endIndex = VerseMatch.Index;
@@ -315,7 +321,7 @@ namespace BibleTaggingUtil.BibleVersions
 
                 string verseXml = string.Empty;
                 if (endIndex > startIndex)
-                    verseXml = osisDocSegments[book].Substring(startIndex, endIndex - startIndex);
+                    verseXml = osisSegment.Substring(startIndex, endIndex - startIndex);
                 //                    verseXml = osisDoc.Substring(startIndex, endIndex - startIndex);
 
                 result = new OsisVerse(verseRef, startIndex, sID, verseXml, eID);
@@ -421,7 +427,7 @@ namespace BibleTaggingUtil.BibleVersions
                         {
                             if (attr.Name == "lemma")
                             {
-                                strongs = GetStrongs(attr.Value);
+                                strongs = OsisUtils.Instance.GetStrongsFromLemma(attr.Value);
                             }
                         }
                     }
@@ -429,21 +435,6 @@ namespace BibleTaggingUtil.BibleVersions
                 }
 
             }
-        }
-
-        private List<string> GetStrongs(string value)
-        {
-            List<string> strings = new List<string>();
-            MatchCollection matches = Regex.Matches(value, @"strong:([GH]\d\d\d\d)");
-            if (matches.Count > 0)
-            {
-                foreach (Match match in matches)
-                {
-                    strings.Add(match.Groups[1].Value);
-                }
-            }
-
-            return strings;
         }
 
         internal void Save(string fileName)
