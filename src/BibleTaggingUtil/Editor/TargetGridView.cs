@@ -560,12 +560,55 @@ namespace BibleTaggingUtil.Editor
         /// <param name="e"></param>
         protected override void OnCellValueChanged(DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex == 0)
+            int row = e.RowIndex;
+            int col = e.ColumnIndex;
+
+            if (row == 0)
             {
                 string newWord = (string)this[e.ColumnIndex, e.RowIndex].Value;
                 CurrentVerse.UpdateWord(e.ColumnIndex, newWord);
-//                FireVerseViewChanged();
+                //                FireVerseViewChanged();
             }
+            else if (row == this.RowCount - 1)
+            {
+                string newValue = (string)this[col, row].Value;
+                if (!string.IsNullOrEmpty(newValue))
+                {
+                    Regex regex = new Regex(@"[<]{0,1}(\d\d\d\d)[>]{0,1}");
+                    MatchCollection matches = regex.Matches(newValue);
+                    if (matches.Count > 0)
+                    {
+                        string temp = string.Empty;
+                        foreach (Match match in matches)
+                        {
+                            temp += string.Format("<{0}> ", match.Groups[1]);
+                        }
+                        newValue = temp.Trim();
+                    }
+                    else
+                    {
+                        // bad entry
+                        this[e.ColumnIndex, e.RowIndex].Value = string.Empty;
+                        return;
+                    }
+                }
+                if (CurrentVerse[col].StrongString != newValue)
+                {
+                    if (this.CurrentVerse != null)
+                        undoStack.Push(new VerseEx(new Verse(this.CurrentVerse), col, row));
+
+                    if (newValue == null) newValue = string.Empty;
+                    this[e.ColumnIndex, e.RowIndex].Value = newValue;
+
+                    CurrentVerse[col].StrongString = newValue;
+
+                    FireRefernceHighlightRequest(newValue);
+
+                    //SaveVerse(CurrentVerseReferece);
+                    FireVerseViewChanged();
+                }
+            }
+
             base.OnCellValueChanged(e);
         }
 
@@ -635,8 +678,6 @@ namespace BibleTaggingUtil.Editor
             drgevent.Effect = DragDropEffects.Copy;
             base.OnDragEnter(drgevent);
         }
-
-
         protected override void OnDragDrop(DragEventArgs drgevent)
         {
             DragData data = drgevent.Data.GetData(typeof(DragData)) as DragData;

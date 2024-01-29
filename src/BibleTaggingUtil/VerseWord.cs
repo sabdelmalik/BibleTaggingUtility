@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BibleTaggingUtil
 {
-
+    [Serializable()]
     public class VerseWord : ICloneable
     {
         public VerseWord(string ancientWord, string english, string[] strong, string transliteration, string reference, string morphology)
@@ -69,8 +69,15 @@ namespace BibleTaggingUtil
             }
             set
             {
-                string strong = value.Replace("<", "").Replace(">", "").Trim();
-                Strong = strong.Split(' ');
+                if (string.IsNullOrEmpty(value))
+                {
+                    Strong = new string[] {""};
+                }
+                else
+                {
+                    string strong = value.Replace("<", "").Replace(">", "").Trim();
+                    Strong = strong.Split(' ');
+                }
             }
         }
         public string Transliteration { get; private set; }

@@ -307,7 +307,6 @@ namespace BibleTaggingUtil.Editor
             tbTopVersion.ReadOnly = true;
             tbTopVersion.Size = new System.Drawing.Size(1299, 31);
             tbTopVersion.TabIndex = 3;
-            //tbTopVersion.Text = "KJV";
             tbTopVersion.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // splitContainer1

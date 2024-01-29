@@ -165,12 +165,13 @@ namespace BibleTaggingUtil.BibleVersions
                     osisDoc = sr.ReadToEnd();
                 }
 
+                container.UpdateProgress("Loading " + bibleName, (100 * bookCount) / 66);
+
                 // Build the book's offsets map
                 //BuildBookOffsets();
                 BuildOsisSegments();
 
                 bookCount = 0;
-                container.UpdateProgress("Loading " + bibleName, (100 * bookCount) / 66);
                 // Create an OSIS Bible Map
                 //foreach (string book in bookOffsets.Keys)
                 //{
@@ -211,45 +212,6 @@ namespace BibleTaggingUtil.BibleVersions
                 bookTemp[book] = localBible;
             }
         }
-        //private void LoadBook(Object threadContext) //string book)
-        //{
-        //    string book = (string)threadContext;
-
-        //    Dictionary<string, OsisVerse> localBible = new Dictionary<string, OsisVerse>();
-        //    try
-        //    {
-        //        Regex regex = new Regex(
-        //            string.Format(@"<verse\s*sID\=""(.*)""\s*osisID\=""{0}\.([0-9]+)\.([0-9]+)""\s*/>", book));
-
-        //        MatchCollection VerseMatches = regex.Matches(osisDoc, bookOffsets[book]);
-        //        if (VerseMatches.Count > 0)
-        //        {
-        //            foreach (Match VerseMatch in VerseMatches)
-        //            {
-        //                OsisVerse? osisVerse = GetVersesTags(book, VerseMatch);
-        //                if (osisVerse != null)
-        //                {
-        //                    //lock (this)
-        //                    {
-        //                        localBible.Add(osisVerse.VerseRefX, osisVerse);
-        //                    }
-        //                    // Verse verseWords = osisVerse.GetVerseWords();
-        //                    // bible.Add(osisVerse.VerseRefX, verseWords);
-        //                }
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        var cm = System.Reflection.MethodBase.GetCurrentMethod();
-        //        var name = cm.DeclaringType.FullName + "." + cm.Name;
-        //        Tracing.TraceException(name, ex.Message);
-        //    }
-        //    finally
-        //    {
-        //        BookLoaded(book, localBible);
-        //    }
-        //}
         private void LoadBookFromSegments(Object threadContext) //string book)
         {
             string book = (string)threadContext;
