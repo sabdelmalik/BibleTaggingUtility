@@ -2,10 +2,13 @@
 using System;
 using System.CodeDom;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -424,8 +427,11 @@ namespace BibleTaggingUtil.BibleVersions
             string currentSID = string.Empty;
             Verse verse = null;
 
+            //Stopwatch sw = new Stopwatch();
+            //sw.Start();
             try
             {
+                container.UpdateProgress("Loading " + bibleName,0);
                 string osisDoc = string.Empty;
                 using (StreamReader sr = new StreamReader(filePath))
                 {
@@ -579,6 +585,43 @@ namespace BibleTaggingUtil.BibleVersions
                     bookNames.Add(Constants.ubsNames[i + 39], bookNamesList[i]);
                 }
             }
+
+
+            //var bibleJson = JsonSerializer.Serialize(bible, new JsonSerializerOptions
+            //{
+            //    Converters = { new JsonBibleConverter() },
+            //    WriteIndented = true,
+            //});
+
+            //var bibleJson = JsonSerializer.Serialize(bible, new JsonSerializerOptions
+            //{
+            //    WriteIndented = true,
+            //});
+
+            //sw.Stop();
+            //long leg1 = sw.ElapsedMilliseconds;
+            //sw.Restart();
+
+            //FileStream s = new FileStream(@"C:\temp\Bible.ser",FileMode.Create);
+            //BinaryFormatter b = new BinaryFormatter();
+            //b.Serialize(s, bible);
+            //s.Close();
+
+
+            //JsonBibleConverter conv = new JsonBibleConverter();
+            //string bibleJson = conv.Write(bible);
+            //File.WriteAllText(@"C:\temp\Bible.Json", bibleJson);
+            //sw.Stop();
+            //long leg2 = sw.ElapsedMilliseconds;
+            //sw.Restart();
+
+            //FileStream s1 = new FileStream(@"C:\temp\Bible.ser", FileMode.Open);
+            //BinaryFormatter b1 = new BinaryFormatter();
+            //bible = (Dictionary<string, Verse>)b1.Deserialize(s1);
+
+            //conv.Read(@"C:\temp\Bible.Json", bible, bookNames, bookNamesList);
+            //sw.Stop();
+            //long leg3 = sw.ElapsedMilliseconds;
 
             return result;
         }

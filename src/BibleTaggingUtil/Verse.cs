@@ -11,10 +11,18 @@ namespace BibleTaggingUtil
     /// <summary>
     /// Represents a verse as a dictionary of verse words
     /// </summary>
+    [Serializable()]
     public class Verse
     {
         private Dictionary<int, VerseWord> verse = new Dictionary<int, VerseWord>();
 
+        public Dictionary<int, VerseWord> VerseWords
+        {
+            get
+            {
+                return verse;
+            }
+        }
         public Verse() { Dirty = false; }
 
         /// <summary>
