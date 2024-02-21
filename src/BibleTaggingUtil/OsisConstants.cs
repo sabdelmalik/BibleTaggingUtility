@@ -38,6 +38,7 @@ namespace BibleTaggingUtil
         public const string revision = "revision";
         // date use current date
         public const string description = "description";
+        public const string description_pd = "description-pd";
         public const string publisher = "publisher";
         public const string type = "type";
         public const string format = "format";
@@ -48,6 +49,7 @@ namespace BibleTaggingUtil
         public const string relation = "relation";
         public const string coverage = "coverage";
         public const string rights = "rights";
+        public const string rights_pd = "rights-pd";
         public const string scope = "scope";
         public const string castList = "castList";
         public const string tieHeader = "tieHeader";
@@ -56,6 +58,7 @@ namespace BibleTaggingUtil
         public const string nt_vpl_file = "nt-vpl-file";
         public const string bible_vpl_file = "bible-vpl-file";
         public const string output_file = "output-file";
+        public const string output_file_publicDomaind = "output-file-pd";
         public const string forInjeel = "forInjeel";
 
         public static string[] osisNames =

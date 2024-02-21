@@ -41,7 +41,7 @@ namespace BibleTaggingUtil
         /// 
         /// </summary>");
         /// <param name="vplFile">");Verse perline file</param>");
-        public void Generate(TargetVersion targetVersion)
+        public void Generate(TargetVersion targetVersion, bool publicDomain = false)
         {
             //string bibleVplFile = string.Empty;
             string otVplFile = string.Empty;
@@ -69,10 +69,16 @@ namespace BibleTaggingUtil
                     ntVplFile = osisConf[OsisConstants.nt_vpl_file];
 
                 if (osisConf.ContainsKey(OsisConstants.output_file))
-                    outputFile = osisConf[OsisConstants.output_file];
+                {
+                    if (publicDomain)
+                        outputFile = osisConf[OsisConstants.output_file_publicDomaind];
+                    else
+                        outputFile = osisConf[OsisConstants.output_file];
+                }
+
 
                 if (string.IsNullOrEmpty(outputFile))
-                    throw new Exception("Configuration must contain an entry for output-file");
+                    throw new Exception("Configuration must contain an entry for output-file or output-file");
 
                 if (string.IsNullOrEmpty(otVplFile) && string.IsNullOrEmpty(ntVplFile))
                     throw new Exception("Configuration must contain atleast one entry of ot-vpl-file and nt-vpl-file");
@@ -137,14 +143,14 @@ namespace BibleTaggingUtil
                     WriteOsisStartTag(sw);
                     WriteOsisTextStartTag(sw);
 
-                    WriteHeader(sw);
+                    WriteHeader(sw, publicDomain);
 
                     if (!string.IsNullOrEmpty(otVplFile))
                     {
                         using (StreamReader sr = new StreamReader(Path.Combine(biblesFolder, otVplFile)))
                         {
 
-                            WriteBible(sr, sw, "H", targetVersion, forInjeel);
+                            WriteBible(sr, sw, "H", targetVersion, forInjeel, publicDomain);
                         }
                     }
 
@@ -154,7 +160,7 @@ namespace BibleTaggingUtil
                         using (StreamReader sr = new StreamReader(Path.Combine(biblesFolder, ntVplFile)))
                         {
 
-                            WriteBible(sr, sw, "G", targetVersion, forInjeel);
+                            WriteBible(sr, sw, "G", targetVersion, forInjeel, publicDomain);
                         }
                     }
 
@@ -171,11 +177,11 @@ namespace BibleTaggingUtil
             }
         }
 
-        private void WriteBible(StreamReader sr, StreamWriter sw, string strongPrefix, TargetVersion targetVersion, bool forInjeel)
+        private void WriteBible(StreamReader sr, StreamWriter sw, string strongPrefix, TargetVersion targetVersion, bool forInjeel, bool publicDomain = false)
         {
             sw.WriteLine("<div type=\"bookGroup\">");
 
-            WriteBibleBooks(sr, sw, strongPrefix, targetVersion, forInjeel);
+            WriteBibleBooks(sr, sw, strongPrefix, targetVersion, forInjeel, publicDomain);
 
             sw.WriteLine("</div>");
 
@@ -185,13 +191,16 @@ namespace BibleTaggingUtil
 
         string currentBook = string.Empty;
         string currentChapter = string.Empty;
-        private void WriteBibleBooks(StreamReader sr, StreamWriter sw, string strongPrefix, TargetVersion targetVersion, bool forInjeel)
+        private void WriteBibleBooks(StreamReader sr, StreamWriter sw, string strongPrefix, TargetVersion targetVersion, bool forInjeel, bool publicDomain = false)
         {
             try
             {
                 while (!sr.EndOfStream)
                 {
                     string line = sr.ReadLine();
+                    if (publicDomain)
+                        line = Utils.RemoveDiacritics(line);
+
                     int bs = line.IndexOf(' ');
                     string bookName = line.Substring(0, bs);
                     string bookOsisName = OsisConstants.osisNames[targetVersion.GetBookIndex(bookName)];    //Array.IndexOf(OsisConstants.osisAltNames, bookName)];
@@ -535,7 +544,7 @@ namespace BibleTaggingUtil
         }
 
 
-        private void WriteHeader(StreamWriter sw)
+        private void WriteHeader(StreamWriter sw, bool publicDomain = false)
         {
             try
             {
@@ -576,13 +585,21 @@ namespace BibleTaggingUtil
                 if (osisConf.ContainsKey(OsisConstants.identifier))
                     sw.WriteLine(String.Format("<identifier type=\"OSIS\">{0}</identifier>", osisConf[OsisConstants.identifier]));
                 // description
-                sw.WriteLine(String.Format("<description>This work adds Strong's references to Smith Van Dyck Arabic Bible.</description>"));
+                if (publicDomain)
+                    if (osisConf.ContainsKey(OsisConstants.description_pd))
+                        sw.WriteLine(String.Format("<description>{0}</description>", osisConf[OsisConstants.description_pd]));
+                    else
+                    if (osisConf.ContainsKey(OsisConstants.description))
+                        sw.WriteLine(String.Format("<description>{0}</description>", osisConf[OsisConstants.description_pd]));
                 // language
                 if (osisConf.ContainsKey(OsisConstants.language) && osisConf.ContainsKey(OsisConstants.language_type))
                     sw.WriteLine(String.Format("<language type=\"{0}\">{1}</language>", osisConf[OsisConstants.language_type], osisConf[OsisConstants.language]));
                 // rights
-                if (osisConf.ContainsKey(OsisConstants.rights))
-                    sw.WriteLine(String.Format("<rights type=\"x-copyright\">{0}</rights>", osisConf[OsisConstants.rights]));
+                if (publicDomain)
+                    if (osisConf.ContainsKey(OsisConstants.rights_pd))
+                        sw.WriteLine(String.Format("<rights type=\"x-copyright\">{0}</rights>", osisConf[OsisConstants.rights_pd]));
+                    if (osisConf.ContainsKey(OsisConstants.rights))
+                        sw.WriteLine(String.Format("<rights type=\"x-copyright\">{0}</rights>", osisConf[OsisConstants.rights]));
                 // refSystem
                 if (osisConf.ContainsKey(OsisConstants.refSystem))
                     sw.WriteLine(String.Format("<refSystem>{0}</refSystem>", osisConf[OsisConstants.refSystem]));

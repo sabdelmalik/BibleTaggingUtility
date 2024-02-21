@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BibleTaggingUtil.OsisXml;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -20,7 +21,29 @@ namespace BibleTaggingUtil
             USFM,
             USFM2OSIS
         }
-        public ConfigurationHolder()
+        private static ConfigurationHolder instance = null;
+        private static readonly object lockObj = new object();
+
+        public static ConfigurationHolder Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    lock (lockObj)
+                    {
+                        if (instance == null)
+                        {
+                            instance = new ConfigurationHolder();
+                        }
+                    }
+                }
+                return instance;
+            }
+        }
+
+
+        private ConfigurationHolder()
         {
             HebrewReferences = new List<string>();
             GreekReferences = new List<string>();

@@ -10,20 +10,25 @@ namespace BibleTaggingUtil
     [Serializable()]
     public class VerseWord : ICloneable
     {
-        public VerseWord(string ancientWord, string english, string[] strong, string transliteration, string reference, string morphology)
+        public VerseWord(string ancientWord, string english, string[] strong, string transliteration, string reference, string morphology="", string rootStrong = "", string wordType = "", string altVerseNumber = "", string wordNumber = "", string meaningVar = "")
         {
             this.Reference = reference;
             Testament = Utils.GetTestament(reference);
 
             if (this.Testament == BibleTestament.OT)
                 this.Hebrew = ancientWord;
-            else if(this.Testament == BibleTestament.NT)
+            else if (this.Testament == BibleTestament.NT)
                 this.Greek = ancientWord;
 
             this.Word = english;
             this.Strong = strong;
             this.Transliteration = transliteration;
             Morphology = morphology;
+            RootStrong = rootStrong;
+            WordType = wordType;
+            AltVerseNumber = altVerseNumber;
+            WordNumber = wordNumber;
+            MeaningVar = meaningVar;
         }
 
         public VerseWord(string word, string[] strong, string reference)
@@ -46,6 +51,9 @@ namespace BibleTaggingUtil
 
 
         public BibleTestament Testament { get; private set; }
+        public string MeaningVar { get; private set; }
+        public string AltVerseNumber { get; private set; }
+        public string WordNumber { get; private set; }
         public string Hebrew { get; private set; }
         public string Greek { get; private set; }
         public string Word { get; set; }
@@ -80,9 +88,13 @@ namespace BibleTaggingUtil
                 }
             }
         }
+
+        public int WordIndex { get; set; }
         public string Transliteration { get; private set; }
         public string Reference { get; private set; }
         public string Morphology { get; private set; }
+        public string RootStrong { get; private set; }
+        public string WordType { get; private set; }
 
         public override string ToString()
         {

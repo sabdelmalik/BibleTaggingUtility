@@ -12,6 +12,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace BibleTaggingUtil.BibleVersions
 {
@@ -36,7 +37,7 @@ namespace BibleTaggingUtil.BibleVersions
 
         string textFilePath = string.Empty;
 
-        
+
         enum STATE
         {
             START,
@@ -104,7 +105,10 @@ namespace BibleTaggingUtil.BibleVersions
         /// <param name="wordLine"></param>
         override protected void ParseLine(string wordLine)
         {
-            ParseLine2(wordLine);
+            if(BibleName == "TOTHT")
+                ParseLineTOTHT(wordLine);
+            else if(BibleName == "TAHOT")
+                ParseLineTAHOT(wordLine);
             return;
 
             if (string.IsNullOrEmpty(wordLine))
@@ -201,7 +205,7 @@ namespace BibleTaggingUtil.BibleVersions
                     int cc = st.IndexOf("}");
                     if (cc != -1)
                     {
-                        st = st.Substring(oc+1, cc-oc-1);
+                        st = st.Substring(oc + 1, cc - oc - 1);
                     }
                     else
                     {
@@ -241,12 +245,13 @@ namespace BibleTaggingUtil.BibleVersions
 
                 // H6440#4
                 int hash = strings[0].IndexOf('#');
-                if (hash == -1) {
+                if (hash == -1)
+                {
                     Tracing.TraceException(MethodBase.GetCurrentMethod().Name, "estrong does not contain a '#': " + st);
                     continue;
                 }
- 
-                strongList.Add( strings[0].Substring(1,4));
+
+                strongList.Add(strings[0].Substring(1, 4));
 
                 transliteration = lineParts[13];
 
@@ -274,7 +279,7 @@ namespace BibleTaggingUtil.BibleVersions
 
         }
 
-        protected void ParseLine2(string wordLine)
+        protected void ParseLineTOTHT(string wordLine)
         {
             if (string.IsNullOrEmpty(wordLine))
                 return;
@@ -466,14 +471,14 @@ namespace BibleTaggingUtil.BibleVersions
             // we use the Accented
             string hebrewWord = lineParts[1];
             string transliteration = lineParts[2];
-            //string grammer = lineParts[5];
+            //string grammar = lineParts[5];
             string[] hebrewWordParts = hebrewWord.Split('/');
             string[] extendedStrongParts = lineParts[4].Split('/');
             string[] grammerParts = lineParts[5].Split('/');
 
             for (int i = 0; i < extendedStrongParts.Length; i++)
             {
-                string grammer = string.Empty;
+                string grammar = string.Empty;
                 string englishWord = string.Empty;
                 string hebrew = string.Empty;
                 string[] strongRefs = null;
@@ -506,7 +511,7 @@ namespace BibleTaggingUtil.BibleVersions
                     int wordNumber = verseWords.Count;
                     if (englishWord.ToLower() != "verseend" && strongRefs[0] != "9001" && strongRefs[0] != "9014" && strongRefs[0] != "9015")
                     {
-                        verseWords[wordNumber] = new VerseWord(hebrew, englishWord, strongRefs, "", currentVerseRef,"");
+                        verseWords[wordNumber] = new VerseWord(hebrew, englishWord, strongRefs, "", currentVerseRef, "");
                         if (bible.ContainsKey(currentVerseRef))
                             bible[currentVerseRef] = verseWords;
                         else
@@ -522,6 +527,116 @@ namespace BibleTaggingUtil.BibleVersions
 
             }
 
+        }
+
+
+
+        ParseState pState = ParseState.Initial;
+
+        protected void ParseLineTAHOT(string line)
+        {
+            if (string.IsNullOrEmpty(line))
+                return;
+
+            /*
+             * Heb (&Eng) Ref & Type	Hebrew	Transliteration	English translation	dStrongs = Lexical = Gloss	Grammar	Meaning Variants	Spelling Variants	Conjoin word	sStrong+Instance	Alt Strongs
+             * 
+             * Gen.1.1#01=M +T	בְּ/רֵאשִׁ֖ית	be./re.Shit	in/ beginning	H9003=ב=in / {H7225G=רֵאשִׁית=: beginning»first:1_beginning}	HR/Ncfsa			H7225		Gen.1.1-01	Gen.1.1-01	בְּרֵאשִׁית	בְּ/רֵאשִׁ֖ית	HR/Ncfsa	H9003=ב=in/H7225=רֵאשִׁית=first_§1_beginning
+             * 
+             * [0]	Ref in Heb (Eng) & Type         "Psa.31.24(31.25)#02=L"
+             * [1]	Hebrew	                        "וְ/יַאֲמֵ֣ץ"
+             * [2]  Transliteration                 "ve./ya.'a.Metz"
+             * [3]	Translation                     "so/ may it show strength"
+             * [4]	dStrongs                        "H9002/{H0553}"
+             * [5]  Grammar                         "HC/Vhj3ms"
+             * [6]  Meaning Variants                ""
+             * [7]  Spelling Variants               ""
+             * [8]  Root dStrong+Instance           "H0553"
+             * [9]  Alternative Strongs+Instance    ""
+             * [10] Conjoin word                    ""
+             * [11]  Expanded Strong tags           "H9002=ו=and/{H0553=אָמֵץ=to strengthen}"
+             */
+
+            string regexPattern = @"([1-9a-zA-Z]+)\.([0-9]{1,3})\.([0-9]{1,3})(\({0,1}[0-9.]*\){0,1})\#([0-9]{1,4})\=([A-Z]\({0,1}[^)]{0,10}\){0,1})\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)";
+
+            try
+            {
+                line = line.Trim();
+                Match match = Regex.Match(line, regexPattern);
+                if (match.Success)
+                {
+                    /*
+                     * Slashes (/) separate segments of words in Strongs, Morph, Hebrew, Transliteration and Word-by-word English, 
+                     * and (\) separates punctuation in Strongs and Hebrew. 
+                     * Strong numbers have the main word in {curly} brackets 
+                     * Transliteration is preceded by the Hebrew word number, and marks stress with an upper case, 
+                     * Translation has unspoken words in <angled> brackets and added words in [square] brackets
+                     */
+                    string bookName = match.Groups[1].Value;
+                    string chapterNum = match.Groups[2].Value;
+                    string verseNum = match.Groups[3].Value;
+                    string altVerseNum = match.Groups[4].Value;
+                    string wordNum = match.Groups[5].Value;
+                    string wordType = match.Groups[6].Value;
+                    string hebrewRaw = match.Groups[7].Value;
+                    string transliteration = match.Groups[8].Value;
+                    string english = match.Groups[9].Value;
+                    string dStrong = match.Groups[10].Value;
+                    string grammar = match.Groups[11].Value;
+                    string meaningVar = match.Groups[12].Value;
+                    string spellingVar = match.Groups[13].Value;
+                    string rootStrong = match.Groups[14].Value;
+                    string altdStrong = match.Groups[15].Value;
+                    string cojoinWord = match.Groups[16].Value;
+                    string expandedStrong = match.Groups[16].Value;
+
+                    string verseRef = string.Format("{0} {1}:{2}", bookName,
+                            chapterNum, //.TrimStart('0'),
+                            verseNum); //.TrimStart('0'));
+
+                    string[] heberewTemp = hebrewRaw.Split('\\');
+                    string hebrew = heberewTemp[0].Replace("/", " ");
+
+                    if(verseRef == "Neh 7:67" && wordNum == "14")
+                    {
+                        int n = 0;
+                    }
+                    //string[] strongsTemp = dStrong.Replace("{", "").Replace("}", "").Split('\\');
+                    string[] strongsList = rootStrong.Split('/');
+
+                    if (string.IsNullOrEmpty(currentVerseRef))
+                    {
+                        // very first verse
+                        currentVerseRef = verseRef;
+                        bible[currentVerseRef] = new Verse();
+                    }
+
+                    if (verseRef != currentVerseRef)
+                    {
+                        // we are moving to a new verse
+                        // save the completed verse
+                        //bible.Add(currentVerseRef, verseWords);
+                        currentVerseRef = verseRef;
+                        bible[currentVerseRef] = new Verse();
+
+                        currentVerseCount++;
+                        container.UpdateProgress("Loading " + bibleName, (100 * currentVerseCount) / totalVerses);
+                    }
+
+                    int wordNumber= bible[currentVerseRef].Count;
+                    bible[currentVerseRef][wordNumber] = new VerseWord(hebrew, english, strongsList, transliteration, currentVerseRef, grammar, dStrong, wordType, altVerseNum, wordNum, meaningVar);
+                }
+                else // not a word line
+                    return;
+
+
+            }
+            catch (Exception ex)
+            {
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
+            }
         }
     }
 }

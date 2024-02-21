@@ -164,7 +164,7 @@ namespace BibleTaggingUtil.Editor
             }
             else
             {
-                if (this.SelectedCells[0].RowIndex == 1)
+                if (this.SelectedCells[0].RowIndex == Rows.Count - 1)
                 {
                     string text = (String)this.SelectedCells[0].Value;
 
@@ -225,10 +225,10 @@ namespace BibleTaggingUtil.Editor
                 SaveVerse(CurrentVerseReferece);
                 this.Update(CurrentVerse);
 
-                this[firstMergeIndex, 1].Selected = true;
-                this.CurrentCell = this[firstMergeIndex, 1];
-                if (!string.IsNullOrEmpty((string)this[firstMergeIndex, 1].Value))
-                    FireRefernceHighlightRequest((string)this[firstMergeIndex, 1].Value);
+                this[firstMergeIndex, Rows.Count - 1].Selected = true;
+                this.CurrentCell = this[firstMergeIndex, Rows.Count - 1];
+                if (!string.IsNullOrEmpty((string)this[firstMergeIndex, Rows.Count - 1].Value))
+                    FireRefernceHighlightRequest((string)this[firstMergeIndex, Rows.Count - 1].Value);
                 FireVerseViewChanged();
             }
             else if (e.ClickedItem.Text == SWAP_CONTEXT_MENU)
@@ -250,10 +250,10 @@ namespace BibleTaggingUtil.Editor
                 SaveVerse(CurrentVerseReferece);
                 this.Update(CurrentVerse);
 
-                this[firstSwapIndex, 1].Selected = true;
-                this.CurrentCell = this[firstSwapIndex, 1];
-                if (!string.IsNullOrEmpty((string)this[firstSwapIndex, 1].Value))
-                    FireRefernceHighlightRequest((string)this[firstSwapIndex, 1].Value);
+                this[firstSwapIndex, Rows.Count - 1].Selected = true;
+                this.CurrentCell = this[firstSwapIndex, Rows.Count - 1];
+                if (!string.IsNullOrEmpty((string)this[firstSwapIndex, Rows.Count - 1].Value))
+                    FireRefernceHighlightRequest((string)this[firstSwapIndex, Rows.Count - 1].Value);
                 FireVerseViewChanged();
             }
             else if (e.ClickedItem.Text == SPLIT_CONTEXT_MENU)
@@ -274,10 +274,10 @@ namespace BibleTaggingUtil.Editor
                 SaveVerse(CurrentVerseReferece);
                 this.Update(CurrentVerse);
 
-                this[splitIndex, 1].Selected = true;
-                this.CurrentCell = this[splitIndex, 1];
-                if (!string.IsNullOrEmpty((string)this[splitIndex, 1].Value))
-                    FireRefernceHighlightRequest((string)this[splitIndex, 1].Value);
+                this[splitIndex, Rows.Count - 1].Selected = true;
+                this.CurrentCell = this[splitIndex, Rows.Count - 1];
+                if (!string.IsNullOrEmpty((string)this[splitIndex, Rows.Count - 1].Value))
+                    FireRefernceHighlightRequest((string)this[splitIndex, Rows.Count - 1].Value);
                 FireVerseViewChanged();
             }
             else if (e.ClickedItem.Text == DELETE_CONTEXT_MENU)
@@ -292,8 +292,8 @@ namespace BibleTaggingUtil.Editor
                 SaveVerse(CurrentVerseReferece);
                 this.Update(CurrentVerse);
 
-                this[col, 1].Selected = true;
-                this.CurrentCell = this[col, 1];
+                this[col, Rows.Count - 1].Selected = true;
+                this.CurrentCell = this[col, Rows.Count - 1];
                 FireVerseViewChanged();
             }
             else
@@ -348,10 +348,10 @@ namespace BibleTaggingUtil.Editor
                     SaveVerse(CurrentVerseReferece);
                     FireVerseViewChanged();
                 }
-                this[col, 1].Selected = true;
-                this.CurrentCell = this[col, 1];
-                if (!string.IsNullOrEmpty((string)this[col, 1].Value))
-                    FireRefernceHighlightRequest((string)this[col, 1].Value);
+                this[col, Rows.Count - 1].Selected = true;
+                this.CurrentCell = this[col, Rows.Count - 1];
+                if (!string.IsNullOrEmpty((string)this[col, Rows.Count - 1].Value))
+                    FireRefernceHighlightRequest((string)this[col, Rows.Count - 1].Value);
                 FireVerseViewChanged();
             }
         }
@@ -406,45 +406,51 @@ namespace BibleTaggingUtil.Editor
                         verseTags[i] = string.Empty;
                 }
 
+                string[] wordNumber = new string[verseWords.Length];
+                for (int i = 0; i < verseWords.Length; i++)
+                    wordNumber[i] = (i+1).ToString();
 
                 this.ColumnCount = verseWords.Length;
                 this.Rows.Add(verseWords);
+                this.Rows.Add(wordNumber);
                 this.Rows.Add(verseTags);
 
                 string tagToHighlight = SearchTag;
                 if (string.IsNullOrEmpty(tagToHighlight) || tagToHighlight.ToLower() == "<blank>")
                     tagToHighlight = "<>";
+
+                int tRow = this.Rows.Count - 1;
                 for (int i = 0; i < verseWords.Length; i++)
                 {
                     string word = (string)this.Rows[0].Cells[i].Value;
-                    string tag = (string)this.Rows[1].Cells[i].Value;
+                    string tag = (string)this.Rows[tRow].Cells[i].Value;
                     string nextTag = string.Empty;
                     if(i < verseWords.Length - 1)
                     {
-                        nextTag = (string)this.Rows[1].Cells[i+1].Value;
+                        nextTag = (string)this.Rows[tRow].Cells[i+1].Value;
                     }
                     if (tag == null)
                         continue;
 
                     if ((tag.Contains("3068") || tag.Contains("3069")) && oldTestament)
                     {
-                        this.Rows[1].Cells[i].Style.ForeColor = Color.Red;
+                        this.Rows[tRow].Cells[i].Style.ForeColor = Color.Red;
                     }
                     if (tag.Contains("0430>") && oldTestament)
                     {
-                        //this.Rows[1].Cells[i].Style.BackColor = Color.Green;
-                        this.Rows[1].Cells[i].Style.ForeColor = Color.Green;
+                        //this.Rows[tRow].Cells[i].Style.BackColor = Color.Green;
+                        this.Rows[tRow].Cells[i].Style.ForeColor = Color.Green;
                     }
 
                     if (tag.Contains("0410>") && oldTestament)
-                        this.Rows[1].Cells[i].Style.ForeColor = Color.Blue;
+                        this.Rows[tRow].Cells[i].Style.ForeColor = Color.Blue;
 
                     if (tag.Contains(tagToHighlight) || tag.Contains("0000") || (tag == string.Empty && tagToHighlight == "<>"))
-                        this.Rows[1].Cells[i].Style.BackColor = Color.LightGray;
+                        this.Rows[tRow].Cells[i].Style.BackColor = Color.LightGray;
                     else if (!string.IsNullOrEmpty(tag) && tag == nextTag)
                     {
-                        this.Rows[1].Cells[i].Style.BackColor = Color.Yellow;
-                        this.Rows[1].Cells[i+1].Style.BackColor = Color.Yellow;
+                        this.Rows[tRow].Cells[i].Style.BackColor = Color.Yellow;
+                        this.Rows[tRow].Cells[i+1].Style.BackColor = Color.Yellow;
                     }
 
                     if (direction.ToLower() == "rtl")
@@ -452,17 +458,18 @@ namespace BibleTaggingUtil.Editor
                 }
 
                 if (col >= 0)
-                    this.CurrentCell = this.Rows[1].Cells[col];
+                    this.CurrentCell = this.Rows[tRow].Cells[col];
 
                 this.ClearSelection();
 
                 this.Rows[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                this.Rows[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 this.Rows[0].ReadOnly = true;
-                this[0,1].Selected = true;
-                this.CurrentCell = this[0, 1];
-                if(!string.IsNullOrEmpty((string)this[0, 1].Value))
-                    FireRefernceHighlightRequest((string)this[0, 1].Value);
-                //this.Rows[1].ReadOnly = true;
+                this[0,tRow].Selected = true;
+                this.CurrentCell = this[0, tRow];
+                if(!string.IsNullOrEmpty((string)this[0, tRow].Value))
+                    FireRefernceHighlightRequest((string)this[0, tRow].Value);
+                //this.Rows[tRow].ReadOnly = true;
 
             }
             catch (Exception ex)
@@ -510,7 +517,7 @@ namespace BibleTaggingUtil.Editor
                 for (int i = 0; i < this.Columns.Count; i++)
                 {
                     string[] tags;
-                    string tag = ((string)this[i, 1].Value);
+                    string tag = ((string)this[i, Rows.Count - 1].Value);
                     if (string.IsNullOrEmpty(tag))
                         tags = new string[] { "<>" };
                     else
@@ -625,12 +632,12 @@ namespace BibleTaggingUtil.Editor
                 //if (this.SelectedRows.Count > 1)
                 //{
                 //}
-                if(e.RowIndex == 1)
+                if(e.RowIndex == Rows.Count - 1 )
                 {
                     this.ClearSelection();
                     this[e.ColumnIndex, e.RowIndex].Selected = true;
                 }
-                FireRefernceHighlightRequest((string)this.Rows[1].Cells[e.ColumnIndex].Value);
+                FireRefernceHighlightRequest((string)this.Rows[Rows.Count - 1].Cells[e.ColumnIndex].Value);
 
             }
             //base.OnCellEnter(e);
@@ -658,7 +665,7 @@ namespace BibleTaggingUtil.Editor
                         undoStack.Push(new VerseEx(new Verse(this.CurrentVerse), savedColumn, savedRow));
 
                     int col = this.SelectedCells[0].ColumnIndex;
-                    this[col, 1].Value = string.Empty;
+                    this[col, Rows.Count - 1].Value = string.Empty;
                     this.CurrentVerse[col].Strong = new string[] { string.Empty };
                     SaveVerse(CurrentVerseReferece);
                     this.Update(CurrentVerse);
@@ -686,7 +693,7 @@ namespace BibleTaggingUtil.Editor
 
             System.Windows.Forms.DataGridView.HitTestInfo hittest = this.HitTest(cursorLocation.X, cursorLocation.Y);
             if (hittest.ColumnIndex != -1
-                && hittest.RowIndex == 1)
+                && hittest.RowIndex == Rows.Count - 1)
             {  //CHANGE
                 if (data.Source.Equals(this))
                 {
@@ -694,11 +701,11 @@ namespace BibleTaggingUtil.Editor
                         return;
                 }
 
-                droppedValue = droppedValue.Replace("+G", "> <");
+                droppedValue = droppedValue.Replace("+G", "> <").Replace(",","");
                 string[] droppedValueParts = droppedValue.Split(' ');
                 String newValue = string.Empty;
 
-                string currentValue = (string)this[hittest.ColumnIndex, 1].Value;
+                string currentValue = (string)this[hittest.ColumnIndex, Rows.Count - 1].Value;
 
                 if (!string.IsNullOrEmpty(currentValue) && !currentValue.Contains("???") && Control.ModifierKeys == Keys.Control)
                     newValue = currentValue;
@@ -715,6 +722,10 @@ namespace BibleTaggingUtil.Editor
                         continue; //skip morphology
 
                     string tmp = droppedValueParts[i].Trim().Replace("<", "").Replace(">", "");
+                    if (tmp[tmp.Length - 2] == '_' && char.IsLetter(tmp[tmp.Length - 1]))
+                        tmp = tmp.Substring(0, tmp.Length - 2);
+                    if (!char.IsDigit(tmp[tmp.Length-1]))
+                        tmp = tmp.Substring(0, tmp.Length - 1);
                     tmp = ("0000" + tmp).Substring(tmp.Length);
                     int val = Convert.ToInt32(tmp);
                     if (val > 0)
@@ -729,27 +740,27 @@ namespace BibleTaggingUtil.Editor
                 if (this.CurrentVerse != null)
                     undoStack.Push(new VerseEx(new Verse(this.CurrentVerse), savedColumn, savedRow));
 
-                this[hittest.ColumnIndex, 1].Value = newValue.Trim();
+                this[hittest.ColumnIndex, Rows.Count - 1].Value = newValue.Trim();
                 this.CurrentVerse[hittest.ColumnIndex].StrongString = newValue.Trim();
 
                 FireRefernceHighlightRequest(newValue);
 
                 if (data.Source.Equals(this))
                 {
-                    this[data.ColumnIndex, 1].Value = string.Empty;
+                    this[data.ColumnIndex, Rows.Count - 1].Value = string.Empty;
                     this.CurrentVerse[data.ColumnIndex].StrongString = string.Empty;
                 }
                 SaveVerse(CurrentVerseReferece);
                 FireVerseViewChanged();
 
                 this.ClearSelection();
-                this[hittest.ColumnIndex, 1].Selected = true;
+                this[hittest.ColumnIndex, Rows.Count - 1].Selected = true;
                 this.Rows[0].ReadOnly = true;
 
-                this[hittest.ColumnIndex, 1].Selected = true;
-                this.CurrentCell = this[hittest.ColumnIndex, 1];
-                if (!string.IsNullOrEmpty((string)this[hittest.ColumnIndex, 1].Value))
-                    FireRefernceHighlightRequest((string)this[hittest.ColumnIndex, 1].Value);
+                this[hittest.ColumnIndex, Rows.Count - 1].Selected = true;
+                this.CurrentCell = this[hittest.ColumnIndex, Rows.Count - 1];
+                if (!string.IsNullOrEmpty((string)this[hittest.ColumnIndex, Rows.Count - 1].Value))
+                    FireRefernceHighlightRequest((string)this[hittest.ColumnIndex, Rows.Count - 1].Value);
 
                 this.Focus();
             }
@@ -770,7 +781,7 @@ namespace BibleTaggingUtil.Editor
                 {
                     if (info.RowIndex >= 0 && info.ColumnIndex >= 0)
                     {
-                        string text = (String)this.Rows[1].Cells[info.ColumnIndex].Value;
+                        string text = (String)this.Rows[Rows.Count - 1].Cells[info.ColumnIndex].Value;
                         DragData data = new DragData(1, info.ColumnIndex, text, this);
                         if (text != null)
                         {

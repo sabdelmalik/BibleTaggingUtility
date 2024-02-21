@@ -16,6 +16,8 @@ namespace BibleTaggingUtil
     {
         private Dictionary<int, VerseWord> verse = new Dictionary<int, VerseWord>();
 
+        private bool hasPsalmTitle = false;
+
         public Dictionary<int, VerseWord> VerseWords
         {
             get
@@ -25,18 +27,88 @@ namespace BibleTaggingUtil
         }
         public Verse() { Dirty = false; }
 
+        public bool HasPsalmTitle 
+        {
+            get 
+            {
+                bool result = false;
+                if (verse[0].Reference.StartsWith("Ps") && verse[0].Reference.EndsWith(":1"))
+                {
+                    foreach(VerseWord vw in verse.Values)
+                    {
+                        if(vw.Word.Trim() == "*")
+                        {
+                            result = true;
+                            break;
+                        }
+                    }
+                }
+                //return hasPsalmTitle; 
+                return result;
+            }
+            set
+            {
+                if (verse.Count > 0 && verse[0].Reference == "Psa 18:1")
+                {
+                    int a = 0;
+                }
+
+                hasPsalmTitle = value; 
+            }
+        }
+
+        public VerseWord GetWordFromStrong(string strong, int startIndex)
+        {
+            VerseWord result = null;
+            try
+            {
+                for (int i = startIndex; i < verse.Count; i++)
+                {
+                    if (verse[i].StrongString.Contains(strong))
+                    {
+                        result = verse[i];
+                        break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
+            }
+            return result;
+        }
+
         /// <summary>
         /// Creates a deep copy of itself
         /// </summary>
         /// <param name="verseToClone"></param>
         public Verse(Verse verseToClone)
         {
+            this.HasPsalmTitle = verseToClone.HasPsalmTitle;
+            this.Dirty = verseToClone.Dirty;
+            
             for (int i = 0; i < verseToClone.Count; i++)
             {
-                verse[i] = (VerseWord)verseToClone[i].Clone();
+                this.verse[i] = (VerseWord)verseToClone[i].Clone();
             }
         }
 
+        public Verse SubVerse(int start, int length)
+        {
+            int l = length;
+            Verse verse = new Verse();
+            if (l == -1) l = this.Count;
+
+            int idx = 0;
+            for (int i = start; i < l; i++)
+            {
+                verse[idx++] = this[i];
+            }
+
+            return verse;
+        }
         public void UpdateWord(int index, string word)
         {
             verse[index].Word = word;
@@ -66,6 +138,7 @@ namespace BibleTaggingUtil
             set
             {
                 verse[index] = value;
+                verse[index].WordIndex = index;
             }
         }
 

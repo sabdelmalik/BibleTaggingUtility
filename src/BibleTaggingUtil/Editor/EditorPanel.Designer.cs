@@ -52,7 +52,10 @@ namespace BibleTaggingUtil.Editor
             tbTopVersion = new System.Windows.Forms.TextBox();
             splitContainer1 = new System.Windows.Forms.SplitContainer();
             dgvTOTHT = new TOHTHGridView();
+            tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             tbTH = new System.Windows.Forms.TextBox();
+            tbTH_Next = new System.Windows.Forms.TextBox();
+            tbTH_Previous = new System.Windows.Forms.TextBox();
             dgvTarget = new TargetGridView();
             tbTarget = new System.Windows.Forms.TextBox();
             toolTip1 = new System.Windows.Forms.ToolTip(components);
@@ -78,6 +81,7 @@ namespace BibleTaggingUtil.Editor
             splitContainer1.Panel2.SuspendLayout();
             splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvTOTHT).BeginInit();
+            tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvTarget).BeginInit();
             SuspendLayout();
             // 
@@ -319,7 +323,7 @@ namespace BibleTaggingUtil.Editor
             // splitContainer1.Panel1
             // 
             splitContainer1.Panel1.Controls.Add(dgvTOTHT);
-            splitContainer1.Panel1.Controls.Add(tbTH);
+            splitContainer1.Panel1.Controls.Add(tableLayoutPanel1);
             // 
             // splitContainer1.Panel2
             // 
@@ -350,7 +354,7 @@ namespace BibleTaggingUtil.Editor
             dgvTOTHT.DefaultCellStyle = dataGridViewCellStyle2;
             dgvTOTHT.Dock = System.Windows.Forms.DockStyle.Fill;
             dgvTOTHT.GridColor = System.Drawing.SystemColors.ControlText;
-            dgvTOTHT.Location = new System.Drawing.Point(0, 31);
+            dgvTOTHT.Location = new System.Drawing.Point(0, 60);
             dgvTOTHT.Name = "dgvTOTHT";
             dgvTOTHT.ReadOnly = true;
             dgvTOTHT.RowHeadersVisible = false;
@@ -358,21 +362,65 @@ namespace BibleTaggingUtil.Editor
             dgvTOTHT.RowTemplate.Height = 29;
             dgvTOTHT.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             dgvTOTHT.ShowCellToolTips = false;
-            dgvTOTHT.Size = new System.Drawing.Size(1299, 228);
+            dgvTOTHT.Size = new System.Drawing.Size(1299, 199);
             dgvTOTHT.TabIndex = 4;
+            // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.ColumnCount = 3;
+            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30F));
+            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
+            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30F));
+            tableLayoutPanel1.Controls.Add(tbTH, 1, 0);
+            tableLayoutPanel1.Controls.Add(tbTH_Next, 2, 0);
+            tableLayoutPanel1.Controls.Add(tbTH_Previous, 0, 0);
+            tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
+            tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 1;
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tableLayoutPanel1.Size = new System.Drawing.Size(1299, 60);
+            tableLayoutPanel1.TabIndex = 6;
             // 
             // tbTH
             // 
             tbTH.BackColor = System.Drawing.SystemColors.MenuHighlight;
-            tbTH.Dock = System.Windows.Forms.DockStyle.Top;
+            tbTH.Dock = System.Windows.Forms.DockStyle.Fill;
             tbTH.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             tbTH.ForeColor = System.Drawing.SystemColors.HighlightText;
-            tbTH.Location = new System.Drawing.Point(0, 0);
+            tbTH.Location = new System.Drawing.Point(392, 3);
             tbTH.Name = "tbTH";
             tbTH.ReadOnly = true;
-            tbTH.Size = new System.Drawing.Size(1299, 31);
+            tbTH.Size = new System.Drawing.Size(513, 31);
             tbTH.TabIndex = 5;
             tbTH.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // tbTH_Next
+            // 
+            tbTH_Next.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            tbTH_Next.Dock = System.Windows.Forms.DockStyle.Fill;
+            tbTH_Next.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            tbTH_Next.ForeColor = System.Drawing.SystemColors.HighlightText;
+            tbTH_Next.Location = new System.Drawing.Point(911, 3);
+            tbTH_Next.Name = "tbTH_Next";
+            tbTH_Next.ReadOnly = true;
+            tbTH_Next.Size = new System.Drawing.Size(385, 31);
+            tbTH_Next.TabIndex = 5;
+            tbTH_Next.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // tbTH_Previous
+            // 
+            tbTH_Previous.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            tbTH_Previous.Dock = System.Windows.Forms.DockStyle.Fill;
+            tbTH_Previous.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            tbTH_Previous.ForeColor = System.Drawing.SystemColors.HighlightText;
+            tbTH_Previous.Location = new System.Drawing.Point(3, 3);
+            tbTH_Previous.Name = "tbTH_Previous";
+            tbTH_Previous.ReadOnly = true;
+            tbTH_Previous.Size = new System.Drawing.Size(383, 31);
+            tbTH_Previous.TabIndex = 5;
+            tbTH_Previous.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // dgvTarget
             // 
@@ -452,12 +500,13 @@ namespace BibleTaggingUtil.Editor
             splitContainerMainEditor.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvTopVersion).EndInit();
             splitContainer1.Panel1.ResumeLayout(false);
-            splitContainer1.Panel1.PerformLayout();
             splitContainer1.Panel2.ResumeLayout(false);
             splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvTOTHT).EndInit();
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvTarget).EndInit();
             ResumeLayout(false);
         }
@@ -486,5 +535,8 @@ namespace BibleTaggingUtil.Editor
         private System.Windows.Forms.TextBox tbTH;
         private System.Windows.Forms.TextBox tbTarget;
         private System.Windows.Forms.PictureBox picRefresh;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TextBox tbTH_Next;
+        private System.Windows.Forms.TextBox tbTH_Previous;
     }
 }

@@ -17,6 +17,7 @@ using BibleTaggingUtil.BibleVersions;
 using System.Security.Cryptography.Xml;
 using System.Reflection;
 using System.Xml.Linq;
+using System.Text.RegularExpressions;
 
 namespace BibleTaggingUtil.Editor
 {
@@ -114,6 +115,9 @@ namespace BibleTaggingUtil.Editor
                 }
             }
 
+            tbTH.Click += TbTH_Click;
+            tbTH_Previous.Click += TbTH_Previous_Click;
+            tbTH_Next.Click += TbTH_Next_Click;
 
             dgvTopVersion.CellContentDoubleClick += Dgv_CellContentDoubleClick;
             dgvTarget.CellContentDoubleClick += Dgv_CellContentDoubleClick;
@@ -174,13 +178,13 @@ namespace BibleTaggingUtil.Editor
         private bool firstEvent = true;
         private void Verse_VerseChanged(object sender, VerseChangedEventArgs e)
         {
-            if (firstEvent)
+            osis = Properties.Settings.Default.Osis;
+            if (osis && firstEvent)
             {
                 firstEvent = false;
                 picEnableEdit.Hide();
 
             }
-            osis = Properties.Settings.Default.Osis; 
 
             strongsPrefix = e.StrongsPrefix;
             testament = e.Testament;
@@ -214,6 +218,8 @@ namespace BibleTaggingUtil.Editor
             Verse verseWords = null;
             try
             {
+                UpdateTOTHT(e.VerseReference);
+                /*
                 // TOTHT view
                 if (testament == TestamentEnum.OLD) //  && container.TOTHT.Bible.ContainsKey(e.VerseReferenceAlt))
                 {
@@ -224,10 +230,10 @@ namespace BibleTaggingUtil.Editor
                         if (container.TOTHT.Bible.ContainsKey(reference))
                         {
                             verseWords = container.TOTHT.Bible[reference];
-                            dgvTOTHT.Update(verseWords, BibleTestament.OT);
+                            UpdateTOTHT(verseWords, BibleTestament.OT);
                         }
                         else
-                            dgvTOTHT.Update(null, BibleTestament.OT);
+                            UpdateTOTHT(null, BibleTestament.OT);
                     }
                 }
                 else if (testament == TestamentEnum.NEW)// && container.TAGNT.Bible.ContainsKey(e.VerseReferenceUBS))
@@ -239,10 +245,10 @@ namespace BibleTaggingUtil.Editor
                         if (container.TAGNT.Bible.ContainsKey(reference))
                         {
                             verseWords = container.TAGNT.Bible[reference];
-                            dgvTOTHT.Update(verseWords, BibleTestament.NT);
+                            UpdateTOTHT(verseWords, BibleTestament.NT);
                         }
                         else
-                            dgvTOTHT.Update(null, BibleTestament.NT);
+                            UpdateTOTHT(null, BibleTestament.NT);
                     }
                 }
                 else
@@ -252,6 +258,7 @@ namespace BibleTaggingUtil.Editor
                     else
                         tbCurrentReference.Text += " Not in " + tbTarget.Text;
                 }
+                */
             }
             catch (Exception ex)
             {
@@ -265,23 +272,23 @@ namespace BibleTaggingUtil.Editor
                 // Target view
                 if (!string.IsNullOrEmpty(oldReference) && dgvTarget.Columns.Count > 0)
                 {
-                    if(osis)
+                    if (osis)
                     {
                         // TODO handle osis save
                     }
                     else
-                         dgvTarget.SaveVerse(oldReference);
+                        dgvTarget.SaveVerse(oldReference);
                 }
 
 
-                actualBookName = osis? container.OsisTarget[bookName] : container.Target[bookName];
+                actualBookName = osis ? container.OsisTarget[bookName] : container.Target[bookName];
                 if (!string.IsNullOrEmpty(actualBookName))
                 {
                     string reference = e.VerseReference.Replace(bookName, actualBookName);
                     //targetUpdatedVerse = Utils.GetVerseText(container.Target.Bible[targetRef], true);
                     if (tbTarget.Text.ToLower().Contains("arabic"))
                         DoSepecialHandling(reference);
-                    Verse v = osis? container.OsisTarget.Bible[reference]: container.Target.Bible[reference];
+                    Verse v = osis ? container.OsisTarget.Bible[reference] : container.Target.Bible[reference];
 
                     if (dgvTarget.IsCurrentTextAramaic)
                     {
@@ -327,6 +334,71 @@ namespace BibleTaggingUtil.Editor
 
         }
 
+        private void UpdateTOTHT(string verseReference) //Verse verseWords)//, BibleTestament testament)
+        {
+            string bk = string.Empty;
+            string ch = string.Empty;
+            string vs = string.Empty;
+
+            string[] tParts = tbTH.Text.Split(" ");
+            tbTH.Text = tParts[0];
+
+            BibleTestament testament = Utils.GetTestament(verseReference);
+
+            Match m = Regex.Match(verseReference, @"([1-9a-zA-Z]{1,5})\s([0-9]{1,3})\:([0-9]{1,3})");
+            if (m.Success)
+            {
+                bk = m.Groups[1].Value.Trim();
+                ch = m.Groups[2].Value.Trim();
+                vs = m.Groups[3].Value.Trim();
+            }
+            int vsi = int.Parse(vs);
+
+            Verse verseWords = null;
+            string actualBookName = string.Empty;
+
+
+            if (testament == BibleTestament.OT) actualBookName = container.TOTHT[bk];
+            else actualBookName = container.TAGNT[bk];
+
+            string current = string.Format("{0} {1}:{2}", actualBookName, ch, vsi);
+            string next = string.Format("{0} {1}:{2}", actualBookName, ch, vsi + 1);
+            string previous = string.Empty;
+            if (vsi > 1) previous = string.Format("{0} {1}:{2}", actualBookName, ch, vsi - 1);
+
+            if (testament == BibleTestament.OT)
+            {
+                if (container.TOTHT.Bible.ContainsKey(current))
+                {
+                    verseWords = container.TOTHT.Bible[current];
+                }
+                if (!container.TOTHT.Bible.ContainsKey(next))
+                    next = string.Empty;
+                if (!container.TOTHT.Bible.ContainsKey(previous))
+                    previous = string.Empty;
+            }
+            else
+            {
+                if (container.TAGNT.Bible.ContainsKey(current))
+                {
+                    verseWords = container.TAGNT.Bible[current];
+                }
+                if (!container.TAGNT.Bible.ContainsKey(next))
+                    next = string.Empty;
+                if (!container.TAGNT.Bible.ContainsKey(previous))
+                    previous = string.Empty;
+            }
+
+            tbTH.Text = tParts[0] + " " + current;
+            tbTH_Next.Text = next;
+            tbTH_Previous.Text = previous;
+ 
+            tbTH.ForeColor = Color.White;
+            tbTH_Next.ForeColor = Color.Black;
+            tbTH_Previous.ForeColor = Color.Black;
+
+            dgvTOTHT.Update(verseWords, testament);
+        }
 
         /// <summary>
         /// Cleean Arabic text
@@ -525,6 +597,7 @@ namespace BibleTaggingUtil.Editor
         private void DgvTarget_RefernceHighlightRequest(object sender, string tag, bool firstHalf)
         {
             new Thread(() => { SelectReferenceTags(tag.Trim(), firstHalf); }).Start();
+            new Thread(() => { SelectTargetTags(tag.Trim(), firstHalf); }).Start();
         }
 
         /// <summary>
@@ -575,6 +648,47 @@ namespace BibleTaggingUtil.Editor
                 }
             }
         }
+        private void SelectTargetTags(string tag, bool firstHalf)
+        {
+            if (InvokeRequired)
+            {
+                Action safeWrite = delegate { SelectTargetTags(tag, firstHalf); };
+                Invoke(safeWrite);
+            }
+            else
+            {
+                try
+                {
+                    if (dgvTarget.SelectedCells.Count == 1)
+                    {
+                        if (string.IsNullOrEmpty(tag))
+                        {
+                            SetHighlightedCell(dgvTarget, null, null, firstHalf);
+                            return;
+                        }
+
+                        string[] tags = tag.Trim().Split(' ');
+                        string[] tags1 = new string[tags.Length];
+                        string[] tags2 = new string[tags.Length];
+                        for (int i = 0; i < tags.Length; i++)
+                        {
+                            tags1[i] = tags[i].Replace("<", "").Replace(">", "");
+                            tags2[i] = tags[i];
+                            while (tags2[i][1] == '0')
+                                tags2[i] = tags2[i].Remove(1, 1);
+                        }
+
+                        SetHighlightedCell(dgvTarget, tags1, tags2, firstHalf);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                    var name = cm.DeclaringType.FullName + "." + cm.Name;
+                    Tracing.TraceException(name, ex.Message);
+                }
+            }
+        }
 
         private void SetHighlightedCell(DataGridView dgv, string[] tags1, string[] tags2, bool firstHalf)
         {
@@ -582,10 +696,19 @@ namespace BibleTaggingUtil.Editor
             int tagsRow = dgv.RowCount - 1;
             List<int> cells = new List<int>();
 
+            int selectedCellColumn = -1;
+            if (dgv == dgvTarget)
+                selectedCellColumn = dgvTarget.SelectedCells[0].ColumnIndex;
+
+
             for (int i = 0; i < count; i++)
             {
+                if (i == selectedCellColumn)
+                    continue; // skip target selected cell
+
                 dgv.Rows[tagsRow].Cells[i].Style.BackColor = Color.White;
-                dgv.Rows[tagsRow].Cells[i].Selected = false;
+                if (dgv != dgvTarget)
+                    dgv.Rows[tagsRow].Cells[i].Selected = false;
 
                 if (tags1 == null)
                     continue;
@@ -605,7 +728,8 @@ namespace BibleTaggingUtil.Editor
             }
             if (cells.Count == 1)
             {
-                dgv.CurrentCell = dgv.Rows[tagsRow].Cells[cells[0]];
+                if (dgv != dgvTarget)
+                    dgv.CurrentCell = dgv.Rows[tagsRow].Cells[cells[0]];
                 dgv.Rows[tagsRow].Cells[cells[0]].Style.BackColor = Color.Yellow;
             }
             else if (cells.Count != 0)
@@ -614,12 +738,14 @@ namespace BibleTaggingUtil.Editor
                 {
                     dgv.Rows[tagsRow].Cells[cells[i]].Style.BackColor = Color.Yellow;
                 }
-                if (firstHalf)
-                    dgv.CurrentCell = dgv.Rows[tagsRow].Cells[cells[0]];
-                else
-                    dgv.CurrentCell = dgv.Rows[tagsRow].Cells[cells[cells.Count - 1]];
+                if (dgv != dgvTarget)
+                    if (firstHalf)
+                        dgv.CurrentCell = dgv.Rows[tagsRow].Cells[cells[0]];
+                    else
+                        dgv.CurrentCell = dgv.Rows[tagsRow].Cells[cells[cells.Count - 1]];
             }
-            dgv.ClearSelection();
+            if (dgv != dgvTarget)
+                dgv.ClearSelection();
         }
 
         #endregion Higlight same tag
@@ -763,9 +889,9 @@ namespace BibleTaggingUtil.Editor
                 if (bookIndex >= 0)
                 {
                     if (bookIndex > 38)
-                        tbTH.Text = "TAGNT";
+                        tbTH.Text = container.TAGNT.BibleName;
                     else
-                        tbTH.Text = "TOTHT";
+                        tbTH.Text = container.TOTHT.BibleName;
                 }
             }
         }
@@ -807,7 +933,7 @@ namespace BibleTaggingUtil.Editor
 
             string reference = tbCurrentReference.Text;
             dgvTarget.SaveVerse(reference);
-            Verse v = osis? container.OsisTarget.Bible[reference] : container.Target.Bible[reference];
+            Verse v = osis ? container.OsisTarget.Bible[reference] : container.Target.Bible[reference];
             dgvTarget.Update(v);
 
             dgvTarget.CurrentCell = dgvTarget[savedColumn, savedRow];
@@ -825,5 +951,63 @@ namespace BibleTaggingUtil.Editor
             }
 
         }
+
+        private void TbTH_Next_Click(object sender, EventArgs e)
+        {
+            UpdateThSpecial(sender);
+        }
+
+        private void TbTH_Previous_Click(object sender, EventArgs e)
+        {
+            UpdateThSpecial(sender);
+        }
+
+        private void TbTH_Click(object sender, EventArgs e)
+        {
+            UpdateThSpecial(sender);
+        }
+
+        private void UpdateThSpecial(object sender)
+        {
+            string reference = ((TextBox)sender).Text;
+            if (string.IsNullOrEmpty(reference))
+                return;
+
+            tbTH.ForeColor = Color.Black;
+            tbTH_Next.ForeColor = Color.Black;
+            tbTH_Previous.ForeColor = Color.Black;
+            if (sender == tbTH)
+            {
+                tbTH.ForeColor = Color.White;
+                int idx = reference.IndexOf(' ');
+                if(idx < 0) reference = string.Empty;
+                else reference = reference.Substring(idx+1).Trim();
+            }
+            if (sender == tbTH_Next)
+            {
+                tbTH_Next.ForeColor = Color.White;
+            }
+            if (sender == tbTH_Previous)
+            {
+                tbTH_Previous.ForeColor = Color.White;
+            }
+
+            BibleTestament testament = Utils.GetTestament(reference);
+            if (testament == BibleTestament.OT) 
+            {
+                if (container.TOTHT.Bible.ContainsKey(reference))
+                    dgvTOTHT.Update(container.TOTHT.Bible[reference], testament);
+                else
+                    dgvTOTHT.Update(null, testament);
+            }
+            else
+            {
+                if (container.TAGNT.Bible.ContainsKey(reference))
+                    dgvTOTHT.Update(container.TAGNT.Bible[reference], testament);
+                else
+                    dgvTOTHT.Update(null, testament);
+            }
+        }
+
     }
 }

@@ -54,7 +54,7 @@ namespace BibleTaggingUtil.BibleVersions
             this.totalVerses = totalVerses;
         }
 
-        public string BibleName { set { bibleName = value;} }
+        public string BibleName { get { return bibleName; } set { bibleName = value;} }
 
         public virtual bool LoadBibleFile(string textFilePath, bool newBible, bool more)
         {
@@ -221,29 +221,32 @@ namespace BibleTaggingUtil.BibleVersions
 
             Match mTx = Regex.Match(line, @"^([0-9A-Za-z]+)\s([0-9]+):([0-9]+)\s*(.*)");
 
-            /*            // find spcae between book and Chapter
-                        int spaceB = line.IndexOf(' ');
-                        // find spcae between Verse number and Text
-                        int spaceV = line.IndexOf(' ', spaceB + 1);
-                        if (spaceV == -1)
-                        {
-                            throw new Exception(string.Format("Ill formed verse line!"));
-                        }
+            string book = string.Empty;
+            string chapter = string.Empty;
+            string verseNo = string.Empty;
+            string verse = string.Empty;
 
-                        string book = line.Substring(0, spaceB);
-                        string reference = line.Substring(0, spaceV);
-                        string verse = line.Substring(spaceV + 1);*/
+            if (mTx.Success)
+            {
+                book = mTx.Groups[1].Value;
+                chapter = mTx.Groups[2].Value;
+                verseNo = mTx.Groups[3].Value;
+                verse = mTx.Groups[4].Value;
+            }
+            else
+            {
+                throw new Exception(string.Format("Ill formed verse line!"));
+            }
 
-            string book = mTx.Groups[1].Value;
-            string chapter = mTx.Groups[2].Value;
-            string verseNo = mTx.Groups[3].Value;
-            string verse = mTx.Groups[4].Value;
             string reference = string.Format("{0} {1}:{2}", book, chapter, verseNo);
-            if(reference == "Jhn 1:1")
+            if(reference == "Psa 18:1")
             { 
                 int x = 0;
             }
 
+            bool hasPsalmTitle = false;
+            if (book.StartsWith("Ps") && verseNo.Trim() == "1")
+                hasPsalmTitle = line.Contains('*');
 
             BibleTestament testament = Utils.GetTestament(reference);
 
@@ -339,11 +342,15 @@ namespace BibleTaggingUtil.BibleVersions
                 vTags[i] = vTags[i].Replace("<", "").Replace(">", "");
 
             Verse verseWords = new Verse();
+ 
             for (int i = 0; i < vWords.Length; i++)
             {
                 string[] splitTags = vTags[i].Split(' ');
                 verseWords[i] = new VerseWord(vWords[i], splitTags, reference);
             }
+
+            if (book.StartsWith("Ps") && verseNo.Trim() == "1")
+                verseWords.HasPsalmTitle = hasPsalmTitle;
 
             bible.Add(reference, verseWords);
             currentVerseCount++;
@@ -367,6 +374,21 @@ namespace BibleTaggingUtil.BibleVersions
             }
             return index;
         }
+
+
+        public string GetBookNameFromIndex(int index)
+        {
+            string bookName = string.Empty;
+            if (index < 66)
+            {
+                if (index < bookNamesList.Count)
+                    bookName = bookNamesList[index];
+                else if (bookNamesList.Count == 27)
+                    bookName = bookNamesList[index - 39];
+            }
+            return bookName;
+        }
+
 
         public string GetCorrectReference(string reference)
         {

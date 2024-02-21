@@ -86,9 +86,25 @@ namespace BibleTaggingUtil.Editor
             List<string> transliteration = new List<string>();
             List<string> tags = new List<string>();
             List<string> morphology = new List<string>();
+            List<string> rootStrongs = new List<string>();
+            List<string> wordType =   new List<string>();
+            List<string> altVerseNumber = new List<string>();
+            List<string> wordNumber = new List<string>();
+            List<string> meaningVar = new List<string>();
 
             try
             {
+                words.Add("ENG");
+                hebrew.Add("HEB");
+                altVerseNumber.Add("ALT");
+                wordNumber.Add("W #");
+                wordType.Add("TYP");
+                morphology.Add("GMR");
+                meaningVar.Add("VAR");
+                transliteration.Add("XLT");
+                rootStrongs.Add("STG");
+                tags.Add("TAG");
+
                 for (int i = 0; i < verseWords.Count; i++)
                 {
                     VerseWord verseWord = verseWords[i];
@@ -96,6 +112,12 @@ namespace BibleTaggingUtil.Editor
                     hebrew.Add(verseWord.Hebrew);
                     morphology.Add(verseWord.Morphology);
                     transliteration.Add(verseWord.Transliteration);
+                    rootStrongs.Add(verseWord.RootStrong);
+                    wordType.Add(verseWord.WordType);
+                    altVerseNumber.Add(verseWord.AltVerseNumber);
+                    wordNumber.Add(verseWord.WordNumber);
+                    meaningVar.Add(verseWord.MeaningVar);
+
                     if (verseWord.Strong.Length > 0)
                     {
                         string s = String.Empty;
@@ -145,13 +167,19 @@ namespace BibleTaggingUtil.Editor
                         tags.Add("");
                 }
 
-                this.ColumnCount = verseWords.Count;
+                //this.ColumnCount = verseWords.Count;
+                this.ColumnCount = words.Count;
 
                 this.Rows.Add(words.ToArray());
                 this.Rows.Add(hebrew.ToArray());
-                //this.Rows.Add(transliteration.ToArray());
+                this.Rows.Add(altVerseNumber.ToArray());
+                this.Rows.Add(wordNumber.ToArray());
+                this.Rows.Add(wordType.ToArray());
+                this.Rows.Add(morphology.ToArray());
+                this.Rows.Add(meaningVar.ToArray());
+                this.Rows.Add(transliteration.ToArray());
+                this.Rows.Add(rootStrongs.ToArray());
                 this.Rows.Add(tags.ToArray());
-                //this.Rows.Add(morphology.ToArray());
 
                 for (int i = 0; i < words.Count; i++)
                 {
@@ -198,26 +226,55 @@ namespace BibleTaggingUtil.Editor
             List<string> transliteration = new List<string>();
             List<string> tags = new List<string>();
             List<string> morphology = new List<string>();
+            List<string> rootStrongs = new List<string>();
+            List<string> wordType = new List<string>();
+            List<string> altVerseNumber = new List<string>();
+            List<string> wordNumber = new List<string>();
 
             try
             {
+                words.Add("ENG");
+                greek.Add("GRK");
+                altVerseNumber.Add("ALT");
+                wordNumber.Add("W #");
+                wordType.Add("TYP");
+                morphology.Add("GMR");
+                transliteration.Add("XLT");
+                rootStrongs.Add("STG");
+                tags.Add("TAG");
+
                 for (int i = 0; i < verseWords.Count; i++)
                 {
                     VerseWord verseWord = verseWords[i];
                     words.Add(verseWord.Word);
                     greek.Add(verseWord.Greek);
-                    transliteration.Add(verseWord.Transliteration);
-                    tags.Add("<" + verseWord.Strong[0] + ">");
                     morphology.Add(verseWord.Morphology);
+                    transliteration.Add(verseWord.Transliteration);
+                    rootStrongs.Add(verseWord.RootStrong);
+                    wordType.Add(verseWord.WordType);
+                    altVerseNumber.Add(verseWord.AltVerseNumber);
+                    wordNumber.Add(verseWord.WordNumber);
+
+                    string strng = string.Empty;
+                    foreach (string s in verseWord.Strong)
+                    {
+                        strng += "<" + s + "> ";
+                    }
+                    tags.Add(strng.Trim());
                 }
 
-                this.ColumnCount = verseWords.Count;
+                //this.ColumnCount = verseWords.Count;
+                this.ColumnCount = words.Count;
 
                 this.Rows.Add(words.ToArray());
                 this.Rows.Add(greek.ToArray());
-                //            this.Rows.Add(transliteration.ToArray());
+                this.Rows.Add(altVerseNumber.ToArray());
+                this.Rows.Add(wordNumber.ToArray());
+                this.Rows.Add(wordType.ToArray());
+                this.Rows.Add(morphology.ToArray());
+                this.Rows.Add(transliteration.ToArray());
+                this.Rows.Add(rootStrongs.ToArray());
                 this.Rows.Add(tags.ToArray());
-                //this.Rows.Add(morphology.ToArray());
 
                 this.ClearSelection();
 

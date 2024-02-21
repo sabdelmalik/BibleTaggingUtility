@@ -39,7 +39,7 @@ namespace BibleTaggingUtil.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("BibleTagging.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("BibleTaggingUtil.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,6 +57,22 @@ namespace BibleTaggingUtil.Properties {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TTArabicSVD - Translators Tags etc. for Arabic SVD OT - STEPBible.org CC BY
+        ///==================================================================================
+        ///
+        ///	==========================================================================
+        ///	Data created using Translators Amalgamated Hebrew OT - STEPBible.org CC BY
+        ///	==========================================================================
+        ///	This licence allows you to:															
+        ///	* Include any part of this data in software or publications without requ [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string TTArabicSVDPreamble {
+            get {
+                return ResourceManager.GetString("TTArabicSVDPreamble", resourceCulture);
             }
         }
     }

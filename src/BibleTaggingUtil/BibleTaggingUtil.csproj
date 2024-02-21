@@ -1,5 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup Label="Globals">
+    <WebView2UseWinRT>False</WebView2UseWinRT>
+  </PropertyGroup>
+
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
@@ -28,6 +32,10 @@
 
   <ItemGroup>
     <Compile Remove="Editor\OsisTargetGridView.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="BibleVersions\TTArabicSVDPreamble.txt" />
   </ItemGroup>
 
   <ItemGroup>
@@ -68,6 +76,10 @@
 
   <ItemGroup>
     <Folder Include="Crosswire\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Properties\TTArabicSVDPreamble.txt" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
