@@ -349,6 +349,18 @@ namespace BibleTaggingUtil.BibleVersions
             vRef = string.Format("{0} {1}:{2}", book, ch, v); ;
             otVerseMap.Add(vRef, new List<int[]>());
             otVerseMap[vRef].Add(new int[] { ch, v, 0, -1, v, 3, -1 });
+            //==============================================================
+            book = "1Th";  // KJV
+            ch = 2; v = 6;
+            vRef = string.Format("{0} {1}:{2}", book, ch, v); ;
+            ntVerseMap.Add(vRef, new List<int[]>());
+            ntVerseMap[vRef].Add(new int[] { ch, v, 0, 9, v, 0, -1 });
+            ntVerseMap[vRef].Add(new int[] { ch, v, 9, -1, v + 1, 0, 7 });
+
+            v += 1;
+            vRef = string.Format("{0} {1}:{2}", book, ch, v); ;
+            otVerseMap.Add(vRef, new List<int[]>());
+            otVerseMap[vRef].Add(new int[] { ch, v, 0, -1, v, 7, -1 });
 
             #endregion NT verse Map
 
