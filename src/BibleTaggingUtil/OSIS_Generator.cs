@@ -85,7 +85,7 @@ namespace BibleTaggingUtil
 
                 if (!string.IsNullOrEmpty(bibleVplFile))
                 {
-                    // we have a complete bible file that we need split into ot and nt
+                    // we have a complete bible file that we need to split into ot and nt
                     if (string.IsNullOrEmpty(otVplFile) || string.IsNullOrEmpty(ntVplFile))
                         throw new Exception("Configuration must contain ot-vpl-file and nt-vpl-file defined because bible-vpl=file is defined");
 

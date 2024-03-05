@@ -13,7 +13,7 @@
 	  (Updates or corrections are easier to implement when the data is distributed from a single source)															
 	* We'd love to hear about your project when you make it available. Email us at STEPBibleATGmail.com..															
 	===========================================================================
-Version 1.0: The Arabic text is that of Smith & Van Dyck (SVD), Translation 1865, "Public Domain" lacking diacritics and formating markers.
+Version 1.1: The Arabic text is that of Smith & Van Dyck (SVD), Translation 1865, "Public Domain" lacking diacritics and formating markers.
 Created 
 
 FIELD DESCRIPTIONS:																
@@ -25,7 +25,7 @@ FIELD DESCRIPTIONS:
 			Morphology codes follow the form defined by OpenScriptures at http://openscriptures.github.io/morphhb/parsing/HebrewMorphologyCodes.html#vt with some adaptations - see TinyURL.com/HebMorph															
 5. Heb w#:	Two digits representing the word number of the corresponding Hebrew word in the Hebrew verse. 
 			Verse number of the Arabic text does not always match the verse number of the corresponding Hebrew Text.
-			In such cases, the hebrew word number is prefixed with the actual hebrew verse number.
+			In such cases, the Hebrew word number is prefixed with the actual Hebrew verse number.
 			See Psa.3:1 for an example. 
 			Some Hebrew word numbers are shown as four digits. This is to show restored text between two words.
 			See Neh.7.68 for an example.

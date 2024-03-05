@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BibleTaggingUtil.Strongs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.Xml;
@@ -10,7 +11,7 @@ namespace BibleTaggingUtil
     [Serializable()]
     public class VerseWord : ICloneable
     {
-        public VerseWord(string ancientWord, string english, string[] strong, string transliteration, string reference, string morphology="", string rootStrong = "", string wordType = "", string altVerseNumber = "", string wordNumber = "", string meaningVar = "")
+        public VerseWord(string ancientWord, string english, StrongsCluster strong, string transliteration, string reference, string morphology="", string rootStrong = "", string wordType = "", string altVerseNumber = "", string wordNumber = "", string meaningVar = "")
         {
             this.Reference = reference;
             Testament = Utils.GetTestament(reference);
@@ -31,7 +32,7 @@ namespace BibleTaggingUtil
             MeaningVar = meaningVar;
         }
 
-        public VerseWord(string word, string[] strong, string reference)
+        public VerseWord(string word, StrongsCluster strong, string reference)
         {
             this.Reference = reference;
             Testament = Utils.GetTestament(reference);
@@ -40,13 +41,20 @@ namespace BibleTaggingUtil
             this.Strong = strong;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="word"></param>
+        /// <param name="strong">strongs in the form &lt;G1234A&gt;  &lt;G5678A&gt; - may not have the enclosing angle brackets
+        /// </param>
+        /// <param name="reference"></param>
         public VerseWord(string word, string strong, string reference)
         {
             this.Reference = reference;
             Testament = Utils.GetTestament(reference);
-
             this.Word = word;
-            this.Strong = strong.Replace("<", "").Replace(">", "").Trim().Split(' ');
+            this.Strong = new StrongsCluster();
+            this.Strong.Add(strong);
         }
 
 
@@ -57,37 +65,28 @@ namespace BibleTaggingUtil
         public string Hebrew { get; private set; }
         public string Greek { get; private set; }
         public string Word { get; set; }
-        public string[] Strong { get; set; }
+        public StrongsCluster Strong { get; set; }
 
         public String StrongString
         {
             get
             {
-                string temp = string.Empty;
-                if (this.Strong != null)
-                {
-                    for(int i= 0; i < this.Strong.Length; i++)
-                    {
-                        temp += "<" + (this.Strong[i].Contains("???")? "" : this.Strong[i]) + "> ";
-                    }
-                }
-                if (temp != "<>")
-                    temp = temp.Replace("<>", "").Trim();
-                return temp;
+                return this.Strong.ToString();
             }
             set
             {
-                if (string.IsNullOrEmpty(value))
-                {
-                    Strong = new string[] {""};
-                }
-                else
-                {
-                    string strong = value.Replace("<", "").Replace(">", "").Trim();
-                    Strong = strong.Split(' ');
-                }
+                this.Strong.Set(value);
             }
         }
+
+        public String StrongStringS
+        {
+            get
+            {
+                return this.Strong.ToStringS();
+            }
+        }
+
 
         public int WordIndex { get; set; }
         public string Transliteration { get; private set; }
@@ -98,38 +97,37 @@ namespace BibleTaggingUtil
 
         public override string ToString()
         {
-            string strng = string.Empty;
-            for (int i = 0; i < Strong.Length; i++)
-            {
-                strng += " " + Strong[i];
-            }
-            return Reference + ": " + Word + strng;
+            return Reference + ": " + Word + this.StrongString;
         }
 
+        public string OsisWord
+        {
+            get 
+            { 
+                string result = string.Empty;
+
+                if (Strong.Count == 0 || (Strong.Count == 1 && Strong[0].IsEmpty))
+                {
+                    result = string.Format("<w>{0}</w>", Word);
+                }
+                else
+                {
+                    string strongStr = string.Empty;
+                    foreach (StrongsNumber number in Strong.Strongs)
+                    {
+                        strongStr += string.Format(" strong:{0}", number.ToString());
+                    }
+                    result = string.Format("<w lemma=\"{0}\">{1}</w>", strongStr.Trim(), Word);
+                }
+                return result; 
+
+            }
+        }
         public static VerseWord operator +(VerseWord a, VerseWord b)
         {
-            List<string> st = new List<string>();
-            bool blankDetected = false;
-            for(int i = 0; i < a.Strong.Length; i++)
-            {
-                if (string.IsNullOrEmpty(a.Strong[i]) || a.Strong[i].Contains("???")|| a.Strong[i].Contains("0000"))
-                    blankDetected = true;
-                else
-                    st.Add(a.Strong[i]);
-            }
-            for (int i = 0; i < b.Strong.Length; i++)
-            {
-                if (string.IsNullOrEmpty(b.Strong[i]) || b.Strong[i].Contains("???") || b.Strong[i].Contains("0000"))
-                    blankDetected = true;
-                else if(!st.Contains(b.Strong[i]))
-                    st.Add(b.Strong[i]);
-            }
-            if (st.Count == 0 && blankDetected)
-                st.Add("");
-
             return new VerseWord(
                 (a.Word + " " + b.Word).Trim(),
-                st.ToArray(),
+                (a.Strong + b.Strong),
                 a.Reference
                 );
         }

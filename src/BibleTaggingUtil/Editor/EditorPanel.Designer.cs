@@ -361,7 +361,6 @@ namespace BibleTaggingUtil.Editor
             dgvTOTHT.RowHeadersWidth = 51;
             dgvTOTHT.RowTemplate.Height = 29;
             dgvTOTHT.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            dgvTOTHT.ShowCellToolTips = false;
             dgvTOTHT.Size = new System.Drawing.Size(1299, 199);
             dgvTOTHT.TabIndex = 4;
             // 

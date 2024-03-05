@@ -83,7 +83,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="md $(ProjectDir)$(OutDir)ReferenceBibles&#xD;&#xA;md $(ProjectDir)$(OutDir)Crosswire&#xD;&#xA;xcopy $(ProjectDir)ReferenceBibles  $(ProjectDir)$(OutDir)ReferenceBibles   /y /s&#xD;&#xA;xcopy $(ProjectDir)Crosswire $(ProjectDir)$(OutDir)Crosswire  /y /s" />
+    <Exec Command="rd $(ProjectDir)$(OutDir)ReferenceBibles /q /s&#xD;&#xA;rd $(ProjectDir)$(OutDir)Crosswire /q /s&#xD;&#xA;md $(ProjectDir)$(OutDir)ReferenceBibles&#xD;&#xA;md $(ProjectDir)$(OutDir)Crosswire&#xD;&#xA;xcopy $(ProjectDir)ReferenceBibles  $(ProjectDir)$(OutDir)ReferenceBibles   /y /s&#xD;&#xA;xcopy $(ProjectDir)Crosswire $(ProjectDir)$(OutDir)Crosswire  /y /s" />
   </Target>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">

@@ -944,31 +944,31 @@ namespace BibleTaggingUtil
                     words.Add(verseWord.Word);
                     hebrew.Add(verseWord.Hebrew);
                     transliteration.Add(verseWord.Transliteration);
-                    if (verseWord.Strong.Length > 0)
+                    if (verseWord.Strong.Count > 0)
                     {
                         string s = String.Empty;
                         bool E = (verseWord.Hebrew.Trim() == "אֱלֹהִים");
                         bool Y = (verseWord.Hebrew.Trim() == "יהוה");
-                        bool strongIsE = (verseWord.Strong[0].Trim() == "0430");
-                        bool strongIsY = ((verseWord.Strong[0].Trim() == "3068") || (verseWord.Strong[0].Trim() == "3069"));
+                        bool strongIsE = (verseWord.Strong[0].Number == 0430);
+                        bool strongIsY = ((verseWord.Strong[0].Number == 3068) || (verseWord.Strong[0].Number == 3069));
 
                         if (E || Y)
                         {
                             // special treatment for אֱלֹהִים & יהוה
                             if ((E && strongIsE) || (Y && strongIsY))
-                                s = "<" + verseWord.Strong[0] + ">";
+                                s = "<" + verseWord.Strong[0].ToString() + ">";
                         }
                         else
                         {
-                            s = verseWord.Strong[0];
+                            s = verseWord.Strong[0].ToString();
                         }
 
-                        if (verseWord.Strong.Length > 1)
+                        if (verseWord.Strong.Count > 1)
                         {
-                            for (int j = 1; j < verseWord.Strong.Length; j++)
+                            for (int j = 1; j < verseWord.Strong.Count; j++)
                             {
-                                strongIsE = (verseWord.Strong[j].Trim() == "0430");
-                                strongIsY = ((verseWord.Strong[j].Trim() == "3068") || (verseWord.Strong[j].Trim() == "3069"));
+                                strongIsE = (verseWord.Strong[j].Number == 0430);
+                                strongIsY = ((verseWord.Strong[j].Number == 3068) || (verseWord.Strong[j].Number == 3069));
                                 if (E || Y)
                                 {
                                     // special treatment for אֱלֹהִים & יהוה
@@ -976,14 +976,14 @@ namespace BibleTaggingUtil
                                     {
                                         if (!string.IsNullOrEmpty(s))
                                             s += " ";
-                                        s += verseWord.Strong[j];
+                                        s += verseWord.Strong[j].ToString();
                                     }
                                 }
                                 else
                                 {
                                     if (!string.IsNullOrEmpty(s))
                                         s += " ";
-                                    s += "<" + verseWord.Strong[j] + ">";
+                                    s += "<" + verseWord.Strong[j].ToString() + ">";
                                 }
                             }
                         }
@@ -1210,7 +1210,8 @@ namespace BibleTaggingUtil
                 () =>
                 {
                     WaitCursorControl(true);
-                    OSIS_Generator generator = new OSIS_Generator(config);
+                    //OSIS_Generator generator = new OSIS_Generator(config);
+                    OsisGenerator generator = new OsisGenerator(config);
                     generator.Generate(target);
                     generator.Generate(target, true);
                     WaitCursorControl(false);
@@ -1456,7 +1457,8 @@ namespace BibleTaggingUtil
 
         private void exportTranslatorTagsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TranslatorTags tt = new TranslatorTags();
+            //TranslatorTags tt = new TranslatorTags();
+            TranslatorTagsEx tt = new TranslatorTagsEx();
             if(Properties.Settings.Default.Osis)
                 tt.Export(OsisTarget, TOTHT, TAGNT, true);
             else

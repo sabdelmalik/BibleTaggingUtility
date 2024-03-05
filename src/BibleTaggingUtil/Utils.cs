@@ -49,10 +49,12 @@ namespace BibleTaggingUtil
                 verse += " " + words[i].Word;
                 if (includeTags)
                 {
-                    for (int j = 0; j < words[i].Strong.Length; j++)
+                    verse += " " + words[i].Strong.ToStringBracketed();
+ /*                   for (int j = 0; j < words[i].Strong.Count; j++)
                     {
-                        verse += (" <" + words[i].Strong[j]) + ">";
+                        verse += (" <" + words[i].Strong[j].ToString()) + ">";
                     }
+ */
                 }
             }
 

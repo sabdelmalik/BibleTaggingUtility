@@ -1,0 +1,656 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|c:\\users\\samim\\documents\\myprojects\\step\\bibletaggingutility\\src\\bibletaggingutil\\bibleversions\\translatortags.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|solutionrelative:bibletaggingutil\\bibleversions\\translatortags.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|c:\\users\\samim\\documents\\myprojects\\step\\bibletaggingutility\\src\\bibletaggingutil\\editor\\editorpanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|solutionrelative:bibletaggingutil\\editor\\editorpanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|c:\\users\\samim\\documents\\myprojects\\step\\bibletaggingutility\\src\\bibletaggingutil\\editor\\editorpanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|solutionrelative:bibletaggingutil\\editor\\editorpanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|c:\\users\\samim\\documents\\myprojects\\step\\bibletaggingutility\\src\\bibletaggingutil\\editor\\editorpanel.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|solutionrelative:bibletaggingutil\\editor\\editorpanel.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|c:\\users\\samim\\documents\\myprojects\\step\\bibletaggingutility\\src\\bibletaggingutil\\editor\\tohthgridview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|solutionrelative:bibletaggingutil\\editor\\tohthgridview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|c:\\users\\samim\\documents\\myprojects\\step\\bibletaggingutility\\src\\bibletaggingutil\\bibleversions\\bibleversion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|solutionrelative:bibletaggingutil\\bibleversions\\bibleversion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|c:\\users\\samim\\documents\\myprojects\\step\\bibletaggingutility\\src\\bibletaggingutil\\editor\\targetgridview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|solutionrelative:bibletaggingutil\\editor\\targetgridview.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|c:\\users\\samim\\documents\\myprojects\\step\\bibletaggingutility\\src\\bibletaggingutil\\bibletaggingutil.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
+      "RelativeMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|solutionrelative:bibletaggingutil\\bibletaggingutil.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|c:\\users\\samim\\documents\\myprojects\\step\\bibletaggingutility\\src\\bibletaggingutil\\verse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|solutionrelative:bibletaggingutil\\verse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|c:\\users\\samim\\documents\\myprojects\\step\\bibletaggingutility\\src\\bibletaggingutil\\verseword.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|solutionrelative:bibletaggingutil\\verseword.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|c:\\users\\samim\\documents\\myprojects\\step\\bibletaggingutility\\src\\bibletaggingutil\\bibletaggingform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|solutionrelative:bibletaggingutil\\bibletaggingform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|c:\\users\\samim\\documents\\myprojects\\step\\bibletaggingutility\\src\\bibletaggingutil\\bibleversions\\referenceversiontagnt.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|solutionrelative:bibletaggingutil\\bibleversions\\referenceversiontagnt.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|c:\\users\\samim\\documents\\myprojects\\step\\bibletaggingutility\\src\\bibletaggingutil\\bibleversions\\referenceversiontotht.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|solutionrelative:bibletaggingutil\\bibleversions\\referenceversiontotht.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|c:\\users\\samim\\documents\\myprojects\\step\\bibletaggingutility\\src\\bibletaggingutil\\utils.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|solutionrelative:bibletaggingutil\\utils.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|c:\\users\\samim\\documents\\myprojects\\step\\bibletaggingutility\\src\\bibletaggingutil\\osisxml\\osisutils.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|solutionrelative:bibletaggingutil\\osisxml\\osisutils.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|c:\\users\\samim\\documents\\myprojects\\step\\bibletaggingutility\\src\\bibletaggingutil\\referencebibles\\tagnt\\1.tagnt mat-jhn - translators amalgamated greek nt - stepbible.org cc-by.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|solutionrelative:bibletaggingutil\\referencebibles\\tagnt\\1.tagnt mat-jhn - translators amalgamated greek nt - stepbible.org cc-by.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|c:\\users\\samim\\documents\\myprojects\\step\\bibletaggingutility\\src\\bibletaggingutil\\referencebibles\\tagnt_old\\1.tagnt mat-jhn - translators amalgamated greek nt - stepbible.org cc-by.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|solutionrelative:bibletaggingutil\\referencebibles\\tagnt_old\\1.tagnt mat-jhn - translators amalgamated greek nt - stepbible.org cc-by.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|c:\\users\\samim\\documents\\myprojects\\step\\bibletaggingutility\\src\\bibletaggingutil\\bibleversions\\targetosisversion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|solutionrelative:bibletaggingutil\\bibleversions\\targetosisversion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|c:\\users\\samim\\documents\\myprojects\\step\\bibletaggingutility\\src\\bibletaggingutil\\bibleversions\\jsonbibleconverter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|solutionrelative:bibletaggingutil\\bibleversions\\jsonbibleconverter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\samim\\AppData\\Local\\SourceServer\\b287d3f60482fb379d9f327389538d70ab3364c12e73d4f0e87edc820fd7ed8b\\src\\libraries\\System.Private.CoreLib\\src\\System\\String.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\samim\\AppData\\Local\\SourceServer\\e563aff8a938ed3be0e84e2210cfaa6b7d825273c1146fa627c2554ebb7531cf\\src\\libraries\\System.Text.Json\\src\\System\\Text\\Json\\ThrowHelper.Serialization.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|c:\\users\\samim\\documents\\myprojects\\step\\bibletaggingutility\\src\\bibletaggingutil\\bibletaggingform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|solutionrelative:bibletaggingutil\\bibletaggingform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\samim\\AppData\\Local\\SourceServer\\c71d7753f9a8a15e62779e2dd8f7100c5a58f86b13f91331159e5bf8e9d8d5b4\\src\\System.Windows.Forms\\src\\System\\Windows\\Forms\\NativeWindow.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\samim\\AppData\\Local\\SourceServer\\d086c11300ffe94d351dfe5d1fa3dbe130d08ea37f9410acc9a6f81bda42c8ce\\src\\libraries\\System.Text.Json\\src\\System\\Text\\Json\\Serialization\\JsonConverterOfT.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|c:\\users\\samim\\documents\\myprojects\\step\\bibletaggingutility\\src\\bibletaggingutil\\bibleversions\\targetversion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|solutionrelative:bibletaggingutil\\bibleversions\\targetversion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|c:\\users\\samim\\documents\\myprojects\\step\\bibletaggingutility\\src\\bibletaggingutil\\bibleversions\\referencetopversion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|solutionrelative:bibletaggingutil\\bibleversions\\referencetopversion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\samim\\AppData\\Local\\SourceServer\\3720e33c9d79160b00be385d179e8b2105ff88089822f75674e9e3db13c20689\\src\\coreclr\\System.Private.CoreLib\\src\\System\\Threading\\Thread.CoreCLR.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\samim\\AppData\\Local\\SourceServer\\65126936f962e148bf1f318a807557889edf6058339fdca083abf0091b4be20b\\src\\libraries\\System.Text.RegularExpressions\\src\\System\\Text\\RegularExpressions\\RegexParser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|c:\\users\\samim\\documents\\myprojects\\step\\bibletaggingutility\\src\\bibletaggingutil\\osisxml\\osisverse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|solutionrelative:bibletaggingutil\\osisxml\\osisverse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|c:\\users\\samim\\documents\\myprojects\\step\\bibletaggingutility\\src\\bibletaggingutil\\referencebibles\\nasb2020\\1.osis.xml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|solutionrelative:bibletaggingutil\\referencebibles\\nasb2020\\1.osis.xml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\samim\\AppData\\Local\\SourceServer\\149c5c946c14e743f813682f6ed50ffb9f5f92ed651d7596cd978b0f6033cc65\\src\\libraries\\System.Private.CoreLib\\src\\System\\String.Manipulation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\samim\\AppData\\Local\\SourceServer\\5065cb7a77913565d8bfa435816bd8fac8162aa906c43574dfacd83b1daa8802\\src\\libraries\\System.Private.CoreLib\\src\\System\\Text\\ValueStringBuilder.AppendFormat.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\samim\\AppData\\Local\\SourceServer\\ed22996e31f92901e5f9cd2f810d4d5418627f07013251bf4a35447617a8a27c\\src\\libraries\\System.Private.CoreLib\\src\\System\\IO\\Path.Windows.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\samim\\AppData\\Local\\SourceServer\\c146152b8818ed84e8d3a35aebcea7934643b4017d53fbe788cb552b14fbbcff\\src\\libraries\\System.Private.CoreLib\\src\\System\\Collections\\Generic\\Dictionary.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|c:\\users\\samim\\documents\\myprojects\\step\\bibletaggingutility\\src\\bibletaggingutil\\cofigurationholder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{26CA7FB5-2DE5-4993-B7DB-BEFFB50068DE}|BibleTaggingUtil\\BibleTaggingUtil.csproj|solutionrelative:bibletaggingutil\\cofigurationholder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\ReferenceBibles\\TOTHT\\1.TAHOT Gen-Deu - Translators Amalgamated Hebrew OT - STEPBible.org CC BY.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:BibleTaggingUtil\\ReferenceBibles\\TOTHT\\1.TAHOT Gen-Deu - Translators Amalgamated Hebrew OT - STEPBible.org CC BY.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\BibleVersions\\ExportTaggingHelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:BibleTaggingUtil\\BibleVersions\\ExportTaggingHelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\ReferenceBibles\\TOTHT\\3.TAHOT Job-Sng - Translators Amalgamated Hebrew OT - STEPBible.org CC BY.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:BibleTaggingUtil\\ReferenceBibles\\TOTHT\\3.TAHOT Job-Sng - Translators Amalgamated Hebrew OT - STEPBible.org CC BY.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\ReferenceBibles\\TOTHT\\4.TAHOT Isa-Mal - Translators Amalgamated Hebrew OT - STEPBible.org CC BY.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:BibleTaggingUtil\\ReferenceBibles\\TOTHT\\4.TAHOT Isa-Mal - Translators Amalgamated Hebrew OT - STEPBible.org CC BY.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 306,
+          "SelectedChildIndex": 9,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 36,
+              "Title": "ExportTaggingHelper.cs",
+              "DocumentMoniker": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\BibleVersions\\ExportTaggingHelper.cs",
+              "RelativeDocumentMoniker": "BibleTaggingUtil\\BibleVersions\\ExportTaggingHelper.cs",
+              "ToolTip": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\BibleVersions\\ExportTaggingHelper.cs",
+              "RelativeToolTip": "BibleTaggingUtil\\BibleVersions\\ExportTaggingHelper.cs",
+              "ViewState": "AQIAABQAAAAAAAAAAAAAACcAAAAbAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-02-02T15:48:41.596Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Verse.cs",
+              "DocumentMoniker": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\Verse.cs",
+              "RelativeDocumentMoniker": "BibleTaggingUtil\\Verse.cs",
+              "ToolTip": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\Verse.cs",
+              "RelativeToolTip": "BibleTaggingUtil\\Verse.cs",
+              "ViewState": "AQIAAA4AAAAAAAAAAAAqwCAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-12T21:39:15.243Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "VerseWord.cs",
+              "DocumentMoniker": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\VerseWord.cs",
+              "RelativeDocumentMoniker": "BibleTaggingUtil\\VerseWord.cs",
+              "ToolTip": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\VerseWord.cs",
+              "RelativeToolTip": "BibleTaggingUtil\\VerseWord.cs",
+              "ViewState": "AQIAAE0AAAAAAAAAAAAAAFUAAAAqAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-02-02T03:45:41.902Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "BibleTaggingUtil",
+              "DocumentMoniker": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\BibleTaggingUtil.csproj",
+              "RelativeDocumentMoniker": "BibleTaggingUtil\\BibleTaggingUtil.csproj",
+              "ToolTip": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\BibleTaggingUtil.csproj",
+              "RelativeToolTip": "BibleTaggingUtil\\BibleTaggingUtil.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2024-01-23T14:20:06.08Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "TOHTHGridView.cs",
+              "DocumentMoniker": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\Editor\\TOHTHGridView.cs",
+              "RelativeDocumentMoniker": "BibleTaggingUtil\\Editor\\TOHTHGridView.cs",
+              "ToolTip": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\Editor\\TOHTHGridView.cs",
+              "RelativeToolTip": "BibleTaggingUtil\\Editor\\TOHTHGridView.cs",
+              "ViewState": "AQIAAEIAAAAAAAAAAAAjwEkAAAAQAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-23T03:42:24.41Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "EditorPanel.cs",
+              "DocumentMoniker": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\Editor\\EditorPanel.cs",
+              "RelativeDocumentMoniker": "BibleTaggingUtil\\Editor\\EditorPanel.cs",
+              "ToolTip": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\Editor\\EditorPanel.cs",
+              "RelativeToolTip": "BibleTaggingUtil\\Editor\\EditorPanel.cs",
+              "ViewState": "AQIAAOMDAAAAAAAAAAAAAO0DAAAzAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-22T18:13:46.441Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "EditorPanel.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\Editor\\EditorPanel.cs",
+              "RelativeDocumentMoniker": "BibleTaggingUtil\\Editor\\EditorPanel.cs",
+              "ToolTip": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\Editor\\EditorPanel.cs [Design]",
+              "RelativeToolTip": "BibleTaggingUtil\\Editor\\EditorPanel.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-10T18:17:55.235Z",
+              "EditorCaption": " [Design]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "EditorPanel.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\Editor\\EditorPanel.Designer.cs",
+              "RelativeDocumentMoniker": "BibleTaggingUtil\\Editor\\EditorPanel.Designer.cs",
+              "ToolTip": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\Editor\\EditorPanel.Designer.cs",
+              "RelativeToolTip": "BibleTaggingUtil\\Editor\\EditorPanel.Designer.cs",
+              "ViewState": "AQIAAI8BAAAAAAAAAAAWwJ8BAAAWAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-22T18:09:15.457Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "BibleVersion.cs",
+              "DocumentMoniker": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\BibleVersions\\BibleVersion.cs",
+              "RelativeDocumentMoniker": "BibleTaggingUtil\\BibleVersions\\BibleVersion.cs",
+              "ToolTip": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\BibleVersions\\BibleVersion.cs",
+              "RelativeToolTip": "BibleTaggingUtil\\BibleVersions\\BibleVersion.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAH4BAAAIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-22T18:10:48.938Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "TranslatorTags.cs",
+              "DocumentMoniker": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\BibleVersions\\TranslatorTags.cs",
+              "RelativeDocumentMoniker": "BibleTaggingUtil\\BibleVersions\\TranslatorTags.cs",
+              "ToolTip": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\BibleVersions\\TranslatorTags.cs",
+              "RelativeToolTip": "BibleTaggingUtil\\BibleVersions\\TranslatorTags.cs",
+              "ViewState": "AQIAAAwAAAAAAAAAAAAwwD4AAAAMAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-02-14T15:46:09.604Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 35,
+              "Title": "1.TAHOT Gen-Deu - Translators Amalgamated Hebrew OT - STEPBible.org CC BY.txt",
+              "DocumentMoniker": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\ReferenceBibles\\TOTHT\\1.TAHOT Gen-Deu - Translators Amalgamated Hebrew OT - STEPBible.org CC BY.txt",
+              "RelativeDocumentMoniker": "BibleTaggingUtil\\ReferenceBibles\\TOTHT\\1.TAHOT Gen-Deu - Translators Amalgamated Hebrew OT - STEPBible.org CC BY.txt",
+              "ToolTip": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\ReferenceBibles\\TOTHT\\1.TAHOT Gen-Deu - Translators Amalgamated Hebrew OT - STEPBible.org CC BY.txt",
+              "RelativeToolTip": "BibleTaggingUtil\\ReferenceBibles\\TOTHT\\1.TAHOT Gen-Deu - Translators Amalgamated Hebrew OT - STEPBible.org CC BY.txt",
+              "ViewState": "AQIAALcSAAAAAAAAAAAswPoTAABxAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2024-02-01T17:11:53.022Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "TargetGridView.cs",
+              "DocumentMoniker": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\Editor\\TargetGridView.cs",
+              "RelativeDocumentMoniker": "BibleTaggingUtil\\Editor\\TargetGridView.cs",
+              "ToolTip": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\Editor\\TargetGridView.cs",
+              "RelativeToolTip": "BibleTaggingUtil\\Editor\\TargetGridView.cs",
+              "ViewState": "AQIAAMoBAAAAAAAAAAAAANEBAABjAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-12T21:47:52.187Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "ReferenceVersionTAGNT.cs",
+              "DocumentMoniker": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\BibleVersions\\ReferenceVersionTAGNT.cs",
+              "RelativeDocumentMoniker": "BibleTaggingUtil\\BibleVersions\\ReferenceVersionTAGNT.cs",
+              "ToolTip": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\BibleVersions\\ReferenceVersionTAGNT.cs",
+              "RelativeToolTip": "BibleTaggingUtil\\BibleVersions\\ReferenceVersionTAGNT.cs",
+              "ViewState": "AQIAAOIAAAAAAAAAAAAAAOsAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-02-01T17:30:03.692Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "ReferenceVersionTOTHT.cs",
+              "DocumentMoniker": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\BibleVersions\\ReferenceVersionTOTHT.cs",
+              "RelativeDocumentMoniker": "BibleTaggingUtil\\BibleVersions\\ReferenceVersionTOTHT.cs",
+              "ToolTip": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\BibleVersions\\ReferenceVersionTOTHT.cs",
+              "RelativeToolTip": "BibleTaggingUtil\\BibleVersions\\ReferenceVersionTOTHT.cs",
+              "ViewState": "AQIAACwCAAAAAAAAAAAhwDICAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-22T17:53:58.155Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "BibleTaggingForm.cs",
+              "DocumentMoniker": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\BibleTaggingForm.cs",
+              "RelativeDocumentMoniker": "BibleTaggingUtil\\BibleTaggingForm.cs",
+              "ToolTip": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\BibleTaggingForm.cs",
+              "RelativeToolTip": "BibleTaggingUtil\\BibleTaggingForm.cs",
+              "ViewState": "AQIAAKUFAAAAAAAAAIAwwLAFAAAMAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-26T16:05:55.407Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Utils.cs",
+              "DocumentMoniker": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\Utils.cs",
+              "RelativeDocumentMoniker": "BibleTaggingUtil\\Utils.cs",
+              "ToolTip": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\Utils.cs",
+              "RelativeToolTip": "BibleTaggingUtil\\Utils.cs",
+              "ViewState": "AQIAABAAAAAAAAAAAAAQwBUAAAAmAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-02-02T04:04:31.95Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "OsisUtils.cs",
+              "DocumentMoniker": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\OsisXml\\OsisUtils.cs",
+              "RelativeDocumentMoniker": "BibleTaggingUtil\\OsisXml\\OsisUtils.cs",
+              "ToolTip": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\OsisXml\\OsisUtils.cs",
+              "RelativeToolTip": "BibleTaggingUtil\\OsisXml\\OsisUtils.cs",
+              "ViewState": "AQIAABEAAAAAAAAAAAAYwCUAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-22T17:53:58.213Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "1.TAGNT Mat-Jhn - Translators Amalgamated Greek NT - STEPBible.org CC-BY.txt",
+              "DocumentMoniker": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\ReferenceBibles\\TAGNT\\1.TAGNT Mat-Jhn - Translators Amalgamated Greek NT - STEPBible.org CC-BY.txt",
+              "RelativeDocumentMoniker": "BibleTaggingUtil\\ReferenceBibles\\TAGNT\\1.TAGNT Mat-Jhn - Translators Amalgamated Greek NT - STEPBible.org CC-BY.txt",
+              "ToolTip": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\ReferenceBibles\\TAGNT\\1.TAGNT Mat-Jhn - Translators Amalgamated Greek NT - STEPBible.org CC-BY.txt",
+              "RelativeToolTip": "BibleTaggingUtil\\ReferenceBibles\\TAGNT\\1.TAGNT Mat-Jhn - Translators Amalgamated Greek NT - STEPBible.org CC-BY.txt",
+              "ViewState": "AQIAAFQAAAAAAAAAAAAAAF4AAAADAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2024-02-02T16:00:34.448Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "1.TAGNT Mat-Jhn - Translators Amalgamated Greek NT - STEPBible.org CC-BY.txt",
+              "DocumentMoniker": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\ReferenceBibles\\TAGNT_Old\\1.TAGNT Mat-Jhn - Translators Amalgamated Greek NT - STEPBible.org CC-BY.txt",
+              "RelativeDocumentMoniker": "BibleTaggingUtil\\ReferenceBibles\\TAGNT_Old\\1.TAGNT Mat-Jhn - Translators Amalgamated Greek NT - STEPBible.org CC-BY.txt",
+              "ToolTip": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\ReferenceBibles\\TAGNT_Old\\1.TAGNT Mat-Jhn - Translators Amalgamated Greek NT - STEPBible.org CC-BY.txt",
+              "RelativeToolTip": "BibleTaggingUtil\\ReferenceBibles\\TAGNT_Old\\1.TAGNT Mat-Jhn - Translators Amalgamated Greek NT - STEPBible.org CC-BY.txt",
+              "ViewState": "AQIAAG8AAAAAAAAAAAAAAEUAAAAiAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2024-02-01T18:18:55.826Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 37,
+              "Title": "3.TAHOT Job-Sng - Translators Amalgamated Hebrew OT - STEPBible.org CC BY.txt",
+              "DocumentMoniker": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\ReferenceBibles\\TOTHT\\3.TAHOT Job-Sng - Translators Amalgamated Hebrew OT - STEPBible.org CC BY.txt",
+              "RelativeDocumentMoniker": "BibleTaggingUtil\\ReferenceBibles\\TOTHT\\3.TAHOT Job-Sng - Translators Amalgamated Hebrew OT - STEPBible.org CC BY.txt",
+              "ToolTip": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\ReferenceBibles\\TOTHT\\3.TAHOT Job-Sng - Translators Amalgamated Hebrew OT - STEPBible.org CC BY.txt",
+              "RelativeToolTip": "BibleTaggingUtil\\ReferenceBibles\\TOTHT\\3.TAHOT Job-Sng - Translators Amalgamated Hebrew OT - STEPBible.org CC BY.txt",
+              "ViewState": "AQIAAMNaAAAAAAAAAAAAANZaAACYAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2024-02-01T17:23:06.416Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 38,
+              "Title": "4.TAHOT Isa-Mal - Translators Amalgamated Hebrew OT - STEPBible.org CC BY.txt",
+              "DocumentMoniker": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\ReferenceBibles\\TOTHT\\4.TAHOT Isa-Mal - Translators Amalgamated Hebrew OT - STEPBible.org CC BY.txt",
+              "RelativeDocumentMoniker": "BibleTaggingUtil\\ReferenceBibles\\TOTHT\\4.TAHOT Isa-Mal - Translators Amalgamated Hebrew OT - STEPBible.org CC BY.txt",
+              "ToolTip": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\ReferenceBibles\\TOTHT\\4.TAHOT Isa-Mal - Translators Amalgamated Hebrew OT - STEPBible.org CC BY.txt",
+              "RelativeToolTip": "BibleTaggingUtil\\ReferenceBibles\\TOTHT\\4.TAHOT Isa-Mal - Translators Amalgamated Hebrew OT - STEPBible.org CC BY.txt",
+              "ViewState": "AQIAACEAAAAAAAAAAAAAAC0AAAAwAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2024-02-01T18:29:58.281Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "OsisVerse.cs",
+              "DocumentMoniker": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\OsisXml\\OsisVerse.cs",
+              "RelativeDocumentMoniker": "BibleTaggingUtil\\OsisXml\\OsisVerse.cs",
+              "ToolTip": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\OsisXml\\OsisVerse.cs",
+              "RelativeToolTip": "BibleTaggingUtil\\OsisXml\\OsisVerse.cs",
+              "ViewState": "AQIAACoAAAAAAAAAAAAWwDsAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-22T17:53:58.225Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "TargetOsisVersion.cs",
+              "DocumentMoniker": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\BibleVersions\\TargetOsisVersion.cs",
+              "RelativeDocumentMoniker": "BibleTaggingUtil\\BibleVersions\\TargetOsisVersion.cs",
+              "ToolTip": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\BibleVersions\\TargetOsisVersion.cs",
+              "RelativeToolTip": "BibleTaggingUtil\\BibleVersions\\TargetOsisVersion.cs",
+              "ViewState": "AQIAADcBAAAAAAAAAAAAAEcBAAAmAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-22T17:53:58.236Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "JsonBibleConverter.cs",
+              "DocumentMoniker": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\BibleVersions\\JsonBibleConverter.cs",
+              "RelativeDocumentMoniker": "BibleTaggingUtil\\BibleVersions\\JsonBibleConverter.cs",
+              "ToolTip": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\BibleVersions\\JsonBibleConverter.cs",
+              "RelativeToolTip": "BibleTaggingUtil\\BibleVersions\\JsonBibleConverter.cs",
+              "ViewState": "AQIAAIoAAAAAAAAAAAAuwEYAAAAMAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-26T12:52:53.884Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "JsonConverterOfT.cs",
+              "DocumentMoniker": "C:\\Users\\samim\\AppData\\Local\\SourceServer\\d086c11300ffe94d351dfe5d1fa3dbe130d08ea37f9410acc9a6f81bda42c8ce\\src\\libraries\\System.Text.Json\\src\\System\\Text\\Json\\Serialization\\JsonConverterOfT.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\AppData\\Local\\SourceServer\\d086c11300ffe94d351dfe5d1fa3dbe130d08ea37f9410acc9a6f81bda42c8ce\\src\\libraries\\System.Text.Json\\src\\System\\Text\\Json\\Serialization\\JsonConverterOfT.cs",
+              "ToolTip": "C:\\Users\\samim\\AppData\\Local\\SourceServer\\d086c11300ffe94d351dfe5d1fa3dbe130d08ea37f9410acc9a6f81bda42c8ce\\src\\libraries\\System.Text.Json\\src\\System\\Text\\Json\\Serialization\\JsonConverterOfT.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\AppData\\Local\\SourceServer\\d086c11300ffe94d351dfe5d1fa3dbe130d08ea37f9410acc9a6f81bda42c8ce\\src\\libraries\\System.Text.Json\\src\\System\\Text\\Json\\Serialization\\JsonConverterOfT.cs",
+              "ViewState": "AQIAALABAAAAAAAAAAAtwLcBAAAgAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-26T13:42:35.465Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "String.cs",
+              "DocumentMoniker": "C:\\Users\\samim\\AppData\\Local\\SourceServer\\b287d3f60482fb379d9f327389538d70ab3364c12e73d4f0e87edc820fd7ed8b\\src\\libraries\\System.Private.CoreLib\\src\\System\\String.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\AppData\\Local\\SourceServer\\b287d3f60482fb379d9f327389538d70ab3364c12e73d4f0e87edc820fd7ed8b\\src\\libraries\\System.Private.CoreLib\\src\\System\\String.cs",
+              "ToolTip": "C:\\Users\\samim\\AppData\\Local\\SourceServer\\b287d3f60482fb379d9f327389538d70ab3364c12e73d4f0e87edc820fd7ed8b\\src\\libraries\\System.Private.CoreLib\\src\\System\\String.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\AppData\\Local\\SourceServer\\b287d3f60482fb379d9f327389538d70ab3364c12e73d4f0e87edc820fd7ed8b\\src\\libraries\\System.Private.CoreLib\\src\\System\\String.cs",
+              "ViewState": "AQIAAEADAAAAAAAAAAAgwEYDAAAUAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-27T21:23:21.5Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "ThrowHelper.Serialization.cs",
+              "DocumentMoniker": "C:\\Users\\samim\\AppData\\Local\\SourceServer\\e563aff8a938ed3be0e84e2210cfaa6b7d825273c1146fa627c2554ebb7531cf\\src\\libraries\\System.Text.Json\\src\\System\\Text\\Json\\ThrowHelper.Serialization.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\AppData\\Local\\SourceServer\\e563aff8a938ed3be0e84e2210cfaa6b7d825273c1146fa627c2554ebb7531cf\\src\\libraries\\System.Text.Json\\src\\System\\Text\\Json\\ThrowHelper.Serialization.cs",
+              "ToolTip": "C:\\Users\\samim\\AppData\\Local\\SourceServer\\e563aff8a938ed3be0e84e2210cfaa6b7d825273c1146fa627c2554ebb7531cf\\src\\libraries\\System.Text.Json\\src\\System\\Text\\Json\\ThrowHelper.Serialization.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\AppData\\Local\\SourceServer\\e563aff8a938ed3be0e84e2210cfaa6b7d825273c1146fa627c2554ebb7531cf\\src\\libraries\\System.Text.Json\\src\\System\\Text\\Json\\ThrowHelper.Serialization.cs",
+              "ViewState": "AQIAAEgAAAAAAAAAAAAtwFIAAAAMAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-26T16:57:10.554Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "BibleTaggingForm.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\BibleTaggingForm.Designer.cs",
+              "RelativeDocumentMoniker": "BibleTaggingUtil\\BibleTaggingForm.Designer.cs",
+              "ToolTip": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\BibleTaggingForm.Designer.cs",
+              "RelativeToolTip": "BibleTaggingUtil\\BibleTaggingForm.Designer.cs",
+              "ViewState": "AQIAAPUAAAAAAAAAAAAkwBcAAAAIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-22T19:31:27.721Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "NativeWindow.cs",
+              "DocumentMoniker": "C:\\Users\\samim\\AppData\\Local\\SourceServer\\c71d7753f9a8a15e62779e2dd8f7100c5a58f86b13f91331159e5bf8e9d8d5b4\\src\\System.Windows.Forms\\src\\System\\Windows\\Forms\\NativeWindow.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\AppData\\Local\\SourceServer\\c71d7753f9a8a15e62779e2dd8f7100c5a58f86b13f91331159e5bf8e9d8d5b4\\src\\System.Windows.Forms\\src\\System\\Windows\\Forms\\NativeWindow.cs",
+              "ToolTip": "C:\\Users\\samim\\AppData\\Local\\SourceServer\\c71d7753f9a8a15e62779e2dd8f7100c5a58f86b13f91331159e5bf8e9d8d5b4\\src\\System.Windows.Forms\\src\\System\\Windows\\Forms\\NativeWindow.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\AppData\\Local\\SourceServer\\c71d7753f9a8a15e62779e2dd8f7100c5a58f86b13f91331159e5bf8e9d8d5b4\\src\\System.Windows.Forms\\src\\System\\Windows\\Forms\\NativeWindow.cs",
+              "ViewState": "AQIAAHIBAAAAAAAAAAAtwHwBAAAUAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-26T16:13:44.935Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "ReferenceTopVersion.cs",
+              "DocumentMoniker": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\BibleVersions\\ReferenceTopVersion.cs",
+              "RelativeDocumentMoniker": "BibleTaggingUtil\\BibleVersions\\ReferenceTopVersion.cs",
+              "ToolTip": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\BibleVersions\\ReferenceTopVersion.cs",
+              "RelativeToolTip": "BibleTaggingUtil\\BibleVersions\\ReferenceTopVersion.cs",
+              "ViewState": "AQIAAAoAAAAAAAAAAAAmwBgAAAA+AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-22T17:42:54.609Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "String.Manipulation.cs",
+              "DocumentMoniker": "C:\\Users\\samim\\AppData\\Local\\SourceServer\\149c5c946c14e743f813682f6ed50ffb9f5f92ed651d7596cd978b0f6033cc65\\src\\libraries\\System.Private.CoreLib\\src\\System\\String.Manipulation.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\AppData\\Local\\SourceServer\\149c5c946c14e743f813682f6ed50ffb9f5f92ed651d7596cd978b0f6033cc65\\src\\libraries\\System.Private.CoreLib\\src\\System\\String.Manipulation.cs",
+              "ToolTip": "C:\\Users\\samim\\AppData\\Local\\SourceServer\\149c5c946c14e743f813682f6ed50ffb9f5f92ed651d7596cd978b0f6033cc65\\src\\libraries\\System.Private.CoreLib\\src\\System\\String.Manipulation.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\AppData\\Local\\SourceServer\\149c5c946c14e743f813682f6ed50ffb9f5f92ed651d7596cd978b0f6033cc65\\src\\libraries\\System.Private.CoreLib\\src\\System\\String.Manipulation.cs",
+              "ViewState": "AQIAAMYBAAAAAAAAAAAEwNEBAAAMAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-22T23:05:17.159Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "TargetVersion.cs",
+              "DocumentMoniker": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\BibleVersions\\TargetVersion.cs",
+              "RelativeDocumentMoniker": "BibleTaggingUtil\\BibleVersions\\TargetVersion.cs",
+              "ToolTip": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\BibleVersions\\TargetVersion.cs",
+              "RelativeToolTip": "BibleTaggingUtil\\BibleVersions\\TargetVersion.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-26T12:23:19.467Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "Thread.CoreCLR.cs",
+              "DocumentMoniker": "C:\\Users\\samim\\AppData\\Local\\SourceServer\\3720e33c9d79160b00be385d179e8b2105ff88089822f75674e9e3db13c20689\\src\\coreclr\\System.Private.CoreLib\\src\\System\\Threading\\Thread.CoreCLR.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\AppData\\Local\\SourceServer\\3720e33c9d79160b00be385d179e8b2105ff88089822f75674e9e3db13c20689\\src\\coreclr\\System.Private.CoreLib\\src\\System\\Threading\\Thread.CoreCLR.cs",
+              "ToolTip": "C:\\Users\\samim\\AppData\\Local\\SourceServer\\3720e33c9d79160b00be385d179e8b2105ff88089822f75674e9e3db13c20689\\src\\coreclr\\System.Private.CoreLib\\src\\System\\Threading\\Thread.CoreCLR.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\AppData\\Local\\SourceServer\\3720e33c9d79160b00be385d179e8b2105ff88089822f75674e9e3db13c20689\\src\\coreclr\\System.Private.CoreLib\\src\\System\\Threading\\Thread.CoreCLR.cs",
+              "ViewState": "AQIAAGAAAAAAAAAAAAAtwGkAAAAIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-25T15:36:16.802Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "RegexParser.cs",
+              "DocumentMoniker": "C:\\Users\\samim\\AppData\\Local\\SourceServer\\65126936f962e148bf1f318a807557889edf6058339fdca083abf0091b4be20b\\src\\libraries\\System.Text.RegularExpressions\\src\\System\\Text\\RegularExpressions\\RegexParser.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\AppData\\Local\\SourceServer\\65126936f962e148bf1f318a807557889edf6058339fdca083abf0091b4be20b\\src\\libraries\\System.Text.RegularExpressions\\src\\System\\Text\\RegularExpressions\\RegexParser.cs",
+              "ToolTip": "C:\\Users\\samim\\AppData\\Local\\SourceServer\\65126936f962e148bf1f318a807557889edf6058339fdca083abf0091b4be20b\\src\\libraries\\System.Text.RegularExpressions\\src\\System\\Text\\RegularExpressions\\RegexParser.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\AppData\\Local\\SourceServer\\65126936f962e148bf1f318a807557889edf6058339fdca083abf0091b4be20b\\src\\libraries\\System.Text.RegularExpressions\\src\\System\\Text\\RegularExpressions\\RegexParser.cs",
+              "ViewState": "AQIAAHIBAAAAAAAAAAAtwI8BAAAcAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-25T15:09:32.701Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "Path.Windows.cs",
+              "DocumentMoniker": "C:\\Users\\samim\\AppData\\Local\\SourceServer\\ed22996e31f92901e5f9cd2f810d4d5418627f07013251bf4a35447617a8a27c\\src\\libraries\\System.Private.CoreLib\\src\\System\\IO\\Path.Windows.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\AppData\\Local\\SourceServer\\ed22996e31f92901e5f9cd2f810d4d5418627f07013251bf4a35447617a8a27c\\src\\libraries\\System.Private.CoreLib\\src\\System\\IO\\Path.Windows.cs",
+              "ToolTip": "C:\\Users\\samim\\AppData\\Local\\SourceServer\\ed22996e31f92901e5f9cd2f810d4d5418627f07013251bf4a35447617a8a27c\\src\\libraries\\System.Private.CoreLib\\src\\System\\IO\\Path.Windows.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\AppData\\Local\\SourceServer\\ed22996e31f92901e5f9cd2f810d4d5418627f07013251bf4a35447617a8a27c\\src\\libraries\\System.Private.CoreLib\\src\\System\\IO\\Path.Windows.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAC0AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-22T18:27:11.182Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "1.osis.xml",
+              "DocumentMoniker": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\ReferenceBibles\\NASB2020\\1.osis.xml",
+              "RelativeDocumentMoniker": "BibleTaggingUtil\\ReferenceBibles\\NASB2020\\1.osis.xml",
+              "ToolTip": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\ReferenceBibles\\NASB2020\\1.osis.xml",
+              "RelativeToolTip": "BibleTaggingUtil\\ReferenceBibles\\NASB2020\\1.osis.xml",
+              "ViewState": "AQIAANoAAAAAAAAAAAAowO0AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003576|",
+              "WhenOpened": "2024-01-22T22:50:33.988Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "ValueStringBuilder.AppendFormat.cs",
+              "DocumentMoniker": "C:\\Users\\samim\\AppData\\Local\\SourceServer\\5065cb7a77913565d8bfa435816bd8fac8162aa906c43574dfacd83b1daa8802\\src\\libraries\\System.Private.CoreLib\\src\\System\\Text\\ValueStringBuilder.AppendFormat.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\AppData\\Local\\SourceServer\\5065cb7a77913565d8bfa435816bd8fac8162aa906c43574dfacd83b1daa8802\\src\\libraries\\System.Private.CoreLib\\src\\System\\Text\\ValueStringBuilder.AppendFormat.cs",
+              "ToolTip": "C:\\Users\\samim\\AppData\\Local\\SourceServer\\5065cb7a77913565d8bfa435816bd8fac8162aa906c43574dfacd83b1daa8802\\src\\libraries\\System.Private.CoreLib\\src\\System\\Text\\ValueStringBuilder.AppendFormat.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\AppData\\Local\\SourceServer\\5065cb7a77913565d8bfa435816bd8fac8162aa906c43574dfacd83b1daa8802\\src\\libraries\\System.Private.CoreLib\\src\\System\\Text\\ValueStringBuilder.AppendFormat.cs",
+              "ViewState": "AQIAAC4AAAAAAAAAAAAEwJAAAAAIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-22T23:04:51.886Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "Dictionary.cs",
+              "DocumentMoniker": "C:\\Users\\samim\\AppData\\Local\\SourceServer\\c146152b8818ed84e8d3a35aebcea7934643b4017d53fbe788cb552b14fbbcff\\src\\libraries\\System.Private.CoreLib\\src\\System\\Collections\\Generic\\Dictionary.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\AppData\\Local\\SourceServer\\c146152b8818ed84e8d3a35aebcea7934643b4017d53fbe788cb552b14fbbcff\\src\\libraries\\System.Private.CoreLib\\src\\System\\Collections\\Generic\\Dictionary.cs",
+              "ToolTip": "C:\\Users\\samim\\AppData\\Local\\SourceServer\\c146152b8818ed84e8d3a35aebcea7934643b4017d53fbe788cb552b14fbbcff\\src\\libraries\\System.Private.CoreLib\\src\\System\\Collections\\Generic\\Dictionary.cs",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\AppData\\Local\\SourceServer\\c146152b8818ed84e8d3a35aebcea7934643b4017d53fbe788cb552b14fbbcff\\src\\libraries\\System.Private.CoreLib\\src\\System\\Collections\\Generic\\Dictionary.cs",
+              "ViewState": "AQIAALIAAAAAAAAAAAAEwMYAAAAQAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-22T21:38:20.895Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 34,
+              "Title": "CofigurationHolder.cs",
+              "DocumentMoniker": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\CofigurationHolder.cs",
+              "RelativeDocumentMoniker": "BibleTaggingUtil\\CofigurationHolder.cs",
+              "ToolTip": "C:\\Users\\samim\\Documents\\MyProjects\\STEP\\BibleTaggingUtility\\src\\BibleTaggingUtil\\CofigurationHolder.cs",
+              "RelativeToolTip": "BibleTaggingUtil\\CofigurationHolder.cs",
+              "ViewState": "AQIAAEsAAAAAAAAAAAAowFkAAAAgAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-01-22T17:34:19.933Z"
+            }
+          ]
+        },
+        {
+          "DockedHeight": 94,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{004be353-6879-467c-9d1e-9ac23cdf6d49}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

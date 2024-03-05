@@ -14,54 +14,56 @@ namespace BibleTaggingUtil.Editor
 
         protected override void OnCellMouseDown(DataGridViewCellMouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left && e.Clicks == 1)
+            if (e.Button == MouseButtons.Left &&
+                            e.Clicks == 1 &&
+                            e.RowIndex >= this.Rows.Count - 2 &&
+                            this.SelectedCells.Count > 0)
             {
                 string text = string.Empty;
-                if (e.RowIndex >= 0)
+                int rowIndex = SelectedCells[0].RowIndex;
+
+                if (this.SelectedCells.Count > 1)
                 {
-                    if (this.SelectedCells.Count > 1 && Control.ModifierKeys != Keys.Control)
+                    bool sameRow = true;
+                    foreach (DataGridViewCell cell in this.SelectedCells)
                     {
-                        bool sameRow = true;
-                        foreach (DataGridViewCell cell in this.SelectedCells)
+
+                        if (cell.RowIndex != rowIndex)
                         {
-                            // we only merge in the top row
-                            if (cell.RowIndex != this.RowCount - 1)
+                            sameRow = false;
+                            break;
+                        }
+                    }
+
+                    if (sameRow)
+                    {
+                        //bool mergeOk = true; // we only drag adjacent cells
+                        int count = this.SelectedCells.Count;
+                        int colIndex = SelectedCells[count - 1].ColumnIndex;
+                        text = (string)this[colIndex, rowIndex].Value;
+                        for (int i = count - 2; i >= 0; i--)
+                        {
+                            text += (" " + this[SelectedCells[i].ColumnIndex, rowIndex].Value);
+                            if (Math.Abs(SelectedCells[i].ColumnIndex - colIndex) != 1)
                             {
-                                sameRow = false;
+                                //mergeOk = false;
+                                text = string.Empty;
                                 break;
                             }
+                            colIndex = SelectedCells[i].ColumnIndex;
                         }
-
-                        if (sameRow)
-                        {
-                            //bool mergeOk = true; // we only drag adjacent cells
-                            int count = this.SelectedCells.Count;
-                            int colIndex = SelectedCells[count - 1].ColumnIndex;
-                            text = (string)this[colIndex, this.RowCount - 1].Value;
-                            for (int i = count - 2; i >= 0 ; i--)
-                            {
-                                text += (" " + this[SelectedCells[i].ColumnIndex, this.RowCount - 1].Value);
-                                if (Math.Abs(SelectedCells[i].ColumnIndex - colIndex) != 1)
-                                {
-                                    //mergeOk = false;
-                                    text = string.Empty;
-                                    break;
-                                }
-                                colIndex = SelectedCells[i].ColumnIndex;
-                            }
-                        }
+                    }
 
 
-                    }
-                    else
-                    {
-                        text = ((String)this.Rows[this.RowCount - 1].Cells[e.ColumnIndex].Value).Trim();
-                    }
-                    DragData data = new DragData(1, e.ColumnIndex, text, this);
-                    if (!string.IsNullOrEmpty(text))
-                    {
-                        this.DoDragDrop(data, DragDropEffects.Copy);
-                    }
+                }
+                else
+                {
+                    text = ((String)this.Rows[rowIndex].Cells[e.ColumnIndex].Value).Trim();
+                }
+                DragData data = new DragData(1, e.ColumnIndex, text, this);
+                if (!string.IsNullOrEmpty(text))
+                {
+                    this.DoDragDrop(data, DragDropEffects.Copy);
                 }
             }
 
@@ -118,31 +120,33 @@ namespace BibleTaggingUtil.Editor
                     wordNumber.Add(verseWord.WordNumber);
                     meaningVar.Add(verseWord.MeaningVar);
 
-                    if (verseWord.Strong.Length > 0)
+                    if (verseWord.Strong.Count > 0)
                     {
                         string s = String.Empty;
                         bool E = (verseWord.Hebrew.Trim() == "אֱלֹהִים");
                         bool Y = (verseWord.Hebrew.Trim() == "יהוה");
-                        bool strongIsE = (verseWord.Strong[0].Trim() == "0430");
-                        bool strongIsY = ((verseWord.Strong[0].Trim() == "3068") || (verseWord.Strong[0].Trim() == "3069"));
+                        bool strongIsE = (verseWord.Strong[0].Number == 430);
+                        bool strongIsY = ((verseWord.Strong[0].Number == 3068) || (verseWord.Strong[0].Number == 3069));
 
                         if (E || Y)
                         {
                             // special treatment for אֱלֹהִים & יהוה
                             if ((E && strongIsE) || (Y && strongIsY))
-                                s = "<" + verseWord.Strong[0] + ">";
+                                //s = "<" + verseWord.Strong[0] + ">";
+                                s= verseWord.Strong[0].ToStringEx();
                         }
                         else
                         {
-                            s = "<" + verseWord.Strong[0] + ">";
+                            //s = "<" + verseWord.Strong[0] + ">";
+                            s = verseWord.Strong[0].ToStringEx();
                         }
 
-                        if (verseWord.Strong.Length > 1)
+                        if (verseWord.Strong.Count > 1)
                         {
-                            for (int j = 1; j < verseWord.Strong.Length; j++)
+                            for (int j = 1; j < verseWord.Strong.Count; j++)
                             {
-                                strongIsE = (verseWord.Strong[j].Trim() == "0430");
-                                strongIsY = ((verseWord.Strong[j].Trim() == "3068") || (verseWord.Strong[j].Trim() == "3069"));
+                                strongIsE = (verseWord.Strong[j].Number == 430);
+                                strongIsY = ((verseWord.Strong[j].Number == 3068) || (verseWord.Strong[j].Number == 3069));
                                 if (E || Y)
                                 {
                                     // special treatment for אֱלֹהִים & יהוה
@@ -150,14 +154,16 @@ namespace BibleTaggingUtil.Editor
                                     {
                                         if (!string.IsNullOrEmpty(s))
                                             s += " ";
-                                        s += "<" + verseWord.Strong[j] + ">";
+                                        //s += "<" + verseWord.Strong[j] + ">";
+                                        s = verseWord.Strong[j].ToStringEx();
                                     }
                                 }
                                 else
                                 {
                                     if (!string.IsNullOrEmpty(s))
                                         s += " ";
-                                    s += "<" + verseWord.Strong[j] + ">";
+                                    //s += "<" + verseWord.Strong[j] + ">";
+                                    s = verseWord.Strong[j].ToStringEx();
                                 }
                             }
                         }
@@ -211,6 +217,29 @@ namespace BibleTaggingUtil.Editor
 
         }
 
+        protected override void OnCellFormatting(DataGridViewCellFormattingEventArgs e)
+        {
+            if (this[0,e.RowIndex].Value.ToString() == "GMR")
+            {
+                for (int i = 1; i < this.ColumnCount; i++)
+                {
+                    DataGridViewCell cell = this.Rows[e.RowIndex].Cells[i];
+                    cell.ToolTipText = GetMorphologyDetails(cell.Value.ToString());
+                }
+            }
+            //base.OnCellFormatting(e);
+        }
+
+        private string GetMorphologyDetails(string morf)
+        {
+            string result = morf;
+            if (morf != null)
+            { 
+            }
+
+            return result;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -255,12 +284,14 @@ namespace BibleTaggingUtil.Editor
                     altVerseNumber.Add(verseWord.AltVerseNumber);
                     wordNumber.Add(verseWord.WordNumber);
 
-                    string strng = string.Empty;
-                    foreach (string s in verseWord.Strong)
-                    {
-                        strng += "<" + s + "> ";
-                    }
-                    tags.Add(strng.Trim());
+                    /*                   string strng = string.Empty;
+                                       foreach (string s in verseWord.Strong)
+                                       {
+                                           strng += "<" + s + "> ";
+                                       }
+                                       tags.Add(strng.Trim());
+                    */
+                    tags.Add(verseWord.Strong.ToStringEx());
                 }
 
                 //this.ColumnCount = verseWords.Count;

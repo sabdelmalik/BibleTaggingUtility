@@ -15,6 +15,7 @@ using System.Xml.Linq;
 using static WeifenLuo.WinFormsUI.Docking.DockPanel;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using BibleTaggingUtil.Strongs;
 
 namespace BibleTaggingUtil.Editor
 {
@@ -222,8 +223,8 @@ namespace BibleTaggingUtil.Editor
                 }
                 this.CurrentVerse.Merge(firstMergeIndex, this.SelectedCells.Count);
 
-                SaveVerse(CurrentVerseReferece);
                 this.Update(CurrentVerse);
+                SaveVerse(CurrentVerseReferece);
 
                 this[firstMergeIndex, Rows.Count - 1].Selected = true;
                 this.CurrentCell = this[firstMergeIndex, Rows.Count - 1];
@@ -271,8 +272,8 @@ namespace BibleTaggingUtil.Editor
                 }
                 this.CurrentVerse.split(splitIndex);
 
-                SaveVerse(CurrentVerseReferece);
                 this.Update(CurrentVerse);
+                SaveVerse(CurrentVerseReferece);
 
                 this[splitIndex, Rows.Count - 1].Selected = true;
                 this.CurrentCell = this[splitIndex, Rows.Count - 1];
@@ -288,9 +289,9 @@ namespace BibleTaggingUtil.Editor
                     undoStack.Push(new VerseEx(new Verse(this.CurrentVerse), savedColumn, savedRow));
 
                 int col = this.SelectedCells[0].ColumnIndex;
-                this.CurrentVerse[col].Strong = new string[] { string.Empty };
-                SaveVerse(CurrentVerseReferece);
+                this.CurrentVerse[col].Strong = new StrongsCluster();
                 this.Update(CurrentVerse);
+                SaveVerse(CurrentVerseReferece);
 
                 this[col, Rows.Count - 1].Selected = true;
                 this.CurrentCell = this[col, Rows.Count - 1];
@@ -385,13 +386,15 @@ namespace BibleTaggingUtil.Editor
                 for (int i = 0; i < verse.Count; i++)
                 {
                     verseWords[i] = verse[i].Word;
-                    for (int j = 0; j < verse[i].Strong.Length; j++)
-                        verseTags[i] += "<" + verse[i].Strong[j] + "> ";
+                    verseTags[i] = verse[i].Strong.ToString();
+/*                    for (int j = 0; j < verse[i].Strong.Count; j++)
+                        //verseTags[i] += "<" + verse[i].Strong[j] + "> ";
+                        verseTags[i] += verse[i].Strong[j];
                     if (verseTags[i] == null)
                         verseTags[i] = string.Empty;
                     else
                         verseTags[i] = verseTags[i].Trim();
-
+*/
                 }
 
                 int col = -1;
@@ -524,10 +527,10 @@ namespace BibleTaggingUtil.Editor
                         tags = tag.Split(' ');
 
                     // remove <> from tags
-                    for (int j = 0; j < tags.Length; j++)
-                        tags[j] = tags[j].Replace("<", "").Replace(">", "");
+//                    for (int j = 0; j < tags.Length; j++)
+//                        tags[j] = tags[j].Replace("<", "").Replace(">", "");
 
-                    verse[i] = new VerseWord((string)this[i, 0].Value, tags, reference);
+                    verse[i] = new VerseWord((string)this[i, 0].Value, new StrongsCluster(tags), reference);
                     if (osis)
                     {
                         verse[i].OsisTagIndex = CurrentVerse[i].OsisTagIndex;
@@ -579,7 +582,7 @@ namespace BibleTaggingUtil.Editor
             else if (row == this.RowCount - 1)
             {
                 string newValue = (string)this[col, row].Value;
-                if (!string.IsNullOrEmpty(newValue))
+        /*        if (!string.IsNullOrEmpty(newValue))
                 {
                     Regex regex = new Regex(@"[<]{0,1}(\d\d\d\d)[>]{0,1}");
                     MatchCollection matches = regex.Matches(newValue);
@@ -599,6 +602,7 @@ namespace BibleTaggingUtil.Editor
                         return;
                     }
                 }
+        */
                 if (CurrentVerse[col].StrongString != newValue)
                 {
                     if (this.CurrentVerse != null)
@@ -666,7 +670,7 @@ namespace BibleTaggingUtil.Editor
 
                     int col = this.SelectedCells[0].ColumnIndex;
                     this[col, Rows.Count - 1].Value = string.Empty;
-                    this.CurrentVerse[col].Strong = new string[] { string.Empty };
+                    this.CurrentVerse[col].Strong = new StrongsCluster();
                     SaveVerse(CurrentVerseReferece);
                     this.Update(CurrentVerse);
 
@@ -690,79 +694,97 @@ namespace BibleTaggingUtil.Editor
             DragData data = drgevent.Data.GetData(typeof(DragData)) as DragData;
             string droppedValue = data.Text;
             Point cursorLocation = this.PointToClient(new Point(drgevent.X, drgevent.Y));
-
-            System.Windows.Forms.DataGridView.HitTestInfo hittest = this.HitTest(cursorLocation.X, cursorLocation.Y);
-            if (hittest.ColumnIndex != -1
-                && hittest.RowIndex == Rows.Count - 1)
-            {  //CHANGE
-                if (data.Source.Equals(this))
-                {
-                    if (data.ColumnIndex == hittest.ColumnIndex)
-                        return;
-                }
-
-                droppedValue = droppedValue.Replace("+G", "> <").Replace(",","");
-                string[] droppedValueParts = droppedValue.Split(' ');
-                String newValue = string.Empty;
-
-                string currentValue = (string)this[hittest.ColumnIndex, Rows.Count - 1].Value;
-
-                if (!string.IsNullOrEmpty(currentValue) && !currentValue.Contains("???") && Control.ModifierKeys == Keys.Control)
-                    newValue = currentValue;
-
-                // special Handling for Aramaic
-                if (droppedValueParts.Length == 2 && IsCurrentTextAramaic && data.Source is Editor.TOHTHGridView)
-                {
-                    droppedValueParts = new string[1] { droppedValueParts[1] };
-                }
-
-                for (int i = 0; i < droppedValueParts.Length; i++)
-                {
-                    if (droppedValueParts[i].Contains('('))
-                        continue; //skip morphology
-
-                    string tmp = droppedValueParts[i].Trim().Replace("<", "").Replace(">", "");
-                    if (tmp[tmp.Length - 2] == '_' && char.IsLetter(tmp[tmp.Length - 1]))
-                        tmp = tmp.Substring(0, tmp.Length - 2);
-                    if (!char.IsDigit(tmp[tmp.Length-1]))
-                        tmp = tmp.Substring(0, tmp.Length - 1);
-                    tmp = ("0000" + tmp).Substring(tmp.Length);
-                    int val = Convert.ToInt32(tmp);
-                    if (val > 0)
+            try
+            {
+                System.Windows.Forms.DataGridView.HitTestInfo hittest = this.HitTest(cursorLocation.X, cursorLocation.Y);
+                if (hittest.ColumnIndex != -1
+                    && hittest.RowIndex == Rows.Count - 1)
+                {  //CHANGE
+                    if (data.Source.Equals(this))
                     {
-                        tmp = "<" + tmp + ">";
- //                       if (!droppedValue.Contains(tmp) || Control.ModifierKeys == Keys.Alt)
-                            newValue += string.IsNullOrEmpty(droppedValue) ? tmp : (" " + tmp);
+                        if (data.ColumnIndex == hittest.ColumnIndex)
+                            return;
                     }
+
+                    droppedValue = droppedValue.Replace("+G", "> <").Replace(",", "");
+                    string[] droppedValueParts = droppedValue.Split(' ');
+                    String newValue = string.Empty;
+
+                   // special Handling for Aramaic
+                    if (droppedValueParts.Length == 2 && IsCurrentTextAramaic && data.Source is Editor.TOHTHGridView)
+                    {
+                        //droppedValueParts = new string[1] { droppedValueParts[1] };
+                        droppedValue = droppedValueParts[1];
+                    }
+
+                    //string currentValue = (string)this[hittest.ColumnIndex, Rows.Count - 1].Value;
+
+//                    if (!string.IsNullOrEmpty(currentValue) && !currentValue.Contains("???") && Control.ModifierKeys == Keys.Control)
+//                        newValue = currentValue;
+
+ 
+                    for (int i = 0; i < droppedValueParts.Length; i++)
+                    {
+                        if (droppedValueParts[i].Contains('('))
+                            continue; //skip morphology
+
+                        newValue += string.IsNullOrEmpty(newValue) ? droppedValueParts[i] : (" " + droppedValueParts[i]);
+                        /*string tmp = droppedValueParts[i].Trim().Replace("<", "").Replace(">", "");
+                        if (tmp[tmp.Length - 2] == '_' && char.IsLetter(tmp[tmp.Length - 1]))
+                            tmp = tmp.Substring(0, tmp.Length - 2);
+                        if (!char.IsDigit(tmp[tmp.Length-1]))
+                            tmp = tmp.Substring(0, tmp.Length - 1);
+                        tmp = ("0000" + tmp).Substring(tmp.Length);
+                        int val = Convert.ToInt32(tmp);
+                        if (val > 0)
+                        {
+                            tmp = "<" + tmp + ">";
+     //                       if (!droppedValue.Contains(tmp) || Control.ModifierKeys == Keys.Alt)
+                                newValue += string.IsNullOrEmpty(droppedValue) ? tmp : (" " + tmp);
+                        }
+                        */
+                    }
+                    int savedColumn = this.CurrentCell.ColumnIndex;
+                    int savedRow = this.CurrentCell.RowIndex;
+                    if (this.CurrentVerse != null)
+                        undoStack.Push(new VerseEx(new Verse(this.CurrentVerse), savedColumn, savedRow));
+
+                    //this[hittest.ColumnIndex, Rows.Count - 1].Value = newValue.Trim();
+                    //this.CurrentVerse[hittest.ColumnIndex].StrongString = newValue.Trim();
+
+                    if (Control.ModifierKeys == Keys.Control)
+                        this.CurrentVerse[hittest.ColumnIndex].Strong.Add(newValue);
+                    else
+                        this.CurrentVerse[hittest.ColumnIndex].Strong.Set(newValue);
+
+                    if (data.Source.Equals(this))
+                    {
+                        //this[data.ColumnIndex, Rows.Count - 1].Value = string.Empty;
+                        if (Control.ModifierKeys != Keys.Control)
+                            this.CurrentVerse[data.ColumnIndex].Strong.Set(string.Empty);
+                    }
+                    Update(CurrentVerse);
+                    SaveVerse(CurrentVerseReferece);
+                    
+                    FireVerseViewChanged();
+
+                    this.ClearSelection();
+                    this[hittest.ColumnIndex, Rows.Count - 1].Selected = true;
+                    this.Rows[0].ReadOnly = true;
+
+                    this[hittest.ColumnIndex, Rows.Count - 1].Selected = true;
+                    this.CurrentCell = this[hittest.ColumnIndex, Rows.Count - 1];
+                    if (!string.IsNullOrEmpty((string)this[hittest.ColumnIndex, Rows.Count - 1].Value))
+                        FireRefernceHighlightRequest((string)this[hittest.ColumnIndex, Rows.Count - 1].Value);
+
+                    this.Focus();
                 }
-                int savedColumn = this.CurrentCell.ColumnIndex;
-                int savedRow = this.CurrentCell.RowIndex;
-                if (this.CurrentVerse != null)
-                    undoStack.Push(new VerseEx(new Verse(this.CurrentVerse), savedColumn, savedRow));
-
-                this[hittest.ColumnIndex, Rows.Count - 1].Value = newValue.Trim();
-                this.CurrentVerse[hittest.ColumnIndex].StrongString = newValue.Trim();
-
-                FireRefernceHighlightRequest(newValue);
-
-                if (data.Source.Equals(this))
-                {
-                    this[data.ColumnIndex, Rows.Count - 1].Value = string.Empty;
-                    this.CurrentVerse[data.ColumnIndex].StrongString = string.Empty;
-                }
-                SaveVerse(CurrentVerseReferece);
-                FireVerseViewChanged();
-
-                this.ClearSelection();
-                this[hittest.ColumnIndex, Rows.Count - 1].Selected = true;
-                this.Rows[0].ReadOnly = true;
-
-                this[hittest.ColumnIndex, Rows.Count - 1].Selected = true;
-                this.CurrentCell = this[hittest.ColumnIndex, Rows.Count - 1];
-                if (!string.IsNullOrEmpty((string)this[hittest.ColumnIndex, Rows.Count - 1].Value))
-                    FireRefernceHighlightRequest((string)this[hittest.ColumnIndex, Rows.Count - 1].Value);
-
-                this.Focus();
+            }
+            catch(Exception ex)
+            {
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
             }
 
             base.OnDragDrop(drgevent);

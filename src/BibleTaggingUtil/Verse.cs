@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BibleTaggingUtil.Strongs;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -57,19 +58,73 @@ namespace BibleTaggingUtil
             }
         }
 
-        public VerseWord GetWordFromStrong(string strong, int startIndex)
+        public List<VerseWord> GetWordListFromStrong(string strong)
+        {
+            List<VerseWord> result = new List<VerseWord>();
+            try
+            {
+                for (int i = 0; i < verse.Count; i++)
+                {
+                    if (verse[i].StrongString.Contains(strong))
+                    {
+                        result.Add(verse[i]);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
+            }
+            return result;
+        }
+        public VerseWord GetWordFromStrong(string strong, int startIndex, bool comb)
         {
             VerseWord result = null;
             try
             {
-                for (int i = startIndex; i < verse.Count; i++)
+                VerseWord fResult = null;
+                VerseWord bResult = null;
+                
+                // search forward
+                for (int i = startIndex + 1; i < verse.Count; i++)
                 {
                     if (verse[i].StrongString.Contains(strong))
                     {
-                        result = verse[i];
+                        fResult = verse[i];
                         break;
                     }
                 }
+
+                if(fResult == null && startIndex > 0)
+                {
+                    // search backward
+                    for (int i = startIndex - 1; i >= 0; i--)
+                    {
+                        if (verse[i].StrongString.Contains(strong))
+                        {
+                            bResult = verse[i];
+                            break;
+                        }
+                    }
+                }
+
+                if(comb && fResult != null && bResult != null)
+                {
+                    // we are within the same Aravbic word
+                    int fDiff = Math.Abs(startIndex - fResult.WordIndex);
+                    int bDiff = Math.Abs(startIndex - bResult.WordIndex);
+                    if (fDiff < bDiff) result = fResult;
+                    else result = bResult;
+                }
+                else
+                {
+                    // prefer forward!
+                    if(fResult != null) result = fResult;
+                    else result = bResult;
+                }
+
             }
             catch (Exception ex)
             {
@@ -95,9 +150,9 @@ namespace BibleTaggingUtil
             }
         }
 
-        public Verse SubVerse(int start, int length)
+        public Verse SubVerse(int start, int last)
         {
-            int l = length;
+            int l = last;
             Verse verse = new Verse();
             if (l == -1) l = this.Count;
 
@@ -144,9 +199,50 @@ namespace BibleTaggingUtil
 
         public void SwapTags(int index1, int index2)
         {
-            string[] temp = verse[index1].Strong;
+            StrongsCluster temp = verse[index1].Strong;
             verse[index1].Strong = verse[index2].Strong;
             verse[index2].Strong = temp;
+        }
+
+        public string OsisPsalmTitleData
+        {
+            get
+            {
+                string result = string.Empty;
+                if (hasPsalmTitle)
+                {
+                    foreach (VerseWord verseWord in verse.Values)
+                    {
+                        if (verseWord.Word == "*")
+                            break;
+                        result += verseWord.OsisWord + " ";
+                    }
+                }
+
+                return result.Trim();
+            }
+        }
+
+        public string OsisVerseData
+        {
+            get
+            {
+                string result = string.Empty;
+                bool psaTitleflag = hasPsalmTitle;
+                foreach (VerseWord verseWord in verse.Values)
+                {
+                    if(psaTitleflag)
+                    {
+                        // skip up to th "*"
+                        if (verseWord.Word != "*") continue;
+                        psaTitleflag = false;
+                        continue;
+                    }
+                    result += verseWord.OsisWord + " ";
+                }
+
+                return result.Trim();
+            }
         }
 
         /// <summary>
@@ -199,28 +295,26 @@ namespace BibleTaggingUtil
             Dictionary<int, VerseWord> temp = new Dictionary<int, VerseWord>();
             int newCount = verse.Count + splitWords.Length - 1;
 
-            string[] tagsToSplit = verse[index].Strong;
-            List<string>[] strongs = new List<string>[splitWords.Length];
-            strongs[1] = new List<string>();
+            StrongsCluster tagsToSplit = verse[index].Strong;
+            List<StrongsNumber>[] strongs = new List<StrongsNumber>[splitWords.Length];
+            //strongs[1] = new List<StrongsNumber>();
             int k;
             for (k = 0; k < strongs.Length; k++)
             {
-                strongs[k] = new List<string>();
-                if (k < tagsToSplit.Length)
+                strongs[k] = new List<StrongsNumber>();
+                if (k < tagsToSplit.Count)
                     strongs[k].Add(tagsToSplit[k]);
                 else
-                    strongs[k].Add("");
+                    strongs[k].Add(new StrongsNumber(""));
             }
-            for (int j = k; j < tagsToSplit.Length; j++)
+            for (int j = k; j < tagsToSplit.Count; j++)
             {
                 strongs[k - 1].Add(tagsToSplit[j]);
             }
 
-
-
             int columnIndex = 0;
 
-            // copy from to start to the index
+            // copy from start to the index
             for (int i = 0; i < index; i++)
             {
                 temp[i] = verse[i];
@@ -229,7 +323,7 @@ namespace BibleTaggingUtil
             // create the new split words 
             for (int i = index; i < (index + splitWords.Length); i++)
             {
-                temp[i] = new VerseWord(splitWords[i - index], strongs[i - index].ToArray(), verse[0].Reference);
+                temp[i] = new VerseWord(splitWords[i - index], new StrongsCluster(strongs[i - index]), verse[0].Reference);
             }
             // copy the remaining words
             for (int i = index + splitWords.Length; i < newCount; i++)
@@ -237,6 +331,7 @@ namespace BibleTaggingUtil
                 temp[i] = verse[++columnIndex];
             }
             verse = temp;
+            Dirty = true;
         }
 
         public bool Dirty { get; set; }

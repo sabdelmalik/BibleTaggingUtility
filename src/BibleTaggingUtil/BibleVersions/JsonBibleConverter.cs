@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BibleTaggingUtil.Strongs;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -100,7 +101,8 @@ namespace BibleTaggingUtil.BibleVersions
                     string? hebrew = (string)verseWord["Hebrew"];
                     string? greek = (string)verseWord["Greek"];
                     string? xlit = (string)verseWord["Transliteration"];
-                    VerseWord theWord = new VerseWord(isHebrew ? hebrew : greek, word, strongs, xlit, reference, morf);
+                    
+                    VerseWord theWord = new VerseWord(isHebrew ? hebrew : greek, word, new StrongsCluster(strongs), xlit, reference, morf);
                     theVerse[wordIndex++] = theWord;
                 }
                 bible[currentReference] = theVerse;

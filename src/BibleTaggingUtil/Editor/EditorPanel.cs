@@ -18,6 +18,7 @@ using System.Security.Cryptography.Xml;
 using System.Reflection;
 using System.Xml.Linq;
 using System.Text.RegularExpressions;
+using BibleTaggingUtil.Strongs;
 
 namespace BibleTaggingUtil.Editor
 {
@@ -295,14 +296,14 @@ namespace BibleTaggingUtil.Editor
                         for (int i = 0; i < v.Count; i++)
                         {
                             VerseWord vw = v[i];
-                            if (vw.Strong.Length == 1 && !string.IsNullOrEmpty(vw.Strong[0]) && verseWords != null)
+                            if (vw.Strong.Count == 1 && !(vw.Strong[0].IsEmpty) && verseWords != null)
                             {
-                                string st = vw.Strong[0].Trim();
+                                string st = vw.Strong[0].ToString();
                                 for (int j = 0; j < verseWords.Count; j++)
                                 {
-                                    if (verseWords[j].Strong.Contains(st))
+                                    if (verseWords[j].Strong.ToString().Contains(st))
                                     {
-                                        if (verseWords[j].Strong.Length == 2)
+                                        if (verseWords[j].Strong.Count == 2)
                                         {
                                             vw.Strong[0] = verseWords[j].Strong[1];
                                         }
@@ -417,14 +418,14 @@ namespace BibleTaggingUtil.Editor
             Verse v = container.Target.Bible[verseReference];
             //List<int> merges = new List<int>();
 
-            if (v[0].Word == "«" && v[0].Strong[0] != "")
+            if (v[0].Word == "«" && !(v[0].Strong[0].IsEmpty))
             {
+                // shift all strongs to the left one position
                 for (int i = v.Count - 1; i > 0; i--)
                 {
-                    v[i].Strong = new string[v[i - 1].Strong.Length];
-                    Array.Copy(v[i - 1].Strong, v[i].Strong, v[i - 1].Strong.Length);
+                    v[i].Strong = v[i - 1].Strong;
                 }
-                v[0].Strong[0] = "";
+                v[0].Strong[0] = new StrongsNumber("");
                 container.Target.Bible[verseReference] = v;
             }
 
@@ -433,7 +434,7 @@ namespace BibleTaggingUtil.Editor
                 for (int i = 0; i < v.Count; i++)
                 {
                     VerseWord vw = v[i];
-                    if (vw.Word == "*" && vw.Strong.Length == 1 && vw.Strong[0].Contains("???"))
+/*                    if (vw.Word == "*" && vw.Strong.Count == 1 && vw.Strong[0].Contains("???"))
                     {
                         vw.Strong[0] = "";
                         changed = true;
@@ -445,7 +446,8 @@ namespace BibleTaggingUtil.Editor
                         changed = true;
                         break;
                     }
-                    else if (i == 0 && vw.Word == "لإِمَامِ" && v[1].Word == "الْمُغَنِّينَ")
+                    else */
+                    if (i == 0 && vw.Word == "لإِمَامِ" && v[1].Word == "الْمُغَنِّينَ")
                     {
                         v.Merge(i, 2);
                         changed = true;
@@ -457,7 +459,7 @@ namespace BibleTaggingUtil.Editor
                         changed = true;
                         break;
                     }
-                    else if (i < v.Count - 1 && vw.Strong.Length == 1 && (string.IsNullOrEmpty(vw.Strong[0]) || vw.Strong[0].Contains("???")) &&
+                    else if (i < v.Count - 1 && vw.Strong.Count == 1 && (vw.Strong[0].IsEmpty /*|| vw.Strong[0].Contains("???")*/) &&
                         (vw.Word == "مِنَ" || vw.Word == "مِنْ" || vw.Word == "إِلَى" || vw.Word == "أَمَّا"))
                     {
                         v.Merge(i, 2);

@@ -87,11 +87,13 @@ namespace SM.Bible.Formats.USFM
             for (int i = 0; i < verseWords.Count; i++)
             {
                 words.Add(verseWords[i].Word);
-                string tmpTag = string.Empty;
+                tags.Add(verseWords[i].Strong.ToString());
+/*                string tmpTag = string.Empty;
                 for (int j = 0; j < verseWords[i].Strong.Length; j++)
                     if(!string.IsNullOrEmpty(verseWords[i].Strong[j]))
                        tmpTag += prfx + verseWords[i].Strong[j] + " ";
                 tags.Add(tmpTag.Trim());
+*/
             }
 
 //            for (int i = 0; i < tags.Count; i++)

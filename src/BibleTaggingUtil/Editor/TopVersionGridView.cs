@@ -44,50 +44,52 @@ namespace BibleTaggingUtil.Editor
             string[] verseTags = new string[verse.Count];
 
             try
-            { 
-            for (int i = 0; i < verse.Count; i++)
             {
-                verseWords[i] = verse[i].Word;
-
-                string thisTag = string.Empty;
-                for (int j = 0; j < verse[i].Strong.Length; j++)
+                for (int i = 0; i < verse.Count; i++)
                 {
-                    if (verse[i].Strong[j].Contains('('))
-                        thisTag += verse[i].Strong[j] + " ";
-                    else
-                        thisTag += "<" + verse[i].Strong[j] + "> ";
+                    verseWords[i] = verse[i].Word;
+
+                    string thisTag = verse[i].Strong.ToString();//string.Empty;
+
+                    /*                for (int j = 0; j < verse[i].Strong.Count; j++)
+                                    {
+                                        if (verse[i].Strong[j].Contains('('))
+                                            thisTag += verse[i].Strong[j] + " ";
+                                        else
+                                            thisTag += "<" + verse[i].Strong[j] + "> ";
+                                    }
+
+                                    thisTag = thisTag.Trim().
+                                            Replace(",", "").
+                                            Replace(".", "").
+                                            Replace(";", "").
+                                            Replace(":", "");
+                    */
+                    if (thisTag == "<>")
+                        thisTag = string.Empty;
+                    verseTags[i] = thisTag;
                 }
 
-                thisTag = thisTag.Trim().
-                        Replace(",", "").
-                        Replace(".", "").
-                        Replace(";", "").
-                        Replace(":", "");
-                if (thisTag == "<>")
-                    thisTag = string.Empty;
-                verseTags[i] = thisTag;
-            }
 
+                this.ColumnCount = verseWords.Length;
+                this.Rows.Add(verseWords);
+                this.Rows.Add(verseTags);
 
-            this.ColumnCount = verseWords.Length;
-            this.Rows.Add(verseWords);
-            this.Rows.Add(verseTags);
-
-            for (int i = 0; i < verseTags.Length; i++)
-            {
-                string tag = (string)this.Rows[1].Cells[i].Value;
-                if (tag == null)
-                    continue;
-                if (tag.Contains("0410>"))
+                for (int i = 0; i < verseTags.Length; i++)
                 {
-                    this.Rows[1].Cells[i].Style.BackColor = Color.Yellow;
+                    string tag = (string)this.Rows[1].Cells[i].Value;
+                    if (tag == null)
+                        continue;
+                    if (tag.Contains("0410>"))
+                    {
+                        this.Rows[1].Cells[i].Style.BackColor = Color.Yellow;
+                    }
                 }
-            }
 
-            this.ClearSelection();
+                this.ClearSelection();
 
-            this.Rows[0].ReadOnly = true;
-            this.Rows[1].ReadOnly = true;
+                this.Rows[0].ReadOnly = true;
+                this.Rows[1].ReadOnly = true;
             }
             catch (Exception ex)
             {

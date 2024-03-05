@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BibleTaggingUtil.Strongs;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -6,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.ConstrainedExecution;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -361,6 +363,15 @@ namespace BibleTaggingUtil.BibleVersions
             vRef = string.Format("{0} {1}:{2}", book, ch, v); ;
             otVerseMap.Add(vRef, new List<int[]>());
             otVerseMap[vRef].Add(new int[] { ch, v, 0, -1, v, 7, -1 });
+            //==============================================================
+            book = "1Th";  // KJV ???
+            ch = 2; v = 11;
+            vRef = string.Format("{0} {1}:{2}", book, ch, v); ;
+            ntVerseMap.Add(vRef, new List<int[]>());
+            ntVerseMap[vRef].Add(new int[] { ch, v, 0, 3, v, 0, 3 });
+            ntVerseMap[vRef].Add(new int[] { ch, v, 3, 1, v + 1, 0, 2 });
+            ntVerseMap[vRef].Add(new int[] { ch, v, 4, 5, v, 3, -1 });
+            ntVerseMap[vRef].Add(new int[] { ch, v, 9, -1, v + 1, 2, 4 });
 
             #endregion NT verse Map
 
@@ -408,9 +419,17 @@ namespace BibleTaggingUtil.BibleVersions
             }
             else
             {
-                OutputTranslatorTagsOT(@"C:\temp\TTAraSVD - Translators Tags etc. for Arabic SVD OT - STEPBible.org CC BY.txt", otWords, publicDomain);
-                //OutputTranslatorTags(@"C:\temp\TTESV - Translators Tags for ESV.txt", otWords);
-                MessageBox.Show("OT Success");
+                try
+                {
+
+                    OutputTranslatorTagsOT(@"C:\temp\TTAraSVD - Translators Tags etc. for Arabic SVD OT - STEPBible.org CC BY.txt", otWords, publicDomain);
+                    //OutputTranslatorTags(@"C:\temp\TTESV - Translators Tags for ESV.txt", otWords);
+                    MessageBox.Show("OT Success");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("OT Write failed");
+                }
             }
 
             if (ntErrors.Count > 0)
@@ -420,12 +439,17 @@ namespace BibleTaggingUtil.BibleVersions
             }
             else
             {
-                OutputTranslatorTagsNT(@"C:\temp\TTAraSVD - Translators Tags etc. for Arabic SVD NT - STEPBible.org CC BY.txt", ntWords);
-                //OutputTranslatorTags(@"C:\temp\TTESV - Translators Tags for ESV.txt", otWords);
-                MessageBox.Show("NT Success");
+                try
+                {
+                    OutputTranslatorTagsNT(@"C:\temp\TTAraSVD - Translators Tags etc. for Arabic SVD NT - STEPBible.org CC BY.txt", ntWords);
+                    //OutputTranslatorTags(@"C:\temp\TTESV - Translators Tags for ESV.txt", otWords);
+                    MessageBox.Show("NT Success");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("OT Write failed");
+                }
             }
-
-
         }
 
         private void ProcessHebrewVerse(Verse verse, int bookIndex, string book, string verseRef, ReferenceVersionTOTHT totht, bool publicDomain)
@@ -434,6 +458,10 @@ namespace BibleTaggingUtil.BibleVersions
             string originalRef = verseRef.Replace(book, bookName);
             int colon = originalRef.IndexOf(':');
             string verseNum = originalRef.Substring(colon);
+            if (verseRef == "Gen 1:29")
+            {
+                int a = 0;
+            }
             #region Psalms Title
             if (verseRef == "Psa 18:1")
             {
@@ -527,118 +555,220 @@ namespace BibleTaggingUtil.BibleVersions
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="verseRef">target book ref: book ch:v</param>
+        /// <param name="originalRef">original language reference: book ch:v</param>
+        /// <param name="verse">complete target verse</param>
+        /// <param name="startIndex">index in verse of starting word to map to hebrew </param>
+        /// <param name="end">index in verse of last word + 1 to map to hebrew</param>
+        /// <param name="hebrewVerse">sevment of the Hebrew verse to map to</param>
         private void ProcessVerseOT(string verseRef, string originalRef, Verse verse, int startIndex, int end, Verse hebrewVerse)
         {
             Dictionary<string, int> usedStrongs = new Dictionary<string, int>();
 
             List<TranslatorWord> newVerse = new List<TranslatorWord>();
 
-            if (originalRef == "Gen 2:5")
+            if (originalRef == "Psa 3:1")
             {
-                //break;
+                int x = 0;
             }
 
-            // key: arabic word index
-            // val: hebrew word index
-            Dictionary<int, int> map = new Dictionary<int, int>();
 
-            if (verseRef == "Gen 7:4")
+            Dictionary<string, List<VerseWord>> temp = new Dictionary<string, List<VerseWord>>();
+            for(int i  = 0; i < hebrewVerse.Count; i++)
             {
-                int d = 0;
-            }
-            for (int i = startIndex; i < end; i++)
-            {
-                List<OriginalWordDetails> ow = new List<OriginalWordDetails>();
+                VerseWord vw1 = hebrewVerse[i];
+                if (vw1.Strong.Count != 1) continue; // for now, handle only single strong's.
 
-                if (verse[i].Strong == null || verse[i].Strong.Length == 0 ||
-                    (verse[i].Strong.Length == 1 && string.IsNullOrEmpty(verse[i].Strong[0])))
+                string strongString = vw1.StrongStringS;
+                if (temp.ContainsKey(strongString)) continue; // we already processed this number
+                
+                for(int j = i+1; j < hebrewVerse.Count; j++)
                 {
-                    ow = null;
-                }
-                else
-                {
-                    foreach (string strong in verse[i].Strong)
+                    VerseWord vw2 = hebrewVerse[j];
+                    if (vw2.Strong.Count != 1) continue; // for now, handle only single strong's.
+
+                    if (strongString == vw2.StrongStringS)
                     {
-                        int offset = 0;
-                        if (usedStrongs.Keys.Contains(strong))
-                            offset = usedStrongs[strong];
-
-                        VerseWord hw = hebrewVerse.GetWordFromStrong(strong, offset);
-                        if (hw == null)
+                        if(temp.ContainsKey(strongString))
                         {
-                            otErrors.Add(string.Format("{0}\t{1}-{2}\t{3}",
-                               verseRef,
-                               verse[i].WordIndex,
-                               verse[i].Word,
-                               strong));
+                            if (vw2.Strong[0].Occurance == 0)
+                            {
+                                vw2.Strong[0].Occurance = temp[strongString].Count + 1;
+                            }
+                            else if (vw2.Strong[0].Occurance != temp[strongString].Count + 1)
+                            {
+                                int w = 0;
+                                vw2.Strong[0].Occurance = temp[strongString].Count + 1;
+                            }
+
+                            temp[strongString].Add(vw2);
                         }
                         else
                         {
-                            usedStrongs[strong] = hw.WordIndex + 1;
-                            map[i] = hw.WordIndex;
-                            OriginalWordDetails wd = new OriginalWordDetails(hw.RootStrong, hw.Morphology, hw.Hebrew, hw.WordIndex, hw.Transliteration, hw.Word, hw.WordNumber, hw.AltVerseNumber, hw.Reference);
-                            ow.Add(wd);
+                            // first match
+                            temp[strongString] = new List<VerseWord>();
+                            if (vw1.Strong[0].Occurance == 0)
+                            {
+                                vw1.Strong[0].Occurance = 1;
+                            }
+                            else if (vw1.Strong[0].Occurance != 1)
+                            {
+                                int w = 0;
+                                vw1.Strong[0].Occurance = 1;
+                            }
+                            if (vw2.Strong[0].Occurance == 0)
+                            {
+                                vw2.Strong[0].Occurance = 2;
+                            }
+                            else if (vw2.Strong[0].Occurance != 2)
+                            {
+                                int w = 0;
+                                vw2.Strong[0].Occurance = 2;
+                            }
+                            temp[strongString].Add(vw1);
+                            temp[strongString].Add(vw2);
                         }
                     }
                 }
-                TranslatorWord aw = new TranslatorWord(verse[i].Word, ow);
-                aw.ArabicWordIndex = newVerse.Count;
-                newVerse.Add(aw);
             }
-            SortedDictionary<int, int> missedWords = new SortedDictionary<int, int>();
-            for (int i = 0; i < hebrewVerse.Count; i++)
+            foreach (List<VerseWord> list in temp.Values)
             {
-                if (map.Values.Contains(i)) continue;
-                int indexA = map.FirstOrDefault(x => x.Value == i + 1).Key;
-                missedWords[indexA] = i;
+                foreach (VerseWord w in list)
+                {
+                    w.Strong[0].CountInVerse = list.Count;
+                }
             }
 
-            List<TranslatorWord> updatedVerse = new List<TranslatorWord>();
-            int s = 0;
-            foreach (int p in missedWords.Keys)
+            try
             {
-                int i = 0;
-                try
+
+                // key: arabic word index
+                // val: hebrew word index
+                Dictionary<int, int> map = new Dictionary<int, int>();
+
+                for (int i = startIndex; i < end; i++)
                 {
-                    for (i = s; i <= p; i++)
+                    List<OriginalWordDetails> ow = new List<OriginalWordDetails>();
+
+                    if (verse[i].Strong == null || verse[i].Strong.Count == 0 ||
+                        (verse[i].Strong.Count == 1 && verse[i].Strong[0].IsEmpty))
                     {
-                        updatedVerse.Add(newVerse[i]);
+                        ow = null;
+                    }
+                    else
+                    {
+                        foreach (StrongsNumber strong in verse[i].Strong.Strongs)
+                        {
+                            int offset = 0;
+                            if (usedStrongs.Keys.Contains(strong.ToString()))
+                                offset = usedStrongs[strong.ToString()];
+
+                            VerseWord hw = hebrewVerse.GetWordFromStrong(strong.ToString(), offset, false);
+                            if (hw == null)
+                            {
+                                otErrors.Add(string.Format("{0}\t{1}-{2}\t{3}",
+                                   verseRef,
+                                   verse[i].WordIndex,
+                                   verse[i].Word,
+                                   strong));
+                            }
+                            else
+                            {
+                                usedStrongs[strong.ToString()] = hw.WordIndex + 1;
+                                map[i] = hw.WordIndex;
+                                OriginalWordDetails wd = new OriginalWordDetails(hw.RootStrong, hw.Morphology, hw.Hebrew, hw.WordIndex, hw.Transliteration, hw.Word, hw.WordNumber, hw.AltVerseNumber, hw.Reference);
+                                ow.Add(wd);
+                            }
+                        }
+                    }
+                    TranslatorWord aw = new TranslatorWord(verse[i].Word, ow);
+                    aw.ArabicWordIndex = newVerse.Count;
+                    newVerse.Add(aw);
+                }
+
+                // Now map contains all Arabic word indices and corresponding Hebrew word indices
+                // if a Hebrew index is missing
+                // we find the arabic word preceding 
+
+                SortedDictionary<int, int> missedWords = new SortedDictionary<int, int>();
+                int lastHebrewIndex = -1;
+                for (int i = 0; i < hebrewVerse.Count; i++)
+                {
+                    if (map.Values.Contains(i))
+                    {
+                        lastHebrewIndex = i;
+                        continue;
+                    }
+
+                    int indexA = map.FirstOrDefault(x => x.Value == lastHebrewIndex).Key;
+                    //int indexA = map.FirstOrDefault(x => x.Value == i + 1).Key;
+                    int newIndex = indexA + i - lastHebrewIndex;
+                    if (missedWords.Keys.Contains(newIndex))
+                    {
+                        int n= 0;
+                    }
+                    missedWords[newIndex] = i;
+                }
+
+                List<TranslatorWord> updatedVerse = new List<TranslatorWord>();
+                int s = 0;
+                foreach (int p in missedWords.Keys)
+                {
+                    int i = 0;
+                    try
+                    {
+                        if (p < newVerse.Count) // test in case missed Hebrew words are beyond all Arabic words
+                        {
+                            for (i = s; i <= p; i++)
+                            {
+                                updatedVerse.Add(newVerse[i]);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        int t = 0;
+                    }
+
+                    s = i;
+                    VerseWord hw = hebrewVerse[missedWords[p]];
+                    List<OriginalWordDetails> ow = new List<OriginalWordDetails>();
+                    ow.Add(new OriginalWordDetails(hw.RootStrong, hw.Morphology, hw.Hebrew, hw.WordIndex, hw.Transliteration, hw.Word, hw.WordNumber, hw.AltVerseNumber, hw.Reference));
+                    updatedVerse.Add(new TranslatorWord(string.Empty, ow));
+                }
+                for (int i = s; i < newVerse.Count; i++)
+                    updatedVerse.Add(newVerse[i]);
+
+                if (otWords.ContainsKey(originalRef))
+                {
+                    int offset = 0;
+                    // find last Arabic word index
+                    for (int i = otWords[originalRef].Count - 1; i >= 0; i--)
+                    {
+                        TranslatorWord word = otWords[originalRef][i];
+                        if (string.IsNullOrEmpty(word.Word)) continue;
+                        offset = word.ArabicWordIndex + 1;
+                        break;
+                    }
+                    //append this verse to previous verse
+                    foreach (TranslatorWord w in updatedVerse)
+                    {
+                        w.ArabicWordIndex += offset;
+                        otWords[originalRef].Add(w);
                     }
                 }
-                catch (Exception ex)
-                {
-                    int t = 0;
-                }
-
-                s = i;
-                VerseWord hw = hebrewVerse[missedWords[p]];
-                List<OriginalWordDetails> ow = new List<OriginalWordDetails>();
-                ow.Add(new OriginalWordDetails(hw.RootStrong, hw.Morphology, hw.Hebrew, hw.WordIndex, hw.Transliteration, hw.Word, hw.WordNumber, hw.AltVerseNumber, hw.Reference));
-                updatedVerse.Add(new TranslatorWord(string.Empty, ow));
+                else
+                    otWords[originalRef] = updatedVerse;
             }
-            for (int i = s; i < newVerse.Count; i++)
-                updatedVerse.Add(newVerse[i]);
-
-            if(otWords.ContainsKey(originalRef))
+            catch (Exception ex)
             {
-                int offset = 0;
-                // find last Arabic word index
-                for(int i = otWords[originalRef].Count -1; i >= 0; i-- )
-                {
-                    TranslatorWord word = otWords[originalRef][i];
-                    if (string.IsNullOrEmpty(word.Word)) continue;
-                    offset = word.ArabicWordIndex + 1;
-                    break;
-                }
-                //append this verse to previous verse
-                foreach(TranslatorWord w in updatedVerse)
-                {
-                    w.ArabicWordIndex += offset;
-                    otWords[originalRef].Add(w);
-                }
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
             }
-            else
-                otWords[originalRef] = updatedVerse;
         }
         private void ProcessVerseNT(string verseRef, string originalRef, Verse verse, int startIndex, int end, Verse hebrewVerse)
         {
@@ -646,112 +776,121 @@ namespace BibleTaggingUtil.BibleVersions
 
             List<TranslatorWord> newVerse = new List<TranslatorWord>();
 
-            if (originalRef == "Gen 2:5")
+            try
             {
-                //break;
-            }
-
-            // key: arabic word index
-            // val: hebrew word index
-            Dictionary<int, int> map = new Dictionary<int, int>();
-
-            if (verseRef == "Gen 7:4")
-            {
-                int d = 0;
-            }
-            for (int i = startIndex; i < end; i++)
-            {
-                List<OriginalWordDetails> ow = new List<OriginalWordDetails>();
-
-                if (verse[i].Strong == null || verse[i].Strong.Length == 0 ||
-                    (verse[i].Strong.Length == 1 && string.IsNullOrEmpty(verse[i].Strong[0])))
+                if (originalRef == "Gen 2:5")
                 {
-                    ow = null;
+                    //break;
+                }
+
+                // key: arabic word index
+                // val: hebrew word index
+                Dictionary<int, int> map = new Dictionary<int, int>();
+
+                if (verseRef == "Gen 7:4")
+                {
+                    int d = 0;
+                }
+                for (int i = startIndex; i < end; i++)
+                {
+                    List<OriginalWordDetails> ow = new List<OriginalWordDetails>();
+
+                    if (verse[i].Strong == null || verse[i].Strong.Count == 0 ||
+                        (verse[i].Strong.Count == 1 && verse[i].Strong[0].IsEmpty))
+                    {
+                        ow = null;
+                    }
+                    else
+                    {
+                        foreach (StrongsNumber strong in verse[i].Strong.Strongs)
+                        {
+                            int offset = 0;
+                            if (usedStrongs.Keys.Contains(strong.ToString()))
+                                offset = usedStrongs[strong.ToString()];
+
+                            VerseWord hw = hebrewVerse.GetWordFromStrong(strong.ToString(), offset, false);
+                            if (hw == null)
+                            {
+                                ntErrors.Add(string.Format("{0}\t{1}-{2}\t{3}",
+                                   verseRef,
+                                   verse[i].WordIndex + 1,
+                                   verse[i].Word,
+                                   strong));
+                            }
+                            else
+                            {
+                                usedStrongs[strong.ToString()] = hw.WordIndex + 1;
+                                map[i] = hw.WordIndex;
+                                OriginalWordDetails wd = new OriginalWordDetails(hw.RootStrong, hw.Morphology, hw.Hebrew, hw.WordIndex, hw.Transliteration, hw.Word, hw.WordNumber, hw.AltVerseNumber, hw.Reference);
+                                ow.Add(wd);
+                            }
+                        }
+                    }
+                    TranslatorWord aw = new TranslatorWord(verse[i].Word, ow);
+                    aw.ArabicWordIndex = newVerse.Count;
+                    newVerse.Add(aw);
+                }
+                SortedDictionary<int, int> missedWords = new SortedDictionary<int, int>();
+                for (int i = 0; i < hebrewVerse.Count; i++)
+                {
+                    if (map.Values.Contains(i)) continue;
+                    int indexA = map.FirstOrDefault(x => x.Value == i + 1).Key;
+                    missedWords[indexA] = i;
+                }
+
+                List<TranslatorWord> updatedVerse = new List<TranslatorWord>();
+                int s = 0;
+                foreach (int p in missedWords.Keys)
+                {
+                    int i = 0;
+                    try
+                    {
+                        for (i = s; i <= p; i++)
+                        {
+                            updatedVerse.Add(newVerse[i]);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        int t = 0;
+                    }
+
+                    s = i;
+                    VerseWord hw = hebrewVerse[missedWords[p]];
+                    List<OriginalWordDetails> ow = new List<OriginalWordDetails>();
+                    ow.Add(new OriginalWordDetails(hw.RootStrong, hw.Morphology, hw.Hebrew, hw.WordIndex, hw.Transliteration, hw.Word, hw.WordNumber, hw.AltVerseNumber, hw.Reference));
+                    updatedVerse.Add(new TranslatorWord(string.Empty, ow));
+                }
+                for (int i = s; i < newVerse.Count; i++)
+                    updatedVerse.Add(newVerse[i]);
+
+                if (ntWords.ContainsKey(originalRef))
+                {
+                    int offset = 0;
+                    // find last Arabic word index
+                    for (int i = ntWords[originalRef].Count - 1; i >= 0; i--)
+                    {
+                        TranslatorWord word = ntWords[originalRef][i];
+                        if (string.IsNullOrEmpty(word.Word)) continue;
+                        offset = word.ArabicWordIndex + 1;
+                        break;
+                    }
+                    //append this verse to previous verse
+                    foreach (TranslatorWord w in updatedVerse)
+                    {
+                        w.ArabicWordIndex += offset;
+                        ntWords[originalRef].Add(w);
+                    }
                 }
                 else
-                {
-                    foreach (string strong in verse[i].Strong)
-                    {
-                        int offset = 0;
-                        if (usedStrongs.Keys.Contains(strong))
-                            offset = usedStrongs[strong];
-
-                        VerseWord hw = hebrewVerse.GetWordFromStrong(strong, offset);
-                        if (hw == null)
-                        {
-                            ntErrors.Add(string.Format("{0}\t{1}-{2}\t{3}",
-                               verseRef,
-                               verse[i].WordIndex + 1,
-                               verse[i].Word,
-                               strong));
-                        }
-                        else
-                        {
-                            usedStrongs[strong] = hw.WordIndex + 1;
-                            map[i] = hw.WordIndex;
-                            OriginalWordDetails wd = new OriginalWordDetails(hw.RootStrong, hw.Morphology, hw.Hebrew, hw.WordIndex, hw.Transliteration, hw.Word, hw.WordNumber, hw.AltVerseNumber, hw.Reference);
-                            ow.Add(wd);
-                        }
-                    }
-                }
-                TranslatorWord aw = new TranslatorWord(verse[i].Word, ow);
-                aw.ArabicWordIndex = newVerse.Count;
-                newVerse.Add(aw);
+                    ntWords[originalRef] = updatedVerse;
             }
-            SortedDictionary<int, int> missedWords = new SortedDictionary<int, int>();
-            for (int i = 0; i < hebrewVerse.Count; i++)
+            catch (Exception ex)
             {
-                if (map.Values.Contains(i)) continue;
-                int indexA = map.FirstOrDefault(x => x.Value == i + 1).Key;
-                missedWords[indexA] = i;
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
             }
-
-            List<TranslatorWord> updatedVerse = new List<TranslatorWord>();
-            int s = 0;
-            foreach (int p in missedWords.Keys)
-            {
-                int i = 0;
-                try
-                {
-                    for (i = s; i <= p; i++)
-                    {
-                        updatedVerse.Add(newVerse[i]);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    int t = 0;
-                }
-
-                s = i;
-                VerseWord hw = hebrewVerse[missedWords[p]];
-                List<OriginalWordDetails> ow = new List<OriginalWordDetails>();
-                ow.Add(new OriginalWordDetails(hw.RootStrong, hw.Morphology, hw.Hebrew, hw.WordIndex, hw.Transliteration, hw.Word, hw.WordNumber, hw.AltVerseNumber, hw.Reference));
-                updatedVerse.Add(new TranslatorWord(string.Empty, ow));
-            }
-            for (int i = s; i < newVerse.Count; i++)
-                updatedVerse.Add(newVerse[i]);
-
-            if(ntWords.ContainsKey(originalRef))
-            {
-                int offset = 0;
-                // find last Arabic word index
-                for(int i = ntWords[originalRef].Count -1; i >= 0; i-- )
-                {
-                    TranslatorWord word = ntWords[originalRef][i];
-                    if (string.IsNullOrEmpty(word.Word)) continue;
-                    offset = word.ArabicWordIndex + 1;
-                    break;
-                }
-                //append this verse to previous verse
-                foreach(TranslatorWord w in updatedVerse)
-                {
-                    w.ArabicWordIndex += offset;
-                    ntWords[originalRef].Add(w);
-                }
-            }
-            else
-                ntWords[originalRef] = updatedVerse;
         }
         private void OutputErrors(string errorFile, List<string> errors)
         {
@@ -1008,43 +1147,4 @@ namespace BibleTaggingUtil.BibleVersions
     }
 
 
-    internal class OriginalWordDetails
-    {
-        public OriginalWordDetails(string strongs, string morphology, string ancientWord, int ancientWordIndex, string transliteration, string wordbyWord, string ancientWordNumber, string ancientWordVerse, string ancientWordReference)
-        {
-            AncientWordIndex = ancientWordIndex;
-            Strongs = strongs;
-            Morphology = morphology;
-            AncientWord = ancientWord;
-            Transliteration = transliteration;
-            WordByWord = wordbyWord;
-            AncientWordNumber = ancientWordNumber;
-            AncientWordVerse = ancientWordVerse;
-            AncientWordReference = ancientWordReference;
-        }
-
-        public int AncientWordIndex { get; }
-        public string AncientWordReference { get; }
-        public string AncientWordVerse{ get; }
-        public string AncientWordNumber{ get; }
-        public string Strongs { get; }
-        public string Morphology { get; }
-        public string AncientWord { get; }
-        public string Transliteration { get; }
-        public string WordByWord { get; }
-    }
-
-    internal class TranslatorWord
-    {
-        public TranslatorWord(string word, List<OriginalWordDetails> otiginalWords)
-        {
-            Word = word;
-            OtiginalWords = otiginalWords;
-        }
-
-        public string Word { get; }
-        public List<OriginalWordDetails> OtiginalWords { get; }
-        public int ArabicWordIndex { get; set; }
-
-    }
-}
+ }

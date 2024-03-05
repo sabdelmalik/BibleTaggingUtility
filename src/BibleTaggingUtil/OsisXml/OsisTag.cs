@@ -1,4 +1,5 @@
 ﻿using BibleTaggingUtil;
+using BibleTaggingUtil.Strongs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,7 +71,7 @@ namespace BibleTaggingUtil.OsisXml
 
         private void CreateUntaggedWord(int index, XmlNode tagXML, string verseRef)
         {
-            verseWord = new VerseWord(tagXML.InnerText, new string[0], verseRef);
+            verseWord = new VerseWord(tagXML.InnerText, new StrongsCluster(), verseRef);
             verseWord.OsisTagIndex = index;
             verseWord.OsisTagLevel = level;
         }
@@ -78,7 +79,7 @@ namespace BibleTaggingUtil.OsisXml
         {
             string word = tagXML.InnerText;
 
-            List<string> strongs = new List<string>();
+            StrongsCluster strongs = new StrongsCluster();
 
             XmlAttributeCollection? attrib = tagXML.Attributes;
             if (attrib != null)
@@ -92,24 +93,24 @@ namespace BibleTaggingUtil.OsisXml
                 }
             }
 
-            verseWord = new VerseWord(tagXML.InnerText, strongs.ToArray(), verseRef);
+            verseWord = new VerseWord(tagXML.InnerText, strongs, verseRef);
             verseWord.OsisTagIndex = index;
             verseWord.OsisTagLevel = level;
         }
 
-        private List<string> GetStrongs(string value)
+        private StrongsCluster GetStrongs(string value)
         {
-            List<string> strings = new List<string>();
+            StrongsCluster strongs = new StrongsCluster();
             MatchCollection matches = Regex.Matches(value, @"strong:[GH](\d\d\d\d)");
             if (matches.Count > 0)
             {
                 foreach (Match match in matches)
                 {
-                    strings.Add(match.Groups[1].Value);
+                    strongs.Add(match.Groups[1].Value);
                 }
             }
 
-            return strings;
+            return strongs;
         }
 
         public List<VerseWord> GetVerseWords()
@@ -159,13 +160,13 @@ namespace BibleTaggingUtil.OsisXml
 
                         if (verseWord != null)
                         {
-                            if (verseWord.Strong.Length > 1 ||
-                                (verseWord.Strong.Length == 1 && !string.IsNullOrEmpty(verseWord.Strong[0])))
+                            if (verseWord.Strong.Count > 1 ||
+                                (verseWord.Strong.Count == 1 && !(verseWord.Strong[0].IsEmpty)))
                             {
                                 string lemmaValue = string.Empty;
-                                foreach (string s in verseWord.Strong)
+                                foreach (StrongsNumber s in verseWord.Strong.Strongs)
                                 {
-                                    lemmaValue += string.Format("strong:{0}{1} ", verseWord.Testament == BibleTestament.OT ? "H" : "G", s);
+                                    lemmaValue += string.Format("strong:{0} ", s.ToString());
                                 }
                                 lemmaValue = lemmaValue.Trim();
                                 result = string.Format("<w lemma=\"{0}\">{1}</w>", lemmaValue, verseWord.Word);
@@ -176,8 +177,8 @@ namespace BibleTaggingUtil.OsisXml
 
                         break;
                     case VerseTagType.w:
-                        if (verseWord.Strong.Length == 0 ||
-                            (verseWord.Strong.Length == 1 && string.IsNullOrEmpty(verseWord.Strong[0])))
+                        if (verseWord.Strong.Count == 0 ||
+                            (verseWord.Strong.Count == 1 && verseWord.Strong[0].IsEmpty))
                         {
                             result = verseWord.Word;
                         }
@@ -186,9 +187,9 @@ namespace BibleTaggingUtil.OsisXml
                             string lemmaValue = string.Empty;
                             if (verseWord != null)
                             {
-                                foreach (string s in verseWord.Strong)
+                                foreach (StrongsNumber s in verseWord.Strong.Strongs)
                                 {
-                                    lemmaValue += string.Format("strong:{0}{1} ", verseWord.Testament == BibleTestament.OT ? "H" : "G", s);
+                                    lemmaValue += string.Format("strong:{0} ", s.ToString());
                                 }
                                 lemmaValue = lemmaValue.Trim();
                                 XmlNode tagXml1 = tagXml.Clone();
@@ -282,14 +283,14 @@ namespace BibleTaggingUtil.OsisXml
                     w.Strong = verseWord.Strong;
                     if (tagType == VerseTagType.w)
                     {
-                        if (w.Strong.Length == 0 ||
-                            (w.Strong.Length == 1 && string.IsNullOrEmpty(w.Strong[0])))
+                        if (w.Strong.Count == 0 ||
+                            (w.Strong.Count == 1 && w.Strong[0].IsEmpty))
                             tagType = VerseTagType.text;
                     }
                     else if (tagType == VerseTagType.text)
                     {
-                        if (w.Strong.Length > 1 ||
-                            (w.Strong.Length == 1 && !string.IsNullOrEmpty(w.Strong[0])))
+                        if (w.Strong.Count > 1 ||
+                            (w.Strong.Count == 1 && !(w.Strong[0].IsEmpty)))
                             tagType = VerseTagType.w;
                     }
                 }
