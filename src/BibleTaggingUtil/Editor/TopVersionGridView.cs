@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BibleTaggingUtil.BibleVersions;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -11,6 +12,8 @@ namespace BibleTaggingUtil.Editor
 {
     internal class TopVersionGridView : DataGridView
     {
+        public ReferenceTopVersion Bible { get; set; }
+
         protected override void OnCellMouseDown(DataGridViewCellMouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left && e.Clicks == 1)

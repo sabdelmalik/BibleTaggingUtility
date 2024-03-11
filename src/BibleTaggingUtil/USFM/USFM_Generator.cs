@@ -115,7 +115,7 @@ namespace SM.Bible.Formats.USFM
 
         private void ReadUSFM()
         {
-            string usfmRefFolder = Path.Combine(BibleTaggingUtil.Properties.Settings.Default.BiblesFolder, usfmConf[UsfmConstants.usfmRefFolder]);
+            string usfmRefFolder = Path.Combine(BibleTaggingUtil.Properties.MainSettings.Default.BiblesFolder, usfmConf[UsfmConstants.usfmRefFolder]);
             string[] files = Directory.GetFiles(usfmRefFolder, "*.usfm");
             foreach (string file in files)
             {
@@ -233,7 +233,7 @@ namespace SM.Bible.Formats.USFM
 
         public void SaveUSFMBible()
         {
-            string usfmOutFolder = Path.Combine(BibleTaggingUtil.Properties.Settings.Default.BiblesFolder, usfmConf[UsfmConstants.usfmOutFolder]);
+            string usfmOutFolder = Path.Combine(BibleTaggingUtil.Properties.MainSettings.Default.BiblesFolder, usfmConf[UsfmConstants.usfmOutFolder]);
             if (!Directory.Exists(usfmOutFolder))
             {
                 Directory.CreateDirectory(usfmOutFolder);

@@ -325,8 +325,10 @@ namespace BibleTaggingUtil.BibleVersions
                                                        else
                                 */
                                 string prefix = Utils.GetTestament(reference) == BibleTestament.NT ? "G" : "H";
-                                    
-                                tmpTag += t/*.Replace("<", "<" + prefix)*/ + " ";
+                                if (t[0] == '<' && char.IsDigit(t[1]))
+                                    tmpTag = t.Replace("<", "<" + prefix) + " ";
+                                else
+                                    tmpTag += t/*.Replace("<", "<" + prefix)*/ + " ";
                             }
                         }
                         tmpTag = tmpTag.Trim();

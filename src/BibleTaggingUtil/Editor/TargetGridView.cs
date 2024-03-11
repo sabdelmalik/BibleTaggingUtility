@@ -121,7 +121,7 @@ namespace BibleTaggingUtil.Editor
             if (this.SelectedCells.Count == 0)
                 return;
 
-            if (Properties.Settings.Default.Osis)
+            if (Properties.MainSettings.Default.Osis)
                 return;
 
             if (this.SelectedCells.Count > 1)
@@ -377,7 +377,7 @@ namespace BibleTaggingUtil.Editor
                 this.CurrentVerse = verse;
                 bool oldTestament = false;
 
-                string direction = Properties.Settings.Default.TargetTextDirection;
+                string direction = Properties.MainSettings.Default.TargetTextDirection;
                 this.Rows.Clear();
 
                 string[] verseWords = new string[verse.Count];
@@ -490,7 +490,7 @@ namespace BibleTaggingUtil.Editor
         /// <param name="verse"></param>
         public void SaveVerse(Verse verse)
         {
-            if (Properties.Settings.Default.Osis)
+            if (Properties.MainSettings.Default.Osis)
                 OsisBible.Bible[verse[0].Reference] = verse;
             else
                 Bible.Bible[verse[0].Reference] = verse;
@@ -511,7 +511,7 @@ namespace BibleTaggingUtil.Editor
             var cm = System.Reflection.MethodBase.GetCurrentMethod();
             var name = cm.DeclaringType.FullName + "." + cm.Name;
 
-            bool osis = Properties.Settings.Default.Osis;
+            bool osis = Properties.MainSettings.Default.Osis;
 
             Verse verse = new Verse();
 
@@ -706,7 +706,11 @@ namespace BibleTaggingUtil.Editor
                             return;
                     }
 
-                    droppedValue = droppedValue.Replace("+G", "> <").Replace(",", "");
+                    if (data.Source is TopVersionGridView)
+                    {
+                        if(((TopVersionGridView)data.Source).Bible.BibleName == "KJV")
+                            droppedValue = droppedValue.Replace("+G", "> <").Replace(",", "");
+                    }
                     string[] droppedValueParts = droppedValue.Split(' ');
                     String newValue = string.Empty;
 

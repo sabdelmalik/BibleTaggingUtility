@@ -48,7 +48,7 @@ namespace BibleTaggingUtil.Strongs
 
             string pattern = @"([GH])([\d]{1,5})([a-zA-Z]{0,2})[_]{0,1}([a-zA-Z]{0,1})";
             Match m = Regex.Match(temp, pattern);
-            if (m != null)
+            if (m != null && m.Groups.Count > 2)
             {
                 Prefix = m.Groups[1].Value;
                 Number = int.Parse(m.Groups[2].Value);

@@ -30,57 +30,52 @@
         {
             progressBar = new System.Windows.Forms.ProgressBar();
             label = new System.Windows.Forms.Label();
-            splitContainer1 = new System.Windows.Forms.SplitContainer();
-            ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
-            splitContainer1.Panel1.SuspendLayout();
-            splitContainer1.Panel2.SuspendLayout();
-            splitContainer1.SuspendLayout();
+            tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // progressBar
             // 
             progressBar.Dock = System.Windows.Forms.DockStyle.Fill;
-            progressBar.Location = new System.Drawing.Point(0, 0);
+            progressBar.Location = new System.Drawing.Point(3, 38);
             progressBar.Name = "progressBar";
-            progressBar.Size = new System.Drawing.Size(209, 32);
+            progressBar.Size = new System.Drawing.Size(204, 29);
             progressBar.TabIndex = 0;
             // 
             // label
             // 
             label.AutoSize = true;
-            label.Dock = System.Windows.Forms.DockStyle.Bottom;
+            label.Dock = System.Windows.Forms.DockStyle.Fill;
             label.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            label.Location = new System.Drawing.Point(0, 11);
+            label.Location = new System.Drawing.Point(3, 0);
             label.Name = "label";
-            label.Size = new System.Drawing.Size(55, 23);
+            label.Size = new System.Drawing.Size(204, 35);
             label.TabIndex = 1;
             label.Text = "label1";
+            label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // splitContainer1
+            // tableLayoutPanel1
             // 
-            splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            splitContainer1.Location = new System.Drawing.Point(0, 0);
-            splitContainer1.Name = "splitContainer1";
-            splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer1.Panel1
-            // 
-            splitContainer1.Panel1.Controls.Add(label);
-            // 
-            // splitContainer1.Panel2
-            // 
-            splitContainer1.Panel2.Controls.Add(progressBar);
-            splitContainer1.Size = new System.Drawing.Size(209, 70);
-            splitContainer1.SplitterDistance = 34;
-            splitContainer1.TabIndex = 2;
+            tableLayoutPanel1.ColumnCount = 1;
+            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            tableLayoutPanel1.Controls.Add(label, 0, 0);
+            tableLayoutPanel1.Controls.Add(progressBar, 0, 1);
+            tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 2;
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            tableLayoutPanel1.Size = new System.Drawing.Size(210, 70);
+            tableLayoutPanel1.TabIndex = 2;
             // 
             // ProgressForm
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(209, 70);
+            ClientSize = new System.Drawing.Size(210, 70);
             ControlBox = false;
-            Controls.Add(splitContainer1);
+            Controls.Add(tableLayoutPanel1);
             FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             MaximizeBox = false;
             MdiChildrenMinimizedAnchorBottom = false;
@@ -91,11 +86,8 @@
             Text = "ProgressForm";
             TopMost = true;
             Load += ProgressForm_Load;
-            splitContainer1.Panel1.ResumeLayout(false);
-            splitContainer1.Panel1.PerformLayout();
-            splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
-            splitContainer1.ResumeLayout(false);
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -103,6 +95,6 @@
 
         private System.Windows.Forms.ProgressBar progressBar;
         private System.Windows.Forms.Label label;
-        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
     }
 }

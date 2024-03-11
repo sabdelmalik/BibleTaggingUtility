@@ -40,6 +40,14 @@ namespace BibleTaggingUtil.Editor
 
         public bool TargetDirty { get; set; }
 
+
+        public ReferenceTopVersion TopVersion
+        {
+            get { return dgvTopVersion.Bible; }
+            set { dgvTopVersion.Bible = value; }
+        }
+
+
         public TargetVersion TargetVersion
         {
             get { return dgvTarget.Bible; }
@@ -179,7 +187,7 @@ namespace BibleTaggingUtil.Editor
         private bool firstEvent = true;
         private void Verse_VerseChanged(object sender, VerseChangedEventArgs e)
         {
-            osis = Properties.Settings.Default.Osis;
+            osis = Properties.MainSettings.Default.Osis;
             if (osis && firstEvent)
             {
                 firstEvent = false;
@@ -632,10 +640,14 @@ namespace BibleTaggingUtil.Editor
                     string[] tags2 = new string[tags.Length];
                     for (int i = 0; i < tags.Length; i++)
                     {
-                        tags1[i] = tags[i].Replace("<", "").Replace(">", "");
+                        string t = tags[i].Replace("<", "").Replace(">", "");
+                        // remove d strong
+                        if (char.IsLetter(t[t.Length-1]))
+                            t = t.Substring(0, t.Length-1);
+                        tags1[i] = t;
                         tags2[i] = tags[i];
-                        while (tags2[i][1] == '0')
-                            tags2[i] = tags2[i].Remove(1, 1);
+//                        while (tags2[i][1] == '0')
+//                            tags2[i] = tags2[i].Remove(1, 1);
                     }
 
                     SetHighlightedCell(dgvTOTHT, tags1, tags2, firstHalf);
@@ -674,10 +686,14 @@ namespace BibleTaggingUtil.Editor
                         string[] tags2 = new string[tags.Length];
                         for (int i = 0; i < tags.Length; i++)
                         {
-                            tags1[i] = tags[i].Replace("<", "").Replace(">", "");
+                            string t = tags[i].Replace("<", "").Replace(">", "");
+                            // remove d strong
+                            if (char.IsLetter(t[t.Length - 1]))
+                                t = t.Substring(0, t.Length - 1);
+                            tags1[i] = t;
                             tags2[i] = tags[i];
-                            while (tags2[i][1] == '0')
-                                tags2[i] = tags2[i].Remove(1, 1);
+                            //while (tags2[i][1] == '0')
+                                //tags2[i] = tags2[i].Remove(1, 1);
                         }
 
                         SetHighlightedCell(dgvTarget, tags1, tags2, firstHalf);

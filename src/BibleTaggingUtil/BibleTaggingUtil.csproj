@@ -32,10 +32,20 @@
 
   <ItemGroup>
     <Compile Remove="Editor\OsisTargetGridView.cs" />
+    <Compile Remove="SettingsForm.PeriodicTimer1.cs" />
+    <Compile Remove="SettingsForm.ReferenceBibles1.cs" />
+    <Compile Remove="SettingsForm.TranslationTags1.cs" />
+    <Compile Remove="TranslatorsTags\TranslatorTags.cs" />
+    <Compile Remove="TranslatorsTags\TranslatorTagsEx - Save.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <None Remove="BibleVersions\TTArabicSVDPreamble.txt" />
+    <None Remove="TranslatorsTags\TranslatorTagsEx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="TranslatorsTags\TranslatorTagsEx" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,16 +58,28 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Properties\ReferenceBibles.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ReferenceBibles.settings</DependentUpon>
+    </Compile>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Update="Properties\Settings.Designer.cs">
+    <Compile Update="Properties\MainSettings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
+      <DependentUpon>MainSettings.settings</DependentUpon>
     </Compile>
+    <Compile Update="Properties\TranslationTags.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TranslationTags.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Settings\SettingsForm.ReferenceBibles.cs" />
+    <Compile Update="Settings\SettingsForm.TranslationTags.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -68,9 +90,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Properties\Settings.settings">
+    <None Update="Properties\ReferenceBibles.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+      <LastGenOutput>ReferenceBibles.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Properties\MainSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>MainSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Properties\TranslationTags.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>TranslationTags.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
 

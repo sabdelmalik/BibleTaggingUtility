@@ -72,10 +72,10 @@ namespace BibleTaggingUtil.BibleVersions
 
                     }
 
-                    Properties.Settings.Default.LastBook = container.VerseSelectionPanel.CurrentBook;
-                    Properties.Settings.Default.LastChapter = container.VerseSelectionPanel.CurrentChapter;
-                    Properties.Settings.Default.LastVerse = container.VerseSelectionPanel.CurrentVerse;
-                    Properties.Settings.Default.Save();
+                    Properties.MainSettings.Default.LastBook = container.VerseSelectionPanel.CurrentBook;
+                    Properties.MainSettings.Default.LastChapter = container.VerseSelectionPanel.CurrentChapter;
+                    Properties.MainSettings.Default.LastVerse = container.VerseSelectionPanel.CurrentVerse;
+                    Properties.MainSettings.Default.Save();
                     container.WaitCursorControl(false);
                 }
 
@@ -102,7 +102,7 @@ namespace BibleTaggingUtil.BibleVersions
             }
             else
             {
-                int priodicSaveTime = Properties.Settings.Default.PeriodicSaveTime;
+                int priodicSaveTime = Properties.MainSettings.Default.PeriodicSaveTime;
 
                 if (saveTimer == null)
                 {

@@ -48,7 +48,7 @@ namespace SM.Bible.Formats.USFM2OSIS
         {
             this.usfm2osisConf = config.USFM2OSIS;
             osisWork = usfm2osisConf[Usfm2OsisConstants.osisIDWork];
-            osis_filename = Path.Combine(BibleTaggingUtil.Properties.Settings.Default.BiblesFolder, usfm2osisConf[Usfm2OsisConstants.outputFileName]);
+            osis_filename = Path.Combine(BibleTaggingUtil.Properties.MainSettings.Default.BiblesFolder, usfm2osisConf[Usfm2OsisConstants.outputFileName]);
             lang_code = usfm2osisConf[Usfm2OsisConstants.language];
         }
 
@@ -56,7 +56,7 @@ namespace SM.Bible.Formats.USFM2OSIS
         {
             osisSegment = new Dictionary<string, string>(); 
             
-            string folder = Path.Combine(BibleTaggingUtil.Properties.Settings.Default.BiblesFolder, usfm2osisConf[Usfm2OsisConstants.usfmSourceFolder]);
+            string folder = Path.Combine(BibleTaggingUtil.Properties.MainSettings.Default.BiblesFolder, usfm2osisConf[Usfm2OsisConstants.usfmSourceFolder]);
             string[] docs = Directory.GetFiles(folder, "*.usfm");
             
             foreach (string doc in docs)

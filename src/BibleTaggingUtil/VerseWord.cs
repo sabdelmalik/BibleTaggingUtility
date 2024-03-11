@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace BibleTaggingUtil
 {
@@ -66,6 +67,14 @@ namespace BibleTaggingUtil
         public string Greek { get; private set; }
         public string Word { get; set; }
         public StrongsCluster Strong { get; set; }
+
+        public String StrongStringEx
+        {
+            get
+            {
+                return this.Strong.ToStringEx();
+            }
+        }
 
         public String StrongString
         {
@@ -131,9 +140,17 @@ namespace BibleTaggingUtil
                 a.Reference
                 );
         }
+
+        /// <summary>
+        /// Implements "deep" copy for StrongsCluster
+        /// </summary>
+        /// <returns></returns>
         public object Clone()
         {
-            return MemberwiseClone();
+            VerseWord newWord = (VerseWord) MemberwiseClone();
+            newWord.Strong = new StrongsCluster(Strong.Strongs);
+
+            return newWord;
         }
 
 

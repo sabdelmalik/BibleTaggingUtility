@@ -58,16 +58,29 @@ namespace BibleTaggingUtil
             }
         }
 
-        public List<VerseWord> GetWordListFromStrong(string strong)
+        public List<VerseWord> GetWordListFromStrong(StrongsNumber strongNumber)
         {
+
             List<VerseWord> result = new List<VerseWord>();
             try
             {
+                // first, let us see if we can find an exact Match
                 for (int i = 0; i < verse.Count; i++)
                 {
-                    if (verse[i].StrongString.Contains(strong))
+                    if (verse[i].StrongStringEx.Contains(strongNumber.ToStringEx()))
                     {
                         result.Add(verse[i]);
+                    }
+                }
+                if (result.Count == 0)
+                {
+
+                    for (int i = 0; i < verse.Count; i++)
+                    {
+                        if (verse[i].StrongString.Contains(strongNumber.ToStringS()))
+                        {
+                            result.Add(verse[i]);
+                        }
                     }
                 }
             }
@@ -334,13 +347,14 @@ namespace BibleTaggingUtil
             Dirty = true;
         }
 
-        public bool Dirty { get; set; }
+         public bool Dirty { get; set; }
 
 
     }
 
     /// <summary>
     /// Represents a verse as a dictionary of verse words
+    /// used for Do/Undo
     /// </summary>
     public class VerseEx
     {

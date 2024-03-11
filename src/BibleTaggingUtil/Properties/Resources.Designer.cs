@@ -61,7 +61,17 @@ namespace BibleTaggingUtil.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TTArabicSVD - Translators Tags etc. for Arabic SVD OT - STEPBible.org CC BY
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ellipsisTX {
+            get {
+                object obj = ResourceManager.GetObject("ellipsisTX", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TTArabicSVD - Translation Tags etc. for Arabic SVD OT - STEPBible.org CC BY
         ///==================================================================================
         ///
         ///	==========================================================================

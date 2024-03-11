@@ -16,7 +16,7 @@ namespace BibleTaggingUtil.BibleVersions
         {
             try
             {
-                string referenceBibleFileFolder = Properties.Settings.Default.referenceBibleFileFolder;
+                string referenceBibleFileFolder = Properties.MainSettings.Default.referenceBibleFileFolder;
                 if (string.IsNullOrEmpty(referenceBibleFileFolder))
                 {
                     referenceBibleFileFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "bibles");
@@ -24,11 +24,11 @@ namespace BibleTaggingUtil.BibleVersions
 
                 string refFile = container.GetBibleFilePath(referenceBibleFileFolder, "Select Reference File");
                 string referenceBibleFileName = Path.GetFileName(refFile);
-                Properties.Settings.Default.ReferenceBibleFileName = referenceBibleFileName;
+                Properties.MainSettings.Default.ReferenceBibleFileName = referenceBibleFileName;
                 referenceBibleFileFolder = Path.GetDirectoryName(refFile);
-                Properties.Settings.Default.referenceBibleFileFolder = referenceBibleFileFolder;
+                Properties.MainSettings.Default.referenceBibleFileFolder = referenceBibleFileFolder;
 
-                Properties.Settings.Default.Save();
+                Properties.MainSettings.Default.Save();
 
                 LoadBibleFile(refFile, true, false);
             }
