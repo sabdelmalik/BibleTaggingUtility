@@ -27,11 +27,18 @@ FIELD DESCRIPTIONS:
 			Verse number of the Arabic text does not always match the verse number of the corresponding Hebrew Text.
 			In such cases, the Hebrew word number is prefixed with the actual Hebrew verse number.
 			See Psa.3:1 for an example. 
-			Some Hebrew word numbers are shown as four digits. This is to show restored text between two words.
+			The Hebrew word numbers may have a suffix indicating the source of the word. Word numbers without a suffix, are from Leningrad manuscript, otherwise the suffix means the following sources:
+			R= restored text based on Leningrad parallels - ie Jos.21.36-37 from 1Ch.6.63-64 and Neh.7.67b from Ezr.2.66																
+			Q= "a Scribal corrections" ie the Qere ('spoken') corrections by scribes. This is made up of the letters in the margin and the pointing in the text.																
+				K= "the uncorrected text" - ie the Ketiv  ('written') is noted as a variant. This is made up of the letters in the text, pointed by Tyndale scholars. 																
+				L - the letters of K with pointing of Q, as found in Leningrad is recorded as a spelling variant. 																
+			 - eg Gen.27.3 L= צָיִדה, K= צֵידָה ('food'), Q= צָיִד ('wild game')		
+			X= "based on Greek sources" - ie extra words based on LXX, expressed in Hebrew as in the apparatus of BHS pr BHK - eg 1Sa.13.1 Saul was שְׁלֹשִׁים שָׁנָ֖ה ('a thirty year-old') not שָׁנָ֖ה ('a year-old') 																
+			If the word is not in the Leningrad text, its number is shown as four digits. This is to show restored text between two words.
 			See Neh.7.68 for an example.
 6. Hebrew	Full Hebrew including pointing with space separating prefixes and suffixes from the root word.
 7. Transliteration: Uses upper case to indicate the stress. It is based on Berean Study Bible. 
 8. Word-by-word: A word by word translation of the Hebrew.Forward slash ( / ) separates the translation to mirror the prefixes, root and suffixes in Hebrew. This means the order of English words follows the order within the Hebrew word.  															
 
-Note: Descriptions for fields 3, 4, 6 and 8 are taken from Translators Amalgamated Hebrew OT - STEPBible.org CC BY.
+Note: Descriptions for fields 3, 4, 5(sources), 6 and 8 are taken from Translators Amalgamated Hebrew OT - STEPBible.org CC BY.
 ==================================================================================

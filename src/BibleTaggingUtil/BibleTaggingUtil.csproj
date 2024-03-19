@@ -31,6 +31,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Editor\HebrewGreekGrid.cs" />
     <Compile Remove="Editor\OsisTargetGridView.cs" />
     <Compile Remove="SettingsForm.PeriodicTimer1.cs" />
     <Compile Remove="SettingsForm.ReferenceBibles1.cs" />
@@ -45,10 +46,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="TranslatorsTags\TranslatorTagsEx" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1370.28" />
   </ItemGroup>
 
@@ -58,6 +55,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Properties\OsisFileGeneration.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OsisFileGeneration.settings</DependentUpon>
+    </Compile>
     <Compile Update="Properties\ReferenceBibles.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
@@ -73,13 +75,40 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>MainSettings.settings</DependentUpon>
     </Compile>
+    <Compile Update="Properties\TargetBibles.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TargetBibles.settings</DependentUpon>
+    </Compile>
     <Compile Update="Properties\TranslationTags.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
       <DependentUpon>TranslationTags.settings</DependentUpon>
     </Compile>
-    <Compile Update="Settings\SettingsForm.ReferenceBibles.cs" />
-    <Compile Update="Settings\SettingsForm.TranslationTags.cs" />
+    <Compile Update="Settings\SettingsForm.TargetBibles.cs">
+	  <DependentUpon>SettingsForm.cs</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Settings\SettingsForm.OSIS.cs">
+	  <DependentUpon>SettingsForm.cs</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Settings\SettingsForm.OsisGeneration.cs">
+	  <DependentUpon>SettingsForm.cs</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Settings\SettingsForm.ReferenceBibles.cs">
+	  <DependentUpon>SettingsForm.cs</DependentUpon>
+      <SubType>Form</SubType>
+	</Compile>
+    <Compile Update="Settings\SettingsForm.TranslationTags.cs">
+	  <DependentUpon>SettingsForm.cs</DependentUpon>
+      <SubType>Form</SubType>
+	</Compile>
+    <Compile Update="Settings\SettingsForm.PeriodicTimer.cs">
+	  <DependentUpon>SettingsForm.cs</DependentUpon>
+      <SubType>Form</SubType>
+	</Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -90,6 +119,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Properties\OsisFileGeneration.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>OsisFileGeneration.Designer.cs</LastGenOutput>
+    </None>
     <None Update="Properties\ReferenceBibles.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>ReferenceBibles.Designer.cs</LastGenOutput>
@@ -97,6 +130,10 @@
     <None Update="Properties\MainSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>MainSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Properties\TargetBibles.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>TargetBibles.Designer.cs</LastGenOutput>
     </None>
     <None Update="Properties\TranslationTags.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

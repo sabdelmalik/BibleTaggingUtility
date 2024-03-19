@@ -26,8 +26,8 @@ namespace BibleTaggingUtil.Editor
         public event RefernceHighlightRequestEventHandler RefernceHighlightRequest;
         public event GotoVerseRequestEventHandler GotoVerseRequest;
 
-        private FixedSizeStack<VerseEx> undoStack = new FixedSizeStack<VerseEx>();
-        private FixedSizeStack<VerseEx> redoStack = new FixedSizeStack<VerseEx>();
+        private FixedSizeStack<VerseEx> undoStack = new FixedSizeStack<VerseEx>(30);
+        private FixedSizeStack<VerseEx> redoStack = new FixedSizeStack<VerseEx>(30);
 
         public TargetGridView()
         {
@@ -167,16 +167,18 @@ namespace BibleTaggingUtil.Editor
             {
                 if (this.SelectedCells[0].RowIndex == Rows.Count - 1)
                 {
-                    string text = (String)this.SelectedCells[0].Value;
+                    StrongsCluster tag = (StrongsCluster)this.SelectedCells[0].Value;
 
-                    if (string.IsNullOrEmpty(text))
+                    if (tag == null)
                         return;
+//                    if (string.IsNullOrEmpty(text))
+//                        return;
 
                     this.ContextMenuStrip.Items.Clear();
 
                     this.ContextMenuStrip.Items.Clear();
 
-                    string[] strings = text.Trim().Split(' ');
+                    string[] strings = tag.ToString().Split(' ');
                     if (strings.Length > 1)
                     {
                         ToolStripMenuItem reverseMenuItem = new ToolStripMenuItem(REVERSE_CONTEXT_MENU);
@@ -208,152 +210,135 @@ namespace BibleTaggingUtil.Editor
 
         private void ContextMenuStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            if (e.ClickedItem.Text == MERGE_CONTEXT_MENU)
+            try
             {
-                int savedColumn = this.CurrentCell.ColumnIndex;
-                int savedRow = this.CurrentCell.RowIndex;
-                if (this.CurrentVerse != null)
-                    undoStack.Push(new VerseEx(new Verse(this.CurrentVerse), savedColumn, savedRow));
-
-                int firstMergeIndex = this.SelectedCells[0].ColumnIndex;
-                for (int i = 1; i < this.SelectedCells.Count; i++)
+                if (e.ClickedItem.Text == MERGE_CONTEXT_MENU)
                 {
-                    if (this.SelectedCells[i].ColumnIndex < firstMergeIndex)
-                        firstMergeIndex = this.SelectedCells[i].ColumnIndex;
-                }
-                this.CurrentVerse.Merge(firstMergeIndex, this.SelectedCells.Count);
+                    int savedColumn = this.CurrentCell.ColumnIndex;
+                    int savedRow = this.CurrentCell.RowIndex;
+                    if (this.CurrentVerse != null)
+                        undoStack.Push(new VerseEx(new Verse(this.CurrentVerse), savedColumn, savedRow));
 
-                this.Update(CurrentVerse);
-                SaveVerse(CurrentVerseReferece);
-
-                this[firstMergeIndex, Rows.Count - 1].Selected = true;
-                this.CurrentCell = this[firstMergeIndex, Rows.Count - 1];
-                if (!string.IsNullOrEmpty((string)this[firstMergeIndex, Rows.Count - 1].Value))
-                    FireRefernceHighlightRequest((string)this[firstMergeIndex, Rows.Count - 1].Value);
-                FireVerseViewChanged();
-            }
-            else if (e.ClickedItem.Text == SWAP_CONTEXT_MENU)
-            {
-                int savedColumn = this.CurrentCell.ColumnIndex;
-                int savedRow = this.CurrentCell.RowIndex;
-                if (this.CurrentVerse != null)
-                    undoStack.Push(new VerseEx(new Verse(this.CurrentVerse), savedColumn, savedRow));
-
-                int firstSwapIndex = this.SelectedCells[0].ColumnIndex;
-                int secondSwapIndex = this.SelectedCells[1].ColumnIndex;
-                //for (int i = 1; i < this.SelectedCells.Count; i++)
-                //{
-                //    if (this.SelectedCells[i].ColumnIndex < firstSwapIndex)
-                //        firstSwapIndex = this.SelectedCells[i].ColumnIndex;
-                //}
-                this.CurrentVerse.SwapTags(firstSwapIndex, secondSwapIndex);
-
-                SaveVerse(CurrentVerseReferece);
-                this.Update(CurrentVerse);
-
-                this[firstSwapIndex, Rows.Count - 1].Selected = true;
-                this.CurrentCell = this[firstSwapIndex, Rows.Count - 1];
-                if (!string.IsNullOrEmpty((string)this[firstSwapIndex, Rows.Count - 1].Value))
-                    FireRefernceHighlightRequest((string)this[firstSwapIndex, Rows.Count - 1].Value);
-                FireVerseViewChanged();
-            }
-            else if (e.ClickedItem.Text == SPLIT_CONTEXT_MENU)
-            {
-                int savedColumn = this.CurrentCell.ColumnIndex;
-                int savedRow = this.CurrentCell.RowIndex;
-                if (this.CurrentVerse != null)
-                    undoStack.Push(new VerseEx(new Verse(this.CurrentVerse), savedColumn, savedRow));
-
-                int splitIndex = this.SelectedCells[0].ColumnIndex;
-                for (int i = 1; i < this.SelectedCells.Count; i++)
-                {
-                    if (this.SelectedCells[i].ColumnIndex < splitIndex)
-                        splitIndex = this.SelectedCells[i].ColumnIndex;
-                }
-                this.CurrentVerse.split(splitIndex);
-
-                this.Update(CurrentVerse);
-                SaveVerse(CurrentVerseReferece);
-
-                this[splitIndex, Rows.Count - 1].Selected = true;
-                this.CurrentCell = this[splitIndex, Rows.Count - 1];
-                if (!string.IsNullOrEmpty((string)this[splitIndex, Rows.Count - 1].Value))
-                    FireRefernceHighlightRequest((string)this[splitIndex, Rows.Count - 1].Value);
-                FireVerseViewChanged();
-            }
-            else if (e.ClickedItem.Text == DELETE_CONTEXT_MENU)
-            {
-                int savedColumn = this.CurrentCell.ColumnIndex;
-                int savedRow = this.CurrentCell.RowIndex;
-                if (this.CurrentVerse != null)
-                    undoStack.Push(new VerseEx(new Verse(this.CurrentVerse), savedColumn, savedRow));
-
-                int col = this.SelectedCells[0].ColumnIndex;
-                this.CurrentVerse[col].Strong = new StrongsCluster();
-                this.Update(CurrentVerse);
-                SaveVerse(CurrentVerseReferece);
-
-                this[col, Rows.Count - 1].Selected = true;
-                this.CurrentCell = this[col, Rows.Count - 1];
-                FireVerseViewChanged();
-            }
-            else
-            {
-                string[] strings = ((string)this.SelectedCells[0].Value).Split(' ');
-                if (strings.Length < 2) return;
-
-                int savedColumn = this.CurrentCell.ColumnIndex;
-                int savedRow = this.CurrentCell.RowIndex;
-                if (this.CurrentVerse != null)
-                    undoStack.Push(new VerseEx(new Verse(this.CurrentVerse), savedColumn, savedRow));
-
-                string newText = string.Empty;
-                int col = 0;
-                if (e.ClickedItem.Text == REVERSE_CONTEXT_MENU)
-                {
-                    newText = strings[strings.Length - 1];
-                    for (int i = strings.Length - 2; i >= 0; i--)
+                    int firstMergeIndex = this.SelectedCells[0].ColumnIndex;
+                    for (int i = 1; i < this.SelectedCells.Count; i++)
                     {
-                        newText += " " + strings[i];
+                        if (this.SelectedCells[i].ColumnIndex < firstMergeIndex)
+                            firstMergeIndex = this.SelectedCells[i].ColumnIndex;
                     }
-                    this.SelectedCells[0].Value = newText;
+                    this.CurrentVerse.Merge(firstMergeIndex, this.SelectedCells.Count);
 
-                    col = this.SelectedCells[0].ColumnIndex;
-                    this.CurrentVerse[col].StrongString = newText;
+                    this.Update(CurrentVerse);
                     SaveVerse(CurrentVerseReferece);
+
+                    this[firstMergeIndex, Rows.Count - 1].Selected = true;
+                    this.CurrentCell = this[firstMergeIndex, Rows.Count - 1];
+                    if (!string.IsNullOrEmpty(((StrongsCluster)this[firstMergeIndex, Rows.Count - 1].Value).ToString()))
+                        FireRefernceHighlightRequest((StrongsCluster)this[firstMergeIndex, Rows.Count - 1].Value);
                     FireVerseViewChanged();
                 }
-                else if (e.ClickedItem.Text == DELETE_LEFT_CONTEXT_MENU)
+                else if (e.ClickedItem.Text == SWAP_CONTEXT_MENU)
                 {
-                    for (int i = 1; i < strings.Length; i++)
-                    {
-                        newText += string.IsNullOrEmpty(newText) ? strings[i] : " " + strings[i];
-                    }
-                    this.SelectedCells[0].Value = newText;
+                    int savedColumn = this.CurrentCell.ColumnIndex;
+                    int savedRow = this.CurrentCell.RowIndex;
+                    if (this.CurrentVerse != null)
+                        undoStack.Push(new VerseEx(new Verse(this.CurrentVerse), savedColumn, savedRow));
 
-                    col = this.SelectedCells[0].ColumnIndex;
-                    this.CurrentVerse[col].StrongString = newText;
+                    int firstSwapIndex = this.SelectedCells[0].ColumnIndex;
+                    int secondSwapIndex = this.SelectedCells[1].ColumnIndex;
+                    //for (int i = 1; i < this.SelectedCells.Count; i++)
+                    //{
+                    //    if (this.SelectedCells[i].ColumnIndex < firstSwapIndex)
+                    //        firstSwapIndex = this.SelectedCells[i].ColumnIndex;
+                    //}
+                    this.CurrentVerse.SwapTags(firstSwapIndex, secondSwapIndex);
+
                     SaveVerse(CurrentVerseReferece);
+                    this.Update(CurrentVerse);
+
+                    this[firstSwapIndex, Rows.Count - 1].Selected = true;
+                    this.CurrentCell = this[firstSwapIndex, Rows.Count - 1];
+                    if (!string.IsNullOrEmpty(((StrongsCluster)this[firstSwapIndex, Rows.Count - 1].Value).ToString()))
+                        FireRefernceHighlightRequest((StrongsCluster)this[firstSwapIndex, Rows.Count - 1].Value);
                     FireVerseViewChanged();
                 }
-                else if (e.ClickedItem.Text == DELETE_RIGHT_CONTEXT_MENU)
+                else if (e.ClickedItem.Text == SPLIT_CONTEXT_MENU)
                 {
-                    for (int i = 0; i < strings.Length - 1; i++)
-                    {
-                        newText += string.IsNullOrEmpty(newText) ? strings[i] : " " + strings[i];
-                    }
-                    this.SelectedCells[0].Value = newText;
+                    int savedColumn = this.CurrentCell.ColumnIndex;
+                    int savedRow = this.CurrentCell.RowIndex;
+                    if (this.CurrentVerse != null)
+                        undoStack.Push(new VerseEx(new Verse(this.CurrentVerse), savedColumn, savedRow));
 
-                    col = this.SelectedCells[0].ColumnIndex;
-                    this.CurrentVerse[col].StrongString = newText;
+                    int splitIndex = this.SelectedCells[0].ColumnIndex;
+                    for (int i = 1; i < this.SelectedCells.Count; i++)
+                    {
+                        if (this.SelectedCells[i].ColumnIndex < splitIndex)
+                            splitIndex = this.SelectedCells[i].ColumnIndex;
+                    }
+                    this.CurrentVerse.split(splitIndex);
+
+                    this.Update(CurrentVerse);
                     SaveVerse(CurrentVerseReferece);
+
+                    this[splitIndex, Rows.Count - 1].Selected = true;
+                    this.CurrentCell = this[splitIndex, Rows.Count - 1];
+                    if (!string.IsNullOrEmpty(((StrongsCluster)this[splitIndex, Rows.Count - 1].Value).ToString()))
+                        FireRefernceHighlightRequest((StrongsCluster)this[splitIndex, Rows.Count - 1].Value);
                     FireVerseViewChanged();
                 }
-                this[col, Rows.Count - 1].Selected = true;
-                this.CurrentCell = this[col, Rows.Count - 1];
-                if (!string.IsNullOrEmpty((string)this[col, Rows.Count - 1].Value))
-                    FireRefernceHighlightRequest((string)this[col, Rows.Count - 1].Value);
-                FireVerseViewChanged();
+                else if (e.ClickedItem.Text == DELETE_CONTEXT_MENU)
+                {
+                    int savedColumn = this.CurrentCell.ColumnIndex;
+                    int savedRow = this.CurrentCell.RowIndex;
+                    if (this.CurrentVerse != null)
+                        undoStack.Push(new VerseEx(new Verse(this.CurrentVerse), savedColumn, savedRow));
+
+                    int col = this.SelectedCells[0].ColumnIndex;
+                    this.CurrentVerse[col].Strong = new StrongsCluster(new string[] { "" });
+                    this.Update(CurrentVerse);
+                    SaveVerse(CurrentVerseReferece);
+
+                    this[col, Rows.Count - 1].Selected = true;
+                    this.CurrentCell = this[col, Rows.Count - 1];
+                    FireVerseViewChanged();
+                }
+                else
+                {
+                    int col = this.SelectedCells[0].ColumnIndex;
+                    StrongsCluster strongsCluster = this.CurrentVerse[col].Strong;
+                    if (strongsCluster.Count < 2) return;
+
+                    int savedColumn = this.CurrentCell.ColumnIndex;
+                    int savedRow = this.CurrentCell.RowIndex;
+                    if (this.CurrentVerse != null)
+                        undoStack.Push(new VerseEx(new Verse(this.CurrentVerse), savedColumn, savedRow));
+
+                    if (e.ClickedItem.Text == REVERSE_CONTEXT_MENU)
+                    {
+                        StrongsNumber temp = strongsCluster[0];
+                        strongsCluster[0] = strongsCluster[strongsCluster.Count -1];
+                        strongsCluster[strongsCluster.Count - 1] = temp;
+                    }
+                    else if (e.ClickedItem.Text == DELETE_LEFT_CONTEXT_MENU)
+                    {
+                        strongsCluster.DeleteAt(0);
+                    }
+                    else if (e.ClickedItem.Text == DELETE_RIGHT_CONTEXT_MENU)
+                    {
+                        strongsCluster.DeleteAt(strongsCluster.Count-1);
+                    }
+
+                    SaveVerse(CurrentVerseReferece);
+                    Update(CurrentVerse);
+                    FireRefernceHighlightRequest((StrongsCluster)this[col, Rows.Count - 1].Value);
+                    FireVerseViewChanged();
+                }
+            }
+            catch (Exception ex)
+            {
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
+                throw;
             }
         }
 
@@ -371,22 +356,27 @@ namespace BibleTaggingUtil.Editor
             {
                 if (verse == null)
                 {
+                    this.Rows.Clear();
+                    this.ColumnCount = 0;
+
                     return;
                 }
 
                 this.CurrentVerse = verse;
                 bool oldTestament = false;
 
-                string direction = Properties.MainSettings.Default.TargetTextDirection;
+                //string direction = Properties.MainSettings.Default.TargetTextDirection;
                 this.Rows.Clear();
 
                 string[] verseWords = new string[verse.Count];
                 string[] verseTags = new string[verse.Count];
+                StrongsCluster[] strongsClusters = new StrongsCluster[verse.Count];
                 oldTestament = (verse[0].Testament == BibleTestament.OT);
                 for (int i = 0; i < verse.Count; i++)
                 {
                     verseWords[i] = verse[i].Word;
                     verseTags[i] = verse[i].Strong.ToString();
+                    strongsClusters[i] = verse[i].Strong;
 /*                    for (int j = 0; j < verse[i].Strong.Count; j++)
                         //verseTags[i] += "<" + verse[i].Strong[j] + "> ";
                         verseTags[i] += verse[i].Strong[j];
@@ -416,7 +406,10 @@ namespace BibleTaggingUtil.Editor
                 this.ColumnCount = verseWords.Length;
                 this.Rows.Add(verseWords);
                 this.Rows.Add(wordNumber);
-                this.Rows.Add(verseTags);
+
+                this.Rows.Add(strongsClusters);
+
+                //this.Rows.Add(verseTags);
 
                 string tagToHighlight = SearchTag;
                 if (string.IsNullOrEmpty(tagToHighlight) || tagToHighlight.ToLower() == "<blank>")
@@ -426,38 +419,41 @@ namespace BibleTaggingUtil.Editor
                 for (int i = 0; i < verseWords.Length; i++)
                 {
                     string word = (string)this.Rows[0].Cells[i].Value;
-                    string tag = (string)this.Rows[tRow].Cells[i].Value;
-                    string nextTag = string.Empty;
+                    StrongsCluster tag = (StrongsCluster)this.Rows[tRow].Cells[i].Value;
+                    StrongsCluster nextTag = new StrongsCluster();
                     if(i < verseWords.Length - 1)
                     {
-                        nextTag = (string)this.Rows[tRow].Cells[i+1].Value;
+                        nextTag = (StrongsCluster)this.Rows[tRow].Cells[i+1].Value;
                     }
                     if (tag == null)
                         continue;
 
-                    if ((tag.Contains("3068") || tag.Contains("3069")) && oldTestament)
+                    if ((tag.ToString().Contains("3068") || tag.ToString().Contains("3069")) && oldTestament)
                     {
                         this.Rows[tRow].Cells[i].Style.ForeColor = Color.Red;
                     }
-                    if (tag.Contains("0430>") && oldTestament)
+                    if (tag.ToString().Contains("0430>") && oldTestament)
                     {
                         //this.Rows[tRow].Cells[i].Style.BackColor = Color.Green;
                         this.Rows[tRow].Cells[i].Style.ForeColor = Color.Green;
                     }
 
-                    if (tag.Contains("0410>") && oldTestament)
+                    if (tag.ToString().Contains("0410>") && oldTestament)
                         this.Rows[tRow].Cells[i].Style.ForeColor = Color.Blue;
 
-                    if (tag.Contains(tagToHighlight) || tag.Contains("0000") || (tag == string.Empty && tagToHighlight == "<>"))
+                    if (tag.ToString().Contains(tagToHighlight) || tag.ToString().Contains("0000") || (tag.ToString() == string.Empty && tagToHighlight == "<>"))
                         this.Rows[tRow].Cells[i].Style.BackColor = Color.LightGray;
-                    else if (!string.IsNullOrEmpty(tag) && tag == nextTag)
+                    else if (!string.IsNullOrEmpty(tag.ToString()) && tag.ToString() == nextTag.ToString())
                     {
                         this.Rows[tRow].Cells[i].Style.BackColor = Color.Yellow;
                         this.Rows[tRow].Cells[i+1].Style.BackColor = Color.Yellow;
                     }
 
-                    if (direction.ToLower() == "rtl")
+                    //if (direction.ToLower() == "rtl")
+                    if(Properties.TargetBibles.Default.RightToLeft)
                         this.Columns[i].DisplayIndex = verseWords.Length - i - 1;
+                    else
+                        this.Columns[i].DisplayIndex = i;
                 }
 
                 if (col >= 0)
@@ -470,8 +466,8 @@ namespace BibleTaggingUtil.Editor
                 this.Rows[0].ReadOnly = true;
                 this[0,tRow].Selected = true;
                 this.CurrentCell = this[0, tRow];
-                if(!string.IsNullOrEmpty((string)this[0, tRow].Value))
-                    FireRefernceHighlightRequest((string)this[0, tRow].Value);
+                if(!string.IsNullOrEmpty(((StrongsCluster)this[0, tRow].Value).ToString()))
+                    FireRefernceHighlightRequest((StrongsCluster)this[0, tRow].Value);
                 //this.Rows[tRow].ReadOnly = true;
 
             }
@@ -519,18 +515,9 @@ namespace BibleTaggingUtil.Editor
             {
                 for (int i = 0; i < this.Columns.Count; i++)
                 {
-                    string[] tags;
-                    string tag = ((string)this[i, Rows.Count - 1].Value);
-                    if (string.IsNullOrEmpty(tag))
-                        tags = new string[] { "<>" };
-                    else
-                        tags = tag.Split(' ');
-
-                    // remove <> from tags
-//                    for (int j = 0; j < tags.Length; j++)
-//                        tags[j] = tags[j].Replace("<", "").Replace(">", "");
-
-                    verse[i] = new VerseWord((string)this[i, 0].Value, new StrongsCluster(tags), reference);
+                    StrongsCluster tag = ((StrongsCluster)this[i, Rows.Count - 1].Value);
+ 
+                    verse[i] = new VerseWord((string)this[i, 0].Value, tag, reference);
                     if (osis)
                     {
                         verse[i].OsisTagIndex = CurrentVerse[i].OsisTagIndex;
@@ -579,39 +566,39 @@ namespace BibleTaggingUtil.Editor
                 CurrentVerse.UpdateWord(e.ColumnIndex, newWord);
                 //                FireVerseViewChanged();
             }
-            else if (row == this.RowCount - 1)
+            else if (row == this.RowCount - 1) 
             {
-                string newValue = (string)this[col, row].Value;
-        /*        if (!string.IsNullOrEmpty(newValue))
+                StrongsCluster oldValue = CurrentVerse[col].Strong;
+                StrongsCluster newValue = null;
+                // tags Row
+                if(this[col, row].Value == null)
                 {
-                    Regex regex = new Regex(@"[<]{0,1}(\d\d\d\d)[>]{0,1}");
-                    MatchCollection matches = regex.Matches(newValue);
-                    if (matches.Count > 0)
+
+                    newValue = new StrongsCluster(new string[] {""});
+                }
+                else if (this[col, row].Value is string)
+                {
+                    // if the new value is a string, this means the tag may've been edited been edited
+                    string temp = (string)this[col, row].Value;
+                    newValue = new StrongsCluster(temp.Split(' '));
+                    if (oldValue.ToString() == temp)
                     {
-                        string temp = string.Empty;
-                        foreach (Match match in matches)
-                        {
-                            temp += string.Format("<{0}> ", match.Groups[1]);
-                        }
-                        newValue = temp.Trim();
-                    }
-                    else
-                    {
-                        // bad entry
-                        this[e.ColumnIndex, e.RowIndex].Value = string.Empty;
-                        return;
+                        this[col, row].Value = newValue;
                     }
                 }
-        */
-                if (CurrentVerse[col].StrongString != newValue)
+                else
+                {
+                    newValue = (StrongsCluster)this[col, row].Value;
+                }
+                if (CurrentVerse[col].Strong.ToString() != newValue.ToString())
                 {
                     if (this.CurrentVerse != null)
                         undoStack.Push(new VerseEx(new Verse(this.CurrentVerse), col, row));
 
-                    if (newValue == null) newValue = string.Empty;
-                    this[e.ColumnIndex, e.RowIndex].Value = newValue;
+                    // if (newValue == null) newValue = string.Empty; TODO:this should be an exception
+                    CurrentVerse[col].Strong = newValue;
 
-                    CurrentVerse[col].StrongString = newValue;
+                    this[e.ColumnIndex, e.RowIndex].Value = newValue;
 
                     FireRefernceHighlightRequest(newValue);
 
@@ -641,7 +628,7 @@ namespace BibleTaggingUtil.Editor
                     this.ClearSelection();
                     this[e.ColumnIndex, e.RowIndex].Selected = true;
                 }
-                FireRefernceHighlightRequest((string)this.Rows[Rows.Count - 1].Cells[e.ColumnIndex].Value);
+                FireRefernceHighlightRequest((StrongsCluster)this.Rows[Rows.Count - 1].Cells[e.ColumnIndex].Value);
 
             }
             //base.OnCellEnter(e);
@@ -692,7 +679,7 @@ namespace BibleTaggingUtil.Editor
         protected override void OnDragDrop(DragEventArgs drgevent)
         {
             DragData data = drgevent.Data.GetData(typeof(DragData)) as DragData;
-            string droppedValue = data.Text;
+            StrongsCluster droppedValue = data.Tag;
             Point cursorLocation = this.PointToClient(new Point(drgevent.X, drgevent.Y));
             try
             {
@@ -706,20 +693,21 @@ namespace BibleTaggingUtil.Editor
                             return;
                     }
 
-                    if (data.Source is TopVersionGridView)
-                    {
-                        if(((TopVersionGridView)data.Source).Bible.BibleName == "KJV")
-                            droppedValue = droppedValue.Replace("+G", "> <").Replace(",", "");
-                    }
-                    string[] droppedValueParts = droppedValue.Split(' ');
-                    String newValue = string.Empty;
+                    //if (data.Source is TopVersionGridView)
+                    //{
+                    //    if(((TopVersionGridView)data.Source).Bible.BibleName == "KJV")
+                    //        droppedValue = droppedValue.Replace("+G", "> <").Replace(",", "");
+                    //}
+//                    string[] droppedValueParts = droppedValue.Split(' ');
+//                    String newValue = string.Empty;
 
                    // special Handling for Aramaic
-                    if (droppedValueParts.Length == 2 && IsCurrentTextAramaic && data.Source is Editor.TOHTHGridView)
-                    {
-                        //droppedValueParts = new string[1] { droppedValueParts[1] };
-                        droppedValue = droppedValueParts[1];
-                    }
+                   // TODO Fix
+                    //if (droppedValueParts.Length == 2 && IsCurrentTextAramaic && data.Source is Editor.TOHTHGridView)
+                    //{
+                    //    //droppedValueParts = new string[1] { droppedValueParts[1] };
+                    //    droppedValue = droppedValueParts[1];
+                    //}
 
                     //string currentValue = (string)this[hittest.ColumnIndex, Rows.Count - 1].Value;
 
@@ -727,12 +715,12 @@ namespace BibleTaggingUtil.Editor
 //                        newValue = currentValue;
 
  
-                    for (int i = 0; i < droppedValueParts.Length; i++)
-                    {
-                        if (droppedValueParts[i].Contains('('))
-                            continue; //skip morphology
+//                    for (int i = 0; i < droppedValueParts.Length; i++)
+//                    {
+//                        if (droppedValueParts[i].Contains('('))
+//                            continue; //skip morphology
 
-                        newValue += string.IsNullOrEmpty(newValue) ? droppedValueParts[i] : (" " + droppedValueParts[i]);
+ //                       newValue += string.IsNullOrEmpty(newValue) ? droppedValueParts[i] : (" " + droppedValueParts[i]);
                         /*string tmp = droppedValueParts[i].Trim().Replace("<", "").Replace(">", "");
                         if (tmp[tmp.Length - 2] == '_' && char.IsLetter(tmp[tmp.Length - 1]))
                             tmp = tmp.Substring(0, tmp.Length - 2);
@@ -747,7 +735,7 @@ namespace BibleTaggingUtil.Editor
                                 newValue += string.IsNullOrEmpty(droppedValue) ? tmp : (" " + tmp);
                         }
                         */
-                    }
+//                    }
                     int savedColumn = this.CurrentCell.ColumnIndex;
                     int savedRow = this.CurrentCell.RowIndex;
                     if (this.CurrentVerse != null)
@@ -756,16 +744,17 @@ namespace BibleTaggingUtil.Editor
                     //this[hittest.ColumnIndex, Rows.Count - 1].Value = newValue.Trim();
                     //this.CurrentVerse[hittest.ColumnIndex].StrongString = newValue.Trim();
 
+
                     if (Control.ModifierKeys == Keys.Control)
-                        this.CurrentVerse[hittest.ColumnIndex].Strong.Add(newValue);
+                        this.CurrentVerse[hittest.ColumnIndex].Strong += droppedValue;
                     else
-                        this.CurrentVerse[hittest.ColumnIndex].Strong.Set(newValue);
+                        this.CurrentVerse[hittest.ColumnIndex].Strong = droppedValue;
 
                     if (data.Source.Equals(this))
                     {
                         //this[data.ColumnIndex, Rows.Count - 1].Value = string.Empty;
                         if (Control.ModifierKeys != Keys.Control)
-                            this.CurrentVerse[data.ColumnIndex].Strong.Set(string.Empty);
+                            this.CurrentVerse[data.ColumnIndex].Strong = new StrongsCluster(new string[] {""});
                     }
                     Update(CurrentVerse);
                     SaveVerse(CurrentVerseReferece);
@@ -778,8 +767,8 @@ namespace BibleTaggingUtil.Editor
 
                     this[hittest.ColumnIndex, Rows.Count - 1].Selected = true;
                     this.CurrentCell = this[hittest.ColumnIndex, Rows.Count - 1];
-                    if (!string.IsNullOrEmpty((string)this[hittest.ColumnIndex, Rows.Count - 1].Value))
-                        FireRefernceHighlightRequest((string)this[hittest.ColumnIndex, Rows.Count - 1].Value);
+                    if (!string.IsNullOrEmpty(((StrongsCluster)this[hittest.ColumnIndex, Rows.Count - 1].Value).ToString()))
+                        FireRefernceHighlightRequest((StrongsCluster)this[hittest.ColumnIndex, Rows.Count - 1].Value);
 
                     this.Focus();
                 }
@@ -807,9 +796,9 @@ namespace BibleTaggingUtil.Editor
                 {
                     if (info.RowIndex >= 0 && info.ColumnIndex >= 0)
                     {
-                        string text = (String)this.Rows[Rows.Count - 1].Cells[info.ColumnIndex].Value;
-                        DragData data = new DragData(1, info.ColumnIndex, text, this);
-                        if (text != null)
+                        StrongsCluster tag = (StrongsCluster)this.Rows[Rows.Count - 1].Cells[info.ColumnIndex].Value;
+                        DragData data = new DragData(1, info.ColumnIndex, tag, this);
+                        if (data != null)
                         {
                             //Need to put braces here  CHANGE
                             this.DoDragDrop(data, DragDropEffects.Copy);
@@ -870,21 +859,20 @@ namespace BibleTaggingUtil.Editor
 
         }
 
-        public void FireRefernceHighlightRequest(string tag)
+        public void FireRefernceHighlightRequest(StrongsCluster tag)
         {
             if (this.RefernceHighlightRequest != null)
             {
-                bool firstHalf = true;  
-                if(this.SelectedCells.Count == 1) 
+                bool firstHalf = true;
+                if (this.SelectedCells.Count == 1)
                 {
-                    if (this.SelectedCells[0].ColumnIndex > (this.ColumnCount/2))
+                    if (this.SelectedCells[0].ColumnIndex > (this.ColumnCount / 2))
                         firstHalf = false;
                 }
                 this.RefernceHighlightRequest(this, tag, firstHalf);
             }
 
         }
-
         public void FireGotoVerseRequest(string tag)
         {
             if (this.GotoVerseRequest != null)
@@ -897,7 +885,7 @@ namespace BibleTaggingUtil.Editor
 
     }
     public delegate void VerseViewChangedEventHandler(object sender, EventArgs e);
-    public delegate void RefernceHighlightRequestEventHandler(object sender, string tag, bool firstHalf);
+    public delegate void RefernceHighlightRequestEventHandler(object sender, StrongsCluster tag, bool firstHalf);
     public delegate void GotoVerseRequestEventHandler(object sender, string reference);
 
 }

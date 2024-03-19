@@ -25,54 +25,6 @@ namespace BibleTaggingUtil.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string ReferenceBibleFileName {
-            get {
-                return ((string)(this["ReferenceBibleFileName"]));
-            }
-            set {
-                this["ReferenceBibleFileName"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string referenceBibleFileFolder {
-            get {
-                return ((string)(this["referenceBibleFileFolder"]));
-            }
-            set {
-                this["referenceBibleFileFolder"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string TargetBibleFileName {
-            get {
-                return ((string)(this["TargetBibleFileName"]));
-            }
-            set {
-                this["TargetBibleFileName"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string TargetBibleFileFolder {
-            get {
-                return ((string)(this["TargetBibleFileFolder"]));
-            }
-            set {
-                this["TargetBibleFileFolder"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public int LastBook {
             get {
@@ -109,30 +61,6 @@ namespace BibleTaggingUtil.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string BiblesFolder {
-            get {
-                return ((string)(this["BiblesFolder"]));
-            }
-            set {
-                this["BiblesFolder"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("RTL")]
-        public string TargetTextDirection {
-            get {
-                return ((string)(this["TargetTextDirection"]));
-            }
-            set {
-                this["TargetTextDirection"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public int PeriodicSaveTime {
             get {
@@ -152,6 +80,30 @@ namespace BibleTaggingUtil.Properties {
             }
             set {
                 this["Osis"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int BrowserPanelDockState {
+            get {
+                return ((int)(this["BrowserPanelDockState"]));
+            }
+            set {
+                this["BrowserPanelDockState"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("8")]
+        public int VersePanelDockState {
+            get {
+                return ((int)(this["VersePanelDockState"]));
+            }
+            set {
+                this["VersePanelDockState"] = value;
             }
         }
     }

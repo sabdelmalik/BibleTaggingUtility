@@ -94,7 +94,7 @@ namespace BibleTaggingUtil.TranslationTags
                             {
                                 usedStrongs[strong.ToStringS()] = hw.WordIndex + 1;
                                 map[i] = hw.WordIndex;
-                                OriginalWordDetails wd = new OriginalWordDetails(hw.RootStrong, hw.Morphology, hw.Hebrew, hw.WordIndex, hw.Transliteration, hw.Word, hw.WordNumber, hw.AltVerseNumber, hw.Reference);
+                                OriginalWordDetails wd = new OriginalWordDetails(hw.RootStrong, hw.Morphology, hw.Hebrew, hw.WordIndex, hw.Transliteration, hw.Word, hw.WordNumber, hw.WordType, hw.AltVerseNumber, hw.Reference);
                                 ow.Add(wd);
                             }
                         }
@@ -131,7 +131,7 @@ namespace BibleTaggingUtil.TranslationTags
                     s = i;
                     VerseWord hw = hebrewVerse[missedWords[p]];
                     List<OriginalWordDetails> ow = new List<OriginalWordDetails>();
-                    ow.Add(new OriginalWordDetails(hw.RootStrong, hw.Morphology, hw.Hebrew, hw.WordIndex, hw.Transliteration, hw.Word, hw.WordNumber, hw.AltVerseNumber, hw.Reference));
+                    ow.Add(new OriginalWordDetails(hw.RootStrong, hw.Morphology, hw.Hebrew, hw.WordIndex, hw.Transliteration, hw.Word, hw.WordNumber, hw.WordType, hw.AltVerseNumber, hw.Reference));
                     updatedVerse.Add(new TranslatorWord(string.Empty, ow));
                 }
                 for (int i = s; i < newVerse.Count; i++)

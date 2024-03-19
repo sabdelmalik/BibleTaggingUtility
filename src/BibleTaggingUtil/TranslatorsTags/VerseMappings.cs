@@ -16,9 +16,23 @@ namespace BibleTaggingUtil.TranslatorsTags
                 Dictionary<string, List<int[]>> map = new Dictionary<string, List<int[]>>();
 
                 //==============================================================
-                string book = "Jdg";
-                int ch = 15; int v = 1;
+                string book = "Jos";
+                int ch = 16; int v = 8;
                 string vRef = string.Format("{0} {1}:{2}", book, ch, v);
+                map.Add(vRef, new List<int[]>());
+                //                              ch  v  s  l  v    s   l
+                map[vRef].Add(new int[] { ch, v, 0, -1, v, 0, 9 });
+
+                v++;
+                vRef = string.Format("{0} {1}:{2}", book, ch, v);
+                map.Add(vRef, new List<int[]>());
+                //                              ch  v  s  l  v    s   l
+                map[vRef].Add(new int[] { ch, v, 0, 6, v - 1, 9, -1 });
+                map[vRef].Add(new int[] { ch, v, 6, -1, v, 0, -1 });
+                //==============================================================
+                book = "Jdg";
+                ch = 15; v = 1;
+                vRef = string.Format("{0} {1}:{2}", book, ch, v);
                 map.Add(vRef, new List<int[]>());
                 //                              ch  v  s  l  v    s   l
                 map[vRef].Add(new int[] { ch, v, 0, 10, v, 0, 11 });

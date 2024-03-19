@@ -1,8 +1,10 @@
 ﻿using BibleTaggingUtil.Strongs;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +15,7 @@ namespace BibleTaggingUtil
     /// Represents a verse as a dictionary of verse words
     /// </summary>
     [Serializable()]
-    public class Verse
+    public class Verse : IEnumerable
     {
         private Dictionary<int, VerseWord> verse = new Dictionary<int, VerseWord>();
 
@@ -27,6 +29,8 @@ namespace BibleTaggingUtil
             }
         }
         public Verse() { Dirty = false; }
+
+        public bool Dirty { get; set; }
 
         public bool HasPsalmTitle 
         {
@@ -67,7 +71,7 @@ namespace BibleTaggingUtil
                 // first, let us see if we can find an exact Match
                 for (int i = 0; i < verse.Count; i++)
                 {
-                    if (verse[i].StrongStringEx.Contains(strongNumber.ToStringEx()))
+                    if (verse[i].StrongStringEx.Contains(strongNumber.ToString()))
                     {
                         result.Add(verse[i]);
                     }
@@ -347,8 +351,56 @@ namespace BibleTaggingUtil
             Dirty = true;
         }
 
-         public bool Dirty { get; set; }
+        #region IEnumerable
 
+        private class VerseEnumerator : IEnumerator
+        {
+            private Dictionary<int, VerseWord> verse;
+            int position = -1;
+
+            //constructor
+            public VerseEnumerator(Dictionary<int, VerseWord> verse)
+            {
+                this.verse = verse;
+            }
+            private IEnumerator getEnumerator()
+            {
+                return (IEnumerator)this;
+            }
+            //IEnumerator
+            public bool MoveNext()
+            {
+                position++;
+                return (position < verse.Count);
+            }
+            //IEnumerator
+            public void Reset()
+            {
+                position = -1;
+            }
+            //IEnumerator
+            public object Current
+            {
+                get
+                {
+                    try
+                    {
+                        return verse[position];
+                    }
+                    catch (IndexOutOfRangeException)
+                    {
+                        throw new InvalidOperationException();
+                    }
+                }
+            }
+        }  //end nested class
+
+        public IEnumerator GetEnumerator()
+        {
+            return new VerseEnumerator(verse);
+        }
+
+        #endregion IEnumerator and IEnumerable
 
     }
 

@@ -1,4 +1,5 @@
 ﻿using BibleTaggingUtil.BibleVersions;
+using BibleTaggingUtil.Strongs;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -20,10 +21,10 @@ namespace BibleTaggingUtil.Editor
             {
                 if (e.RowIndex >= 0)
                 {
-                    string text = (String)this.Rows[1].Cells[e.ColumnIndex].Value;
-                    if (text != null)
+                    StrongsCluster tag = (StrongsCluster)this.Rows[1].Cells[e.ColumnIndex].Value;
+                    if (tag != null)
                     {
-                        DragData data = new DragData(1, e.ColumnIndex, text.Trim(), this);
+                        DragData data = new DragData(1, e.ColumnIndex, tag, this);
                         this.DoDragDrop(data, DragDropEffects.Copy);
                     }
                 }
@@ -44,15 +45,16 @@ namespace BibleTaggingUtil.Editor
                 return;
 
             string[] verseWords = new string[verse.Count];
-            string[] verseTags = new string[verse.Count];
+            StrongsCluster[] verseTags = new StrongsCluster[verse.Count];
 
             try
             {
                 for (int i = 0; i < verse.Count; i++)
                 {
                     verseWords[i] = verse[i].Word;
-
-                    string thisTag = verse[i].Strong.ToString();//string.Empty;
+                    verseTags[i] = verse[i].Strong;
+                   
+                    // string thisTag = verse[i].Strong.ToString();//string.Empty;
 
                     /*                for (int j = 0; j < verse[i].Strong.Count; j++)
                                     {
@@ -68,9 +70,9 @@ namespace BibleTaggingUtil.Editor
                                             Replace(";", "").
                                             Replace(":", "");
                     */
-                    if (thisTag == "<>")
-                        thisTag = string.Empty;
-                    verseTags[i] = thisTag;
+                    //if (thisTag == "<>")
+                    //    thisTag = string.Empty;
+                    //verseTags[i] = thisTag;
                 }
 
 
@@ -80,10 +82,10 @@ namespace BibleTaggingUtil.Editor
 
                 for (int i = 0; i < verseTags.Length; i++)
                 {
-                    string tag = (string)this.Rows[1].Cells[i].Value;
+                    StrongsCluster tag = (StrongsCluster)this.Rows[1].Cells[i].Value;
                     if (tag == null)
                         continue;
-                    if (tag.Contains("0410>"))
+                    if (tag.ToString().Contains("0410>"))
                     {
                         this.Rows[1].Cells[i].Style.BackColor = Color.Yellow;
                     }

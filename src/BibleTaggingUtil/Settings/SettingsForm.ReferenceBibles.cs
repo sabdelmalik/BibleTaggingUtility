@@ -22,11 +22,7 @@ namespace BibleTaggingUtil.Settings
 
         private void InitializeReferencesTab()
         {
-                      TopRefChanged = false;
-          MainNtChanged = false;
-          MainOtChanged = false;
-
-        List<string> folders = new List<string>();
+            List<string> folders = new List<string>();
             foreach(string folder in Directory.GetDirectories(topReferencesFolder))
             {
                 folders.Add(Path.GetFileName(folder));
@@ -71,11 +67,6 @@ namespace BibleTaggingUtil.Settings
             checkbOtRefSkip.Checked = Properties.ReferenceBibles.Default.OtRefSkip;
             checkbNtRefSkip.Checked = Properties.ReferenceBibles.Default.NtRefSkip;
         }
-
-        public bool TopRefChanged { get; private set; }
-        public bool MainNtChanged { get; private set; }
-        public bool MainOtChanged { get; private set; }
-
         public string ReferenceTopVersionPath
         {
             get
@@ -118,29 +109,32 @@ namespace BibleTaggingUtil.Settings
         {
             if (Properties.ReferenceBibles.Default.TopReference != cbTopReference.Text)
             {
+                changedFlags.TopRefChanged = false;
                 Properties.ReferenceBibles.Default.TopReference = cbTopReference.Text;
                 topRefSet = true;
-                TopRefChanged = true;
+                changedFlags.TopRefChanged = true;
             }
         }
 
         private void cbMainOT_SelectedIndexChanged(object sender, EventArgs e)
         {
+            changedFlags.MainOtChanged = false;
             if (Properties.ReferenceBibles.Default.TAOTReference != cbMainOT.Text)
             {
                 Properties.ReferenceBibles.Default.TAOTReference = cbMainOT.Text;
                 mainOtSet = true;
-                MainOtChanged = true;
+                changedFlags.MainOtChanged = true;
            }
         }
 
         private void cbMainNT_SelectedIndexChanged(object sender, EventArgs e)
         {
+            changedFlags.MainNtChanged = false;
             if (Properties.ReferenceBibles.Default.TANTReference != cbMainNT.Text)
             {
                 Properties.ReferenceBibles.Default.TANTReference = cbMainNT.Text;
                 mainNtSet = true;
-                MainNtChanged = true;
+                changedFlags.MainNtChanged = true;
             }
         }
 

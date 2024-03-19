@@ -12,24 +12,12 @@ namespace BibleTaggingUtil.BibleVersions
     {
         public ReferenceTopVersion(BibleTaggingForm container) : base(container, 23145 + 7957) { }
 
+        [Obsolete]
         public void Load()
         {
             try
             {
-                string referenceBibleFileFolder = Properties.MainSettings.Default.referenceBibleFileFolder;
-                if (string.IsNullOrEmpty(referenceBibleFileFolder))
-                {
-                    referenceBibleFileFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "bibles");
-                }
-
-                string refFile = container.GetBibleFilePath(referenceBibleFileFolder, "Select Reference File");
-                string referenceBibleFileName = Path.GetFileName(refFile);
-                Properties.MainSettings.Default.ReferenceBibleFileName = referenceBibleFileName;
-                referenceBibleFileFolder = Path.GetDirectoryName(refFile);
-                Properties.MainSettings.Default.referenceBibleFileFolder = referenceBibleFileFolder;
-
-                Properties.MainSettings.Default.Save();
-
+                string refFile = Properties.ReferenceBibles.Default.TopReference;
                 LoadBibleFile(refFile, true, false);
             }
             catch (Exception ex)

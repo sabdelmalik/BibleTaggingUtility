@@ -53,7 +53,7 @@ namespace BibleTaggingUtil.Editor
 
 
                     }
-                    else
+                    else if (e.RowIndex >= 0) { }
                     {
                         text = ((String)this.Rows[this.RowCount - 1].Cells[e.ColumnIndex].Value).Trim();
                     }

@@ -24,8 +24,11 @@ namespace BibleTaggingUtil.TranslationTags
         private string TranslationTagsFolderPath = string.Empty;
         private string booksFolderPath = string.Empty;
 
-        public TranslationTagsEx()
+        BibleTaggingForm container;
+        public TranslationTagsEx(BibleTaggingForm bibleTaggingForm)
         {
+            container = bibleTaggingForm;
+
             otVerseMap = VerseMappings.OldTestament;
             ntVerseMap = VerseMappings.NewTestament;
 
@@ -38,21 +41,38 @@ namespace BibleTaggingUtil.TranslationTags
             }
         }
 
-        public void Export(BibleVersion target, ReferenceVersionTOTHT totht, ReferenceVersionTAGNT tagnt)
+        public void Export(BibleVersion target, ReferenceVersionTAHOT tahot, ReferenceVersionTAGNT tagnt)
         {
-            Prepare(target, totht, tagnt);
+            Prepare(target, tahot, tagnt);
         }
 
-        private void Prepare(BibleVersion target, ReferenceVersionTOTHT totht, ReferenceVersionTAGNT tagnt)
+        int totalVerseCount = 0;
+        int verseCounter = 0;
+
+        private void Prepare(BibleVersion target, ReferenceVersionTAHOT tahot, ReferenceVersionTAGNT tagnt)
         {
+            otWords.Clear();
+            otMissedWords.Clear();
+            otErrors.Clear();
+
+            ntWords.Clear();
+            ntErrors.Clear();
+
             if (!string.IsNullOrEmpty(Properties.TranslationTags.Default.RepeatedWordFileName))
             {
+                totalVerseCount = 2 * target.Bible.Count;
+                verseCounter = 0;
+                container.WaitCursorControl(true);
+
                 string repeatedPath = Path.Combine(TranslationTagsFolderPath, Properties.TranslationTags.Default.RepeatedWordFileName);
                 repeatedPath = Path.ChangeExtension(repeatedPath, ".txt");
                 using (StreamWriter sw = new StreamWriter(repeatedPath))
                 {
                     foreach ((string verseRef, Verse verse) in target.Bible)
                     {
+                        container.UpdateProgress("Processing xlation Tags", (100 * verseCounter++) / totalVerseCount);
+
+                        //string repeatedPath = Path.Combine(TranslationTagsFolderPath, Properties.TranslationTags.Default.RepeatedWordFileName);
                         string book = string.Empty;
 
                         int idx = verseRef.IndexOf(' ');
@@ -61,43 +81,52 @@ namespace BibleTaggingUtil.TranslationTags
                             book = verseRef.Substring(0, idx);
                         }
 
-                        #region temp code
-                        // Repeated Hebrew word for intensification. Sometimes this can also mean "every" (e.g. "every morning" for "morning morning" or "every day" for "day day", "every man" for "man man").
-                        if (book == "Exo")
+                        int bookIndex = target.GetBookIndex(book);
+
+                        #region Repeted word code
+                        try
                         {
-                            string lastWord = string.Empty;
-                            for (int i = 0; i < verse.Count; i++)
+
+                            // Repeated Hebrew word for intensification. Sometimes this can also mean "every" (e.g. "every morning" for "morning morning" or "every day" for "day day", "every man" for "man man").
+                            if (bookIndex < 5)
                             {
-                                VerseWord word = verse[i];
-                                if (word.Strong.Count > 1)
+                                string lastWord = string.Empty;
+                                for (int i = 0; i < verse.Count; i++)
                                 {
-                                    foreach (StrongsNumber s in word.Strong.Strongs)
+                                    VerseWord word = verse[i];
+                                    if (word.Strong.Count > 1)
                                     {
-                                        if (word.Strong.Strongs.Count(item => item.ToStringS() == s.ToStringS()) > 1)
+                                        foreach (StrongsNumber s in word.Strong.Strongs)
                                         {
-                                            // we have a word to report
-                                            string aWord = word.Word;
-                                            string strong = word.Strong.ToString();
-                                            if (aWord != lastWord)
+                                            if (word.Strong.Strongs.Count(item => item.ToStringS() == s.ToStringS()) > 1)
                                             {
-                                                lastWord = aWord;
-                                                sw.WriteLine(string.Format("{0}\t{1}\t{2}", verseRef, aWord, strong));
+                                                // we have a word to report
+                                                string aWord = word.Word;
+                                                string strong = word.Strong.ToString();
+                                                if (aWord != lastWord)
+                                                {
+                                                    lastWord = aWord;
+                                                    sw.WriteLine(string.Format("{0}\t{1}\t{2}", verseRef, aWord, strong));
+                                                }
                                             }
                                         }
-                                    }
 
+                                    }
                                 }
+
                             }
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Repeted Words Errors Found", "TT Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
 
                         }
                         #endregion temp code
 
-                        int bookIndex = target.GetBookIndex(book);
-
                         if (bookIndex < 39)
                         {
                             // OT
-                            ProcessHebrewVerse(verse, bookIndex, book, verseRef, totht);
+                            ProcessHebrewVerse(verse, bookIndex, book, verseRef, tahot);
                         }
                         else
                         {
@@ -115,11 +144,11 @@ namespace BibleTaggingUtil.TranslationTags
             {
                 if (!string.IsNullOrEmpty(Properties.TranslationTags.Default.ErrorsFileName))
                 {
-                    string errorsFile = Path.Combine(TranslationTagsFolderPath, Properties.TranslationTags.Default.MissingWordsFileName + "_OT");
+                    string errorsFile = Path.Combine(TranslationTagsFolderPath, Properties.TranslationTags.Default.ErrorsFileName + "_OT");
                     errorsFile = Path.ChangeExtension(errorsFile, ".txt");
                     OutputErrors(errorsFile, otErrors);
                 }
-                MessageBox.Show("OT Errors Found");
+                MessageBox.Show("OT Errors Found", "TT Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1 ,MessageBoxOptions.DefaultDesktopOnly);
             }
             else
             {
@@ -129,15 +158,15 @@ namespace BibleTaggingUtil.TranslationTags
                     {
                         //              OutputTranslatorTagsOT(@"C:\temp\TTAraSVD - Translation Tags etc. for Arabic SVD OT - STEPBible.org CC BY_1_1.txt", otWords, publicDomain);
                         OutputTranslatorTagsOT(otWords, Properties.TranslationTags.Default.PublicDomain);
-                        MessageBox.Show("OT Success");
+                        MessageBox.Show("OT Success", "TT Success", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("OT Write failed");
+                    MessageBox.Show("OT Write failed", "TT Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 }
 
-                foreach ((string verseRef, Verse hebrewVerse) in totht.Bible)
+                foreach ((string verseRef, Verse hebrewVerse) in tahot.Bible)
                 {
                     int idx = verseRef.IndexOf(' ');
                     string book = string.Empty;
@@ -146,7 +175,7 @@ namespace BibleTaggingUtil.TranslationTags
                         book = verseRef.Substring(0, idx);
                     }
 
-                    int bookIndex = totht.GetBookIndex(book);
+                    int bookIndex = tahot.GetBookIndex(book);
                     string bookName = target.GetBookNameFromIndex(bookIndex);
                     string reference = verseRef.Replace(book, bookName);
 
@@ -210,11 +239,11 @@ namespace BibleTaggingUtil.TranslationTags
             {
                 if (!string.IsNullOrEmpty(Properties.TranslationTags.Default.ErrorsFileName))
                 {
-                    string errorsFile = Path.Combine(TranslationTagsFolderPath, Properties.TranslationTags.Default.MissingWordsFileName + "_NT");
+                    string errorsFile = Path.Combine(TranslationTagsFolderPath, Properties.TranslationTags.Default.ErrorsFileName + "_NT");
                     errorsFile = Path.ChangeExtension(errorsFile, ".txt");
                     OutputErrors(errorsFile, ntErrors);
                 }
-                MessageBox.Show("NT Errors Found");
+                MessageBox.Show("NT Errors Found", "TT Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
             else
             {
@@ -222,18 +251,19 @@ namespace BibleTaggingUtil.TranslationTags
                 {
                     OutputTranslatorTagsNT(@"C:\temp\TTAraSVD - Translation Tags etc. for Arabic SVD NT - STEPBible.org CC BY_1_1.txt", ntWords);
                     //OutputTranslatorTags(@"C:\temp\TTESV - Translators Tags for ESV.txt", otWords);
-                    MessageBox.Show("NT Success");
+                    MessageBox.Show("NT Success", "TT Success", MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 }
                 catch(Exception ex)
                 {
-                    MessageBox.Show("NT Write failed");
+                    MessageBox.Show("NT Write failed", "TT Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 }
             }
+            container.WaitCursorControl(false);
         }
 
         private void OutputErrors(string errorFile, List<string> errors)
         {
-            using (StreamWriter sw = new StreamWriter(errorFile, false))
+            using (StreamWriter sw = new StreamWriter(errorFile))
             {
                 int i = 0;
                 while (true)

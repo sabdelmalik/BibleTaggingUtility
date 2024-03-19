@@ -48,15 +48,22 @@ namespace SM.Bible.Formats.USFM2OSIS
         {
             this.usfm2osisConf = config.USFM2OSIS;
             osisWork = usfm2osisConf[Usfm2OsisConstants.osisIDWork];
-            osis_filename = Path.Combine(BibleTaggingUtil.Properties.MainSettings.Default.BiblesFolder, usfm2osisConf[Usfm2OsisConstants.outputFileName]);
+            string targetBiblesFolder = BibleTaggingUtil.Properties.TargetBibles.Default.TargetBiblesFolder;
+            string targetBible = BibleTaggingUtil.Properties.TargetBibles.Default.TargetBible;
+            string biblesFolder = Path.Combine(targetBiblesFolder, targetBible);
+
+            osis_filename = Path.Combine(biblesFolder, usfm2osisConf[Usfm2OsisConstants.outputFileName]);
             lang_code = usfm2osisConf[Usfm2OsisConstants.language];
         }
 
         public void Convert()
         {
-            osisSegment = new Dictionary<string, string>(); 
-            
-            string folder = Path.Combine(BibleTaggingUtil.Properties.MainSettings.Default.BiblesFolder, usfm2osisConf[Usfm2OsisConstants.usfmSourceFolder]);
+            osisSegment = new Dictionary<string, string>();
+            string targetBiblesFolder = BibleTaggingUtil.Properties.TargetBibles.Default.TargetBiblesFolder;
+            string targetBible = BibleTaggingUtil.Properties.TargetBibles.Default.TargetBible;
+            string biblesFolder = Path.Combine(targetBiblesFolder, targetBible);
+
+            string folder = Path.Combine(biblesFolder, usfm2osisConf[Usfm2OsisConstants.usfmSourceFolder]);
             string[] docs = Directory.GetFiles(folder, "*.usfm");
             
             foreach (string doc in docs)

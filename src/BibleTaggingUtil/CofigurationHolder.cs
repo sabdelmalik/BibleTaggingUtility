@@ -63,7 +63,7 @@ namespace BibleTaggingUtil
             if (!File.Exists(configFilePath))
                 return string.Format("File not found: {0}", configFilePath);
 
-            Properties.MainSettings.Default.TargetTextDirection = "LTR";
+            //Properties.MainSettings.Default.TargetTextDirection = "LTR";
 
             ParseState state = ParseState.NONE;
             using (StreamReader sr = new StreamReader(configFilePath))
@@ -133,9 +133,9 @@ namespace BibleTaggingUtil
                                     }
                                 }
                                 break;
-                            case "targettextdirection":
-                                Properties.MainSettings.Default.TargetTextDirection = parts[1].Trim();
-                                break;
+                            //case "targettextdirection":
+                            //    Properties.MainSettings.Default.TargetTextDirection = parts[1].Trim();
+                            //    break;
                             case "osis":
                                 if(parts[1].Trim().ToLower() == "true") osis = true;
                                 break;

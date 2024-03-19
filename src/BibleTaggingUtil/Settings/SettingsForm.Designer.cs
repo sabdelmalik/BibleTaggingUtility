@@ -37,7 +37,14 @@ namespace BibleTaggingUtil.Settings
             btnOK = new System.Windows.Forms.Button();
             nudSavePeriod = new System.Windows.Forms.NumericUpDown();
             tabControl1 = new System.Windows.Forms.TabControl();
-            tabPage1 = new System.Windows.Forms.TabPage();
+            targetBible = new System.Windows.Forms.TabPage();
+            checkBoxRTL = new System.Windows.Forms.CheckBox();
+            cbTargetBibles = new System.Windows.Forms.ComboBox();
+            label14 = new System.Windows.Forms.Label();
+            tbTargetBiblesFolder = new System.Windows.Forms.TextBox();
+            label13 = new System.Windows.Forms.Label();
+            button1 = new System.Windows.Forms.Button();
+            referenceBibles = new System.Windows.Forms.TabPage();
             checkbNtRefSkip = new System.Windows.Forms.CheckBox();
             checkbOtRefSkip = new System.Windows.Forms.CheckBox();
             checkbTopRefSkip = new System.Windows.Forms.CheckBox();
@@ -47,7 +54,7 @@ namespace BibleTaggingUtil.Settings
             label5 = new System.Windows.Forms.Label();
             label4 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
-            tabPage2 = new System.Windows.Forms.TabPage();
+            translationTags = new System.Windows.Forms.TabPage();
             checkbPublicDomain = new System.Windows.Forms.CheckBox();
             checkbAppendTimestamp = new System.Windows.Forms.CheckBox();
             checkbFilesPerBook = new System.Windows.Forms.CheckBox();
@@ -66,15 +73,22 @@ namespace BibleTaggingUtil.Settings
             label11 = new System.Windows.Forms.Label();
             label6 = new System.Windows.Forms.Label();
             btnTTFolder = new System.Windows.Forms.Button();
+            osisGeneration = new System.Windows.Forms.TabPage();
+            checkBoxUseDisambiguatedStrong = new System.Windows.Forms.CheckBox();
             periodicSave = new System.Windows.Forms.TabPage();
             tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             panel1 = new System.Windows.Forms.Panel();
-            folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            translationTagsFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
             ttRefBibleSkip = new System.Windows.Forms.ToolTip(components);
+            targetBiblesFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
+            label15 = new System.Windows.Forms.Label();
+            cbVersification = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)nudSavePeriod).BeginInit();
             tabControl1.SuspendLayout();
-            tabPage1.SuspendLayout();
-            tabPage2.SuspendLayout();
+            targetBible.SuspendLayout();
+            referenceBibles.SuspendLayout();
+            translationTags.SuspendLayout();
+            osisGeneration.SuspendLayout();
             periodicSave.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             panel1.SuspendLayout();
@@ -111,6 +125,7 @@ namespace BibleTaggingUtil.Settings
             // 
             // btnCancel
             // 
+            btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             btnCancel.Location = new System.Drawing.Point(482, 18);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new System.Drawing.Size(94, 35);
@@ -121,6 +136,7 @@ namespace BibleTaggingUtil.Settings
             // btnOK
             // 
             btnOK.BackColor = System.Drawing.Color.PaleGreen;
+            btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             btnOK.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             btnOK.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             btnOK.Location = new System.Drawing.Point(146, 18);
@@ -144,8 +160,11 @@ namespace BibleTaggingUtil.Settings
             // 
             // tabControl1
             // 
-            tabControl1.Controls.Add(tabPage1);
-            tabControl1.Controls.Add(tabPage2);
+            tabControl1.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
+            tabControl1.Controls.Add(targetBible);
+            tabControl1.Controls.Add(referenceBibles);
+            tabControl1.Controls.Add(translationTags);
+            tabControl1.Controls.Add(osisGeneration);
             tabControl1.Controls.Add(periodicSave);
             tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             tabControl1.Location = new System.Drawing.Point(3, 3);
@@ -154,23 +173,100 @@ namespace BibleTaggingUtil.Settings
             tabControl1.Size = new System.Drawing.Size(793, 474);
             tabControl1.TabIndex = 6;
             // 
-            // tabPage1
+            // targetBible
             // 
-            tabPage1.Controls.Add(checkbNtRefSkip);
-            tabPage1.Controls.Add(checkbOtRefSkip);
-            tabPage1.Controls.Add(checkbTopRefSkip);
-            tabPage1.Controls.Add(cbMainNT);
-            tabPage1.Controls.Add(cbMainOT);
-            tabPage1.Controls.Add(cbTopReference);
-            tabPage1.Controls.Add(label5);
-            tabPage1.Controls.Add(label4);
-            tabPage1.Controls.Add(label3);
-            tabPage1.Location = new System.Drawing.Point(4, 29);
-            tabPage1.Name = "tabPage1";
-            tabPage1.Size = new System.Drawing.Size(785, 441);
-            tabPage1.TabIndex = 2;
-            tabPage1.Text = "Reference Bibles";
-            tabPage1.UseVisualStyleBackColor = true;
+            targetBible.Controls.Add(cbVersification);
+            targetBible.Controls.Add(label15);
+            targetBible.Controls.Add(checkBoxRTL);
+            targetBible.Controls.Add(cbTargetBibles);
+            targetBible.Controls.Add(label14);
+            targetBible.Controls.Add(tbTargetBiblesFolder);
+            targetBible.Controls.Add(label13);
+            targetBible.Controls.Add(button1);
+            targetBible.Location = new System.Drawing.Point(4, 29);
+            targetBible.Name = "targetBible";
+            targetBible.Size = new System.Drawing.Size(785, 441);
+            targetBible.TabIndex = 4;
+            targetBible.Text = "Target Bible";
+            targetBible.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxRTL
+            // 
+            checkBoxRTL.AutoSize = true;
+            checkBoxRTL.Location = new System.Drawing.Point(208, 145);
+            checkBoxRTL.Name = "checkBoxRTL";
+            checkBoxRTL.Size = new System.Drawing.Size(146, 24);
+            checkBoxRTL.TabIndex = 13;
+            checkBoxRTL.Text = "Right To Left Text";
+            checkBoxRTL.UseVisualStyleBackColor = true;
+            checkBoxRTL.CheckedChanged += checkBoxRTL_CheckedChanged;
+            // 
+            // cbTargetBibles
+            // 
+            cbTargetBibles.FormattingEnabled = true;
+            cbTargetBibles.Location = new System.Drawing.Point(208, 89);
+            cbTargetBibles.Name = "cbTargetBibles";
+            cbTargetBibles.Size = new System.Drawing.Size(483, 28);
+            cbTargetBibles.TabIndex = 12;
+            cbTargetBibles.SelectedIndexChanged += cbTargetBibles_SelectedIndexChanged;
+            // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Location = new System.Drawing.Point(18, 92);
+            label14.Name = "label14";
+            label14.Size = new System.Drawing.Size(88, 20);
+            label14.TabIndex = 11;
+            label14.Text = "Target Bible";
+            // 
+            // tbTargetBiblesFolder
+            // 
+            tbTargetBiblesFolder.Location = new System.Drawing.Point(208, 37);
+            tbTargetBiblesFolder.Name = "tbTargetBiblesFolder";
+            tbTargetBiblesFolder.Size = new System.Drawing.Size(483, 27);
+            tbTargetBiblesFolder.TabIndex = 9;
+            tbTargetBiblesFolder.Text = "Target Bibles Folder";
+            // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Location = new System.Drawing.Point(18, 39);
+            label13.Name = "label13";
+            label13.Size = new System.Drawing.Size(140, 20);
+            label13.TabIndex = 8;
+            label13.Text = "Target Bibles Folder";
+            // 
+            // button1
+            // 
+            button1.BackColor = System.Drawing.SystemColors.ButtonFace;
+            button1.BackgroundImage = Properties.Resources.ellipsisTX;
+            button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            button1.Font = new System.Drawing.Font("Wingdings", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            button1.Location = new System.Drawing.Point(729, 35);
+            button1.Name = "button1";
+            button1.Size = new System.Drawing.Size(33, 31);
+            button1.TabIndex = 10;
+            button1.Text = "Target Bibles Folder";
+            button1.UseVisualStyleBackColor = false;
+            button1.Click += button1_Click;
+            // 
+            // referenceBibles
+            // 
+            referenceBibles.Controls.Add(checkbNtRefSkip);
+            referenceBibles.Controls.Add(checkbOtRefSkip);
+            referenceBibles.Controls.Add(checkbTopRefSkip);
+            referenceBibles.Controls.Add(cbMainNT);
+            referenceBibles.Controls.Add(cbMainOT);
+            referenceBibles.Controls.Add(cbTopReference);
+            referenceBibles.Controls.Add(label5);
+            referenceBibles.Controls.Add(label4);
+            referenceBibles.Controls.Add(label3);
+            referenceBibles.Location = new System.Drawing.Point(4, 29);
+            referenceBibles.Name = "referenceBibles";
+            referenceBibles.Size = new System.Drawing.Size(785, 441);
+            referenceBibles.TabIndex = 2;
+            referenceBibles.Text = "Reference Bibles";
+            referenceBibles.UseVisualStyleBackColor = true;
             // 
             // checkbNtRefSkip
             // 
@@ -261,33 +357,33 @@ namespace BibleTaggingUtil.Settings
             label3.TabIndex = 0;
             label3.Text = "Top Reference Bible";
             // 
-            // tabPage2
+            // translationTags
             // 
-            tabPage2.Controls.Add(checkbPublicDomain);
-            tabPage2.Controls.Add(checkbAppendTimestamp);
-            tabPage2.Controls.Add(checkbFilesPerBook);
-            tabPage2.Controls.Add(tbRepeatedWord);
-            tabPage2.Controls.Add(label12);
-            tabPage2.Controls.Add(tbForReviewFileName);
-            tabPage2.Controls.Add(label10);
-            tabPage2.Controls.Add(tbMissingWordsFileName);
-            tabPage2.Controls.Add(label9);
-            tabPage2.Controls.Add(tbErrorsFileName);
-            tabPage2.Controls.Add(label8);
-            tabPage2.Controls.Add(tbOutputFileName);
-            tabPage2.Controls.Add(label7);
-            tabPage2.Controls.Add(tbVersion);
-            tabPage2.Controls.Add(tbTtFolder);
-            tabPage2.Controls.Add(label11);
-            tabPage2.Controls.Add(label6);
-            tabPage2.Controls.Add(btnTTFolder);
-            tabPage2.Location = new System.Drawing.Point(4, 29);
-            tabPage2.Name = "tabPage2";
-            tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            tabPage2.Size = new System.Drawing.Size(785, 441);
-            tabPage2.TabIndex = 1;
-            tabPage2.Text = "Translation Tags";
-            tabPage2.UseVisualStyleBackColor = true;
+            translationTags.Controls.Add(checkbPublicDomain);
+            translationTags.Controls.Add(checkbAppendTimestamp);
+            translationTags.Controls.Add(checkbFilesPerBook);
+            translationTags.Controls.Add(tbRepeatedWord);
+            translationTags.Controls.Add(label12);
+            translationTags.Controls.Add(tbForReviewFileName);
+            translationTags.Controls.Add(label10);
+            translationTags.Controls.Add(tbMissingWordsFileName);
+            translationTags.Controls.Add(label9);
+            translationTags.Controls.Add(tbErrorsFileName);
+            translationTags.Controls.Add(label8);
+            translationTags.Controls.Add(tbOutputFileName);
+            translationTags.Controls.Add(label7);
+            translationTags.Controls.Add(tbVersion);
+            translationTags.Controls.Add(tbTtFolder);
+            translationTags.Controls.Add(label11);
+            translationTags.Controls.Add(label6);
+            translationTags.Controls.Add(btnTTFolder);
+            translationTags.Location = new System.Drawing.Point(4, 29);
+            translationTags.Name = "translationTags";
+            translationTags.Padding = new System.Windows.Forms.Padding(3);
+            translationTags.Size = new System.Drawing.Size(785, 441);
+            translationTags.TabIndex = 1;
+            translationTags.Text = "Translation Tags";
+            translationTags.UseVisualStyleBackColor = true;
             // 
             // checkbPublicDomain
             // 
@@ -454,6 +550,28 @@ namespace BibleTaggingUtil.Settings
             btnTTFolder.UseVisualStyleBackColor = false;
             btnTTFolder.Click += btnTTFolder_Click;
             // 
+            // osisGeneration
+            // 
+            osisGeneration.Controls.Add(checkBoxUseDisambiguatedStrong);
+            osisGeneration.Location = new System.Drawing.Point(4, 29);
+            osisGeneration.Name = "osisGeneration";
+            osisGeneration.Size = new System.Drawing.Size(785, 441);
+            osisGeneration.TabIndex = 3;
+            osisGeneration.Text = "OSIS Generation";
+            osisGeneration.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxUseDisambiguatedStrong
+            // 
+            checkBoxUseDisambiguatedStrong.AutoSize = true;
+            checkBoxUseDisambiguatedStrong.BackColor = System.Drawing.Color.WhiteSmoke;
+            checkBoxUseDisambiguatedStrong.Location = new System.Drawing.Point(66, 51);
+            checkBoxUseDisambiguatedStrong.Name = "checkBoxUseDisambiguatedStrong";
+            checkBoxUseDisambiguatedStrong.Size = new System.Drawing.Size(209, 24);
+            checkBoxUseDisambiguatedStrong.TabIndex = 0;
+            checkBoxUseDisambiguatedStrong.Text = "Use Disambiguated Strong";
+            checkBoxUseDisambiguatedStrong.UseVisualStyleBackColor = false;
+            checkBoxUseDisambiguatedStrong.CheckedChanged += checkBoxUseDisambiguatedStrong_CheckedChanged;
+            // 
             // periodicSave
             // 
             periodicSave.Controls.Add(nudSavePeriod);
@@ -493,6 +611,24 @@ namespace BibleTaggingUtil.Settings
             panel1.Size = new System.Drawing.Size(793, 76);
             panel1.TabIndex = 7;
             // 
+            // label15
+            // 
+            label15.AutoSize = true;
+            label15.Location = new System.Drawing.Point(18, 192);
+            label15.Name = "label15";
+            label15.Size = new System.Drawing.Size(90, 20);
+            label15.TabIndex = 14;
+            label15.Text = "Versification";
+            // 
+            // cbVersification
+            // 
+            cbVersification.FormattingEnabled = true;
+            cbVersification.Location = new System.Drawing.Point(208, 192);
+            cbVersification.Name = "cbVersification";
+            cbVersification.Size = new System.Drawing.Size(483, 28);
+            cbVersification.TabIndex = 15;
+            cbVersification.SelectedIndexChanged += cbVersification_SelectedIndexChanged;
+            // 
             // SettingsForm
             // 
             AcceptButton = btnOK;
@@ -506,10 +642,14 @@ namespace BibleTaggingUtil.Settings
             Load += SettingsForm_Load;
             ((System.ComponentModel.ISupportInitialize)nudSavePeriod).EndInit();
             tabControl1.ResumeLayout(false);
-            tabPage1.ResumeLayout(false);
-            tabPage1.PerformLayout();
-            tabPage2.ResumeLayout(false);
-            tabPage2.PerformLayout();
+            targetBible.ResumeLayout(false);
+            targetBible.PerformLayout();
+            referenceBibles.ResumeLayout(false);
+            referenceBibles.PerformLayout();
+            translationTags.ResumeLayout(false);
+            translationTags.PerformLayout();
+            osisGeneration.ResumeLayout(false);
+            osisGeneration.PerformLayout();
             periodicSave.ResumeLayout(false);
             periodicSave.PerformLayout();
             tableLayoutPanel1.ResumeLayout(false);
@@ -527,10 +667,10 @@ namespace BibleTaggingUtil.Settings
         private System.Windows.Forms.NumericUpDown nudSavePeriod;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage periodicSave;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage translationTags;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage referenceBibles;
         private System.Windows.Forms.ComboBox cbMainNT;
         private System.Windows.Forms.ComboBox cbMainOT;
         private System.Windows.Forms.ComboBox cbTopReference;
@@ -540,7 +680,7 @@ namespace BibleTaggingUtil.Settings
         private System.Windows.Forms.TextBox tbTtFolder;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button btnTTFolder;
-        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.FolderBrowserDialog translationTagsFolderDialog;
         private System.Windows.Forms.TextBox tbForReviewFileName;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox tbMissingWordsFileName;
@@ -560,5 +700,17 @@ namespace BibleTaggingUtil.Settings
         private System.Windows.Forms.TextBox tbRepeatedWord;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.CheckBox checkbPublicDomain;
+        private System.Windows.Forms.TabPage osisGeneration;
+        private System.Windows.Forms.CheckBox checkBoxUseDisambiguatedStrong;
+        private System.Windows.Forms.TabPage targetBible;
+        private System.Windows.Forms.TextBox tbTargetBiblesFolder;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.FolderBrowserDialog targetBiblesFolderDialog;
+        private System.Windows.Forms.ComboBox cbTargetBibles;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.CheckBox checkBoxRTL;
+        private System.Windows.Forms.ComboBox cbVersification;
+        private System.Windows.Forms.Label label15;
     }
 }

@@ -19,14 +19,12 @@ using System.Reflection;
 using System.Xml.Linq;
 using System.Text.RegularExpressions;
 using BibleTaggingUtil.Strongs;
+using BibleTaggingUtil.Versification;
 
 namespace BibleTaggingUtil.Editor
 {
     public partial class EditorPanel : DockContent
     {
-
-
-
         private BibleTaggingForm container;
         private BrowserPanel browser;
         private VerseSelectionPanel verse;
@@ -37,10 +35,21 @@ namespace BibleTaggingUtil.Editor
         private System.Timers.Timer tempTimer = null;
         private bool osis = false;
 
-
+        private FixedSizeStack<string> navStackBack = new FixedSizeStack<string>(20);
+        private FixedSizeStack<string> navStackForward = new FixedSizeStack<string>(20);
         public bool TargetDirty { get; set; }
 
 
+        public ReferenceVersionTAGNT TAGNT
+        {
+            get { return dgvTOTHT.BibleNT; }
+            set { dgvTOTHT.BibleNT = value; }
+        }
+        public ReferenceVersionTAHOT TAHOT
+        {
+            get { return dgvTOTHT.BibleOT; }
+            set { dgvTOTHT.BibleOT = value; }
+        }
         public ReferenceTopVersion TopVersion
         {
             get { return dgvTopVersion.Bible; }
@@ -92,6 +101,11 @@ namespace BibleTaggingUtil.Editor
             img.RotateFlip(RotateFlipType.Rotate180FlipY);
             picRedo.Image = img;
             //picRedo.Invalidate();
+
+            System.Drawing.Image imgPrev = picPrevVerse.Image;
+            imgPrev.RotateFlip(RotateFlipType.Rotate180FlipX);
+            picPrevVerse.Image = imgPrev;
+
 
             this.container = container;
             this.browser = browser;
@@ -159,20 +173,27 @@ namespace BibleTaggingUtil.Editor
         }
 
 
-        public string CurrentVerse
+        public string CurrentVerseRef
         {
             get { return tbCurrentReference.Text; }
         }
 
         public void ClearCurrentVerse()
         {
-            tbCurrentReference.Text = string.Empty;
-            dgvTarget.Rows.Clear();
-            dgvTarget.ColumnCount = 0;
-            dgvTopVersion.Rows.Clear();
-            dgvTopVersion.ColumnCount = 0;
-            dgvTOTHT.Rows.Clear();
-            dgvTOTHT.ColumnCount = 0;
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => { ClearCurrentVerse(); }));
+            }
+            else
+            {
+                tbCurrentReference.Text = string.Empty;
+                dgvTarget.Rows.Clear();
+                dgvTarget.ColumnCount = 0;
+                dgvTopVersion.Rows.Clear();
+                dgvTopVersion.ColumnCount = 0;
+                dgvTOTHT.Rows.Clear();
+                dgvTOTHT.ColumnCount = 0;
+            }
         }
 
         public void SaveCurrentVerse()
@@ -199,6 +220,7 @@ namespace BibleTaggingUtil.Editor
             testament = e.Testament;
 
             string oldReference = tbCurrentReference.Text;
+            navStackBack.Push(oldReference);
             tbCurrentReference.Text = e.VerseReference;
             dgvTarget.CurrentVerseReferece = e.VerseReference;
             string bookName = e.VerseReference.Substring(0, 3);
@@ -297,7 +319,17 @@ namespace BibleTaggingUtil.Editor
                     //targetUpdatedVerse = Utils.GetVerseText(container.Target.Bible[targetRef], true);
                     if (tbTarget.Text.ToLower().Contains("arabic"))
                         DoSepecialHandling(reference);
-                    Verse v = osis ? container.OsisTarget.Bible[reference] : container.Target.Bible[reference];
+                    Verse v = null;
+                    if(osis)
+                    {
+                        if (container.OsisTarget.Bible.ContainsKey(reference))
+                            v = container.OsisTarget.Bible[reference];
+                    }
+                    else
+                    {
+                        if (container.Target.Bible.ContainsKey(reference))
+                            v = container.Target.Bible[reference];
+                    }
 
                     if (dgvTarget.IsCurrentTextAramaic)
                     {
@@ -401,7 +433,7 @@ namespace BibleTaggingUtil.Editor
             tbTH.Text = tParts[0] + " " + current;
             tbTH_Next.Text = next;
             tbTH_Previous.Text = previous;
- 
+
             tbTH.ForeColor = Color.White;
             tbTH_Next.ForeColor = Color.Black;
             tbTH_Previous.ForeColor = Color.Black;
@@ -442,19 +474,19 @@ namespace BibleTaggingUtil.Editor
                 for (int i = 0; i < v.Count; i++)
                 {
                     VerseWord vw = v[i];
-/*                    if (vw.Word == "*" && vw.Strong.Count == 1 && vw.Strong[0].Contains("???"))
-                    {
-                        vw.Strong[0] = "";
-                        changed = true;
-                        break;
-                    }
-                    else if (vw.Strong.Length == 1 && vw.Strong[0].Contains("0000"))
-                    {
-                        vw.Strong[0] = "";
-                        changed = true;
-                        break;
-                    }
-                    else */
+                    /*                    if (vw.Word == "*" && vw.Strong.Count == 1 && vw.Strong[0].Contains("???"))
+                                        {
+                                            vw.Strong[0] = "";
+                                            changed = true;
+                                            break;
+                                        }
+                                        else if (vw.Strong.Length == 1 && vw.Strong[0].Contains("0000"))
+                                        {
+                                            vw.Strong[0] = "";
+                                            changed = true;
+                                            break;
+                                        }
+                                        else */
                     if (i == 0 && vw.Word == "لإِمَامِ" && v[1].Word == "الْمُغَنِّينَ")
                     {
                         v.Merge(i, 2);
@@ -511,7 +543,14 @@ namespace BibleTaggingUtil.Editor
         private void Dgv_CellContentDoubleClick(object sender, System.Windows.Forms.DataGridViewCellEventArgs e)
         {
             DataGridView dgv = (DataGridView)sender;
-            string tag = (String)(dgv.Rows[dgv.RowCount - 1].Cells[e.ColumnIndex].Value);
+            string tag = string.Empty;
+            var cellTag = dgv.Rows[dgv.RowCount - 1].Cells[e.ColumnIndex].Value;
+
+            if (cellTag is string)
+                tag = (String)cellTag;
+            else
+                tag = ((StrongsCluster)cellTag).ToStringS();
+
             if (!string.IsNullOrEmpty(tag))
             {
                 tag = tag.Replace("<", "").Replace(">", "").Replace(",", "").Replace(".", "").Replace(":", "");
@@ -519,7 +558,7 @@ namespace BibleTaggingUtil.Editor
                 string[] tags = tag.Split(' ');
                 if (tags.Length == 1)
                 {
-                    browser.NavigateToTag((testament == TestamentEnum.OLD ? "H" : "G") + tags[0]);
+                    browser.NavigateToTag(/*(testament == TestamentEnum.OLD ? "H" : "G") + */tags[0]);
                 }
                 else
                 {
@@ -552,7 +591,14 @@ namespace BibleTaggingUtil.Editor
         private void DgvTOTHTView_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             DataGridView dgv = (DataGridView)sender;
-            string tag = (String)(dgv.Rows[dgv.Rows.Count - 1].Cells[e.ColumnIndex].Value);
+            string tag = string.Empty;
+            var cellTag = dgv.Rows[dgv.RowCount - 1].Cells[e.ColumnIndex].Value;
+
+            if (cellTag is string)
+                tag = (String)cellTag;
+            else
+                tag = ((StrongsCluster)cellTag).ToStringS();
+
             if (!string.IsNullOrEmpty(tag))
             {
                 tag = tag.Replace("<", "").Replace(">", "").Replace(",", "").Replace(".", "").Replace(":", "");
@@ -604,17 +650,44 @@ namespace BibleTaggingUtil.Editor
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="tag"></param>
-        private void DgvTarget_RefernceHighlightRequest(object sender, string tag, bool firstHalf)
+        private void DgvTarget_RefernceHighlightRequest(object sender, StrongsCluster tag, bool firstHalf)
         {
-            new Thread(() => { SelectReferenceTags(tag.Trim(), firstHalf); }).Start();
-            new Thread(() => { SelectTargetTags(tag.Trim(), firstHalf); }).Start();
+            new Thread(() =>
+            {
+                try
+                {
+                    SelectReferenceTags(tag, firstHalf);
+                }
+                catch (Exception ex)
+                {
+                    var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                    var name = cm.DeclaringType.FullName + "." + cm.Name;
+                    Tracing.TraceException(name, ex.Message);
+                    container.HandleException(ex);
+                }
+            }).Start();
+
+            new Thread(() =>
+            {
+                try
+                {
+                    SelectTargetTags(tag, firstHalf);
+                }
+                catch (Exception ex)
+                {
+                    var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                    var name = cm.DeclaringType.FullName + "." + cm.Name;
+                    Tracing.TraceException(name, ex.Message);
+                    container.HandleException(ex);
+                }
+            }).Start();
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="tag"></param>
-        private void SelectReferenceTags(string tag, bool firstHalf)
+        private void SelectReferenceTags(StrongsCluster tag, bool firstHalf)
         {
             if (InvokeRequired)
             {
@@ -628,28 +701,30 @@ namespace BibleTaggingUtil.Editor
                     dgvTopVersion.ClearSelection();
                     dgvTOTHT.ClearSelection();
 
-                    if (string.IsNullOrEmpty(tag))
+                    if (string.IsNullOrEmpty(tag.ToString()))
                     {
                         SetHighlightedCell(dgvTOTHT, null, null, firstHalf);
                         SetHighlightedCell(dgvTopVersion, null, null, firstHalf);
                         return;
                     }
 
-                    string[] tags = tag.Trim().Split(' ');
-                    string[] tags1 = new string[tags.Length];
-                    string[] tags2 = new string[tags.Length];
-                    for (int i = 0; i < tags.Length; i++)
-                    {
-                        string t = tags[i].Replace("<", "").Replace(">", "");
-                        // remove d strong
-                        if (char.IsLetter(t[t.Length-1]))
-                            t = t.Substring(0, t.Length-1);
-                        tags1[i] = t;
-                        tags2[i] = tags[i];
-//                        while (tags2[i][1] == '0')
-//                            tags2[i] = tags2[i].Remove(1, 1);
-                    }
+                    //string[] tags = tag.ToString().Split(' ');
 
+                    string[] tags1 = tag.ToString().Split(' ');   // dStrong + position   new string[tags.Length];
+                    string[] tags2 = tag.ToStringS().Split(' ');  // sStrong new string[tags.Length];
+
+                    /*                    for (int i = 0; i < tags.Length; i++)
+                                        {
+                                            string t = tags[i].Replace("<", "").Replace(">", "");
+                                            // remove d strong
+                                            if (char.IsLetter(t[t.Length-1]))
+                                                t = t.Substring(0, t.Length-1);
+                                            tags1[i] = t;
+                                            tags2[i] = tags[i];
+                    //                        while (tags2[i][1] == '0')
+                    //                            tags2[i] = tags2[i].Remove(1, 1);
+                                        }
+                    */
                     SetHighlightedCell(dgvTOTHT, tags1, tags2, firstHalf);
                     SetHighlightedCell(dgvTopVersion, tags1, tags2, firstHalf);
 
@@ -662,7 +737,7 @@ namespace BibleTaggingUtil.Editor
                 }
             }
         }
-        private void SelectTargetTags(string tag, bool firstHalf)
+        private void SelectTargetTags(StrongsCluster tag, bool firstHalf)
         {
             if (InvokeRequired)
             {
@@ -675,27 +750,27 @@ namespace BibleTaggingUtil.Editor
                 {
                     if (dgvTarget.SelectedCells.Count == 1)
                     {
-                        if (string.IsNullOrEmpty(tag))
+                        if (string.IsNullOrEmpty(tag.ToString()))
                         {
                             SetHighlightedCell(dgvTarget, null, null, firstHalf);
                             return;
                         }
 
-                        string[] tags = tag.Trim().Split(' ');
-                        string[] tags1 = new string[tags.Length];
-                        string[] tags2 = new string[tags.Length];
-                        for (int i = 0; i < tags.Length; i++)
-                        {
-                            string t = tags[i].Replace("<", "").Replace(">", "");
-                            // remove d strong
-                            if (char.IsLetter(t[t.Length - 1]))
-                                t = t.Substring(0, t.Length - 1);
-                            tags1[i] = t;
-                            tags2[i] = tags[i];
-                            //while (tags2[i][1] == '0')
-                                //tags2[i] = tags2[i].Remove(1, 1);
-                        }
-
+                        //string[] tags = tag.ToString().Split(' ');
+                        string[] tags1 = tag.ToString().Split(' ');   // dStrong + position   new string[tags.Length];
+                        string[] tags2 = tag.ToStringS().Split(' ');  // sStrong new string[tags.Length];
+                        /*                        for (int i = 0; i < tags.Length; i++)
+                                                {
+                                                    string t = tags[i].Replace("<", "").Replace(">", "");
+                                                    // remove d strong
+                                                    if (char.IsLetter(t[t.Length - 1]))
+                                                        t = t.Substring(0, t.Length - 1);
+                                                    tags1[i] = t;
+                                                    tags2[i] = tags[i];
+                                                    //while (tags2[i][1] == '0')
+                                                        //tags2[i] = tags2[i].Remove(1, 1);
+                                                }
+                        */
                         SetHighlightedCell(dgvTarget, tags1, tags2, firstHalf);
                     }
                 }
@@ -712,38 +787,24 @@ namespace BibleTaggingUtil.Editor
         {
             int count = dgv.ColumnCount;
             int tagsRow = dgv.RowCount - 1;
-            List<int> cells = new List<int>();
+            //List<int> cells = new List<int>();
 
             int selectedCellColumn = -1;
             if (dgv == dgvTarget)
                 selectedCellColumn = dgvTarget.SelectedCells[0].ColumnIndex;
 
-
-            for (int i = 0; i < count; i++)
+            List<int> cells = new List<int>();
+            // first try with dStrong + position
+            if (!checkBsStrongHighlight.Checked)  // checked if we need to use only sStrong
             {
-                if (i == selectedCellColumn)
-                    continue; // skip target selected cell
-
-                dgv.Rows[tagsRow].Cells[i].Style.BackColor = Color.White;
-                if (dgv != dgvTarget)
-                    dgv.Rows[tagsRow].Cells[i].Selected = false;
-
-                if (tags1 == null)
-                    continue;
-                string refTag = (string)dgv.Rows[tagsRow].Cells[i].Value;
-
-                if (!string.IsNullOrEmpty(refTag))
-                {
-                    for (int j = 0; j < tags1.Length; j++)
-                    {
-                        if (refTag.Contains(tags1[j]) || refTag.Contains(tags2[j]))
-                        {
-                            cells.Add(i);
-                        }
-                    }
-
-                }
+                cells = GetCellsToHighlight(dgv, tags1);
             }
+            if (cells.Count == 0)
+            {
+                // Now try with sStrong
+                cells = GetCellsToHighlight(dgv, tags2);
+            }
+
             if (cells.Count == 1)
             {
                 if (dgv != dgvTarget)
@@ -765,6 +826,44 @@ namespace BibleTaggingUtil.Editor
             if (dgv != dgvTarget)
                 dgv.ClearSelection();
         }
+
+        private List<int> GetCellsToHighlight(DataGridView dgv, string[] tags)
+        {
+            List<int> cells = new List<int>();
+            int count = dgv.ColumnCount;
+            int tagsRow = dgv.RowCount - 1;
+            int selectedCellColumn = -1;
+            if (dgv == dgvTarget)
+                selectedCellColumn = dgvTarget.SelectedCells[0].ColumnIndex;
+
+            for (int i = 0; i < count; i++)
+            {
+                //                if (i == selectedCellColumn)
+                //                    continue; // skip target selected cell
+
+                dgv.Rows[tagsRow].Cells[i].Style.BackColor = Color.White;
+                if (dgv != dgvTarget)
+                    dgv.Rows[tagsRow].Cells[i].Selected = false;
+
+                if (tags == null)
+                    continue;
+                StrongsCluster refTag = (StrongsCluster)dgv.Rows[tagsRow].Cells[i].Value;
+
+                if (refTag != null)
+                {
+
+                    for (int j = 0; j < tags.Length; j++)
+                    {
+                        if (refTag.ToString().Contains(tags[j]))
+                        {
+                            cells.Add(i);
+                        }
+                    }
+                }
+            }
+            return cells;
+        }
+
 
         #endregion Higlight same tag
 
@@ -794,6 +893,11 @@ namespace BibleTaggingUtil.Editor
                     e.Handled = true;
                 }
             }
+            else if (e.KeyCode == Keys.F3)
+            {
+                // ignore F3 - we don't want to sort
+                e.Handled = true;
+            }
         }
 
         private void DgvTarget_KeyUp(object sender, KeyEventArgs e)
@@ -817,6 +921,11 @@ namespace BibleTaggingUtil.Editor
                 }
                 if (e.KeyCode == Keys.Y) dgvTarget.Redo();
                 if (e.KeyCode == Keys.Z) dgvTarget.Undo();
+            }
+            else if (e.KeyCode == Keys.F3)
+            {
+                // ignore F3 - we don't want to sort
+                e.Handled = true;
             }
         }
 
@@ -914,29 +1023,38 @@ namespace BibleTaggingUtil.Editor
             }
         }
 
-        public void TargetBibleName(string name)
+        public string TargetBibleName
         {
-            if (InvokeRequired)
+            set
             {
-                Action safeWrite = delegate { TargetBibleName(name); };
-                Invoke(safeWrite);
-            }
-            else
-            {
-                tbTarget.Text = name;
+                if (InvokeRequired)
+                {
+                    Invoke(new Action(() => { TargetBibleName = value; }));
+                }
+                else
+                {
+                    tbTarget.Text = value;
+                    //if(tbTarget.Text.ToLower().Contains("arabic"))
+                    //    dgvTarget.RightToLeft = RightToLeft.Yes;
+                    //else 
+                    //    tbTarget.RightToLeft = RightToLeft.No;
+                }
             }
         }
 
-        public void TopReferenceBibleName(string name)
+
+        public string TopReferenceBibleName
         {
-            if (InvokeRequired)
+            set
             {
-                Action safeWrite = delegate { TopReferenceBibleName(name); };
-                Invoke(safeWrite);
-            }
-            else
-            {
-                tbTopVersion.Text = name;
+                if (InvokeRequired)
+                {
+                    Invoke(new Action(() => { TopReferenceBibleName = value; }));
+                }
+                else
+                {
+                    tbTopVersion.Text = value;
+                }
             }
         }
         private void cbTagToFind_SelectedIndexChanged(object sender, EventArgs e)
@@ -998,8 +1116,8 @@ namespace BibleTaggingUtil.Editor
             {
                 tbTH.ForeColor = Color.White;
                 int idx = reference.IndexOf(' ');
-                if(idx < 0) reference = string.Empty;
-                else reference = reference.Substring(idx+1).Trim();
+                if (idx < 0) reference = string.Empty;
+                else reference = reference.Substring(idx + 1).Trim();
             }
             if (sender == tbTH_Next)
             {
@@ -1011,7 +1129,7 @@ namespace BibleTaggingUtil.Editor
             }
 
             BibleTestament testament = Utils.GetTestament(reference);
-            if (testament == BibleTestament.OT) 
+            if (testament == BibleTestament.OT)
             {
                 if (container.TOTHT.Bible.ContainsKey(reference))
                     dgvTOTHT.Update(container.TOTHT.Bible[reference], testament);
@@ -1027,5 +1145,41 @@ namespace BibleTaggingUtil.Editor
             }
         }
 
+        private void checkBsStrongHighlight_CheckedChanged(object sender, EventArgs e)
+        {
+            if (dgvTarget.SelectedCells.Count == 1)
+            {
+                try
+                {
+                    dgvTarget.FireRefernceHighlightRequest((StrongsCluster)dgvTarget.SelectedCells[0].Value);
+                }
+                catch { }
+            }
+        }
+
+        private void picBack_Click(object sender, EventArgs e)
+        {
+            if (navStackBack.Count > 0)
+            {
+                string currentReference = tbCurrentReference.Text;
+                navStackForward.Push(currentReference);
+
+                string prevRef =  navStackBack.Pop();
+                verse.GotoVerse(prevRef);
+            }
+
+        }
+
+        private void picForward_Click(object sender, EventArgs e)
+        {
+            if (navStackForward.Count > 0)
+            {
+                string currentReference = tbCurrentReference.Text;
+                navStackBack.Push(currentReference);
+
+                string prevRef = navStackForward.Pop();
+                verse.GotoVerse(prevRef);
+            }
+        }
     }
 }

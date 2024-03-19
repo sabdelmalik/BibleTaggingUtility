@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BibleTaggingUtil.BibleVersions;
+using BibleTaggingUtil.Strongs;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -11,60 +13,69 @@ namespace BibleTaggingUtil.Editor
 {
     internal class TOHTHGridView : DataGridView
     {
+        public ReferenceVersionTAGNT BibleNT { get; set; }
+        public ReferenceVersionTAHOT BibleOT { get; set; }
 
         protected override void OnCellMouseDown(DataGridViewCellMouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left &&
-                            e.Clicks == 1 &&
-                            e.RowIndex >= this.Rows.Count - 2 &&
-                            this.SelectedCells.Count > 0)
+            try
             {
-                string text = string.Empty;
-                int rowIndex = SelectedCells[0].RowIndex;
-
-                if (this.SelectedCells.Count > 1)
+                if (e.Button == MouseButtons.Left &&
+                                e.Clicks == 1 &&
+                                e.RowIndex >= this.Rows.Count - 2 &&
+                                e.ColumnIndex > 0 &&
+                                this.SelectedCells.Count > 0)
                 {
-                    bool sameRow = true;
-                    foreach (DataGridViewCell cell in this.SelectedCells)
-                    {
+                    StrongsCluster tag = new StrongsCluster();
+                    int rowIndex = SelectedCells[0].RowIndex;
 
-                        if (cell.RowIndex != rowIndex)
-                        {
-                            sameRow = false;
-                            break;
-                        }
-                    }
-
-                    if (sameRow)
+                    if (this.SelectedCells.Count > 1)
                     {
-                        //bool mergeOk = true; // we only drag adjacent cells
-                        int count = this.SelectedCells.Count;
-                        int colIndex = SelectedCells[count - 1].ColumnIndex;
-                        text = (string)this[colIndex, rowIndex].Value;
-                        for (int i = count - 2; i >= 0; i--)
+                        bool sameRow = true;
+                        foreach (DataGridViewCell cell in this.SelectedCells)
                         {
-                            text += (" " + this[SelectedCells[i].ColumnIndex, rowIndex].Value);
-                            if (Math.Abs(SelectedCells[i].ColumnIndex - colIndex) != 1)
+
+                            if ((cell.RowIndex != rowIndex))
                             {
-                                //mergeOk = false;
-                                text = string.Empty;
+                                sameRow = false;
                                 break;
                             }
-                            colIndex = SelectedCells[i].ColumnIndex;
                         }
+
+                        if (sameRow)
+                        {
+                            //bool mergeOk = true; // we only drag adjacent cells
+                            int count = this.SelectedCells.Count;
+                            int colIndex = SelectedCells[count - 1].ColumnIndex;
+                            tag = (StrongsCluster)this[colIndex, rowIndex].Value;
+                            for (int i = count - 2; i >= 0; i--)
+                            {
+                                tag += (StrongsCluster)this[SelectedCells[i].ColumnIndex, rowIndex].Value;
+                                if (Math.Abs(SelectedCells[i].ColumnIndex - colIndex) != 1)
+                                {
+                                    //mergeOk = false;
+                                    tag = new StrongsCluster(new string[] { "" });
+                                    break;
+                                }
+                                colIndex = SelectedCells[i].ColumnIndex;
+                            }
+                        }
+
+
                     }
-
-
-                }
-                else
-                {
-                    text = ((String)this.Rows[rowIndex].Cells[e.ColumnIndex].Value).Trim();
-                }
-                DragData data = new DragData(1, e.ColumnIndex, text, this);
-                if (!string.IsNullOrEmpty(text))
-                {
+                    else
+                    {
+                        tag = this.Rows[rowIndex].Cells[e.ColumnIndex].Value as StrongsCluster;
+                    }
+                    DragData data = new DragData(1, e.ColumnIndex, tag, this);
                     this.DoDragDrop(data, DragDropEffects.Copy);
                 }
+            }
+            catch (Exception ex)
+            {
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
             }
 
             base.OnCellMouseDown(e);
@@ -86,14 +97,14 @@ namespace BibleTaggingUtil.Editor
             List<string> words = new List<string>();
             List<string> hebrew = new List<string>();
             List<string> transliteration = new List<string>();
-            List<string> tags = new List<string>();
+            List<StrongsCluster> tags = new List<StrongsCluster>();
             List<string> morphology = new List<string>();
             List<string> rootStrongs = new List<string>();
             List<string> wordType =   new List<string>();
             List<string> altVerseNumber = new List<string>();
             List<string> wordNumber = new List<string>();
             List<string> meaningVar = new List<string>();
-
+            StrongsCluster tagLable = new StrongsCluster("TAG");
             try
             {
                 words.Add("ENG");
@@ -105,7 +116,7 @@ namespace BibleTaggingUtil.Editor
                 meaningVar.Add("VAR");
                 transliteration.Add("XLT");
                 rootStrongs.Add("STG");
-                tags.Add("TAG");
+                tags.Add(tagLable);
 
                 for (int i = 0; i < verseWords.Count; i++)
                 {
@@ -119,7 +130,8 @@ namespace BibleTaggingUtil.Editor
                     altVerseNumber.Add(verseWord.AltVerseNumber);
                     wordNumber.Add(verseWord.WordNumber);
                     meaningVar.Add(verseWord.MeaningVar);
-
+                    tags.Add(verseWord.Strong);
+/*
                     if (verseWord.Strong.Count > 0)
                     {
                         string s = String.Empty;
@@ -170,7 +182,8 @@ namespace BibleTaggingUtil.Editor
                         tags.Add(s.Trim());
                     }
                     else
-                        tags.Add("");
+                        tags.Add("")
+*/;
                 }
 
                 //this.ColumnCount = verseWords.Count;
@@ -190,8 +203,8 @@ namespace BibleTaggingUtil.Editor
                 for (int i = 0; i < words.Count; i++)
                 {
                     string word = (string)this.Rows[1].Cells[i].Value;
-                    string strong = (string)this.Rows[this.RowCount-1].Cells[i].Value;
-                    if (word.Contains("יהוה") || strong.Contains("3069") || strong.Contains("3068"))
+                    StrongsCluster tag = (StrongsCluster)this.Rows[this.RowCount-1].Cells[i].Value;
+                    if (word.Contains("יהוה") || tag.ToString().Contains("3069") || tag.ToString().Contains("3068"))
                     {
                         this.Rows[1].Cells[i].Style.ForeColor = Color.Red;
                         this.Rows[this.RowCount - 1].Cells[i].Style.ForeColor = Color.Red;
@@ -253,7 +266,7 @@ namespace BibleTaggingUtil.Editor
             List<string> words = new List<string>();
             List<string> greek = new List<string>();
             List<string> transliteration = new List<string>();
-            List<string> tags = new List<string>();
+            List<object> tags = new List<object>();
             List<string> morphology = new List<string>();
             List<string> rootStrongs = new List<string>();
             List<string> wordType = new List<string>();
@@ -283,6 +296,7 @@ namespace BibleTaggingUtil.Editor
                     wordType.Add(verseWord.WordType);
                     altVerseNumber.Add(verseWord.AltVerseNumber);
                     wordNumber.Add(verseWord.WordNumber);
+                    tags.Add(verseWord.Strong);
 
                     /*                   string strng = string.Empty;
                                        foreach (string s in verseWord.Strong)
@@ -291,7 +305,7 @@ namespace BibleTaggingUtil.Editor
                                        }
                                        tags.Add(strng.Trim());
                     */
-                    tags.Add(verseWord.Strong.ToStringEx());
+                    //tags.Add(verseWord.Strong.ToStringEx());
                 }
 
                 //this.ColumnCount = verseWords.Count;

@@ -32,9 +32,9 @@ namespace BibleTaggingUtil.TranslationTags
         /// </summary>
         private Dictionary<string, List<int[]>> otVerseMap;
 
-        private void ProcessHebrewVerse(Verse verse, int bookIndex, string book, string verseRef, ReferenceVersionTOTHT totht)
+        private void ProcessHebrewVerse(Verse verse, int bookIndex, string book, string verseRef, ReferenceVersionTAHOT tahot)
         {
-            string bookName = totht.GetBookNameFromIndex(bookIndex);
+            string bookName = tahot.GetBookNameFromIndex(bookIndex);
             string originalRef = verseRef.Replace(book, bookName);
             int colon = originalRef.IndexOf(':');
             string verseNum = originalRef.Substring(colon);
@@ -59,16 +59,16 @@ namespace BibleTaggingUtil.TranslationTags
                     title[indx] = verse[indx];
                     indx++;
                 }
-                if (totht.Bible.ContainsKey(originalPrevRef))
+                if (tahot.Bible.ContainsKey(originalPrevRef))
                 {
                     // get the Hebrew verse
-                    Verse hebrewVerse = totht.Bible[originalPrevRef];
+                    Verse hebrewVerse = tahot.Bible[originalPrevRef];
                     ProcessVerseOT(verseRef, originalRef, title, 0, title.Count, hebrewVerse); ;
                 }
-                if (totht.Bible.ContainsKey(originalRef))
+                if (tahot.Bible.ContainsKey(originalRef))
                 {
                     // get the Hebrew verse
-                    Verse hebrewVerse = totht.Bible[originalRef];
+                    Verse hebrewVerse = tahot.Bible[originalRef];
                     ProcessVerseOT(verseRef, originalRef, verse, indx + 1, verse.Count, hebrewVerse); ;
                 }
             }
@@ -98,7 +98,7 @@ namespace BibleTaggingUtil.TranslationTags
                         string hebRef = string.Format("{0} {1}:{2}", bk, chapterNum, mapVerse);
 
                         // get the Hebrew verse
-                        Verse hebrewVerse = totht.Bible[hebRef];
+                        Verse hebrewVerse = tahot.Bible[hebRef];
                         Verse hebrewVerseSec = hebrewVerse.SubVerse(mapStart, mapLen);
                         if (map[3] == 0) // unmapped section of reconstructed words
                             ProcessVerseOT(verseRef, originalRef, verse, start, 0, hebrewVerseSec);
@@ -114,10 +114,10 @@ namespace BibleTaggingUtil.TranslationTags
                     Tracing.TraceException(name, ex.Message);
                 }
             }
-            else if (totht.Bible.ContainsKey(originalRef))
+            else if (tahot.Bible.ContainsKey(originalRef))
             {
                 // get the Hebrew verse
-                Verse hebrewVerse = totht.Bible[originalRef];
+                Verse hebrewVerse = tahot.Bible[originalRef];
                 ProcessVerseOT(verseRef, originalRef, verse, 0, verse.Count, hebrewVerse); ;
             }
         }
@@ -137,7 +137,7 @@ namespace BibleTaggingUtil.TranslationTags
 
             List<TranslatorWord> newVerse = new List<TranslatorWord>();
 
-            if (originalRef == "Num 21:26")
+            if (originalRef == "Gen 4:8")
             {
                 int x = 0;
             }
@@ -294,9 +294,9 @@ namespace BibleTaggingUtil.TranslationTags
                                         {
                                             // if אֹת֖ H0853 or H0176 א֚וֹ or H0413 אֶל choose closest to last
                                             if (hw.Strong.Strongs.Count == 1 &&
-                                                (hw.Strong.Strongs[0].ToStringEx().Contains("H0853")) ||
-                                                (hw.Strong.Strongs[0].ToStringEx().Contains("H0176")) ||
-                                                 (hw.Strong.Strongs[0].ToStringEx().Contains("H0413")))
+                                                (hw.Strong.Strongs[0].ToString().Contains("H0853")) ||
+                                                (hw.Strong.Strongs[0].ToString().Contains("H0176")) ||
+                                                 (hw.Strong.Strongs[0].ToString().Contains("H0413")))
                                             {
                                                 int span = Math.Abs(lastHebIndex - hw.WordIndex);
                                                 // get the first in the list
@@ -361,7 +361,7 @@ namespace BibleTaggingUtil.TranslationTags
                                 {
                                     arabic2HebrewMap[i] = new List<int> { hw.WordIndex };
                                 }
-                                OriginalWordDetails wd = new OriginalWordDetails(hw.RootStrong, hw.Morphology, hw.Hebrew, hw.WordIndex, hw.Transliteration, hw.Word, hw.WordNumber, hw.AltVerseNumber, hw.Reference);
+                                OriginalWordDetails wd = new OriginalWordDetails(hw.RootStrong, hw.Morphology, hw.Hebrew, hw.WordIndex, hw.Transliteration, hw.Word, hw.WordNumber, hw.WordType, hw.AltVerseNumber, hw.Reference);
                                 ow.Add(wd);
                             }
                         }
@@ -487,7 +487,7 @@ namespace BibleTaggingUtil.TranslationTags
                         }
                         VerseWord hw = hebrewVerse[hIndex[0]];
                         List<OriginalWordDetails> ow = new List<OriginalWordDetails>();
-                        ow.Add(new OriginalWordDetails(hw.RootStrong, hw.Morphology, hw.Hebrew, hw.WordIndex, hw.Transliteration, hw.Word, hw.WordNumber, hw.AltVerseNumber, hw.Reference));
+                        ow.Add(new OriginalWordDetails(hw.RootStrong, hw.Morphology, hw.Hebrew, hw.WordIndex, hw.Transliteration, hw.Word, hw.WordNumber, hw.WordType, hw.AltVerseNumber, hw.Reference));
                         updatedVerse.Add(new TranslatorWord(string.Empty, ow));
 
                     }
@@ -539,6 +539,8 @@ namespace BibleTaggingUtil.TranslationTags
 
             foreach ((string verseRef, List<TranslatorWord> verseWords) in words)
             {
+                container.UpdateProgress("Processing xlation Tags", (100 * verseCounter++) / totalVerseCount);
+
                 if (perBook)
                 {
                     int space = verseRef.IndexOf(' ');
@@ -593,20 +595,18 @@ namespace BibleTaggingUtil.TranslationTags
                             swR = new StreamWriter(forReview, false);
                         }
                     }
+                }
 
-                    if (publicDomain && !preambleWritten)
-                    {
-                        WritePreamble(sw);
-                        preambleWritten = true;
-                    }
-
-
+                if (publicDomain && !preambleWritten)
+                {
+                    WritePreamble(sw);
+                    preambleWritten = true;
                 }
 
                 if (verseRef == "Neh 7:67")
-                    {
-                        int z = 0;
-                    }
+                {
+                    int z = 0;
+                }
                 try
                 {
                     sw.WriteLine(verseRef.Replace(" ", ".").Replace(":", "."));

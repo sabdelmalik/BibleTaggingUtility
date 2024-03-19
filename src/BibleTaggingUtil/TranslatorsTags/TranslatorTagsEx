@@ -58,12 +58,12 @@ namespace BibleTaggingUtil.TranslationTags
             }
         }
 
-        public void Export(BibleVersion target, ReferenceVersionTOTHT totht, ReferenceVersionTAGNT tagnt)
+        public void Export(BibleVersion target, ReferenceVersionTAHOT totht, ReferenceVersionTAGNT tagnt)
         {
             Prepare(target, totht, tagnt);
         }
 
-        private void Prepare(BibleVersion target, ReferenceVersionTOTHT totht, ReferenceVersionTAGNT tagnt)
+        private void Prepare(BibleVersion target, ReferenceVersionTAHOT totht, ReferenceVersionTAGNT tagnt)
         {
             if (!string.IsNullOrEmpty(Properties.TranslationTags.Default.RepeatedWordFileName))
             {
@@ -254,7 +254,7 @@ namespace BibleTaggingUtil.TranslationTags
             }
         }
 
-        private void ProcessHebrewVerse(Verse verse, int bookIndex, string book, string verseRef, ReferenceVersionTOTHT totht)
+        private void ProcessHebrewVerse(Verse verse, int bookIndex, string book, string verseRef, ReferenceVersionTAHOT totht)
         {
             string bookName = totht.GetBookNameFromIndex(bookIndex);
             string originalRef = verseRef.Replace(book, bookName);
@@ -531,8 +531,8 @@ namespace BibleTaggingUtil.TranslationTags
                                         {
                                             // if אֹת֖ H0853 or H0413 אֶל choose closest to last
                                             if (hw.Strong.Strongs.Count == 1 && 
-                                                (hw.Strong.Strongs[0].ToStringEx().Contains("H0853")) ||
-                                                 (hw.Strong.Strongs[0].ToStringEx().Contains("H0413")))
+                                                (hw.Strong.Strongs[0].ToString().Contains("H0853")) ||
+                                                 (hw.Strong.Strongs[0].ToString().Contains("H0413")))
                                             {
                                                 int span = Math.Abs(lastHebIndex - hw.WordIndex);
                                                 // get the first in the list
@@ -597,7 +597,7 @@ namespace BibleTaggingUtil.TranslationTags
                                 {
                                     map[i] = new List<int> { hw.WordIndex };
                                 }
-                                OriginalWordDetails wd = new OriginalWordDetails(hw.RootStrong, hw.Morphology, hw.Hebrew, hw.WordIndex, hw.Transliteration, hw.Word, hw.WordNumber, hw.AltVerseNumber, hw.Reference);
+                                OriginalWordDetails wd = new OriginalWordDetails(hw.RootStrong, hw.Morphology, hw.Hebrew, hw.WordIndex, hw.Transliteration, hw.Word, hw.WordNumber, hw.WordType, hw.AltVerseNumber, hw.Reference);
                                 ow.Add(wd);
                             }
                         }
@@ -723,7 +723,7 @@ namespace BibleTaggingUtil.TranslationTags
                         }
                         VerseWord hw = hebrewVerse[hIndex[0]];
                         List<OriginalWordDetails> ow = new List<OriginalWordDetails>();
-                        ow.Add(new OriginalWordDetails(hw.RootStrong, hw.Morphology, hw.Hebrew, hw.WordIndex, hw.Transliteration, hw.Word, hw.WordNumber, hw.AltVerseNumber, hw.Reference));
+                        ow.Add(new OriginalWordDetails(hw.RootStrong, hw.Morphology, hw.Hebrew, hw.WordIndex, hw.Transliteration, hw.Word, hw.WordNumber, hw.WordType, hw.AltVerseNumber, hw.Reference));
                         updatedVerse.Add(new TranslatorWord(string.Empty, ow));
 
                     }
@@ -812,7 +812,7 @@ namespace BibleTaggingUtil.TranslationTags
                             {
                                 usedStrongs[strong.ToStringS()] = hw.WordIndex + 1;
                                 map[i] = hw.WordIndex;
-                                OriginalWordDetails wd = new OriginalWordDetails(hw.RootStrong, hw.Morphology, hw.Hebrew, hw.WordIndex, hw.Transliteration, hw.Word, hw.WordNumber, hw.AltVerseNumber, hw.Reference);
+                                OriginalWordDetails wd = new OriginalWordDetails(hw.RootStrong, hw.Morphology, hw.Hebrew, hw.WordIndex, hw.Transliteration, hw.Word, hw.WordNumber, hw.WordType, hw.AltVerseNumber, hw.Reference);
                                 ow.Add(wd);
                             }
                         }
@@ -849,7 +849,7 @@ namespace BibleTaggingUtil.TranslationTags
                     s = i;
                     VerseWord hw = hebrewVerse[missedWords[p]];
                     List<OriginalWordDetails> ow = new List<OriginalWordDetails>();
-                    ow.Add(new OriginalWordDetails(hw.RootStrong, hw.Morphology, hw.Hebrew, hw.WordIndex, hw.Transliteration, hw.Word, hw.WordNumber, hw.AltVerseNumber, hw.Reference));
+                    ow.Add(new OriginalWordDetails(hw.RootStrong, hw.Morphology, hw.Hebrew, hw.WordIndex, hw.Transliteration, hw.Word, hw.WordNumber, hw.WordType, hw.AltVerseNumber, hw.Reference));
                     updatedVerse.Add(new TranslatorWord(string.Empty, ow));
                 }
                 for (int i = s; i < newVerse.Count; i++)

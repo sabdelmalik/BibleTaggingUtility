@@ -72,7 +72,7 @@ namespace BibleTaggingUtil
         {
             get
             {
-                return this.Strong.ToStringEx();
+                return this.Strong.ToString();
             }
         }
 
@@ -109,6 +109,10 @@ namespace BibleTaggingUtil
             return Reference + ": " + Word + this.StrongString;
         }
 
+        /// <summary>
+        /// Constructs an OSIS w tag. 
+        /// Strongs are either sStrong or dStrong depending on settings.
+        /// </summary>
         public string OsisWord
         {
             get 
@@ -124,7 +128,10 @@ namespace BibleTaggingUtil
                     string strongStr = string.Empty;
                     foreach (StrongsNumber number in Strong.Strongs)
                     {
-                        strongStr += string.Format(" strong:{0}", number.ToString());
+                        if(Properties.OsisFileGeneration.Default.UseDisambiguatedStrong)
+                            strongStr += string.Format(" strong:{0}", number.ToStringD());
+                        else
+                            strongStr += string.Format(" strong:{0}", number.ToStringS());
                     }
                     result = string.Format("<w lemma=\"{0}\">{1}</w>", strongStr.Trim(), Word);
                 }

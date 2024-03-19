@@ -68,7 +68,7 @@ namespace BibleTaggingUtil.Strongs
             get { return Prefix == string.Empty; }
         }
 
-        public string ToStringEx()
+        public override string ToString()
         {
             string result = string.Empty;
             if (Prefix != string.Empty)
@@ -80,6 +80,10 @@ namespace BibleTaggingUtil.Strongs
             }
             return result;
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>Simple Strong's number</returns>
         public string ToStringS()
         {
             string result = string.Empty;
@@ -90,7 +94,11 @@ namespace BibleTaggingUtil.Strongs
             return result;
         }
 
-        public override string ToString()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>Disambiguated Strong's number</returns>
+        public string ToStringD()
         {
             string result = string.Empty;
             if (Prefix != string.Empty)

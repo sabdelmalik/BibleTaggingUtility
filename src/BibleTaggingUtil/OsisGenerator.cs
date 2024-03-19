@@ -25,7 +25,9 @@ namespace BibleTaggingUtil
 
             try
             {
-                string biblesFolder = Properties.MainSettings.Default.BiblesFolder;
+                string targetBiblesFolder = BibleTaggingUtil.Properties.TargetBibles.Default.TargetBiblesFolder;
+                string targetBible = BibleTaggingUtil.Properties.TargetBibles.Default.TargetBible;
+                string biblesFolder = Path.Combine(targetBiblesFolder, targetBible);
 
                 //                if (osisConf.ContainsKey(OsisConstants.bible_vpl_file))
                 //                    bibleVplFile = osisConf[OsisConstants.bible_vpl_file];

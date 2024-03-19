@@ -405,6 +405,7 @@ namespace BibleTaggingUtil.BibleVersions
         }
 
 
+
         public string GetCorrectReference(string reference)
         {
             string correctReference = string.Empty;

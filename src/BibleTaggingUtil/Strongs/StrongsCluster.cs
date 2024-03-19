@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualBasic;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,10 +8,14 @@ using System.Threading.Tasks;
 
 namespace BibleTaggingUtil.Strongs
 {
-    public class StrongsCluster
+    public class StrongsCluster : IEnumerable
     {
         private List<StrongsNumber> strongs;
 
+        private bool tagLable = false;
+        private string lable = string.Empty;
+
+        public bool IsTagLable { get { return tagLable; } }
         public StrongsCluster() { strongs = new List<StrongsNumber>(); }
         public StrongsCluster(List<StrongsNumber> strongsNums)
         {
@@ -30,6 +35,11 @@ namespace BibleTaggingUtil.Strongs
             }
         }
 
+        public StrongsCluster(string lable)
+        {
+            tagLable = true;
+            this.lable = lable;
+        }
 
         public List<StrongsNumber> Strongs
         { get { return strongs; } }
@@ -52,6 +62,10 @@ namespace BibleTaggingUtil.Strongs
 
         public static StrongsCluster operator +(StrongsCluster a, StrongsCluster b)
         {
+            if (a.IsTagLable)
+                return b;
+            if (b.IsTagLable)
+                return a;
             StrongsCluster strongsCluster = new StrongsCluster(a.Strongs);
 
             foreach (StrongsNumber number in b.Strongs)
@@ -110,12 +124,26 @@ namespace BibleTaggingUtil.Strongs
         {
             get
             {
+                if(index < 0 || index >= strongs.Count)
+                    throw new ArgumentOutOfRangeException("index");
                 return strongs[index];
             }
             set
             {
+                if (index < 0 || index >= strongs.Count)
+                    throw new ArgumentOutOfRangeException("index");
                 strongs[index] = value;
             }
+        }
+
+        public void DeleteAt(int index)
+        {
+            if (index < 0 || index >= strongs.Count)
+                throw new ArgumentOutOfRangeException("index");
+            if (strongs.Count == 1)
+                strongs[0] = new StrongsNumber("");
+            else
+                strongs.RemoveAt(index);
         }
 
         public string ToStringBracketed()
@@ -143,29 +171,84 @@ namespace BibleTaggingUtil.Strongs
             return result.Trim();
         }
 
-        public string ToStringEx()
+        public override string ToString()
         {
             string result = string.Empty;
 
-            foreach (StrongsNumber num in strongs)
+            if (tagLable) { result = lable; }
+            else
             {
-                result += num.ToStringEx() + " ";
+                foreach (StrongsNumber num in strongs)
+                {
+                    result += num.ToString() + " ";
+                }
             }
 
             return result.Trim();
         }
 
-        public override string ToString()
+        public string ToStringD()
         {
             string result = string.Empty;
 
             foreach(StrongsNumber num in strongs)
             {
-                result += num.ToString() + " ";
+                result += num.ToStringD() + " ";
             }
 
             return result.Trim();
         }
+        #region IEnumerable
+
+        private class StrongsEnumerator : IEnumerator
+        {
+            private List<StrongsNumber> strongs;
+            int position = -1;
+
+            //constructor
+            public StrongsEnumerator(List<StrongsNumber> strongs)
+            {
+                this.strongs = strongs;
+            }
+            private IEnumerator getEnumerator()
+            {
+                return (IEnumerator)this;
+            }
+            //IEnumerator
+            public bool MoveNext()
+            {
+                position++;
+                return (position < strongs.Count);
+            }
+            //IEnumerator
+            public void Reset()
+            {
+                position = -1;
+            }
+            //IEnumerator
+            public object Current
+            {
+                get
+                {
+                    try
+                    {
+                        return strongs[position];
+                    }
+                    catch (IndexOutOfRangeException)
+                    {
+                        throw new InvalidOperationException();
+                    }
+                }
+            }
+        }  //end nested class
+
+        public IEnumerator GetEnumerator()
+        {
+            return new StrongsEnumerator(strongs);
+        }
+
+        #endregion IEnumerator and IEnumerable
+
 
     }
 }

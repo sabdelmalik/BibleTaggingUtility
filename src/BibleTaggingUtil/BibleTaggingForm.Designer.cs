@@ -38,12 +38,12 @@ namespace BibleTaggingUtil
             folderBrowserDialog2 = new System.Windows.Forms.FolderBrowserDialog();
             menuStrip1 = new System.Windows.Forms.MenuStrip();
             fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            setBibleFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             reloadTargetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             saveUpdatedTartgetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            saveKJVPlainToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            saveHebrewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            serachReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            tAHOTEnglishToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             generateSWORDFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             usfmToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             generateUSFMFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,6 +58,7 @@ namespace BibleTaggingUtil
             openFileDialog = new System.Windows.Forms.OpenFileDialog();
             folderBrowserDialog3 = new System.Windows.Forms.FolderBrowserDialog();
             waitCursorAnimation = new System.Windows.Forms.PictureBox();
+            restoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)waitCursorAnimation).BeginInit();
             SuspendLayout();
@@ -81,7 +82,7 @@ namespace BibleTaggingUtil
             // menuStrip1
             // 
             menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { fileToolStripMenuItem, saveKJVPlainToolStripMenuItem, saveHebrewToolStripMenuItem, generateSWORDFilesToolStripMenuItem, usfmToolStripMenuItem, oSISToolStripMenuItem, aboutToolStripMenuItem, translatorsTagsToolStripMenuItem });
+            menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { fileToolStripMenuItem, editToolStripMenuItem, generateSWORDFilesToolStripMenuItem, usfmToolStripMenuItem, oSISToolStripMenuItem, aboutToolStripMenuItem, translatorsTagsToolStripMenuItem });
             menuStrip1.Location = new System.Drawing.Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Padding = new System.Windows.Forms.Padding(6, 3, 0, 3);
@@ -91,52 +92,52 @@ namespace BibleTaggingUtil
             // 
             // fileToolStripMenuItem
             // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { setBibleFolderToolStripMenuItem, reloadTargetToolStripMenuItem, saveUpdatedTartgetToolStripMenuItem, settingsToolStripMenuItem });
+            fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { reloadTargetToolStripMenuItem, saveUpdatedTartgetToolStripMenuItem, restoreToolStripMenuItem, settingsToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
             fileToolStripMenuItem.Text = "File";
             // 
-            // setBibleFolderToolStripMenuItem
-            // 
-            setBibleFolderToolStripMenuItem.Name = "setBibleFolderToolStripMenuItem";
-            setBibleFolderToolStripMenuItem.Size = new System.Drawing.Size(197, 26);
-            setBibleFolderToolStripMenuItem.Text = "Set Bible Folder";
-            setBibleFolderToolStripMenuItem.Click += setBibleFolderToolStripMenuItem_Click;
-            // 
             // reloadTargetToolStripMenuItem
             // 
             reloadTargetToolStripMenuItem.Name = "reloadTargetToolStripMenuItem";
-            reloadTargetToolStripMenuItem.Size = new System.Drawing.Size(197, 26);
+            reloadTargetToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             reloadTargetToolStripMenuItem.Text = "Reload Target";
             reloadTargetToolStripMenuItem.Click += reloadTargetToolStripMenuItem_Click;
             // 
             // saveUpdatedTartgetToolStripMenuItem
             // 
             saveUpdatedTartgetToolStripMenuItem.Name = "saveUpdatedTartgetToolStripMenuItem";
-            saveUpdatedTartgetToolStripMenuItem.Size = new System.Drawing.Size(197, 26);
+            saveUpdatedTartgetToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             saveUpdatedTartgetToolStripMenuItem.Text = "Save Updatest";
             saveUpdatedTartgetToolStripMenuItem.Click += saveUpdatedTartgetToolStripMenuItem_Click;
             // 
             // settingsToolStripMenuItem
             // 
             settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            settingsToolStripMenuItem.Size = new System.Drawing.Size(197, 26);
+            settingsToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             settingsToolStripMenuItem.Text = "Settings";
             settingsToolStripMenuItem.Click += settingsToolStripMenuItem_Click;
             // 
-            // saveKJVPlainToolStripMenuItem
+            // editToolStripMenuItem
             // 
-            saveKJVPlainToolStripMenuItem.Name = "saveKJVPlainToolStripMenuItem";
-            saveKJVPlainToolStripMenuItem.Size = new System.Drawing.Size(118, 24);
-            saveKJVPlainToolStripMenuItem.Text = "Save KJV Plain";
-            saveKJVPlainToolStripMenuItem.Click += saveKJVPlainToolStripMenuItem_Click;
+            editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { serachReportToolStripMenuItem, tAHOTEnglishToolStripMenuItem });
+            editToolStripMenuItem.Name = "editToolStripMenuItem";
+            editToolStripMenuItem.Size = new System.Drawing.Size(49, 24);
+            editToolStripMenuItem.Text = "Edit";
             // 
-            // saveHebrewToolStripMenuItem
+            // serachReportToolStripMenuItem
             // 
-            saveHebrewToolStripMenuItem.Name = "saveHebrewToolStripMenuItem";
-            saveHebrewToolStripMenuItem.Size = new System.Drawing.Size(110, 24);
-            saveHebrewToolStripMenuItem.Text = "Save Hebrew";
-            saveHebrewToolStripMenuItem.Click += saveHebrewToolStripMenuItem_Click;
+            serachReportToolStripMenuItem.Name = "serachReportToolStripMenuItem";
+            serachReportToolStripMenuItem.Size = new System.Drawing.Size(286, 26);
+            serachReportToolStripMenuItem.Text = "Serach Report (Experimental)";
+            serachReportToolStripMenuItem.Click += serachReportToolStripMenuItem_Click;
+            // 
+            // tAHOTEnglishToolStripMenuItem
+            // 
+            tAHOTEnglishToolStripMenuItem.Name = "tAHOTEnglishToolStripMenuItem";
+            tAHOTEnglishToolStripMenuItem.Size = new System.Drawing.Size(286, 26);
+            tAHOTEnglishToolStripMenuItem.Text = "TAHOT English";
+            tAHOTEnglishToolStripMenuItem.Click += tAHOTEnglishToolStripMenuItem_Click;
             // 
             // generateSWORDFilesToolStripMenuItem
             // 
@@ -211,7 +212,7 @@ namespace BibleTaggingUtil
             // exportTranslatorTagsToolStripMenuItem
             // 
             exportTranslatorTagsToolStripMenuItem.Name = "exportTranslatorTagsToolStripMenuItem";
-            exportTranslatorTagsToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            exportTranslatorTagsToolStripMenuItem.Size = new System.Drawing.Size(155, 26);
             exportTranslatorTagsToolStripMenuItem.Text = "Export TT";
             exportTranslatorTagsToolStripMenuItem.Click += exportTranslatorTagsToolStripMenuItem_Click;
             // 
@@ -230,6 +231,13 @@ namespace BibleTaggingUtil
             waitCursorAnimation.TabIndex = 4;
             waitCursorAnimation.TabStop = false;
             waitCursorAnimation.Visible = false;
+            // 
+            // restoreToolStripMenuItem
+            // 
+            restoreToolStripMenuItem.Name = "restoreToolStripMenuItem";
+            restoreToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            restoreToolStripMenuItem.Text = "Restore";
+            restoreToolStripMenuItem.Click += restoreToolStripMenuItem_Click;
             // 
             // BibleTaggingForm
             // 
@@ -261,11 +269,8 @@ namespace BibleTaggingUtil
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog2;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem setBibleFolderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveUpdatedTartgetToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
-        private System.Windows.Forms.ToolStripMenuItem saveKJVPlainToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveHebrewToolStripMenuItem;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog3;
         private System.Windows.Forms.ToolStripMenuItem generateSWORDFilesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem usfmToolStripMenuItem;
@@ -281,6 +286,10 @@ namespace BibleTaggingUtil
         private System.Windows.Forms.ToolStripMenuItem reloadTargetToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem translatorsTagsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportTranslatorTagsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem serachReportToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tAHOTEnglishToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem restoreToolStripMenuItem;
     }
 }
 

@@ -36,10 +36,11 @@ namespace BibleTaggingUtil.Settings
 
         private void btnTTFolder_Click(object sender, EventArgs e)
         {
-            DialogResult result = folderBrowserDialog1.ShowDialog(this);
+
+            DialogResult result = translationTagsFolderDialog.ShowDialog(this);
             if (result == DialogResult.OK)
             {
-                tbTtFolder.Text = folderBrowserDialog1.SelectedPath;
+                tbTtFolder.Text = translationTagsFolderDialog.SelectedPath;
             }
         }
 

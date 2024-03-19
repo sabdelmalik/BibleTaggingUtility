@@ -39,7 +39,7 @@ namespace BibleTaggingUtil.BibleVersions
 
                     if (bible.Count > 0)
                     {
-                        // construce Updates fileName
+                        // construct Updates fileName
                         string taggedFolder = Path.GetDirectoryName(container.Config.TaggedBible);
                         string oldTaggedFolder = Path.Combine(taggedFolder, "OldTagged");
                         if (!Directory.Exists(oldTaggedFolder))

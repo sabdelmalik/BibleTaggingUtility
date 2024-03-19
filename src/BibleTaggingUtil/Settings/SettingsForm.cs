@@ -19,6 +19,7 @@ namespace BibleTaggingUtil.Settings
         private string topReferencesFolder = string.Empty;
         private string translatorsAmalgamatedFolder = string.Empty;
 
+        SettingsFlags changedFlags = new SettingsFlags();
         public SettingsForm()
         {
             InitializeComponent();
@@ -42,17 +43,24 @@ namespace BibleTaggingUtil.Settings
         {
             InitializeReferencesTab();
             InitializeTranslationTagsTab();
+            InitializeTargetBiblesTab();
         }
 
-
+        internal SettingsFlags ChangedFlags
+        {
+            get { return changedFlags; }
+        }
         private void btnOK_Click(object sender, EventArgs e)
         {
+
             if (topRefSet && mainOtSet && mainNtSet)
             {
                 Properties.ReferenceBibles.Default.Configured = true;
             }
             Properties.MainSettings.Default.Save();
+            Properties.OsisFileGeneration.Default.Save();
             Properties.ReferenceBibles.Default.Save();
+            Properties.TargetBibles.Default.Save();
             Properties.TranslationTags.Default.Save();
             this.Close();
             this.DialogResult = DialogResult.OK;

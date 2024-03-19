@@ -438,7 +438,7 @@ namespace BibleTaggingUtil
 
 
         /* protected */
-        public static int[][] LAST_VERSE =
+        public static int[][] LAST_VERSE1 =
 {
         // Genesis
         new int[]
