@@ -442,11 +442,14 @@ namespace BibleTaggingUtil.Editor
                         this.Rows[tRow].Cells[i].Style.ForeColor = Color.Blue;
 
                     if (tag.ToString().Contains(tagToHighlight) || tag.ToString().Contains("0000") || (tag.ToString() == string.Empty && tagToHighlight == "<>"))
+                    {
+                        this.Rows[tRow].Cells[i].Style.ForeColor= Color.DarkGreen;
                         this.Rows[tRow].Cells[i].Style.BackColor = Color.LightGray;
+                    }
                     else if (!string.IsNullOrEmpty(tag.ToString()) && tag.ToString() == nextTag.ToString())
                     {
                         this.Rows[tRow].Cells[i].Style.BackColor = Color.Yellow;
-                        this.Rows[tRow].Cells[i+1].Style.BackColor = Color.Yellow;
+                        this.Rows[tRow].Cells[i + 1].Style.BackColor = Color.Yellow;
                     }
 
                     //if (direction.ToLower() == "rtl")
@@ -692,50 +695,6 @@ namespace BibleTaggingUtil.Editor
                         if (data.ColumnIndex == hittest.ColumnIndex)
                             return;
                     }
-
-                    //if (data.Source is TopVersionGridView)
-                    //{
-                    //    if(((TopVersionGridView)data.Source).Bible.BibleName == "KJV")
-                    //        droppedValue = droppedValue.Replace("+G", "> <").Replace(",", "");
-                    //}
-//                    string[] droppedValueParts = droppedValue.Split(' ');
-//                    String newValue = string.Empty;
-
-                   // special Handling for Aramaic
-                   // TODO Fix
-                    //if (droppedValueParts.Length == 2 && IsCurrentTextAramaic && data.Source is Editor.TOHTHGridView)
-                    //{
-                    //    //droppedValueParts = new string[1] { droppedValueParts[1] };
-                    //    droppedValue = droppedValueParts[1];
-                    //}
-
-                    //string currentValue = (string)this[hittest.ColumnIndex, Rows.Count - 1].Value;
-
-//                    if (!string.IsNullOrEmpty(currentValue) && !currentValue.Contains("???") && Control.ModifierKeys == Keys.Control)
-//                        newValue = currentValue;
-
- 
-//                    for (int i = 0; i < droppedValueParts.Length; i++)
-//                    {
-//                        if (droppedValueParts[i].Contains('('))
-//                            continue; //skip morphology
-
- //                       newValue += string.IsNullOrEmpty(newValue) ? droppedValueParts[i] : (" " + droppedValueParts[i]);
-                        /*string tmp = droppedValueParts[i].Trim().Replace("<", "").Replace(">", "");
-                        if (tmp[tmp.Length - 2] == '_' && char.IsLetter(tmp[tmp.Length - 1]))
-                            tmp = tmp.Substring(0, tmp.Length - 2);
-                        if (!char.IsDigit(tmp[tmp.Length-1]))
-                            tmp = tmp.Substring(0, tmp.Length - 1);
-                        tmp = ("0000" + tmp).Substring(tmp.Length);
-                        int val = Convert.ToInt32(tmp);
-                        if (val > 0)
-                        {
-                            tmp = "<" + tmp + ">";
-     //                       if (!droppedValue.Contains(tmp) || Control.ModifierKeys == Keys.Alt)
-                                newValue += string.IsNullOrEmpty(droppedValue) ? tmp : (" " + tmp);
-                        }
-                        */
-//                    }
                     int savedColumn = this.CurrentCell.ColumnIndex;
                     int savedRow = this.CurrentCell.RowIndex;
                     if (this.CurrentVerse != null)

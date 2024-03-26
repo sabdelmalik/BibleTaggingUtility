@@ -49,7 +49,7 @@ namespace BibleTaggingUtil.TranslatorsTags
                 vRef = string.Format("{0} {1}:{2}", book, ch, v); ;
                 map.Add(vRef, new List<int[]>());
                 map[vRef].Add(new int[] { ch, v, 0, 13, v, 0, 14 });
-                map[vRef].Add(new int[] { ch, v, 13, 0, v, 14, 33 });
+                map[vRef].Add(new int[] { ch, v, 13, 0, v, 14, 19 });
                 map[vRef].Add(new int[] { ch, v, 13, -1, v, 33, -1 });
                 //==============================================================
                 book = "1Sa";
@@ -57,7 +57,7 @@ namespace BibleTaggingUtil.TranslatorsTags
                 vRef = string.Format("{0} {1}:{2}", book, ch, v); ;
                 map.Add(vRef, new List<int[]>());
                 map[vRef].Add(new int[] { ch, v, 0, 5, v, 0, 5 });
-                map[vRef].Add(new int[] { ch, v, 5, 0, v, 5, 18 });
+                map[vRef].Add(new int[] { ch, v, 5, 0, v, 5, 13 });
                 map[vRef].Add(new int[] { ch, v, 5, -1, v, 18, -1 });
                 //==============================================================
                 book = "1Sa";
@@ -65,7 +65,7 @@ namespace BibleTaggingUtil.TranslatorsTags
                 vRef = string.Format("{0} {1}:{2}", book, ch, v); ;
                 map.Add(vRef, new List<int[]>());
                 map[vRef].Add(new int[] { ch, v, 0, 5, v, 0, 6 });
-                map[vRef].Add(new int[] { ch, v, 5, 0, v, 6, 31 });
+                map[vRef].Add(new int[] { ch, v, 5, 0, v, 6, 25 });
                 map[vRef].Add(new int[] { ch, v, 5, -1, v, 31, -1 });
                 //==============================================================
                 book = "1Sa";
@@ -85,7 +85,7 @@ namespace BibleTaggingUtil.TranslatorsTags
                 vRef = string.Format("{0} {1}:{2}", book, ch, v); ;
                 map.Add(vRef, new List<int[]>());
                 map[vRef].Add(new int[] { ch, v, 0, 12, v, 0, 14 });
-                map[vRef].Add(new int[] { ch, v, 12, 0, v, 14, 25 });
+                map[vRef].Add(new int[] { ch, v, 12, 0, v, 14, 11 });
                 map[vRef].Add(new int[] { ch, v, 12, -1, v, 25, -1 });
                 //==============================================================
                 book = "1Ki";

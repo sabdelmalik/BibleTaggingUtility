@@ -26,6 +26,11 @@ namespace BibleTaggingUtil
         {
             get { return stack1.Count; }
         }
+        public void Clear()
+        {
+            stack1.Clear();
+            stack2.Clear();
+        }
 
         public void Push(T item)
         {

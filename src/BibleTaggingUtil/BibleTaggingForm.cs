@@ -76,8 +76,8 @@ namespace BibleTaggingUtil
 #if DEBUG
             generateSWORDFilesToolStripMenuItem.Visible = false;
 #else
-            saveHebrewToolStripMenuItem.Visible = false;
-            saveKJVPlainToolStripMenuItem.Visible = false;
+            //saveHebrewToolStripMenuItem.Visible = false;
+            //saveKJVPlainToolStripMenuItem.Visible = false;
             usfmToolStripMenuItem.Visible = false;
             oSISToolStripMenuItem.Visible = false;
 #endif
@@ -99,10 +99,24 @@ namespace BibleTaggingUtil
         private void BibleTaggingForm_Load(object sender, EventArgs e)
         {
             bool workingOnNIV = false;
-            #region WinFormUI setup
-            this.dockPanel.Theme = this.vS2013BlueTheme1;
+
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            AssemblyName assemblyName = assembly.GetName();
+            Version version = assemblyName.Version;
+            this.Text = "Bible Tagging " + version.ToString();
+
+            var cm = System.Reflection.MethodBase.GetCurrentMethod();
+            var name = cm.DeclaringType.FullName + "." + cm.Name;
+
+            execFolder = Path.GetDirectoryName(assembly.Location);
+            Tracing.InitialiseTrace(execFolder);
+
+            Tracing.TraceEntry(name);
 
             string configFile = Path.Combine(Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath), "DockPanel.config");
+
+            #region WinFormUI setup
+            this.dockPanel.Theme = this.vS2013BlueTheme1;
 
             if (System.IO.File.Exists(configFile))
                 dockPanel.LoadFromXml(configFile, m_deserializeDockContent);
@@ -121,6 +135,7 @@ namespace BibleTaggingUtil
                 browserPanel.Show(dockPanel, DockState.DockRight);
             browserPanel.CloseButtonVisible = false;
             browserPanel.DockState = (DockState)Properties.MainSettings.Default.BrowserPanelDockState;
+            Tracing.TraceInfo(name, "browserPanel initialised");
 
             browserPanel.LexiconWebsite = "https://www.blueletterbible.org/lexicon/{0}/kjv/wlc/0-1/";
             browserPanel.NavigateToTag("h1");
@@ -147,6 +162,7 @@ namespace BibleTaggingUtil
 
             editorPanel.CloseButton = false;
             editorPanel.CloseButtonVisible = false;
+            Tracing.TraceInfo(name, "editorPanel initialised");
 
             if (dockPanel.DocumentStyle == DocumentStyle.SystemMdi)
             {
@@ -158,14 +174,11 @@ namespace BibleTaggingUtil
 
             verseSelectionPanel.CloseButtonVisible = false;
             verseSelectionPanel.DockState = (DockState)Properties.MainSettings.Default.VersePanelDockState;
+            Tracing.TraceInfo(name, "verseSelectionPanel initialised");
 
             #endregion WinFormUI setup
 
 
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            AssemblyName assemblyName = assembly.GetName();
-            Version version = assemblyName.Version;
-            this.Text = "Bible Tagging " + version.ToString();
 
             while (!Properties.ReferenceBibles.Default.Configured)
             {
@@ -179,9 +192,6 @@ namespace BibleTaggingUtil
                     return;
                 }
             }
-
-            execFolder = Path.GetDirectoryName(assembly.Location);
-            Tracing.InitialiseTrace(execFolder);
 
             crosswirePath = Path.Combine(execFolder, "Crosswire");
             //refFolder = Path.Combine(execFolder, "ReferenceBibles");
@@ -467,6 +477,8 @@ namespace BibleTaggingUtil
             }
 
             target.ActivatePeriodicTimer();
+
+            editorPanel.ClearNavStack();
 
             WaitCursorControl(false);
         }
@@ -1003,10 +1015,12 @@ namespace BibleTaggingUtil
                     try
                     {
                         WaitCursorControl(true);
+                        UpdateProgress("Generating OSIS File", -1);
                         //OSIS_Generator generator = new OSIS_Generator(config);
                         OsisGenerator generator = new OsisGenerator(config);
                         generator.Generate(target);
-                        generator.Generate(target, true);
+                        if(Properties.TargetBibles.Default.TargetBible.Contains("ara"))
+                            generator.Generate(target, true);
                         WaitCursorControl(false);
                     }
                     catch (Exception ex)
@@ -1291,9 +1305,8 @@ namespace BibleTaggingUtil
                 target.BibleName = bibleName;
                 target.LoadBibleFile(files[0], true, false);
                 WaitCursorControl(false);
-
                 VerseSelectionPanel.SetBookCount(target.BookCount);
-
+                
 
             }
         }

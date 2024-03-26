@@ -478,6 +478,7 @@ namespace BibleTaggingUtil.BibleVersions
                 osisDoc = osisDoc.Replace("\r\n", "").Replace("\n", "").Replace("<p>","").Replace("</p>", "");
 
                 osisDoc = RemoveOddTags(osisDoc, "p");
+                osisDoc = RemoveOddTags(osisDoc, "q");
                 osisDoc = RemoveOddTags(osisDoc, "lg");
                 //osisDoc = RemoveOddTags(osisDoc, "div");
                 osisDoc = RemoveOddTags(osisDoc, "l");

@@ -140,122 +140,128 @@ namespace BibleTaggingUtil.TranslationTags
                 }
             }
 
-            if (otErrors.Count > 0)
+            if (otWords.Count > 0)
             {
-                if (!string.IsNullOrEmpty(Properties.TranslationTags.Default.ErrorsFileName))
+                if (otErrors.Count > 0)
                 {
-                    string errorsFile = Path.Combine(TranslationTagsFolderPath, Properties.TranslationTags.Default.ErrorsFileName + "_OT");
-                    errorsFile = Path.ChangeExtension(errorsFile, ".txt");
-                    OutputErrors(errorsFile, otErrors);
-                }
-                MessageBox.Show("OT Errors Found", "TT Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1 ,MessageBoxOptions.DefaultDesktopOnly);
-            }
-            else
-            {
-                try
-                {
-                    if (!string.IsNullOrEmpty(Properties.TranslationTags.Default.OutputFileName))
+                    if (!string.IsNullOrEmpty(Properties.TranslationTags.Default.ErrorsFileName))
                     {
-                        //              OutputTranslatorTagsOT(@"C:\temp\TTAraSVD - Translation Tags etc. for Arabic SVD OT - STEPBible.org CC BY_1_1.txt", otWords, publicDomain);
-                        OutputTranslatorTagsOT(otWords, Properties.TranslationTags.Default.PublicDomain);
-                        MessageBox.Show("OT Success", "TT Success", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        string errorsFile = Path.Combine(TranslationTagsFolderPath, Properties.TranslationTags.Default.ErrorsFileName + "_OT");
+                        errorsFile = Path.ChangeExtension(errorsFile, ".txt");
+                        OutputErrors(errorsFile, otErrors);
                     }
+                    MessageBox.Show("OT Errors Found", "TT Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 }
-                catch (Exception ex)
+                else
                 {
-                    MessageBox.Show("OT Write failed", "TT Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-                }
-
-                foreach ((string verseRef, Verse hebrewVerse) in tahot.Bible)
-                {
-                    int idx = verseRef.IndexOf(' ');
-                    string book = string.Empty;
-                    if (idx != -1)
+                    try
                     {
-                        book = verseRef.Substring(0, idx);
-                    }
-
-                    int bookIndex = tahot.GetBookIndex(book);
-                    string bookName = target.GetBookNameFromIndex(bookIndex);
-                    string reference = verseRef.Replace(book, bookName);
-
-                    for (int i = 0; i < hebrewVerse.Count; i++)
-                    {
-                        bool found = false;
-                        if (otWords.ContainsKey(reference))
+                        if (!string.IsNullOrEmpty(Properties.TranslationTags.Default.OutputFileName))
                         {
-                            List<TranslatorWord> updatedVerse = otWords[reference];
-                            foreach (TranslatorWord w in  updatedVerse)
+                            //              OutputTranslatorTagsOT(@"C:\temp\TTAraSVD - Translation Tags etc. for Arabic SVD OT - STEPBible.org CC BY_1_1.txt", otWords, publicDomain);
+                            OutputTranslatorTagsOT(otWords, Properties.TranslationTags.Default.PublicDomain);
+                            MessageBox.Show("OT Success", "TT Success", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("OT Write failed", "TT Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    }
+
+                    foreach ((string verseRef, Verse hebrewVerse) in tahot.Bible)
+                    {
+                        int idx = verseRef.IndexOf(' ');
+                        string book = string.Empty;
+                        if (idx != -1)
+                        {
+                            book = verseRef.Substring(0, idx);
+                        }
+
+                        int bookIndex = tahot.GetBookIndex(book);
+                        string bookName = target.GetBookNameFromIndex(bookIndex);
+                        string reference = verseRef.Replace(book, bookName);
+
+                        for (int i = 0; i < hebrewVerse.Count; i++)
+                        {
+                            bool found = false;
+                            if (otWords.ContainsKey(reference))
                             {
-                                if (w.OtiginalWords != null)
+                                List<TranslatorWord> updatedVerse = otWords[reference];
+                                foreach (TranslatorWord w in updatedVerse)
                                 {
-                                    foreach (OriginalWordDetails ow in w.OtiginalWords)
+                                    if (w.OtiginalWords != null)
                                     {
-                                        if (ow.AncientWordIndex == i)
+                                        foreach (OriginalWordDetails ow in w.OtiginalWords)
                                         {
-                                            found = true;
-                                            break;
+                                            if (ow.AncientWordIndex == i)
+                                            {
+                                                found = true;
+                                                break;
+                                            }
                                         }
+                                        if (found)
+                                            break;
                                     }
-                                    if (found)
-                                        break;
                                 }
-                            }
-                        }
-                        else
-                        {
-                            int e = 0;
-                        }
-                        if(!found)
-                        {
-                            if(otMissedWords.ContainsKey(reference))
-                            {
-                                otMissedWords[reference].Add(i);
                             }
                             else
                             {
-                                otMissedWords[reference] = new List<int> { i };
+                                int e = 0;
+                            }
+                            if (!found)
+                            {
+                                if (otMissedWords.ContainsKey(reference))
+                                {
+                                    otMissedWords[reference].Add(i);
+                                }
+                                else
+                                {
+                                    otMissedWords[reference] = new List<int> { i };
+                                }
                             }
                         }
                     }
+
                 }
 
-            }
-
-            if (!string.IsNullOrEmpty(Properties.TranslationTags.Default.MissingWordsFileName))
-            {
-                string missedWordsFile = Path.Combine(TranslationTagsFolderPath, Properties.TranslationTags.Default.MissingWordsFileName + "_OT");
-                missedWordsFile = Path.ChangeExtension(missedWordsFile, ".txt");
-                using (StreamWriter sw = new StreamWriter(missedWordsFile))
+                if (!string.IsNullOrEmpty(Properties.TranslationTags.Default.MissingWordsFileName))
                 {
-                    foreach ((string reference, List<int> missed) in otMissedWords)
+                    string missedWordsFile = Path.Combine(TranslationTagsFolderPath, Properties.TranslationTags.Default.MissingWordsFileName + "_OT");
+                    missedWordsFile = Path.ChangeExtension(missedWordsFile, ".txt");
+                    using (StreamWriter sw = new StreamWriter(missedWordsFile))
                     {
-                        sw.WriteLine(string.Format("{0}\t{1}", reference, string.Join(",", missed)));
+                        foreach ((string reference, List<int> missed) in otMissedWords)
+                        {
+                            sw.WriteLine(string.Format("{0}\t{1}", reference, string.Join(",", missed)));
+                        }
                     }
                 }
             }
 
-            if (ntErrors.Count > 0)
+            if (ntWords.Count > 0)
             {
-                if (!string.IsNullOrEmpty(Properties.TranslationTags.Default.ErrorsFileName))
+                if (ntErrors.Count > 0)
                 {
-                    string errorsFile = Path.Combine(TranslationTagsFolderPath, Properties.TranslationTags.Default.ErrorsFileName + "_NT");
-                    errorsFile = Path.ChangeExtension(errorsFile, ".txt");
-                    OutputErrors(errorsFile, ntErrors);
+                    if (!string.IsNullOrEmpty(Properties.TranslationTags.Default.ErrorsFileName))
+                    {
+                        string errorsFile = Path.Combine(TranslationTagsFolderPath, Properties.TranslationTags.Default.ErrorsFileName + "_NT");
+                        errorsFile = Path.ChangeExtension(errorsFile, ".txt");
+                        OutputErrors(errorsFile, ntErrors);
+                    }
+                    MessageBox.Show("NT Errors Found", "TT Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 }
-                MessageBox.Show("NT Errors Found", "TT Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-            }
-            else
-            {
-                try
+                else
                 {
-                    OutputTranslatorTagsNT(@"C:\temp\TTAraSVD - Translation Tags etc. for Arabic SVD NT - STEPBible.org CC BY_1_1.txt", ntWords);
-                    //OutputTranslatorTags(@"C:\temp\TTESV - Translators Tags for ESV.txt", otWords);
-                    MessageBox.Show("NT Success", "TT Success", MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-                }
-                catch(Exception ex)
-                {
-                    MessageBox.Show("NT Write failed", "TT Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    try
+                    {
+                        OutputTranslatorTagsNT(@"C:\temp\TTAraSVD - Translation Tags etc. for Arabic SVD NT - STEPBible.org CC BY_1_1.txt", ntWords);
+                        //OutputTranslatorTags(@"C:\temp\TTESV - Translators Tags for ESV.txt", otWords);
+                        MessageBox.Show("NT Success", "TT Success", MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("NT Write failed", "TT Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    }
                 }
             }
             container.WaitCursorControl(false);
@@ -288,10 +294,15 @@ namespace BibleTaggingUtil.TranslationTags
         private void WritePreamble(StreamWriter sw)
         {
             string preamble = Properties.Resources.TTArabicSVDPreamble;
+
             string created = string.Format("Created {0} {1}.", 
                 DateTime.Now.ToString("yyyy-MM-dd"), 
                 ConfigurationHolder.Instance.OSIS[OsisConstants.creator_name]); 
-            preamble = preamble.Replace("Created", created);
+            preamble = preamble.Replace("{Created}", created);
+
+            string version = string.Format("Version {0}:", Properties.TranslationTags.Default.Version);
+            preamble = preamble.Replace("{Version}", version);
+
             sw.WriteLine(preamble);
         }
 

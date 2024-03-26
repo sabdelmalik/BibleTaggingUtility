@@ -16,7 +16,7 @@ namespace BibleTaggingUtil.TranslationTags
 
         public string Word { get; }
         public List<OriginalWordDetails> OtiginalWords { get; }
-        public int ArabicWordIndex { get; set; }
+        public int TargetWordIndex { get; set; }
 
     }
 }

@@ -62,6 +62,68 @@ namespace BibleTaggingUtil
             }
         }
 
+        public int IndexOf(string word, int startIndex = 0)
+        {
+            int idx = -1;
+            if (startIndex < this.Count)
+            {
+                for (int i = startIndex; i < this.Count; i++)
+                {
+                    if (this[i].Word.Contains(word))
+                    {
+                        idx = i; break;
+                    }
+                }
+            }
+            return idx;
+        }
+
+/*        public Verse SubVerse(int start, int last)
+        {
+            int l = last;
+            Verse verse = new Verse();
+            if (l == -1) l = this.Count;
+
+            int idx = 0;
+            for (int i = start; i < l; i++)
+            {
+                verse[idx++] = this[i];
+            }
+
+            return verse;
+        }
+*/
+        public Verse SubVerse(int start, int count = -1 )
+        {
+            Verse result = new Verse();
+
+            int end  = (count == -1)? this.Count : start + count;
+
+            int idx = 0;
+            if (start < this.Count && end <= this.Count)
+            {
+                for(int  i = start; i < end; i++)
+                {
+                    result[idx++] = (VerseWord) this[i].Clone();
+                }
+            }
+            
+            return result;
+        }
+
+        public static Verse operator +(Verse a, Verse b)
+        {
+            Verse result = new Verse(a);
+
+            for(int i = 0; i < b.Count; i++)
+            {
+                result[a.Count + i] = (VerseWord)b[i].Clone();
+            }
+
+            return result;
+        }
+
+
         public List<VerseWord> GetWordListFromStrong(StrongsNumber strongNumber)
         {
 
@@ -167,20 +229,6 @@ namespace BibleTaggingUtil
             }
         }
 
-        public Verse SubVerse(int start, int last)
-        {
-            int l = last;
-            Verse verse = new Verse();
-            if (l == -1) l = this.Count;
-
-            int idx = 0;
-            for (int i = start; i < l; i++)
-            {
-                verse[idx++] = this[i];
-            }
-
-            return verse;
-        }
         public void UpdateWord(int index, string word)
         {
             verse[index].Word = word;

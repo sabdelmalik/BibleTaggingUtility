@@ -97,15 +97,12 @@ namespace BibleTaggingUtil.Editor
             this.CloseButtonVisible = false;
             this.CloseButton = false;
 
-            System.Drawing.Image img = picRedo.Image;
-            img.RotateFlip(RotateFlipType.Rotate180FlipY);
-            picRedo.Image = img;
+             picRedo.Image.RotateFlip(RotateFlipType.Rotate180FlipY);
             //picRedo.Invalidate();
 
-            System.Drawing.Image imgPrev = picPrevVerse.Image;
-            imgPrev.RotateFlip(RotateFlipType.Rotate180FlipX);
-            picPrevVerse.Image = imgPrev;
+            picNextVerse.Image.RotateFlip(RotateFlipType.Rotate90FlipNone);
 
+            picPrevVerse.Image.RotateFlip(RotateFlipType.Rotate270FlipNone);
 
             this.container = container;
             this.browser = browser;
@@ -220,6 +217,9 @@ namespace BibleTaggingUtil.Editor
             testament = e.Testament;
 
             string oldReference = tbCurrentReference.Text;
+            if (BackForwardClicked)
+                BackForwardClicked = false;
+            else
             navStackBack.Push(oldReference);
             tbCurrentReference.Text = e.VerseReference;
             dgvTarget.CurrentVerseReferece = e.VerseReference;
@@ -1157,10 +1157,18 @@ namespace BibleTaggingUtil.Editor
             }
         }
 
+        private bool BackForwardClicked = false;
+
+        public void ClearNavStack()
+        {
+            navStackBack.Clear();
+            navStackForward.Clear();
+        }
         private void picBack_Click(object sender, EventArgs e)
         {
             if (navStackBack.Count > 0)
             {
+                BackForwardClicked = true;
                 string currentReference = tbCurrentReference.Text;
                 navStackForward.Push(currentReference);
 
@@ -1174,6 +1182,7 @@ namespace BibleTaggingUtil.Editor
         {
             if (navStackForward.Count > 0)
             {
+                BackForwardClicked = true;
                 string currentReference = tbCurrentReference.Text;
                 navStackBack.Push(currentReference);
 

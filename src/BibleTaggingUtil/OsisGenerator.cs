@@ -80,10 +80,13 @@ namespace BibleTaggingUtil
         string currentBook = string.Empty;
         string currentChapter = string.Empty;
         bool oldTestament = true;
+        
         private void WriteBible(StreamWriter sw, TargetVersion targetVersion, bool forInjeel, bool publicDomain = false)
         {
             string refPattern = @"^([1-9a-zA-Z]{1,6})\s([0-9]{1,3})\:([0-9]{1,3})";
             bool inOT = true;
+            Verse previousVerse = new Verse();
+
             sw.WriteLine("<div type=\"bookGroup\">");
             foreach (string reference in targetVersion.Bible.Keys)
             {
@@ -189,59 +192,72 @@ namespace BibleTaggingUtil
                         sw.WriteLine(string.Format("<title canonical=\"true\" type=\"psalm\">{0}</title>", verse.OsisPsalmTitleData));
                     }
                 }
-/*
+
+                string verseText = verse.OsisVerseData;
                 if (forInjeel)
                 {
-                    if (currentBook == "Ezra" && currentChapter == "5" && verse == "6")
+                    // Injeel
+                    // Ezra 5:6 ٦ صُورَةُ الرِّسَالَةِ الَّتِي أَرْسَلَهَا تَتْنَايُ وَالِي عَبْرِ النَّهْرِ وَشَتَرْبُوزْنَايُ وَرُفَقَاؤُهُمَا الأَفَرْسَكِيِّينَ الَّذِينَ فِي عَبْرِ النَّهْرِ إِلَى دَارِيُوسَ الْمَلِكِ. أَرْسَلُوا إِلَيْهِ رِسَالَةً وَكَانَ مَكْتُوبًا فِيهَا هكَذَا:
+                    // Ezra 5:7 «لِدَارِيُوسَ الْمَلِكِ كُلُّ سَلاَمٍ.
+                    // SVD
+                    // Ezra 5:6 صُورَةُ الرِّسَالَةِ الَّتِي أَرْسَلَهَا تَتْنَايُ وَالِي عَبْرِ النَّهْرِ وَشَتَرْبُوزْنَايُ وَرُفَقَاؤُهُمَا الأَفَرْسَكِيِّينَ الَّذِينَ فِي عَبْرِ النَّهْرِ إِلَى دَارِيُوسَ الْمَلِكِ.
+                    // Ezra 5:7 أَرْسَلُوا إِلَيْهِ رِسَالَةً وَكَانَ مَكْتُوبًا فِيهَا هكَذَا: «لِدَارِيُوسَ الْمَلِكِ كُلُّ سَلاَمٍ.
+                    if (currentBook == "Ezra" && currentChapter == "5" && verseNum == "6")
                     {
-                        previousText = verseText;
+                        previousVerse = verse;
                         continue;
                     }
-                    else if (currentBook == "Ezra" && currentChapter == "5" && verse == "7")
+                    else if (currentBook == "Ezra" && currentChapter == "5" && verseNum == "7")
                     {
                         // need to split, combine, save, the the remainaing text
-                        string endtext = "هكَذَا: <1836>";
-                        int idx = verseText.IndexOf(endtext);
-                        string verse6 = previousText + " " + verseText.Substring(0, idx + endtext.Length);
-                        sw.WriteLine(string.Format("<verse osisID='{0}.{1}.{2}'>{3}</verse>", currentBook, currentChapter, "6", GetTaggedVerse(verse6, strongPrefix)));
-                        previousText = string.Empty;
-                        verseText = verseText.Substring(idx + endtext.Length).Trim();
+                        string endtext = "هكَذَا:"; // هكَذَا: <1836>";
+                        int idx = verse.IndexOf(endtext);
+
+                        Verse verse6 = previousVerse + verse.SubVerse(0, idx + 1);
+
+                        sw.WriteLine(string.Format("<verse osisID='{0}.{1}.{2}'>{3}</verse>", currentBook, currentChapter, "6", verse6.OsisVerseData));
+                        previousVerse = new Verse();
+                        verseText = verse.SubVerse(idx + 1).OsisVerseData;
                     }
-                    else if (currentBook == "Dan" && currentChapter == "2" && verse == "14")
+                    else if (currentBook == "Dan" && currentChapter == "2" && verseNum == "14")
                     {
-                        previousText = verseText;
+                        previousVerse = verse;
                         continue;
                     }
-                    else if (currentBook == "Dan" && currentChapter == "2" && verse == "15")
+                    else if (currentBook == "Dan" && currentChapter == "2" && verseNum == "15")
                     {
                         // need to split, combine, save, the the remainaing text
-                        string endtext = "الْمَلِكِ: <4430>";
-                        int idx = verseText.IndexOf(endtext);
-                        string verse14 = previousText + " " + verseText.Substring(0, idx + endtext.Length);
-                        sw.WriteLine(string.Format("<verse osisID='{0}.{1}.{2}'>{3}</verse>", currentBook, currentChapter, "14", GetTaggedVerse(verse14, strongPrefix)));
-                        previousText = string.Empty;
-                        verseText = verseText.Substring(idx + endtext.Length).Trim();
+                        string endtext = "الْمَلِكِ:"; // الْمَلِكِ: <4430>";
+                        int idx = verse.IndexOf(endtext);
+
+                        Verse verse14 = previousVerse + verse.SubVerse(0, idx + 1);
+
+                        sw.WriteLine(string.Format("<verse osisID='{0}.{1}.{2}'>{3}</verse>", currentBook, currentChapter, "14", verse14.OsisVerseData));
+                        previousVerse = new Verse();
+                        verseText = verse.SubVerse(idx + 1).OsisVerseData;
                     }
-                    else if (currentBook == "1Tim" && currentChapter == "6" && verse == "21")
+                    else if (currentBook == "1Tim" && currentChapter == "6" && verseNum == "21")
                     {
-                        verseText = verseText.Replace(" ٢٢ <>", "");
+
+                        int idx = verse.IndexOf("٢٢");
+                        verseText = (verse.SubVerse(0, idx) + verse.SubVerse(idx+1)).OsisVerseData;
                     }
-                    else if (currentBook == "3John" && currentChapter == "1" && verse == "14")
+                    else if (currentBook == "3John" && currentChapter == "1" && verseNum == "14")
                     {
-                        previousText = verseText;
+                        previousVerse = verse;
                         continue;
                     }
-                    else if (currentBook == "3John" && currentChapter == "1" && verse == "15")
+                    else if (currentBook == "3John" && currentChapter == "1" && verseNum == "15")
                     {
-                        verseText = previousText + " " + verseText;
-                        previousText = string.Empty;
-                        verse = "14";
+                        verseText = (previousVerse + verse).OsisVerseData;
+                        previousVerse = new Verse();
+                        verseNum = "14";
                     }
 
 
                 }
-*/
-                sw.WriteLine(string.Format("<verse osisID='{0}.{1}.{2}'>{3}</verse>", currentBook, currentChapter, verseNum, verse.OsisVerseData));
+
+                sw.WriteLine(string.Format("<verse osisID='{0}.{1}.{2}'>{3}</verse>", currentBook, currentChapter, verseNum, verseText));
 
 
             }

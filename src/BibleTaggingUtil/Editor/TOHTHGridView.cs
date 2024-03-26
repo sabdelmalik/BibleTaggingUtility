@@ -51,12 +51,12 @@ namespace BibleTaggingUtil.Editor
                             for (int i = count - 2; i >= 0; i--)
                             {
                                 tag += (StrongsCluster)this[SelectedCells[i].ColumnIndex, rowIndex].Value;
-                                if (Math.Abs(SelectedCells[i].ColumnIndex - colIndex) != 1)
-                                {
-                                    //mergeOk = false;
-                                    tag = new StrongsCluster(new string[] { "" });
-                                    break;
-                                }
+                                //if (Math.Abs(SelectedCells[i].ColumnIndex - colIndex) != 1)
+                                //{
+                                //    //mergeOk = false;
+                                //    tag = new StrongsCluster(new string[] { "" });
+                                //    break;
+                                //}
                                 colIndex = SelectedCells[i].ColumnIndex;
                             }
                         }
@@ -266,12 +266,13 @@ namespace BibleTaggingUtil.Editor
             List<string> words = new List<string>();
             List<string> greek = new List<string>();
             List<string> transliteration = new List<string>();
-            List<object> tags = new List<object>();
+            List<StrongsCluster> tags = new List<StrongsCluster>();
             List<string> morphology = new List<string>();
             List<string> rootStrongs = new List<string>();
             List<string> wordType = new List<string>();
             List<string> altVerseNumber = new List<string>();
             List<string> wordNumber = new List<string>();
+            StrongsCluster tagLable = new StrongsCluster("TAG");
 
             try
             {
@@ -283,7 +284,7 @@ namespace BibleTaggingUtil.Editor
                 morphology.Add("GMR");
                 transliteration.Add("XLT");
                 rootStrongs.Add("STG");
-                tags.Add("TAG");
+                tags.Add(tagLable);
 
                 for (int i = 0; i < verseWords.Count; i++)
                 {

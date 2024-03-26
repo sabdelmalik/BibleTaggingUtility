@@ -69,7 +69,7 @@ namespace BibleTaggingUtil.TranslationTags
                 {
                     // get the Hebrew verse
                     Verse hebrewVerse = tahot.Bible[originalRef];
-                    ProcessVerseOT(verseRef, originalRef, verse, indx + 1, verse.Count, hebrewVerse); ;
+                    ProcessVerseOT(verseRef, originalRef, verse, indx + 1, verse.Count - indx - 1, hebrewVerse); ;
                 }
             }
             #endregion Psalms Title
@@ -86,9 +86,10 @@ namespace BibleTaggingUtil.TranslationTags
                         int verseNumbr = map[1];
                         int start = map[2];
                         if (map[3] == -1)
-                            len = verse.Count;
+                            len = verse.Count - start;
                         else
-                            len += map[3];
+                            len = map[3];
+                            //len += map[3];
                         int mapVerse = map[4];
                         int mapStart = map[5];
                         int mapLen = map[6];
@@ -131,13 +132,13 @@ namespace BibleTaggingUtil.TranslationTags
         /// <param name="startIndex">index in verse of starting word to map to hebrew </param>
         /// <param name="end">index in verse of last word + 1 to map to hebrew</param>
         /// <param name="hebrewVerse">segment of the Hebrew verse to map to</param>
-        private void ProcessVerseOT(string verseRef, string originalRef, Verse verse, int startIndex, int end, Verse hebrewVerse)
+        private void ProcessVerseOT(string verseRef, string originalRef, Verse verse, int startIndex, int count, Verse hebrewVerse)
         {
             Dictionary<string, int> usedStrongs = new Dictionary<string, int>();
 
             List<TranslatorWord> newVerse = new List<TranslatorWord>();
 
-            if (originalRef == "Gen 4:8")
+            if (originalRef == "1Sa 19:2")
             {
                 int x = 0;
             }
@@ -218,7 +219,7 @@ namespace BibleTaggingUtil.TranslationTags
                 Dictionary<int, List<int>> arabic2HebrewMap = new Dictionary<int, List<int>>();
 
                 int lastHebIndex = -1;
-                for (int i = startIndex; i < end; i++)
+                for (int i = startIndex; i < startIndex + count; i++)
                 {
                     List<OriginalWordDetails> ow = new List<OriginalWordDetails>();
 
@@ -367,7 +368,7 @@ namespace BibleTaggingUtil.TranslationTags
                         }
                     }
                     TranslatorWord aw = new TranslatorWord(verse[i].Word, ow);
-                    aw.ArabicWordIndex = newVerse.Count;
+                    aw.TargetWordIndex = newVerse.Count;
                     newVerse.Add(aw);
                 }
 
@@ -386,14 +387,14 @@ namespace BibleTaggingUtil.TranslationTags
                 // fill in the Arabic Words missing from map
                 // Arabic words with no hebrew words, are assigned hebrew word numbers beyond the hebrewVerse.Count
                 int missingArabicWords = 0;
-                if (end > startIndex)
+                if (count > 0)
                 {
-                    int arabicWordCount = end - startIndex;
-                    missingArabicWords = arabicWordCount - arabic2HebrewMap.Count;
+                    //int arabicWordCount = count;
+                    missingArabicWords = count - arabic2HebrewMap.Count;
                     if (missingArabicWords > 0)
                     {
                         int lastHebrewWord = hebrewVerse.Count - 1;
-                        for (int i = startIndex; i < end; i++)
+                        for (int i = startIndex; i < startIndex + count; i++)
                         {
                             if (arabic2HebrewMap.ContainsKey(i))
                             {
@@ -469,13 +470,14 @@ namespace BibleTaggingUtil.TranslationTags
                 {
                     if ((aIndex % restoredAllowance) == 0)
                     {
-                        int adjIndex = (aIndex / restoredAllowance) - startIndex - 1;
+                        int index = (aIndex / restoredAllowance) - 1;
+                        int adjIndex = index - startIndex;
                         if (hIndex.Count > 0)
                             updatedVerse.Add(newVerse[adjIndex]);
                         else
                         {
-                            TranslatorWord unmapped = new TranslatorWord(verse[adjIndex].Word, null);
-                            unmapped.ArabicWordIndex = adjIndex;
+                            TranslatorWord unmapped = new TranslatorWord(verse[index].Word, null);
+                            unmapped.TargetWordIndex = adjIndex;
                             updatedVerse.Add(unmapped);
                         }
                     }
@@ -501,13 +503,13 @@ namespace BibleTaggingUtil.TranslationTags
                     {
                         TranslatorWord word = otWords[originalRef][i];
                         if (string.IsNullOrEmpty(word.Word)) continue;
-                        offset = word.ArabicWordIndex + 1;
+                        offset = word.TargetWordIndex + 1;
                         break;
                     }
                     //append this verse to previous verse
                     foreach (TranslatorWord w in updatedVerse)
                     {
-                        w.ArabicWordIndex += offset;
+                        w.TargetWordIndex += offset;
                         otWords[originalRef].Add(w);
                     }
                 }
@@ -622,12 +624,12 @@ namespace BibleTaggingUtil.TranslationTags
                             string[] parts = word.Word.Split(new char[] { ' ' });
                             if (parts.Length == 1)
                             {
-                                araWordNo = string.Format("#{0:d2}", word.ArabicWordIndex + arabicIndexAdjust);
+                                araWordNo = string.Format("#{0:d2}", word.TargetWordIndex + arabicIndexAdjust);
                             }
                             else
                             {
-                                araWordNo = string.Format("#{0:d2} - #{1:d2}", word.ArabicWordIndex + arabicIndexAdjust,
-                                                                   word.ArabicWordIndex + arabicIndexAdjust + parts.Length - 1);
+                                araWordNo = string.Format("#{0:d2} - #{1:d2}", word.TargetWordIndex + arabicIndexAdjust,
+                                                                   word.TargetWordIndex + arabicIndexAdjust + parts.Length - 1);
                                 arabicIndexAdjust += (parts.Length - 1);
                             }
                         }

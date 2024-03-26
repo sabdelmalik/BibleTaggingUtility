@@ -32,9 +32,9 @@ namespace BibleTaggingUtil.Editor
             components = new System.ComponentModel.Container();
             System.Windows.Forms.Panel panel1;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditorPanel));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             checkBsStrongHighlight = new System.Windows.Forms.CheckBox();
             picRefresh = new System.Windows.Forms.PictureBox();
             picRedo = new System.Windows.Forms.PictureBox();
@@ -117,7 +117,7 @@ namespace BibleTaggingUtil.Editor
             // checkBsStrongHighlight
             // 
             checkBsStrongHighlight.AutoSize = true;
-            checkBsStrongHighlight.Location = new System.Drawing.Point(901, 19);
+            checkBsStrongHighlight.Location = new System.Drawing.Point(867, 26);
             checkBsStrongHighlight.Name = "checkBsStrongHighlight";
             checkBsStrongHighlight.Size = new System.Drawing.Size(170, 24);
             checkBsStrongHighlight.TabIndex = 23;
@@ -128,7 +128,7 @@ namespace BibleTaggingUtil.Editor
             // picRefresh
             // 
             picRefresh.Image = (System.Drawing.Image)resources.GetObject("picRefresh.Image");
-            picRefresh.Location = new System.Drawing.Point(1104, 15);
+            picRefresh.Location = new System.Drawing.Point(1051, 18);
             picRefresh.Name = "picRefresh";
             picRefresh.Size = new System.Drawing.Size(40, 40);
             picRefresh.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -140,7 +140,7 @@ namespace BibleTaggingUtil.Editor
             // picRedo
             // 
             picRedo.Image = (System.Drawing.Image)resources.GetObject("picRedo.Image");
-            picRedo.Location = new System.Drawing.Point(499, 15);
+            picRedo.Location = new System.Drawing.Point(1171, 18);
             picRedo.Name = "picRedo";
             picRedo.Size = new System.Drawing.Size(40, 40);
             picRedo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -152,7 +152,7 @@ namespace BibleTaggingUtil.Editor
             // picFindTagForward
             // 
             picFindTagForward.Image = (System.Drawing.Image)resources.GetObject("picFindTagForward.Image");
-            picFindTagForward.Location = new System.Drawing.Point(711, 15);
+            picFindTagForward.Location = new System.Drawing.Point(674, 18);
             picFindTagForward.Name = "picFindTagForward";
             picFindTagForward.Size = new System.Drawing.Size(40, 40);
             picFindTagForward.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -164,7 +164,7 @@ namespace BibleTaggingUtil.Editor
             // picDecreaseFont
             // 
             picDecreaseFont.Image = (System.Drawing.Image)resources.GetObject("picDecreaseFont.Image");
-            picDecreaseFont.Location = new System.Drawing.Point(658, 15);
+            picDecreaseFont.Location = new System.Drawing.Point(617, 18);
             picDecreaseFont.Name = "picDecreaseFont";
             picDecreaseFont.Size = new System.Drawing.Size(40, 40);
             picDecreaseFont.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -176,7 +176,7 @@ namespace BibleTaggingUtil.Editor
             // picIncreaseFont
             // 
             picIncreaseFont.Image = (System.Drawing.Image)resources.GetObject("picIncreaseFont.Image");
-            picIncreaseFont.Location = new System.Drawing.Point(605, 15);
+            picIncreaseFont.Location = new System.Drawing.Point(571, 18);
             picIncreaseFont.Name = "picIncreaseFont";
             picIncreaseFont.Size = new System.Drawing.Size(40, 40);
             picIncreaseFont.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -188,7 +188,7 @@ namespace BibleTaggingUtil.Editor
             // picEnableEdit
             // 
             picEnableEdit.Image = (System.Drawing.Image)resources.GetObject("picEnableEdit.Image");
-            picEnableEdit.Location = new System.Drawing.Point(552, 15);
+            picEnableEdit.Location = new System.Drawing.Point(506, 18);
             picEnableEdit.Name = "picEnableEdit";
             picEnableEdit.Size = new System.Drawing.Size(40, 40);
             picEnableEdit.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -200,7 +200,7 @@ namespace BibleTaggingUtil.Editor
             // picUndo
             // 
             picUndo.Image = (System.Drawing.Image)resources.GetObject("picUndo.Image");
-            picUndo.Location = new System.Drawing.Point(446, 15);
+            picUndo.Location = new System.Drawing.Point(1113, 18);
             picUndo.Name = "picUndo";
             picUndo.Size = new System.Drawing.Size(40, 40);
             picUndo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -212,9 +212,9 @@ namespace BibleTaggingUtil.Editor
             // picPrevVerse
             // 
             picPrevVerse.Image = (System.Drawing.Image)resources.GetObject("picPrevVerse.Image");
-            picPrevVerse.Location = new System.Drawing.Point(44, 19);
+            picPrevVerse.Location = new System.Drawing.Point(173, 18);
             picPrevVerse.Name = "picPrevVerse";
-            picPrevVerse.Size = new System.Drawing.Size(35, 35);
+            picPrevVerse.Size = new System.Drawing.Size(40, 40);
             picPrevVerse.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             picPrevVerse.TabIndex = 15;
             picPrevVerse.TabStop = false;
@@ -224,7 +224,7 @@ namespace BibleTaggingUtil.Editor
             // picForward
             // 
             picForward.Image = (System.Drawing.Image)resources.GetObject("picForward.Image");
-            picForward.Location = new System.Drawing.Point(335, 19);
+            picForward.Location = new System.Drawing.Point(49, 23);
             picForward.Name = "picForward";
             picForward.Size = new System.Drawing.Size(30, 30);
             picForward.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -236,7 +236,7 @@ namespace BibleTaggingUtil.Editor
             // picBack
             // 
             picBack.Image = (System.Drawing.Image)resources.GetObject("picBack.Image");
-            picBack.Location = new System.Drawing.Point(3, 19);
+            picBack.Location = new System.Drawing.Point(3, 23);
             picBack.Name = "picBack";
             picBack.Size = new System.Drawing.Size(30, 30);
             picBack.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -248,9 +248,9 @@ namespace BibleTaggingUtil.Editor
             // picNextVerse
             // 
             picNextVerse.Image = (System.Drawing.Image)resources.GetObject("picNextVerse.Image");
-            picNextVerse.Location = new System.Drawing.Point(294, 14);
+            picNextVerse.Location = new System.Drawing.Point(429, 18);
             picNextVerse.Name = "picNextVerse";
-            picNextVerse.Size = new System.Drawing.Size(35, 35);
+            picNextVerse.Size = new System.Drawing.Size(40, 40);
             picNextVerse.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             picNextVerse.TabIndex = 14;
             picNextVerse.TabStop = false;
@@ -260,7 +260,7 @@ namespace BibleTaggingUtil.Editor
             // picSave
             // 
             picSave.Image = (System.Drawing.Image)resources.GetObject("picSave.Image");
-            picSave.Location = new System.Drawing.Point(393, 15);
+            picSave.Location = new System.Drawing.Point(97, 18);
             picSave.Name = "picSave";
             picSave.Size = new System.Drawing.Size(40, 40);
             picSave.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -274,7 +274,7 @@ namespace BibleTaggingUtil.Editor
             cbTagToFind.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             cbTagToFind.FormattingEnabled = true;
             cbTagToFind.Items.AddRange(new object[] { "???", "<blank>" });
-            cbTagToFind.Location = new System.Drawing.Point(757, 17);
+            cbTagToFind.Location = new System.Drawing.Point(720, 24);
             cbTagToFind.Name = "cbTagToFind";
             cbTagToFind.Size = new System.Drawing.Size(127, 28);
             cbTagToFind.TabIndex = 12;
@@ -285,7 +285,7 @@ namespace BibleTaggingUtil.Editor
             // 
             tbCurrentReference.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             tbCurrentReference.ForeColor = System.Drawing.Color.DarkRed;
-            tbCurrentReference.Location = new System.Drawing.Point(85, 19);
+            tbCurrentReference.Location = new System.Drawing.Point(219, 23);
             tbCurrentReference.Name = "tbCurrentReference";
             tbCurrentReference.ReadOnly = true;
             tbCurrentReference.Size = new System.Drawing.Size(204, 30);
@@ -323,14 +323,14 @@ namespace BibleTaggingUtil.Editor
             dgvTopVersion.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvTopVersion.ColumnHeadersVisible = false;
             dgvTopVersion.Cursor = System.Windows.Forms.Cursors.Hand;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            dgvTopVersion.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            dgvTopVersion.DefaultCellStyle = dataGridViewCellStyle4;
             dgvTopVersion.Dock = System.Windows.Forms.DockStyle.Fill;
             dgvTopVersion.GridColor = System.Drawing.SystemColors.ControlText;
             dgvTopVersion.Location = new System.Drawing.Point(0, 31);
@@ -390,14 +390,14 @@ namespace BibleTaggingUtil.Editor
             dgvTOTHT.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvTOTHT.ColumnHeadersVisible = false;
             dgvTOTHT.Cursor = System.Windows.Forms.Cursors.Hand;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            dgvTOTHT.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            dgvTOTHT.DefaultCellStyle = dataGridViewCellStyle5;
             dgvTOTHT.Dock = System.Windows.Forms.DockStyle.Fill;
             dgvTOTHT.GridColor = System.Drawing.SystemColors.ControlText;
             dgvTOTHT.Location = new System.Drawing.Point(0, 60);
@@ -481,14 +481,14 @@ namespace BibleTaggingUtil.Editor
             dgvTarget.CurrentVerse = null;
             dgvTarget.CurrentVerseReferece = null;
             dgvTarget.Cursor = System.Windows.Forms.Cursors.Hand;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            dgvTarget.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            dgvTarget.DefaultCellStyle = dataGridViewCellStyle6;
             dgvTarget.Dock = System.Windows.Forms.DockStyle.Fill;
             dgvTarget.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnF2;
             dgvTarget.GridColor = System.Drawing.SystemColors.ControlText;

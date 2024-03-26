@@ -82,7 +82,7 @@ namespace BibleTaggingUtil
             // menuStrip1
             // 
             menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { fileToolStripMenuItem, editToolStripMenuItem, generateSWORDFilesToolStripMenuItem, usfmToolStripMenuItem, oSISToolStripMenuItem, aboutToolStripMenuItem, translatorsTagsToolStripMenuItem });
+            menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { fileToolStripMenuItem, editToolStripMenuItem, generateSWORDFilesToolStripMenuItem, usfmToolStripMenuItem, oSISToolStripMenuItem, translatorsTagsToolStripMenuItem, aboutToolStripMenuItem });
             menuStrip1.Location = new System.Drawing.Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Padding = new System.Windows.Forms.Padding(6, 3, 0, 3);
