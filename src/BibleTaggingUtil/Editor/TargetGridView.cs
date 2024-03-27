@@ -16,6 +16,7 @@ using static WeifenLuo.WinFormsUI.Docking.DockPanel;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using BibleTaggingUtil.Strongs;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace BibleTaggingUtil.Editor
 {
@@ -613,6 +614,7 @@ namespace BibleTaggingUtil.Editor
             base.OnCellValueChanged(e);
         }
 
+
         /// <summary>
         /// 
         /// </summary>
@@ -813,7 +815,19 @@ namespace BibleTaggingUtil.Editor
         {
             if (this.VerseViewChanged != null)
             {
-                this.VerseViewChanged(this, EventArgs.Empty);
+                new Thread(() =>
+                {
+                    try
+                    {
+                        this.VerseViewChanged(this, EventArgs.Empty);
+                    }
+                    catch (Exception ex)
+                    {
+                        var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                        var name = cm.DeclaringType.FullName + "." + cm.Name;
+                        Tracing.TraceException(name, ex.Message);
+                    }
+                }).Start();
             }
 
         }
@@ -822,21 +836,45 @@ namespace BibleTaggingUtil.Editor
         {
             if (this.RefernceHighlightRequest != null)
             {
-                bool firstHalf = true;
-                if (this.SelectedCells.Count == 1)
+                new Thread(() =>
                 {
-                    if (this.SelectedCells[0].ColumnIndex > (this.ColumnCount / 2))
-                        firstHalf = false;
-                }
-                this.RefernceHighlightRequest(this, tag, firstHalf);
+                    try
+                    {
+                        bool firstHalf = true;
+                        if (this.SelectedCells.Count == 1)
+                        {
+                            if (this.SelectedCells[0].ColumnIndex > (this.ColumnCount / 2))
+                                firstHalf = false;
+                        }
+                        this.RefernceHighlightRequest(this, tag, firstHalf);
+                    }
+                    catch (Exception ex)
+                    {
+                        var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                        var name = cm.DeclaringType.FullName + "." + cm.Name;
+                        Tracing.TraceException(name, ex.Message);
+                    }
+                }).Start();
             }
-
         }
+
         public void FireGotoVerseRequest(string tag)
         {
             if (this.GotoVerseRequest != null)
             {
-                this.GotoVerseRequest(this, tag);
+                new Thread(() =>
+                {
+                    try
+                    {
+                        this.GotoVerseRequest(this, tag);
+                    }
+                    catch (Exception ex)
+                    {
+                        var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                        var name = cm.DeclaringType.FullName + "." + cm.Name;
+                        Tracing.TraceException(name, ex.Message);
+                    }
+                }).Start();
             }
 
         }
