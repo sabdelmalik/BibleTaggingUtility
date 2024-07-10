@@ -101,18 +101,30 @@ namespace BibleTaggingUtil.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TTArabicSVD - Translation Tags etc. for Arabic SVD OT - STEPBible.org CC BY
+        ///   Looks up a localized string similar to TTArabicSVD - Translation Tags etc. for Arabic SVD Bible - STEPBible.org CC BY-SA 4.0
+        ///كلمات اللغات الاصلية لترجمة فانديك
         ///==================================================================================
-        ///
-        ///	==========================================================================
-        ///	Data created using Translators Amalgamated Hebrew OT - STEPBible.org CC BY
-        ///	==========================================================================
-        ///	This licence allows you to:															
-        ///	* Include any part of this data in software or publications without requ [rest of string was truncated]&quot;;.
+        ///Arabic SVD Bible was translated from original languages by Drs. Eli Smith &amp; Cornelius Van Dyck, 1865.
+        ///Digitisation, formatting and diacritics by &quot;Arabic Bible Outreach Ministry&quot; https://www.arabicbible.com/
+        ///Data created using Translators Amalgamated Hebrew OT - STEPBible.org CC BY 4.0 https://github.co [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string TTArabicSVDPreamble {
+        internal static string TTArabicSVDPreamble_NT {
             get {
-                return ResourceManager.GetString("TTArabicSVDPreamble", resourceCulture);
+                return ResourceManager.GetString("TTArabicSVDPreamble_NT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TTArabicSVD - Translation Tags etc. for the OT of the Arabic SVD Bible - STEPBible.org CC BY-SA 4.0
+        ///كلمات اللغات الاصلية لترجمة فانديك للعهد القديم
+        ///==================================================================================
+        ///Arabic SVD Bible was translated from original languages by Drs. Eli Smith &amp; Cornelius Van Dyck, 1865.
+        ///Digitisation, formatting and diacritics by &quot;Arabic Bible Outreach Ministry&quot; https://www.arabicbible.com/
+        ///Data created using Translators Amalgamated Hebrew OT - STEPBible.org  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string TTArabicSVDPreamble_OT {
+            get {
+                return ResourceManager.GetString("TTArabicSVDPreamble_OT", resourceCulture);
             }
         }
     }

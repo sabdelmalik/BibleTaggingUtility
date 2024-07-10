@@ -44,6 +44,10 @@ namespace BibleTaggingUtil.Settings
             InitializeReferencesTab();
             InitializeTranslationTagsTab();
             InitializeTargetBiblesTab();
+            InitializeOsisGenerationTab();
+
+            this.Width = 1020;
+            this.Height = 758;
         }
 
         internal SettingsFlags ChangedFlags
@@ -57,8 +61,13 @@ namespace BibleTaggingUtil.Settings
             {
                 Properties.ReferenceBibles.Default.Configured = true;
             }
+
             Properties.MainSettings.Default.Save();
+
+            Properties.OsisFileGeneration.Default.HebrewTagsToExclude = tbHebTags2Exclude.Text;
+            Properties.OsisFileGeneration.Default.GreekTagsToExclude = tbGrkTags2Exclude.Text;
             Properties.OsisFileGeneration.Default.Save();
+
             Properties.ReferenceBibles.Default.Save();
             Properties.TargetBibles.Default.Save();
             Properties.TranslationTags.Default.Save();

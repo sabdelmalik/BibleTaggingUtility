@@ -93,11 +93,11 @@ namespace BibleTaggingUtil
             return false;
         }
 
-        public static string RemoveDiacritics(string lineToCkean)
+        public static string RemoveDiacritics(string lineToClean)
         {
             // Remove diacretics
-            string result = lineToCkean.
-                Replace("\u064B", "").  // ARABIC FATHATAN
+            string result = lineToClean.
+/*                Replace("\u064B", "").  // ARABIC FATHATAN
                 Replace("\u064C", "").  // ARABIC DAMMATAN
                 Replace("\u064D", "").  // ARABIC KASRATAN
                 Replace("\u064E", "").  // ARABIC FATHA
@@ -117,7 +117,7 @@ namespace BibleTaggingUtil
                 Replace("\u065C", "").
                 Replace("\u065D", "").
                 Replace("\u065E", "").
-                Replace("\u065F", "").
+                Replace("\u065F", "").*/
                 Replace("«", "").
                 Replace("»", "").
                 Replace(": ", " ").

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.Xml;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -12,7 +13,7 @@ namespace BibleTaggingUtil
     [Serializable()]
     public class VerseWord : ICloneable
     {
-        public VerseWord(string ancientWord, string english, StrongsCluster strong, string transliteration, string reference, string morphology="", string rootStrong = "", string wordType = "", string altVerseNumber = "", string wordNumber = "", string meaningVar = "")
+        public VerseWord(string ancientWord, string english, StrongsCluster strong, string transliteration, string reference, string morphology = "", string rootStrong = "", string wordType = "", string altVerseNumber = "", string wordNumber = "", string meaningVar = "", string dictForm = "", string dictGloss = "")
         {
             this.Reference = reference;
             Testament = Utils.GetTestament(reference);
@@ -31,6 +32,66 @@ namespace BibleTaggingUtil
             AltVerseNumber = altVerseNumber;
             WordNumber = wordNumber;
             MeaningVar = meaningVar;
+            DictForm = dictForm;
+            DictGloss = dictGloss;
+            this.VarUsed = false;
+
+            bool useVar = false;
+            if (!string.IsNullOrEmpty(meaningVar))
+            {
+                int varSourceIndex = meaningVar.IndexOf("in:");
+                if (varSourceIndex > 0 && meaningVar.Substring(varSourceIndex+3).Contains("TR"))
+                {
+                    useVar = true;
+                }
+            }
+            if (Properties.TargetBibles.Default.UseGrkMeaningVar && useVar)
+             {
+                // e.g. Rev.22.14#03=N(K)O … ποιοῦντες (T=poiountes) doing - G4160=V-PAP-NPM in: TR+Byz 
+                //                string pattern = @"^([\u0300-\u03FF\u1F00-\u1FFF\s]+)\s+\([otOT]\=([a-zA-Z\u0100-\u01FF\u1F00-\u1FFF\s']+)\)\s+([a-zA-Z0-9\u2000-\u206F\s<>\[\]\-]+)\s+\-\s+(G[\d]*)\=([-a-zA-Z0-9]+)\s.*";//\s\-\s(G{\d.)\=([-a-zA-Z]+)\s";
+                //string pattern = @"^([\u0300-\u03FF\u1F00-\u1FFF\s]+)\s+\([otOT]\=([a-zA-Z\u0100-\u01FF\u1F00-\u1FFF\s']+)\)\s+([a-zA-Z0-9\u2000-\u206F\s<>\[\]\-]+)\s+\-\s+([-a-zA-Z0-9=+\s]+)\s.*";//\s\-\s(G{\d.)\=([-a-zA-Z]+)\s";
+
+                //meaningVar = "δεσμοῖς μου (T=desmois mou) my imprisonments - G1199=N-DPM + G0846|G3165«G3450=P-1GS in: TR+Byz";
+                meaningVar = meaningVar.Replace("|", "?").Replace("«", "!");
+                string pattern = @"^([\u0300-\u03FF\u1F00-\u1FFF\s]+)\s+\([otOT]\=([a-zA-Z\u0100-\u01FF\u1F00-\u1FFF\s']+)\)\s+([a-zA-Z0-9\u2000-\u206F\s<>\[\]\-]+)\s+\-\s+([-a-zA-Z0-9=+\?\!\s]+)\s.*";//\s\-\s(G{\d.)\=([-a-zA-Z]+)\s";
+                Match match = Regex.Match(meaningVar, pattern);
+                if(match.Success)
+                {
+                    this.Greek = match.Groups[1].Value;
+                    this.Transliteration = match.Groups[2].Value;
+                    this.Word = match.Groups[3].Value;
+                    //this.RootStrong = match.Groups[4].Value;
+                    //this.Morphology = match.Groups[5].Value;
+                    this.RootStrong = string.Empty;
+                    this.Morphology = string.Empty;
+                    string[] strongMorphs = match.Groups[4].Value.Split('+');
+                    foreach (string strongMorph in strongMorphs)
+                    {
+                        string[] parts = strongMorph.Trim().Split('=');
+                        string temp = parts[0];
+                        if (temp.Contains("?") || temp.Contains("!"))
+                        {
+                            int last = temp.LastIndexOf("G");
+                            temp = temp.Substring(last);
+                        }
+                        RootStrong += temp + " ";
+                        Morphology += parts[1] + "/";
+                    }
+                    RootStrong = RootStrong.Trim();
+                    Morphology = Morphology.Trim('/');
+
+                    this.DictForm = this.Greek;
+                    this.DictGloss = this.Word;
+                    this.Strong = new StrongsCluster();
+                    this.Strong.Add(RootStrong);
+
+                    this.VarUsed = true;
+                }
+                else
+                {
+                    string x = reference;
+                }
+            }
         }
 
         public VerseWord(string word, StrongsCluster strong, string reference)
@@ -66,6 +127,8 @@ namespace BibleTaggingUtil
         public string Hebrew { get; private set; }
         public string Greek { get; private set; }
         public string Word { get; set; }
+        public string DictForm { get; private set; }
+        public string DictGloss { get; private set; }
         public StrongsCluster Strong { get; set; }
 
         public String StrongStringEx
@@ -103,6 +166,7 @@ namespace BibleTaggingUtil
         public string Morphology { get; private set; }
         public string RootStrong { get; private set; }
         public string WordType { get; private set; }
+        public bool VarUsed { get; private set; }
 
         public override string ToString()
         {
@@ -126,14 +190,38 @@ namespace BibleTaggingUtil
                 else
                 {
                     string strongStr = string.Empty;
+                    int validCount = 0;
                     foreach (StrongsNumber number in Strong.Strongs)
                     {
-                        if(Properties.OsisFileGeneration.Default.UseDisambiguatedStrong)
-                            strongStr += string.Format(" strong:{0}", number.ToStringD());
-                        else
-                            strongStr += string.Format(" strong:{0}", number.ToStringS());
+                        if(!string.IsNullOrEmpty(number.ToStringD()))
+                            validCount++;
                     }
-                    result = string.Format("<w lemma=\"{0}\">{1}</w>", strongStr.Trim(), Word);
+                    foreach (StrongsNumber number in Strong.Strongs)
+                    {
+                        // check if we need to include this strong number
+                        string strongNum = number.ToStringD();
+                        bool include = !string.IsNullOrEmpty(strongNum);
+                        if (include && validCount > 1)
+                        {
+                            if (Testament == BibleTestament.NT)
+                                include = !Properties.OsisFileGeneration.Default.GreekTagsToExclude.Contains(strongNum);
+                            else
+                                include = !Properties.OsisFileGeneration.Default.HebrewTagsToExclude.Contains(strongNum);
+                            validCount--;
+                        }
+
+                        if (include)
+                        {
+                            if (Properties.OsisFileGeneration.Default.UseDisambiguatedStrong)
+                                strongStr += string.Format(" strong:{0}", number.ToStringD());
+                            else
+                                strongStr += string.Format(" strong:{0}", number.ToStringS());
+                        }
+                    }
+                    if(!string.IsNullOrEmpty(strongStr))
+                        result = string.Format("<w lemma=\"{0}\">{1}</w>", strongStr.Trim(), Word);
+                    else
+                        result = string.Format("<w>{0}</w>", Word);
                 }
                 return result; 
 

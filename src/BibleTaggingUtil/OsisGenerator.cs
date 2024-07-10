@@ -106,13 +106,6 @@ namespace BibleTaggingUtil
 
                 int currentBookIndex = targetVersion.GetBookIndex(bookName);
 
-                if(currentBookIndex == 39 && inOT)
-                {
-                    // We've just started the NT
-                    inOT = false;
-                    sw.WriteLine("</div>");
-                    sw.WriteLine("<div type=\"bookGroup\">");
-                }
                 string bookOsisName = OsisConstants.osisNames[currentBookIndex];
 
                 if (currentBook != bookOsisName)
@@ -161,8 +154,22 @@ namespace BibleTaggingUtil
                                 sw.WriteLine("إِلَى فِلِيمُونَ كُتِبَتْ مِنْ رُومِيَةَ عَلَى يَدِ أُنِسِيمُسَ اٌلْخَادِمِ");
                                 sw.WriteLine("</div>");
                             }
+                            else if (currentBook == "Heb")
+                            {
+                                sw.WriteLine(colophonStart);
+                                sw.WriteLine("إِلَى الْعِبْرانِيِّينَ، كُتِبَتْ مِنْ إِيطَالِيَا، عَلَى يَدِ تِيمُوثَاوُسَ");
+                                sw.WriteLine("</div>");
+                            }
                         }
                         sw.WriteLine("</div>");
+
+                        if (currentBookIndex == 39 && inOT)
+                        {
+                            // We've just started the NT
+                            inOT = false;
+                            sw.WriteLine("</div>");
+                            sw.WriteLine("<div type=\"bookGroup\">");
+                        }
                     }
                     currentBook = bookOsisName;
                     // start tag for the new book

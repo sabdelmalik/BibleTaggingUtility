@@ -135,6 +135,12 @@ namespace BibleTaggingUtil.Versification
         {
             get { return useAltNames; }
         }
+
+        public int LastVerse(string book, int chapter)
+        {
+            int[] lastVerse = bibleBooks[book].LastVerse;
+            return lastVerse[chapter];
+        }
         private void lbBookNames_SelectedIndexChanged(object sender, EventArgs e)
         {
             string book = lbBookNames.SelectedItem.ToString();

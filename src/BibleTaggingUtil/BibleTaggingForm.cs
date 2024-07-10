@@ -100,6 +100,8 @@ namespace BibleTaggingUtil
         {
             bool workingOnNIV = false;
 
+            settingsForm.TargetAboutToChange += SettingsForm_TargetAboutToChange;
+
             Assembly assembly = Assembly.GetExecutingAssembly();
             AssemblyName assemblyName = assembly.GetName();
             Version version = assemblyName.Version;
@@ -221,6 +223,11 @@ namespace BibleTaggingUtil
                     HandleException(ex);
                 }
             }).Start();
+        }
+
+        private void SettingsForm_TargetAboutToChange(object sender, EventArgs e)
+        {
+            target.SaveUpdates();
         }
 
         private void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
@@ -534,8 +541,18 @@ namespace BibleTaggingUtil
             }
             else
             {
+                if(Properties.MainSettings.Default.LastBook < 0)
+                { Properties.MainSettings.Default.LastBook = 0; }
                 verseSelectionPanel.CurrentBook = Properties.MainSettings.Default.LastBook;
+
+
+                if (Properties.MainSettings.Default.LastChapter < 0)
+                { Properties.MainSettings.Default.LastChapter = 0; }
                 verseSelectionPanel.CurrentChapter = Properties.MainSettings.Default.LastChapter;
+
+
+                if (Properties.MainSettings.Default.LastVerse < 0)
+                { Properties.MainSettings.Default.LastVerse = 0; }
                 verseSelectionPanel.CurrentVerse = Properties.MainSettings.Default.LastVerse;
                 verseSelectionPanel.FireVerseChanged();
                 editorPanel.TargetDirty = false;
@@ -877,7 +894,7 @@ namespace BibleTaggingUtil
             }
         }
 
-        public void FindVerse(string tag)
+        public void FindVerse(BibleVersion version, string tag)
         {
             try
             {
@@ -897,7 +914,7 @@ namespace BibleTaggingUtil
                     {
                         string bookName = newRef.Substring(0, 3);
                         string targetRef = newRef.Replace(bookName, Target[bookName]);
-                        text = Utils.GetVerseText(Target.Bible[targetRef], true);
+                        text = Utils.GetVerseText(version.Bible[targetRef], true);
                     }
                     catch (Exception ex)
                     {
@@ -930,6 +947,10 @@ namespace BibleTaggingUtil
             }
         }
 
+
+        /// <summary>
+        /// finds the a tag that ids repeated in two consequetive cells
+        /// </summary>
         public void FindRepetitive()
         {
             try
@@ -1018,7 +1039,7 @@ namespace BibleTaggingUtil
                         UpdateProgress("Generating OSIS File", -1);
                         //OSIS_Generator generator = new OSIS_Generator(config);
                         OsisGenerator generator = new OsisGenerator(config);
-                        generator.Generate(target);
+                        generator.Generate(target, true);
                         if(Properties.TargetBibles.Default.TargetBible.Contains("ara"))
                             generator.Generate(target, true);
                         WaitCursorControl(false);

@@ -8,7 +8,7 @@ namespace BibleTaggingUtil.TranslationTags
 {
     internal class OriginalWordDetails
     {
-        public OriginalWordDetails(string strongs, string morphology, string ancientWord, int ancientWordIndex, string transliteration, string wordbyWord, string ancientWordNumber, string wordType, string ancientWordVerse, string ancientWordReference)
+        public OriginalWordDetails(string strongs, string morphology, string ancientWord, int ancientWordIndex, string transliteration, string wordbyWord, string ancientWordNumber, string wordType, string ancientWordVerse, string ancientWordReference, string dictForm = "", string dictGloss = "")
         {
             AncientWordIndex = ancientWordIndex;
             Strongs = strongs;
@@ -21,6 +21,8 @@ namespace BibleTaggingUtil.TranslationTags
                 AncientWordNumber += wordType;
             AncientWordVerse = ancientWordVerse;
             AncientWordReference = ancientWordReference;
+            DictGloss = dictGloss;
+            DictForm = dictForm;
         }
 
         public int AncientWordIndex { get; }
@@ -32,5 +34,7 @@ namespace BibleTaggingUtil.TranslationTags
         public string AncientWord { get; }
         public string Transliteration { get; }
         public string WordByWord { get; }
+        public string DictForm { get; }
+        public string DictGloss { get; }
     }
 }

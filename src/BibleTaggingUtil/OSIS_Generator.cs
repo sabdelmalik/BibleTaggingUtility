@@ -200,8 +200,8 @@ namespace BibleTaggingUtil
                 while (!sr.EndOfStream)
                 {
                     string line = sr.ReadLine();
-                    if (publicDomain)
-                        line = Utils.RemoveDiacritics(line);
+                    //if (publicDomain)
+                    //    line = Utils.RemoveDiacritics(line);
 
                     int bs = line.IndexOf(' ');
                     string bookName = line.Substring(0, bs);

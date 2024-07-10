@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -15,7 +16,13 @@ namespace BibleTaggingUtil.Editor
     {
         public ReferenceVersionTAGNT BibleNT { get; set; }
         public ReferenceVersionTAHOT BibleOT { get; set; }
+        public string SearchTag { get; internal set; }
 
+        protected override void OnCellEnter(DataGridViewCellEventArgs e)
+        {
+            // Ignore this event
+            //base.OnCellEnter(e);
+        }
         protected override void OnCellMouseDown(DataGridViewCellMouseEventArgs e)
         {
             try
@@ -214,6 +221,13 @@ namespace BibleTaggingUtil.Editor
                         this.Rows[1].Cells[i].Style.ForeColor = Color.Black;
                         this.Rows[this.RowCount - 1].Cells[i].Style.ForeColor = Color.Black;
                     }
+                    if (SearchTag!=null && tag.ToString().Contains(SearchTag))
+                    {
+                        this.Rows[this.RowCount - 1].Cells[i].Style.ForeColor = Color.Maroon;
+                        if(RowCount > 2)
+                            this.Rows[this.RowCount - 2].Cells[i].Style.BackColor = Color.Yellow;
+                    }
+
                 }
             }
             catch (Exception ex)
@@ -265,12 +279,15 @@ namespace BibleTaggingUtil.Editor
 
             List<string> words = new List<string>();
             List<string> greek = new List<string>();
+            List<string> dictForm = new List<string>();
+            List<string> dictGloss = new List<string>();
             List<string> transliteration = new List<string>();
             List<StrongsCluster> tags = new List<StrongsCluster>();
             List<string> morphology = new List<string>();
             List<string> rootStrongs = new List<string>();
             List<string> wordType = new List<string>();
             List<string> altVerseNumber = new List<string>();
+            List<string> varUsed = new List<string>();
             List<string> wordNumber = new List<string>();
             StrongsCluster tagLable = new StrongsCluster("TAG");
 
@@ -278,7 +295,10 @@ namespace BibleTaggingUtil.Editor
             {
                 words.Add("ENG");
                 greek.Add("GRK");
+                dictForm.Add("LEX");
+                dictGloss.Add("GLS");
                 altVerseNumber.Add("ALT");
+                varUsed.Add("VAR");
                 wordNumber.Add("W #");
                 wordType.Add("TYP");
                 morphology.Add("GMR");
@@ -291,11 +311,14 @@ namespace BibleTaggingUtil.Editor
                     VerseWord verseWord = verseWords[i];
                     words.Add(verseWord.Word);
                     greek.Add(verseWord.Greek);
+                    dictForm.Add(verseWord.DictForm);
+                    dictGloss.Add(verseWord.DictGloss);
                     morphology.Add(verseWord.Morphology);
                     transliteration.Add(verseWord.Transliteration);
                     rootStrongs.Add(verseWord.RootStrong);
                     wordType.Add(verseWord.WordType);
                     altVerseNumber.Add(verseWord.AltVerseNumber);
+                    varUsed.Add(verseWord.VarUsed ? "*****" : "");
                     wordNumber.Add(verseWord.WordNumber);
                     tags.Add(verseWord.Strong);
 
@@ -311,18 +334,38 @@ namespace BibleTaggingUtil.Editor
 
                 //this.ColumnCount = verseWords.Count;
                 this.ColumnCount = words.Count;
+                List<string> empty = new List<string>(ColumnCount);
+                empty.AddRange(Enumerable.Repeat("", ColumnCount));
 
                 this.Rows.Add(words.ToArray());
                 this.Rows.Add(greek.ToArray());
+                this.Rows.Add(empty.ToArray());
+                this.Rows.Add(dictGloss.ToArray());
+                this.Rows.Add(dictForm.ToArray());
                 this.Rows.Add(altVerseNumber.ToArray());
+                this.Rows.Add(varUsed.ToArray());
                 this.Rows.Add(wordNumber.ToArray());
                 this.Rows.Add(wordType.ToArray());
+                int typeRow = 8;
                 this.Rows.Add(morphology.ToArray());
                 this.Rows.Add(transliteration.ToArray());
                 this.Rows.Add(rootStrongs.ToArray());
                 this.Rows.Add(tags.ToArray());
 
                 this.ClearSelection();
+
+                for (int i = 1; i < words.Count; i++)
+                {
+                    string type = (string)this.Rows[typeRow].Cells[i].Value;
+                    if (!type.ToUpper().Contains("K"))
+                    {
+                        for (int j = 0; j < this.RowCount; j++) { 
+                            this.Rows[j].Cells[i].Style.BackColor = Color.LightGray;
+                        }
+                    }
+ 
+                }
+
 
                 this.Rows[0].ReadOnly = true;
                 this.Rows[1].ReadOnly = true;

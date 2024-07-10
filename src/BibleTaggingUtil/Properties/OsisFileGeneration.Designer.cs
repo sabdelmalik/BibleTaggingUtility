@@ -12,7 +12,7 @@ namespace BibleTaggingUtil.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.8.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.9.0.0")]
     internal sealed partial class OsisFileGeneration : global::System.Configuration.ApplicationSettingsBase {
         
         private static OsisFileGeneration defaultInstance = ((OsisFileGeneration)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new OsisFileGeneration())));
@@ -32,6 +32,30 @@ namespace BibleTaggingUtil.Properties {
             }
             set {
                 this["UseDisambiguatedStrong"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string GreekTagsToExclude {
+            get {
+                return ((string)(this["GreekTagsToExclude"]));
+            }
+            set {
+                this["GreekTagsToExclude"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string HebrewTagsToExclude {
+            get {
+                return ((string)(this["HebrewTagsToExclude"]));
+            }
+            set {
+                this["HebrewTagsToExclude"] = value;
             }
         }
     }

@@ -58,6 +58,11 @@ namespace BibleTaggingUtil.BibleVersions
 
         public string BibleName { get { return bibleName; } set { bibleName = value;} }
 
+        public int LastVerse(string book, int chapter)
+        {
+           return container.VerseSelectionPanel.LastVerse(book, chapter);
+        }
+
         public virtual bool LoadBibleFile(string textFilePath, bool newBible, bool more)
         {
             if (newBible)

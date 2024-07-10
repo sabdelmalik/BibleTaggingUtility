@@ -317,7 +317,7 @@ namespace BibleTaggingUtil.Editor
                 {
                     string reference = e.VerseReference.Replace(bookName, actualBookName);
                     //targetUpdatedVerse = Utils.GetVerseText(container.Target.Bible[targetRef], true);
-                    if (tbTarget.Text.ToLower().Contains("arabic"))
+                    if (tbTarget.Text.ToLower().Contains("arabic") && container.OsisTarget.Bible.ContainsKey(reference))
                         DoSepecialHandling(reference);
                     Verse v = null;
                     if(osis)
@@ -328,7 +328,9 @@ namespace BibleTaggingUtil.Editor
                     else
                     {
                         if (container.Target.Bible.ContainsKey(reference))
+                        {
                             v = container.Target.Bible[reference];
+                        }
                     }
 
                     if (dgvTarget.IsCurrentTextAramaic)
@@ -405,7 +407,7 @@ namespace BibleTaggingUtil.Editor
             string current = string.Format("{0} {1}:{2}", actualBookName, ch, vsi);
             string next = string.Format("{0} {1}:{2}", actualBookName, ch, vsi + 1);
             string previous = string.Empty;
-            if (vsi > 1) previous = string.Format("{0} {1}:{2}", actualBookName, ch, vsi - 1);
+            /*if (vsi > 1)*/ previous = string.Format("{0} {1}:{2}", actualBookName, ch, vsi - 1);
 
             if (testament == BibleTestament.OT)
             {
@@ -551,7 +553,53 @@ namespace BibleTaggingUtil.Editor
             else
                 tag = ((StrongsCluster)cellTag).ToStringS();
 
-            if (!string.IsNullOrEmpty(tag))
+            StrongsCluster tag1 = new StrongsCluster();
+
+            if (sender is TOHTHGridView && Control.ModifierKeys == Keys.Control)
+            {
+                if (dgv.SelectedCells.Count > 1)
+                {
+                    int rowIndex = dgv.SelectedCells[0].RowIndex;
+
+                    bool sameRow = true;
+                    foreach (DataGridViewCell cell in dgv.SelectedCells)
+                    {
+
+                        if ((cell.RowIndex != rowIndex))
+                        {
+                            sameRow = false;
+                            break;
+                        }
+                    }
+
+                    if (sameRow)
+                    {
+                        //bool mergeOk = true; // we only drag adjacent cells
+                        int count = dgv.SelectedCells.Count;
+                        int colIndex = dgv.SelectedCells[count - 1].ColumnIndex;
+                        tag1 = (StrongsCluster)dgv[colIndex, rowIndex].Value;
+                        for (int i = count - 2; i >= 0; i--)
+                        {
+                            tag1 += (StrongsCluster)dgv[dgv.SelectedCells[i].ColumnIndex, rowIndex].Value;
+                            colIndex = dgv.SelectedCells[i].ColumnIndex;
+                        }
+                    }
+                }
+                else
+                {
+                    if (dgv.SelectedCells.Count == 1)
+                    {
+                        tag1 = dgv.Rows[dgv.SelectedCells[0].RowIndex].Cells[e.ColumnIndex].Value as StrongsCluster;
+                    }
+                    else
+                    {
+                        tag1 = (StrongsCluster)cellTag;
+                    }
+                }
+                DragData data = new DragData(1, e.ColumnIndex, tag1, dgvTOTHT);
+                dgvTarget.SimulateDataDrop(data);
+            }
+            else if (!string.IsNullOrEmpty(tag))
             {
                 tag = tag.Replace("<", "").Replace(">", "").Replace(",", "").Replace(".", "").Replace(":", "");
 
@@ -599,7 +647,12 @@ namespace BibleTaggingUtil.Editor
             else
                 tag = ((StrongsCluster)cellTag).ToStringS();
 
-            if (!string.IsNullOrEmpty(tag))
+            if (Control.ModifierKeys == Keys.Alt)
+            {
+                DragData data = new DragData(1, e.ColumnIndex, (StrongsCluster)cellTag, dgvTOTHT);
+                dgvTarget.SimulateDataDrop(data);
+            }
+            else if (!string.IsNullOrEmpty(tag))
             {
                 tag = tag.Replace("<", "").Replace(">", "").Replace(",", "").Replace(".", "").Replace(":", "");
 
@@ -639,7 +692,9 @@ namespace BibleTaggingUtil.Editor
         private void Cms_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             string tag = e.ClickedItem.Text;
-            browser.NavigateToTag((testament == TestamentEnum.OLD ? "H" : "G") + tag);
+            if (tag[0] != 'G' && tag[0] != 'H')
+                tag = (testament == TestamentEnum.OLD ? "H" : "G") + tag;
+            browser.NavigateToTag(tag);
         }
 
         #endregion Reference verse events
@@ -808,7 +863,9 @@ namespace BibleTaggingUtil.Editor
             if (cells.Count == 1)
             {
                 if (dgv != dgvTarget)
+                {
                     dgv.CurrentCell = dgv.Rows[tagsRow].Cells[cells[0]];
+                }
                 dgv.Rows[tagsRow].Cells[cells[0]].Style.BackColor = Color.Yellow;
             }
             else if (cells.Count != 0)
@@ -817,11 +874,11 @@ namespace BibleTaggingUtil.Editor
                 {
                     dgv.Rows[tagsRow].Cells[cells[i]].Style.BackColor = Color.Yellow;
                 }
-                if (dgv != dgvTarget)
-                    if (firstHalf)
-                        dgv.CurrentCell = dgv.Rows[tagsRow].Cells[cells[0]];
-                    else
-                        dgv.CurrentCell = dgv.Rows[tagsRow].Cells[cells[cells.Count - 1]];
+                //if (dgv != dgvTarget)
+                //    if (firstHalf)
+                //        dgv.CurrentCell = dgv.Rows[tagsRow].Cells[cells[0]];
+                //    else
+                //        dgv.CurrentCell = dgv.Rows[tagsRow].Cells[cells[cells.Count - 1]];
             }
             if (dgv != dgvTarget)
                 dgv.ClearSelection();
@@ -991,8 +1048,16 @@ namespace BibleTaggingUtil.Editor
             }
             else
             {
+                dgvTOTHT.SearchTag = cbTagToFind.Text;
                 dgvTarget.SearchTag = cbTagToFind.Text;
-                container.FindVerse(cbTagToFind.Text);
+                if (Control.ModifierKeys == Keys.Alt)
+                {
+                    container.FindVerse(container.TOTHT, cbTagToFind.Text);
+                }
+                else
+                {
+                    container.FindVerse(container.Target, cbTagToFind.Text);
+                }
             }
         }
 

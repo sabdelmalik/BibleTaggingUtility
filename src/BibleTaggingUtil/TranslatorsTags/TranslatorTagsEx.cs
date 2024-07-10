@@ -254,7 +254,8 @@ namespace BibleTaggingUtil.TranslationTags
                 {
                     try
                     {
-                        OutputTranslatorTagsNT(@"C:\temp\TTAraSVD - Translation Tags etc. for Arabic SVD NT - STEPBible.org CC BY_1_1.txt", ntWords);
+                        //OutputTranslatorTagsNT(@"C:\temp\TTAraSVD - Translation Tags etc. for Arabic SVD NT - STEPBible.org CC BY_1_1.txt", ntWords);
+                        OutputTranslatorTagsNT(ntWords, Properties.TranslationTags.Default.PublicDomain);
                         //OutputTranslatorTags(@"C:\temp\TTESV - Translators Tags for ESV.txt", otWords);
                         MessageBox.Show("NT Success", "TT Success", MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                     }
@@ -291,10 +292,8 @@ namespace BibleTaggingUtil.TranslationTags
                 }
             }
         }
-        private void WritePreamble(StreamWriter sw)
+        private void WritePreamble(StreamWriter sw, string preamble)
         {
-            string preamble = Properties.Resources.TTArabicSVDPreamble;
-
             string created = string.Format("Created {0} {1}.", 
                 DateTime.Now.ToString("yyyy-MM-dd"), 
                 ConfigurationHolder.Instance.OSIS[OsisConstants.creator_name]); 

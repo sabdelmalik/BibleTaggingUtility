@@ -226,7 +226,13 @@ namespace BibleTaggingUtil.Editor
                         if (this.SelectedCells[i].ColumnIndex < firstMergeIndex)
                             firstMergeIndex = this.SelectedCells[i].ColumnIndex;
                     }
+
                     this.CurrentVerse.Merge(firstMergeIndex, this.SelectedCells.Count);
+
+                    if (firstMergeIndex == 0 && SelectedCells.Count == 2 && (string)this[firstMergeIndex, 0].Value == "«")
+                    {
+                        this.CurrentVerse[0].Word = this.CurrentVerse[0].Word.Replace("« ", "«");
+                    }
 
                     this.Update(CurrentVerse);
                     SaveVerse(CurrentVerseReferece);
@@ -444,8 +450,9 @@ namespace BibleTaggingUtil.Editor
 
                     if (tag.ToString().Contains(tagToHighlight) || tag.ToString().Contains("0000") || (tag.ToString() == string.Empty && tagToHighlight == "<>"))
                     {
-                        this.Rows[tRow].Cells[i].Style.ForeColor= Color.DarkGreen;
-                        this.Rows[tRow].Cells[i].Style.BackColor = Color.LightGray;
+                        this.Rows[tRow].Cells[i].Style.ForeColor= Color.Maroon;
+                        if (RowCount > 2)
+                            this.Rows[tRow-1].Cells[i].Style.BackColor = Color.Yellow;
                     }
                     else if (!string.IsNullOrEmpty(tag.ToString()) && tag.ToString() == nextTag.ToString())
                     {
@@ -615,6 +622,19 @@ namespace BibleTaggingUtil.Editor
         }
 
 
+        bool gotFocus = false;
+
+        protected override void OnLostFocus(EventArgs e)
+        {
+            gotFocus = false;
+            base.OnLostFocus(e);
+        }
+        protected override void OnGotFocus(EventArgs e)
+        {
+            gotFocus = true;
+            base.OnGotFocus(e);
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -623,12 +643,16 @@ namespace BibleTaggingUtil.Editor
         {
             if (this.Rows.Count > 1)
             {
+                if (!this.gotFocus)
+                {
+                    return;
+                }
                 // during initialsation, we may come here
                 // when the grid rows are not fully initialised
                 //if (this.SelectedRows.Count > 1)
                 //{
                 //}
-                if(e.RowIndex == Rows.Count - 1 )
+                if (e.RowIndex == Rows.Count - 1)
                 {
                     this.ClearSelection();
                     this[e.ColumnIndex, e.RowIndex].Selected = true;
@@ -744,6 +768,36 @@ namespace BibleTaggingUtil.Editor
             base.OnDragDrop(drgevent);
         }
 
+        public void SimulateDataDrop(DragData data)
+        {
+            if(this.SelectedCells.Count == 1)
+            {
+                int savedColumn = this.CurrentCell.ColumnIndex;
+                int savedRow = this.CurrentCell.RowIndex;
+                if (this.CurrentVerse != null)
+                    undoStack.Push(new VerseEx(new Verse(this.CurrentVerse), savedColumn, savedRow));
+
+                int targetColumn = this.SelectedCells[0].ColumnIndex;
+                this.CurrentVerse[targetColumn].Strong = data.Tag;
+
+                Update(CurrentVerse);
+                SaveVerse(CurrentVerseReferece);
+
+                FireVerseViewChanged();
+
+                this.ClearSelection();
+                this[targetColumn, Rows.Count - 1].Selected = true;
+                this.Rows[0].ReadOnly = true;
+
+                this[targetColumn, Rows.Count - 1].Selected = true;
+                this.CurrentCell = this[targetColumn, Rows.Count - 1];
+                if (!string.IsNullOrEmpty(((StrongsCluster)this[targetColumn, Rows.Count - 1].Value).ToString()))
+                    FireRefernceHighlightRequest((StrongsCluster)this[targetColumn, Rows.Count - 1].Value);
+                
+                this.Focus();
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -767,6 +821,7 @@ namespace BibleTaggingUtil.Editor
                     }
                 }
             }
+
             base.OnMouseDown(e);
         }
 
@@ -836,12 +891,12 @@ namespace BibleTaggingUtil.Editor
         {
             if (this.RefernceHighlightRequest != null)
             {
-                new Thread(() =>
-                {
+//                new Thread(() =>
+//                {
                     try
                     {
                         bool firstHalf = true;
-                        if (this.SelectedCells.Count == 1)
+                        //if (this.SelectedCells.Count == 1)
                         {
                             if (this.SelectedCells[0].ColumnIndex > (this.ColumnCount / 2))
                                 firstHalf = false;
@@ -854,7 +909,7 @@ namespace BibleTaggingUtil.Editor
                         var name = cm.DeclaringType.FullName + "." + cm.Name;
                         Tracing.TraceException(name, ex.Message);
                     }
-                }).Start();
+//                }).Start();
             }
         }
 

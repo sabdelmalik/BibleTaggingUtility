@@ -566,7 +566,7 @@ namespace BibleTaggingUtil.TranslationTags
                     if (sw == null)
                     {
                         string output = Path.Combine(booksFolderPath,
-                                     string.Format("{0}_{1}_{2}_OT_{3}.txt", bookNum, book, Properties.TranslationTags.Default.OutputFileName, version));
+                                     string.Format("OT_{0:d2}_{1}_{2}_{3}.txt", bookNum, book, Properties.TranslationTags.Default.OutputFileName, version));
                         sw = new StreamWriter(output, false);
                     }
 
@@ -575,7 +575,7 @@ namespace BibleTaggingUtil.TranslationTags
                         if (!string.IsNullOrEmpty(Properties.TranslationTags.Default.ForReviewFileName))
                         {
                             string forReview = Path.Combine(booksFolderPath,
-                                string.Format("{0}_{1}_{2}.txt", bookNum, book, Properties.TranslationTags.Default.ForReviewFileName));
+                                string.Format("OT_{0:d2}_{1}_{2}.txt", bookNum, book, Properties.TranslationTags.Default.ForReviewFileName));
                             swR = new StreamWriter(forReview, false);
                         }
                     }
@@ -593,7 +593,7 @@ namespace BibleTaggingUtil.TranslationTags
                         if (!string.IsNullOrEmpty(Properties.TranslationTags.Default.ForReviewFileName))
                         {
                             string forReview = Path.Combine(TranslationTagsFolderPath,
-                            string.Format("{0}.txt", Properties.TranslationTags.Default.ForReviewFileName));
+                            string.Format("{0}-OT.txt", Properties.TranslationTags.Default.ForReviewFileName));
                             swR = new StreamWriter(forReview, false);
                         }
                     }
@@ -601,7 +601,9 @@ namespace BibleTaggingUtil.TranslationTags
 
                 if (publicDomain && !preambleWritten)
                 {
-                    WritePreamble(sw);
+                    string preamble = Properties.Resources.TTArabicSVDPreamble_OT;
+
+                    WritePreamble(sw, preamble);
                     preambleWritten = true;
                 }
 
@@ -611,6 +613,10 @@ namespace BibleTaggingUtil.TranslationTags
                 }
                 try
                 {
+                    if(verseRef == "Jdg 15:2")
+                    {
+                        int x = 0;
+                    }
                     sw.WriteLine(verseRef.Replace(" ", ".").Replace(":", "."));
                     sw.WriteLine("========");
                     sw.WriteLine("Ara W#\tArabic\tStrongs\tGrammar\tHeb w#\tHebrew\tTransliteration\tWord-by-word");
@@ -675,26 +681,28 @@ namespace BibleTaggingUtil.TranslationTags
 
                                 Strongs += owd.Strongs + "; ";
                                 Morphology += owd.Morphology + "; ";
-                                AncientWordVerse += ancientVerseNumber + "; ";
-                                AncientWordNumber += owd.AncientWordNumber + "; ";
+                                //AncientWordVerse += ancientVerseNumber + "; ";
+                                //AncientWordNumber += owd.AncientWordNumber + "; ";
+                                AncientWordVerse += ancientVerseNumber + "#" + owd.AncientWordNumber + "; ";
                                 AncientWord += owd.AncientWord + "; ";
                                 Transliteration += owd.Transliteration + "; ";
                                 WordByWord += owd.WordByWord + "; ";
                             }
 
-                            line = string.Format("{0}\t{1}\t{2}\t{3}\t{4}#{5}\t{6}\t{7}\t{8}",
+                            //line = string.Format("{0}\t{1}\t{2}\t{3}\t{4}#{5}\t{6}\t{7}\t{8}",
+                            line = string.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}",
                                 araWordNo,
                                 word.Word,
                                 Strongs.TrimEnd(new char[] { ';', ' ' }),
                                 Morphology.TrimEnd(new char[] { ';', ' ' }),
                                 AncientWordVerse.TrimEnd(new char[] { ';', ' ' }),
-                                AncientWordNumber.TrimEnd(new char[] { ';', ' ' }),
+                                //AncientWordNumber.TrimEnd(new char[] { ';', ' ' }),
                                 AncientWord.TrimEnd(new char[] { ';', ' ' }),
                                 Transliteration.TrimEnd(new char[] { ';', ' ' }),
                                 WordByWord.TrimEnd(new char[] { ';', ' ' }));
                             if (string.IsNullOrEmpty(araWordNo))
                             {
-                                if (!(Strongs.Contains("H0853") && AncientWord.TrimEnd(new char[] { ';', ' ' }) == "אֶת") && !Strongs.Contains("H0834") && !Strongs.Contains("H4994")) // אֲשֶׁר֙ אֶת 
+                                if (!(Strongs.Contains("H0853") && AncientWord.TrimEnd(new char[] { ';', ' ' }) == "אֶת") && !Strongs.Contains("H0834"))// && !Strongs.Contains("H4994")) // אֲשֶׁר֙ אֶת 
                                 {
                                     string reviewLine = string.Format("{0}\t#{1}:{2}",
                                         verseRef,

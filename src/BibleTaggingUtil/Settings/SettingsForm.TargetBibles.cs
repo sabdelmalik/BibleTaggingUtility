@@ -13,11 +13,13 @@ namespace BibleTaggingUtil.Settings
         private string currentTarget = string.Empty;
         private bool targetBibleChanged = false;
 
+        public event EventHandler TargetAboutToChange;
         private void InitializeTargetBiblesTab()
         {
             targetBibleChanged = false;
             targetBiblesFolder = Properties.TargetBibles.Default.TargetBiblesFolder;
             checkBoxRTL.Checked = Properties.TargetBibles.Default.RightToLeft;
+            checkBoxTR_Byz.Checked = Properties.TargetBibles.Default.UseGrkMeaningVar;
             if (string.IsNullOrEmpty(targetBiblesFolder) )
             {
                 tbTargetBiblesFolder.Text = string.Empty;
@@ -92,6 +94,8 @@ namespace BibleTaggingUtil.Settings
             changedFlags.TargetBibleChanged = false;
             if (cbTargetBibles.Text != currentTarget)
             {
+                TargetAboutToChange?.Invoke(this, EventArgs.Empty);
+
                 currentTarget = cbTargetBibles.Text;
                 Properties.TargetBibles.Default.TargetBible = currentTarget;
                 changedFlags.TargetBibleChanged = true;
@@ -102,6 +106,11 @@ namespace BibleTaggingUtil.Settings
         {
             Properties.TargetBibles.Default.RightToLeft = checkBoxRTL.Checked;
 
+        }
+
+        private void checkBoxTR_Byz_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.TargetBibles.Default.UseGrkMeaningVar = checkBoxTR_Byz.Checked;
         }
 
         private void cbVersification_SelectedIndexChanged(object sender, EventArgs e)

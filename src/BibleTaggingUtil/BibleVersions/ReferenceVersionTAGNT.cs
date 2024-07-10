@@ -49,6 +49,30 @@ namespace BibleTaggingUtil.BibleVersions
         int wordsLineCounter = 0;
         List<string> strongList = new List<string>();
 
+        // dictionary for words to ignore the TR meaningVar
+        // key ref
+        // val word #
+        Dictionary<string, int[]> ignoreTR = new Dictionary<string, int[]>()
+        {
+            { "Mrk 4:21", new int[]{22} },
+            { "Act 16:17", new int[]{19} },
+            { "Act 17:27", new int[]{2} },
+            { "Act 21:8", new int[]{8} },
+            { "Php 4:3", new int[]{0} },
+            { "Rom 12:11", new int[]{8} },
+            { "2Co 11:10", new int[]{10} },
+            { "Php 3:13", new int[]{3} },
+            { "1Pe 1:4", new int[]{11} },
+            { "2Pe 2:12", new int[]{5} },
+            { "Jud 1:24", new int[]{4} },
+            { "Rev 7:4", new int[]{9} },
+            { "Rev 7:5", new int[]{ 3, 9, 15 } }, 
+            { "Rev 7:6", new int[]{ 3, 9, 15 } }, 
+            { "Rev 7:7", new int[]{ 3, 9, 15 } }, 
+            { "Rev 7:8", new int[]{ 3, 9, 15 } }, 
+            { "Rev 13:18", new int[]{ 24 } } 
+        };
+
         override protected void ParseLine(string line)
         {
             try
@@ -127,7 +151,7 @@ namespace BibleTaggingUtil.BibleVersions
                             chapterNum.TrimStart('0'),
                             verseNum.TrimStart('0'));
 
-                    if(verseRef == "1Jn 2:14")
+                    if(verseRef == "Heb 10:34")
                     {
                         int x = 0;
                     }
@@ -157,8 +181,8 @@ namespace BibleTaggingUtil.BibleVersions
                         strongsList[i] = strongsList[i].Trim();
 
                     string[] dictParts = dictionaryFormGloss.Split('=');
-                    string dictionaryForm = dictParts[0];
-                    string gloss = dictParts.Length > 1 ? dictParts[1] : string.Empty;
+                    string dictForm = dictParts[0];
+                    string dictGloss = dictParts.Length > 1 ? dictParts[1] : string.Empty;
 
                     if (string.IsNullOrEmpty(currentVerseRef))
                     {
@@ -180,7 +204,12 @@ namespace BibleTaggingUtil.BibleVersions
                     }
 
                     int wordNumber = bible[currentVerseRef].Count;
-                    bible[currentVerseRef][wordNumber] = new VerseWord(greek, english, new StrongsCluster(strongsList), transliteration, currentVerseRef, grammar, dStrong, wordType, altVerseNum, wordNum);
+                    //if(currentVerseRef == "Php 4:3" && wordNumber == 0)
+                    if (ignoreTR.ContainsKey(currentVerseRef) && ignoreTR[currentVerseRef].Contains(wordNumber))
+                    {
+                        meaningVar = string.Empty;
+                    }
+                    bible[currentVerseRef][wordNumber] = new VerseWord(greek, english, new StrongsCluster(strongsList), transliteration, currentVerseRef, grammar, dStrong, wordType, altVerseNum, wordNum, meaningVar: meaningVar, dictForm:dictForm,dictGloss:dictGloss);
                 }
                 else // not a word line
                     return;
