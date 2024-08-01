@@ -42,7 +42,10 @@ namespace BibleTaggingUtil
             }
             else
             {
+                
                 label.Text = text;
+                label.BringToFront();
+                
             }
         }
 

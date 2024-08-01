@@ -1,0 +1,40 @@
+﻿General
+	√ save on application exception
+	√ preseve doc status.
+File Menu
+	√ Restore
+Editor
+	√ tooltips for new buttons
+	√ back/forward for last viewed stack
+	√ increase size of the middle dgv
+√ Versification
+
+NIV
+	combined OT & NT
+Reference Bibles
+	√ numbering reference files not required if single file
+Translation Tags
+	√ progress bar
+	√ preamble for seperate files
+	► repeated words
+Settings
+	Reference Bibles
+		√ Select from available references
+	Target Bible
+		√ location
+		√ Bible list
+		√ RTL
+	Osis
+		√ Use dStrong
+		► osis2mod options
+	TranslationTags
+		√ Version
+		√ Output location
+		File Names
+			√ errors
+			√ missing words
+			√ for review
+			√ Repeted word (for emphasis)
+		√ Seperate books option
+		► Timestamp to file name
+		√ public domain

@@ -1,0 +1,11 @@
+﻿Here are the places where 5-digit numbers are probably more accurate but 4-digit numbers will be used in the future: 
+43_Luk.001.036#12	U=BTWSHNMI>NKO	old age	γήρει (gērei)	G1094=N-DSN	γῆρος=old age	G20195
+43_Luk.002.044#16	U=BTWSHNMI>NKO	relatives	συγγενεῦσιν (sungeneusin)	G4773=A-DPM	συγγενεύς=kindred	G21148
+44_Jhn.004.052#16	U=HNMI>NKO	Yesterday	ἐχθὲς (echthes)	G5504=ADV	ἐχθές=yesterday	G20487
+45_Act.017.015#03	v=TWSHNMI>N(k)O	escorting	καθιστάνοντες (kathistanontes)	G2525=V-PAP-NPM	καθίστημι=to appoint/conduct	G20549
+45_Act.020.015#06	v=TWSHNMI>N(k)O	opposite	ἄντικρυς (antikrus)	G0481=ADV	ἄντικρυς=opposite	G20085
+45_Act.021.006#01	v=TWSHNMI>N(k)O	we greeted	ἀπησπασάμεθα (apēspasametha)	G0782=V-AMI-1P	ἀποσπάω=to draw away	G20093
+45_Act.024.012#12	v=TWSHNMI>N(k)O	obstruction	ἐπίστασιν (epistasin)	G1999=N-ASF	ἐπίστασις=stoppage	G20447
+48_2Co.011.028#05	v=TWSHNMI>N(k)O	stoppage	ἐπίστασίς (epistasis)	G1999=N-NSF	ἐπίστασις=stoppage	G20447
+53_1Th.002.008#02	v=BTWSHNMI>N(k)O	yearning for	ὁμειρόμενοι (homeiromenoi)	G2442=V-PNP-NPM	ὁμείρομαι=to yearn for	G20833
+67_Rev.013.002#14	v=BTWSHNMI>N(k)O	a bear’s	ἄρκου (arkou)	G0715=N-GSF	ἄρκος=bear	G20140

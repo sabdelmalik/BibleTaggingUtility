@@ -39,7 +39,7 @@ namespace BibleTaggingUtil.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("BibleTagging.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("BibleTaggingUtil.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,6 +57,74 @@ namespace BibleTaggingUtil.Properties {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ellipsisTX {
+            get {
+                object obj = ResourceManager.GetObject("ellipsisTX", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_back_94 {
+            get {
+                object obj = ResourceManager.GetObject("icons8_back_94", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_forward_94 {
+            get {
+                object obj = ResourceManager.GetObject("icons8_forward_94", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap reset {
+            get {
+                object obj = ResourceManager.GetObject("reset", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TTArabicSVD - Translation Tags etc. for Arabic SVD Bible - STEPBible.org CC BY-SA 4.0
+        ///كلمات اللغات الاصلية لترجمة فانديك
+        ///==================================================================================
+        ///Arabic SVD Bible was translated from original languages by Drs. Eli Smith &amp; Cornelius Van Dyck, 1865.
+        ///Digitisation, formatting and diacritics by &quot;Arabic Bible Outreach Ministry&quot; https://www.arabicbible.com/
+        ///Data created using Translators Amalgamated Hebrew OT - STEPBible.org CC BY 4.0 https://github.co [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string TTArabicSVDPreamble_NT {
+            get {
+                return ResourceManager.GetString("TTArabicSVDPreamble_NT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TTArabicSVD - Translation Tags etc. for the OT of the Arabic SVD Bible - STEPBible.org CC BY-SA 4.0
+        ///كلمات اللغات الاصلية لترجمة فانديك للعهد القديم
+        ///==================================================================================
+        ///Arabic SVD Bible was translated from original languages by Drs. Eli Smith &amp; Cornelius Van Dyck, 1865.
+        ///Digitisation, formatting and diacritics by &quot;Arabic Bible Outreach Ministry&quot; https://www.arabicbible.com/
+        ///Data created using Translators Amalgamated Hebrew OT - STEPBible.org  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string TTArabicSVDPreamble_OT {
+            get {
+                return ResourceManager.GetString("TTArabicSVDPreamble_OT", resourceCulture);
             }
         }
     }

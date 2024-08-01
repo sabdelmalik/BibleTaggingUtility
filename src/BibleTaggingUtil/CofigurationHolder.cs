@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BibleTaggingUtil.OsisXml;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -20,7 +21,29 @@ namespace BibleTaggingUtil
             USFM,
             USFM2OSIS
         }
-        public ConfigurationHolder()
+        private static ConfigurationHolder instance = null;
+        private static readonly object lockObj = new object();
+
+        public static ConfigurationHolder Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    lock (lockObj)
+                    {
+                        if (instance == null)
+                        {
+                            instance = new ConfigurationHolder();
+                        }
+                    }
+                }
+                return instance;
+            }
+        }
+
+
+        private ConfigurationHolder()
         {
             HebrewReferences = new List<string>();
             GreekReferences = new List<string>();
@@ -40,9 +63,11 @@ namespace BibleTaggingUtil
             if (!File.Exists(configFilePath))
                 return string.Format("File not found: {0}", configFilePath);
 
-            Properties.Settings.Default.TargetTextDirection = "LTR";
+            //Properties.MainSettings.Default.TargetTextDirection = "LTR";
 
             ParseState state = ParseState.NONE;
+            string templine = string.Empty;
+
             using (StreamReader sr = new StreamReader(configFilePath))
             {
                 bool osis = false;
@@ -71,13 +96,29 @@ namespace BibleTaggingUtil
                         }
                         continue;
                     }
+                    else
+                    {
+                        if (line.EndsWith("\\"))
+                        {
+                            templine += "\n" + line.TrimEnd('\\');
+                            continue;
+                        }
+                        line = templine + "\n" + line;
+                        line = line.TrimStart('\n');
+                        templine = string.Empty;
+                    }
+
+                    int equal = line.IndexOf("=");
+                    if (equal == -1) continue;
+
+                    string[] parts = new string[2];
+                    parts[0] = line.Substring(0, equal);
+                    parts[1] = line.Substring(equal + 1);
+
+
 
                     if (state == ParseState.TAGGING)
                     {
-                        string[] parts = line.Split('=');
-                        if (parts.Length != 2)
-                            continue;
-
                         switch (parts[0].Trim().ToLower())
                         {
                             case "untaggedbible":
@@ -110,9 +151,9 @@ namespace BibleTaggingUtil
                                     }
                                 }
                                 break;
-                            case "targettextdirection":
-                                Properties.Settings.Default.TargetTextDirection = parts[1].Trim();
-                                break;
+                            //case "targettextdirection":
+                            //    Properties.MainSettings.Default.TargetTextDirection = parts[1].Trim();
+                            //    break;
                             case "osis":
                                 if(parts[1].Trim().ToLower() == "true") osis = true;
                                 break;
@@ -121,25 +162,22 @@ namespace BibleTaggingUtil
 
                     else if(state == ParseState.OSIS)
                     {
-                        string[] lineParts = line.Split('=');
-                        OSIS[lineParts[0]] = lineParts[1];
+                        OSIS[parts[0]] = parts[1];
                     }
 
                     else if (state == ParseState.USFM)
                     {
-                        string[] lineParts = line.Split('=');
-                        USFM[lineParts[0]] = lineParts[1];
+                        USFM[parts[0]] = parts[1];
                     }
 
                    else if (state == ParseState.USFM2OSIS)
                     {
-                        string[] lineParts = line.Split('=');
-                        USFM2OSIS[lineParts[0]] = lineParts[1];
+                        USFM2OSIS[parts[0]] = parts[1];
                     }
 
                 }
 
-                Properties.Settings.Default.Osis = osis;
+                Properties.MainSettings.Default.Osis = osis;
             }
             return string.Empty;
         }

@@ -87,11 +87,13 @@ namespace SM.Bible.Formats.USFM
             for (int i = 0; i < verseWords.Count; i++)
             {
                 words.Add(verseWords[i].Word);
-                string tmpTag = string.Empty;
+                tags.Add(verseWords[i].Strong.ToString());
+/*                string tmpTag = string.Empty;
                 for (int j = 0; j < verseWords[i].Strong.Length; j++)
                     if(!string.IsNullOrEmpty(verseWords[i].Strong[j]))
                        tmpTag += prfx + verseWords[i].Strong[j] + " ";
                 tags.Add(tmpTag.Trim());
+*/
             }
 
 //            for (int i = 0; i < tags.Count; i++)
@@ -113,7 +115,11 @@ namespace SM.Bible.Formats.USFM
 
         private void ReadUSFM()
         {
-            string usfmRefFolder = Path.Combine(BibleTaggingUtil.Properties.Settings.Default.BiblesFolder, usfmConf[UsfmConstants.usfmRefFolder]);
+            string targetBiblesFolder = BibleTaggingUtil.Properties.TargetBibles.Default.TargetBiblesFolder;
+            string targetBible = BibleTaggingUtil.Properties.TargetBibles.Default.TargetBible;
+            string biblesFolder = Path.Combine(targetBiblesFolder, targetBible);
+
+            string usfmRefFolder = Path.Combine(biblesFolder, usfmConf[UsfmConstants.usfmRefFolder]);
             string[] files = Directory.GetFiles(usfmRefFolder, "*.usfm");
             foreach (string file in files)
             {
@@ -231,7 +237,10 @@ namespace SM.Bible.Formats.USFM
 
         public void SaveUSFMBible()
         {
-            string usfmOutFolder = Path.Combine(BibleTaggingUtil.Properties.Settings.Default.BiblesFolder, usfmConf[UsfmConstants.usfmOutFolder]);
+            string targetBiblesFolder = BibleTaggingUtil.Properties.TargetBibles.Default.TargetBiblesFolder;
+            string targetBible = BibleTaggingUtil.Properties.TargetBibles.Default.TargetBible;
+            string biblesFolder = Path.Combine(targetBiblesFolder, targetBible);
+            string usfmOutFolder = Path.Combine(biblesFolder, usfmConf[UsfmConstants.usfmOutFolder]);
             if (!Directory.Exists(usfmOutFolder))
             {
                 Directory.CreateDirectory(usfmOutFolder);

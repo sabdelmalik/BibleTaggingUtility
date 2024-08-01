@@ -1,5 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup Label="Globals">
+    <WebView2UseWinRT>False</WebView2UseWinRT>
+  </PropertyGroup>
+
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
@@ -27,7 +31,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Editor\HebrewGreekGrid.cs" />
     <Compile Remove="Editor\OsisTargetGridView.cs" />
+    <Compile Remove="SettingsForm.PeriodicTimer1.cs" />
+    <Compile Remove="SettingsForm.ReferenceBibles1.cs" />
+    <Compile Remove="SettingsForm.TranslationTags1.cs" />
+    <Compile Remove="TranslatorsTags\TranslatorTags.cs" />
+    <Compile Remove="TranslatorsTags\TranslatorTagsEx - Save.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Properties\TTArabicSVDPreamble_NT.txt" />
+    <None Remove="Properties\TTArabicSVDPreamble_OT.txt" />
+    <None Remove="TranslatorsTags\TranslatorTagsEx" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,16 +56,56 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Properties\OsisFileGeneration.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OsisFileGeneration.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\ReferenceBibles.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ReferenceBibles.settings</DependentUpon>
+    </Compile>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Update="Properties\Settings.Designer.cs">
+    <Compile Update="Properties\MainSettings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
+      <DependentUpon>MainSettings.settings</DependentUpon>
     </Compile>
+    <Compile Update="Properties\TargetBibles.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TargetBibles.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\TranslationTags.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TranslationTags.settings</DependentUpon>
+    </Compile>
+    <Compile Update="Settings\SettingsForm.TargetBibles.cs">
+	  <DependentUpon>SettingsForm.cs</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Settings\SettingsForm.OsisGeneration.cs">
+	  <DependentUpon>SettingsForm.cs</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Settings\SettingsForm.ReferenceBibles.cs">
+	  <DependentUpon>SettingsForm.cs</DependentUpon>
+      <SubType>Form</SubType>
+	</Compile>
+    <Compile Update="Settings\SettingsForm.TranslationTags.cs">
+	  <DependentUpon>SettingsForm.cs</DependentUpon>
+      <SubType>Form</SubType>
+	</Compile>
+    <Compile Update="Settings\SettingsForm.PeriodicTimer.cs">
+	  <DependentUpon>SettingsForm.cs</DependentUpon>
+      <SubType>Form</SubType>
+	</Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -60,18 +116,40 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Properties\Settings.settings">
+    <None Update="Properties\OsisFileGeneration.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+      <LastGenOutput>OsisFileGeneration.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Properties\ReferenceBibles.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>ReferenceBibles.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Properties\MainSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>MainSettings.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Properties\TargetBibles.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>TargetBibles.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="Properties\TranslationTags.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>TranslationTags.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Crosswire\" />
+    <Folder Include="ReferenceBibles\TranslatorsAmalgamated\NT\TAGNT\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Properties\TTArabicSVDPreamble_NT.txt" />
+    <Resource Include="Properties\TTArabicSVDPreamble_OT.txt" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="md $(ProjectDir)$(OutDir)ReferenceBibles&#xD;&#xA;md $(ProjectDir)$(OutDir)Crosswire&#xD;&#xA;xcopy $(ProjectDir)ReferenceBibles  $(ProjectDir)$(OutDir)ReferenceBibles   /y /s&#xD;&#xA;xcopy $(ProjectDir)Crosswire $(ProjectDir)$(OutDir)Crosswire  /y /s" />
+    <Exec Command="rd $(ProjectDir)$(OutDir)ReferenceBibles /q /s&#xD;&#xA;rd $(ProjectDir)$(OutDir)Crosswire /q /s&#xD;&#xA;md $(ProjectDir)$(OutDir)ReferenceBibles&#xD;&#xA;md $(ProjectDir)$(OutDir)Crosswire&#xD;&#xA;xcopy $(ProjectDir)ReferenceBibles  $(ProjectDir)$(OutDir)ReferenceBibles   /y /s&#xD;&#xA;xcopy $(ProjectDir)Crosswire $(ProjectDir)$(OutDir)Crosswire  /y /s" />
   </Target>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">

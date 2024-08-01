@@ -1,4 +1,6 @@
 ﻿using BibleTaggingUtil.OsisXml;
+using BibleTaggingUtil.Strongs;
+using Microsoft.VisualBasic;
 using System;
 using System.CodeDom;
 using System.Collections.Generic;
@@ -54,7 +56,12 @@ namespace BibleTaggingUtil.BibleVersions
             this.totalVerses = totalVerses;
         }
 
-        public string BibleName { set { bibleName = value;} }
+        public string BibleName { get { return bibleName; } set { bibleName = value;} }
+
+        public int LastVerse(string book, int chapter)
+        {
+           return container.VerseSelectionPanel.LastVerse(book, chapter);
+        }
 
         public virtual bool LoadBibleFile(string textFilePath, bool newBible, bool more)
         {
@@ -221,29 +228,32 @@ namespace BibleTaggingUtil.BibleVersions
 
             Match mTx = Regex.Match(line, @"^([0-9A-Za-z]+)\s([0-9]+):([0-9]+)\s*(.*)");
 
-            /*            // find spcae between book and Chapter
-                        int spaceB = line.IndexOf(' ');
-                        // find spcae between Verse number and Text
-                        int spaceV = line.IndexOf(' ', spaceB + 1);
-                        if (spaceV == -1)
-                        {
-                            throw new Exception(string.Format("Ill formed verse line!"));
-                        }
+            string book = string.Empty;
+            string chapter = string.Empty;
+            string verseNo = string.Empty;
+            string verse = string.Empty;
 
-                        string book = line.Substring(0, spaceB);
-                        string reference = line.Substring(0, spaceV);
-                        string verse = line.Substring(spaceV + 1);*/
+            if (mTx.Success)
+            {
+                book = mTx.Groups[1].Value;
+                chapter = mTx.Groups[2].Value;
+                verseNo = mTx.Groups[3].Value;
+                verse = mTx.Groups[4].Value;
+            }
+            else
+            {
+                throw new Exception(string.Format("Ill formed verse line!"));
+            }
 
-            string book = mTx.Groups[1].Value;
-            string chapter = mTx.Groups[2].Value;
-            string verseNo = mTx.Groups[3].Value;
-            string verse = mTx.Groups[4].Value;
             string reference = string.Format("{0} {1}:{2}", book, chapter, verseNo);
-            if(reference == "Jhn 1:1")
+            if(reference == "Psa 18:1")
             { 
                 int x = 0;
             }
 
+            bool hasPsalmTitle = false;
+            if (book.StartsWith("Ps") && verseNo.Trim() == "1")
+                hasPsalmTitle = line.Contains('*');
 
             BibleTestament testament = Utils.GetTestament(reference);
 
@@ -259,9 +269,13 @@ namespace BibleTaggingUtil.BibleVersions
                     continue; // some extra space
                 if (i == 0 || versePart[0] != '<' ) // add i == 0 test because a verse can not start with a tag.
                 {
+                    // this is a word
+
+                    // Save constructed tag
                     if (!string.IsNullOrEmpty(tmpTag))
                         tags.Add(tmpTag);
                     tmpTag = string.Empty;
+
                     tempWord += (string.IsNullOrEmpty(tempWord)) ? verseParts[i] : (" " + verseParts[i]);
                     if (i == verseParts.Length - 1)
                     {
@@ -271,9 +285,13 @@ namespace BibleTaggingUtil.BibleVersions
                 }
                 else
                 {
+                    // This is a tag
+
+                    // save constructed phrase
                     if (!string.IsNullOrEmpty(tempWord))
                         words.Add(tempWord);
                     tempWord = string.Empty;
+
                     if (verseParts[i] == "<>")
                     {
                         tmpTag = "<>";
@@ -281,36 +299,41 @@ namespace BibleTaggingUtil.BibleVersions
                     else
                     {
                         tmpTag += (string.IsNullOrEmpty(tmpTag)) ? verseParts[i] : (" " + verseParts[i]);
-                        tmpTag = tmpTag.Replace(".", "").Replace("?", "").Trim();
+                        tmpTag = tmpTag.Replace(".", "").Replace("?", "").Trim(); // erroneous KJV characters
                         if (!string.IsNullOrEmpty(tmpTag))
                         {
                             string[] pts = tmpTag.Split(' ');
                             tmpTag= string.Empty;
                             foreach (string t in pts)
                             {
-                                if (t.StartsWith('<'))
-                                {
-                                    int x = t.IndexOf(">");
-                                    if (x > 0)
-                                    {
-                                        string t1 = t.Substring(1, x - 1);
-                                        int len = t1.Length;
-                                        if (len == 0) continue;
-                                        char last = t1[len - 1];
-                                        if (char.IsDigit(last))
-                                        {
-                                            string t2 = "0000" + t1;
-                                            tmpTag += "<" + t2.Substring(t2.Length - 4) + "> ";
-                                        }
-                                        else
-                                        {
-                                            string t2 = "0000" + t1;
-                                            tmpTag += "<" + t2.Substring(t2.Length - 5) + "> ";
-                                        }
-                                    }
-                                 }
+                                /*                       if (t.StartsWith('<'))
+                                                       {
+                                                           int x = t.IndexOf(">");
+                                                           if (x > 0)
+                                                           {
+                                                               string t1 = t.Substring(1, x - 1);
+                                                               int len = t1.Length;
+                                                               if (len == 0) continue;
+                                                               char last = t1[len - 1];
+                                                               if (char.IsDigit(last))
+                                                               {
+                                                                   string t2 = "0000" + t1;
+                                                                   tmpTag += "<" + t2.Substring(t2.Length - 4) + "> ";
+                                                               }
+                                                               else
+                                                               {
+                                                                   string t2 = "0000" + t1;
+                                                                   tmpTag += "<" + t2.Substring(t2.Length - 5) + "> ";
+                                                               }
+                                                           }
+                                                        }
+                                                       else
+                                */
+                                string prefix = Utils.GetTestament(reference) == BibleTestament.NT ? "G" : "H";
+                                if (t[0] == '<' && char.IsDigit(t[1]))
+                                    tmpTag = t.Replace("<", "<" + prefix) + " ";
                                 else
-                                    tmpTag += t + " ";
+                                    tmpTag += t/*.Replace("<", "<" + prefix)*/ + " ";
                             }
                         }
                         tmpTag = tmpTag.Trim();
@@ -339,11 +362,15 @@ namespace BibleTaggingUtil.BibleVersions
                 vTags[i] = vTags[i].Replace("<", "").Replace(">", "");
 
             Verse verseWords = new Verse();
+ 
             for (int i = 0; i < vWords.Length; i++)
             {
                 string[] splitTags = vTags[i].Split(' ');
-                verseWords[i] = new VerseWord(vWords[i], splitTags, reference);
+                verseWords[i] = new VerseWord(vWords[i], new StrongsCluster(splitTags), reference);
             }
+
+            if (book.StartsWith("Ps") && verseNo.Trim() == "1")
+                verseWords.HasPsalmTitle = hasPsalmTitle;
 
             bible.Add(reference, verseWords);
             currentVerseCount++;
@@ -367,6 +394,22 @@ namespace BibleTaggingUtil.BibleVersions
             }
             return index;
         }
+
+
+        public string GetBookNameFromIndex(int index)
+        {
+            string bookName = string.Empty;
+            if (index < 66)
+            {
+                if (index < bookNamesList.Count)
+                    bookName = bookNamesList[index];
+                else if (bookNamesList.Count == 27)
+                    bookName = bookNamesList[index - 39];
+            }
+            return bookName;
+        }
+
+
 
         public string GetCorrectReference(string reference)
         {
@@ -440,6 +483,7 @@ namespace BibleTaggingUtil.BibleVersions
                 osisDoc = osisDoc.Replace("\r\n", "").Replace("\n", "").Replace("<p>","").Replace("</p>", "");
 
                 osisDoc = RemoveOddTags(osisDoc, "p");
+                osisDoc = RemoveOddTags(osisDoc, "q");
                 osisDoc = RemoveOddTags(osisDoc, "lg");
                 //osisDoc = RemoveOddTags(osisDoc, "div");
                 osisDoc = RemoveOddTags(osisDoc, "l");
@@ -530,7 +574,8 @@ namespace BibleTaggingUtil.BibleVersions
                         else if (xmlNode.Name == "w")
                         {
                             verse[wordIndex++] = new VerseWord(xmlNode.InnerText,
-                                OsisUtils.Instance.GetStrongsFromLemma(xmlNode.Attributes["lemma"].Value).ToArray(),
+                                new StrongsCluster(
+                                    OsisUtils.Instance.GetStrongsFromLemma(xmlNode.Attributes["lemma"].Value).ToArray()),
                                 currentReference);
 
                             temp1 = xmlNode.NextSibling;

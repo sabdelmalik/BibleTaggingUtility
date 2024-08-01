@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BibleTaggingUtil.BibleVersions;
+using BibleTaggingUtil.Strongs;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -11,16 +13,18 @@ namespace BibleTaggingUtil.Editor
 {
     internal class TopVersionGridView : DataGridView
     {
+        public ReferenceTopVersion Bible { get; set; }
+
         protected override void OnCellMouseDown(DataGridViewCellMouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left && e.Clicks == 1)
             {
                 if (e.RowIndex >= 0)
                 {
-                    string text = (String)this.Rows[1].Cells[e.ColumnIndex].Value;
-                    if (text != null)
+                    StrongsCluster tag = (StrongsCluster)this.Rows[1].Cells[e.ColumnIndex].Value;
+                    if (tag != null)
                     {
-                        DragData data = new DragData(1, e.ColumnIndex, text.Trim(), this);
+                        DragData data = new DragData(1, e.ColumnIndex, tag, this);
                         this.DoDragDrop(data, DragDropEffects.Copy);
                     }
                 }
@@ -41,53 +45,56 @@ namespace BibleTaggingUtil.Editor
                 return;
 
             string[] verseWords = new string[verse.Count];
-            string[] verseTags = new string[verse.Count];
+            StrongsCluster[] verseTags = new StrongsCluster[verse.Count];
 
             try
-            { 
-            for (int i = 0; i < verse.Count; i++)
             {
-                verseWords[i] = verse[i].Word;
-
-                string thisTag = string.Empty;
-                for (int j = 0; j < verse[i].Strong.Length; j++)
+                for (int i = 0; i < verse.Count; i++)
                 {
-                    if (verse[i].Strong[j].Contains('('))
-                        thisTag += verse[i].Strong[j] + " ";
-                    else
-                        thisTag += "<" + verse[i].Strong[j] + "> ";
+                    verseWords[i] = verse[i].Word;
+                    verseTags[i] = verse[i].Strong;
+                   
+                    // string thisTag = verse[i].Strong.ToString();//string.Empty;
+
+                    /*                for (int j = 0; j < verse[i].Strong.Count; j++)
+                                    {
+                                        if (verse[i].Strong[j].Contains('('))
+                                            thisTag += verse[i].Strong[j] + " ";
+                                        else
+                                            thisTag += "<" + verse[i].Strong[j] + "> ";
+                                    }
+
+                                    thisTag = thisTag.Trim().
+                                            Replace(",", "").
+                                            Replace(".", "").
+                                            Replace(";", "").
+                                            Replace(":", "");
+                    */
+                    //if (thisTag == "<>")
+                    //    thisTag = string.Empty;
+                    //verseTags[i] = thisTag;
                 }
 
-                thisTag = thisTag.Trim().
-                        Replace(",", "").
-                        Replace(".", "").
-                        Replace(";", "").
-                        Replace(":", "");
-                if (thisTag == "<>")
-                    thisTag = string.Empty;
-                verseTags[i] = thisTag;
-            }
 
+                this.ColumnCount = verseWords.Length;
+                this.Rows.Add(verseWords);
+                this.Rows.Add(verseTags);
 
-            this.ColumnCount = verseWords.Length;
-            this.Rows.Add(verseWords);
-            this.Rows.Add(verseTags);
-
-            for (int i = 0; i < verseTags.Length; i++)
-            {
-                string tag = (string)this.Rows[1].Cells[i].Value;
-                if (tag == null)
-                    continue;
-                if (tag.Contains("0410>"))
+                for (int i = 0; i < verseTags.Length; i++)
                 {
-                    this.Rows[1].Cells[i].Style.BackColor = Color.Yellow;
+                    StrongsCluster tag = (StrongsCluster)this.Rows[1].Cells[i].Value;
+                    if (tag == null)
+                        continue;
+                    if (tag.ToString().Contains("0410>"))
+                    {
+                        this.Rows[1].Cells[i].Style.BackColor = Color.Yellow;
+                    }
                 }
-            }
 
-            this.ClearSelection();
+                this.ClearSelection();
 
-            this.Rows[0].ReadOnly = true;
-            this.Rows[1].ReadOnly = true;
+                this.Rows[0].ReadOnly = true;
+                this.Rows[1].ReadOnly = true;
             }
             catch (Exception ex)
             {

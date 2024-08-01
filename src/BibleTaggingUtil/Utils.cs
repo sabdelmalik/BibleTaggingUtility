@@ -49,10 +49,12 @@ namespace BibleTaggingUtil
                 verse += " " + words[i].Word;
                 if (includeTags)
                 {
-                    for (int j = 0; j < words[i].Strong.Length; j++)
+                    verse += " " + words[i].Strong.ToStringBracketed();
+ /*                   for (int j = 0; j < words[i].Strong.Count; j++)
                     {
-                        verse += (" <" + words[i].Strong[j]) + ">";
+                        verse += (" <" + words[i].Strong[j].ToString()) + ">";
                     }
+ */
                 }
             }
 
@@ -91,5 +93,38 @@ namespace BibleTaggingUtil
             return false;
         }
 
+        public static string RemoveDiacritics(string lineToClean)
+        {
+            // Remove diacretics
+            string result = lineToClean.
+/*                Replace("\u064B", "").  // ARABIC FATHATAN
+                Replace("\u064C", "").  // ARABIC DAMMATAN
+                Replace("\u064D", "").  // ARABIC KASRATAN
+                Replace("\u064E", "").  // ARABIC FATHA
+                Replace("\u064F", "").  // ARABIC DAMMA
+                Replace("\u0650", "").  // ARABIC KASRA
+                Replace("\u0651", "").  // ARABIC SHADDA
+                Replace("\u0652", "").  // ARABIC SUKUN
+                Replace("\u0653", "").  // Madda
+                Replace("\u0654", "").  // Hamza above
+                Replace("\u0655", "").  // Hamza below
+                Replace("\u0656", "").  // 
+                Replace("\u0657", "").
+                Replace("\u0658", "").
+                Replace("\u0659", "").
+                Replace("\u065A", "").
+                Replace("\u065B", "").
+                Replace("\u065C", "").
+                Replace("\u065D", "").
+                Replace("\u065E", "").
+                Replace("\u065F", "").*/
+                Replace("«", "").
+                Replace("»", "").
+                Replace(": ", " ").
+                Replace("؟", ".").
+                Replace("!", ".");
+
+            return result;
+        }
     }
 }

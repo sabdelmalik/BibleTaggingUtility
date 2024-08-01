@@ -23,6 +23,11 @@ using Microsoft.VisualBasic.Logging;
 using System.Xml.Linq;
 using System.Text;
 using System.Text.Json;
+using BibleTaggingUtil.TranslationTags;
+using BibleTaggingUtil.Settings;
+using BibleTaggingUtil.Versification;
+using BibleTaggingUtil.Restore;
+using BibleTaggingUtil.Strongs;
 
 namespace BibleTaggingUtil
 {
@@ -33,30 +38,28 @@ namespace BibleTaggingUtil
         private BrowserPanel browserPanel;
         private EditorPanel editorPanel;
         private VerseSelectionPanel verseSelectionPanel;
-        private ProgressForm progressForm;
+        private ProgressForm progressForm = null;
 
         private TargetVersion target;
         private TargetOsisVersion osisTarget;
         private ReferenceTopVersion referenceTopVersion;
-        private ReferenceVersionTOTHT referenceTOTHT;
+        private ReferenceVersionTAHOT referenceTOTHT;
         private ReferenceVersionTAGNT referenceTAGNT;
 
         private string execFolder = string.Empty;
-        private string refFolder = string.Empty;
-        private string topReferencePath = string.Empty;
-        private string tagntPath = string.Empty;
-        private string tothtPath = string.Empty;
         private string crosswirePath = string.Empty;
-
-
 
         private bool m_bSaveLayout = true;
         private DeserializeDockContent m_deserializeDockContent;
 
+        private TranslationTagsEx translationTags = null;
+
         // to save updated dictionary
         // https://stackoverflow.com/questions/36333567/saving-a-dictionaryint-object-in-c-sharp-serialization
 
-        private ConfigurationHolder config = new ConfigurationHolder();
+        private ConfigurationHolder config;
+        private SettingsForm settingsForm = new SettingsForm();
+        private RestoreTarget restoreTarget = null;
 
         public BibleTaggingForm()
         {
@@ -74,8 +77,8 @@ namespace BibleTaggingUtil
 #if DEBUG
             generateSWORDFilesToolStripMenuItem.Visible = false;
 #else
-            saveHebrewToolStripMenuItem.Visible = false;
-            saveKJVPlainToolStripMenuItem.Visible = false;
+            //saveHebrewToolStripMenuItem.Visible = false;
+            //saveKJVPlainToolStripMenuItem.Visible = false;
             usfmToolStripMenuItem.Visible = false;
             oSISToolStripMenuItem.Visible = false;
 #endif
@@ -83,7 +86,7 @@ namespace BibleTaggingUtil
             target = new TargetVersion(this);
             osisTarget = new TargetOsisVersion(this);
             referenceTopVersion = new ReferenceTopVersion(this);
-            referenceTOTHT = new ReferenceVersionTOTHT(this);
+            referenceTOTHT = new ReferenceVersionTAHOT(this);
             referenceTAGNT = new ReferenceVersionTAGNT(this);
         }
 
@@ -97,13 +100,31 @@ namespace BibleTaggingUtil
         private void BibleTaggingForm_Load(object sender, EventArgs e)
         {
             bool workingOnNIV = false;
-            #region WinFormUI setup
-            this.dockPanel.Theme = this.vS2013BlueTheme1;
+
+            settingsForm.TargetAboutToChange += SettingsForm_TargetAboutToChange;
+
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            AssemblyName assemblyName = assembly.GetName();
+            Version version = assemblyName.Version;
+            this.Text = "Bible Tagging " + version.ToString();
+
+            var cm = System.Reflection.MethodBase.GetCurrentMethod();
+            var name = cm.DeclaringType.FullName + "." + cm.Name;
+
+            execFolder = Path.GetDirectoryName(assembly.Location);
+            Tracing.InitialiseTrace(execFolder);
+
+            Tracing.TraceEntry(name);
 
             string configFile = Path.Combine(Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath), "DockPanel.config");
 
+            #region WinFormUI setup
+            this.dockPanel.Theme = this.vS2013BlueTheme1;
+
             if (System.IO.File.Exists(configFile))
                 dockPanel.LoadFromXml(configFile, m_deserializeDockContent);
+
+            EnableRestoreMenu();
 
             browserPanel = new BrowserPanel(); //CreateNewDocument();
             browserPanel.Text = "Blue Letter Bible Lexicon";
@@ -116,16 +137,19 @@ namespace BibleTaggingUtil
             else
                 browserPanel.Show(dockPanel, DockState.DockRight);
             browserPanel.CloseButtonVisible = false;
+            browserPanel.DockState = (DockState)Properties.MainSettings.Default.BrowserPanelDockState;
+            Tracing.TraceInfo(name, "browserPanel initialised");
 
             browserPanel.LexiconWebsite = "https://www.blueletterbible.org/lexicon/{0}/kjv/wlc/0-1/";
             browserPanel.NavigateToTag("h1");
             //browserPanel.NavigateTo("https://www.blueletterbible.org/lexicon/h1/kjv/wlc/0-1/");
 
-            progressForm= new ProgressForm(this);
+            //progressForm = new ProgressForm(this);
 
             verseSelectionPanel = new VerseSelectionPanel();
             verseSelectionPanel.Text = "Verse Selection";
             verseSelectionPanel.TabText = verseSelectionPanel.Text;
+
 
             editorPanel = new EditorPanel(this, browserPanel, verseSelectionPanel);
             editorPanel.Text = "Verse Editor";
@@ -141,6 +165,7 @@ namespace BibleTaggingUtil
 
             editorPanel.CloseButton = false;
             editorPanel.CloseButtonVisible = false;
+            Tracing.TraceInfo(name, "editorPanel initialised");
 
             if (dockPanel.DocumentStyle == DocumentStyle.SystemMdi)
             {
@@ -151,28 +176,89 @@ namespace BibleTaggingUtil
                 verseSelectionPanel.Show(dockPanel, DockState.DockLeft);
 
             verseSelectionPanel.CloseButtonVisible = false;
+            verseSelectionPanel.DockState = (DockState)Properties.MainSettings.Default.VersePanelDockState;
+            Tracing.TraceInfo(name, "verseSelectionPanel initialised");
 
             #endregion WinFormUI setup
 
 
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            AssemblyName assemblyName = assembly.GetName();
-            Version version = assemblyName.Version;
-            this.Text = "Bible Tagging " + version.ToString();
 
-            execFolder = Path.GetDirectoryName(assembly.Location);
-            Tracing.InitialiseTrace(execFolder);
+            while (!Properties.ReferenceBibles.Default.Configured)
+            {
+                GetSettings(startup: true);
+                if (Properties.ReferenceBibles.Default.Configured)
+                    break;
+                DialogResult result = MessageBox.Show("Incomplete Settings! \r\n Do you want to retry settings", "Settings", MessageBoxButtons.YesNo);
+                if (result == DialogResult.No)
+                {
+                    Application.Exit();
+                    return;
+                }
+            }
 
             crosswirePath = Path.Combine(execFolder, "Crosswire");
-            refFolder = Path.Combine(execFolder, "ReferenceBibles");
+            //refFolder = Path.Combine(execFolder, "ReferenceBibles");
 
-            tagntPath = Path.Combine(refFolder, "TAGNT");
-            tothtPath = Path.Combine(refFolder, "TOTHT");
+            //tagntPath = Path.Combine(refFolder, ntReference);
+            //tothtPath = Path.Combine(refFolder, otReference);
 
+            editorPanel.TAGNT = referenceTAGNT;
+            editorPanel.TAHOT = referenceTOTHT;
+            editorPanel.TopVersion = referenceTopVersion;
             editorPanel.TargetVersion = target;
             editorPanel.TargetOsisVersion = osisTarget;
 
-            new Thread(() => { LoadBibles(); }).Start();
+            Application.ThreadException += Application_ThreadException;
+
+            new Thread(() =>
+            {
+                try
+                {
+                    LoadBibles();
+                }
+                catch (Exception ex)
+                {
+                    var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                    var name = cm.DeclaringType.FullName + "." + cm.Name;
+                    Tracing.TraceException(name, ex.Message);
+                    HandleException(ex);
+                }
+            }).Start();
+        }
+
+        private void SettingsForm_TargetAboutToChange(object sender, EventArgs e)
+        {
+            target.SaveUpdates();
+        }
+
+        private void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
+        {
+            HandleException(e.Exception);
+        }
+
+        public void HandleException(Exception ex)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => { HandleException(ex); }));
+            }
+            else
+            {
+                string caption = "Exception";
+                string text = "An exception occurred!\r\nThe application will terminate.\r\nDo you want to Save before termination?";
+                DialogResult result = MessageBox.Show(text, caption, MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    if (Properties.MainSettings.Default.Osis)
+                        OsisTarget.Save("");
+                    else
+                        Target.SaveUpdates();
+
+                }
+                WaitCursorControl(false);
+                //this.Close();
+                Application.Exit();
+            }
         }
 
         private void BibleTaggingForm_KeyDown(object sender, KeyEventArgs e)
@@ -185,6 +271,9 @@ namespace BibleTaggingUtil
 
         private void BibleTaggingForm_Resize(object sender, EventArgs e)
         {
+            if (progressForm == null)
+                return;
+
             progressForm.Location = new Point(
                 this.Location.X + (this.Width / 2) - (progressForm.Width / 2),
                 this.Location.Y + (this.Height / 2) - (progressForm.Height / 2));
@@ -211,7 +300,9 @@ namespace BibleTaggingUtil
                     // Save the Verses Updates
 
                     target.SaveUpdates();
-                    Properties.Settings.Default.Save();
+                    Properties.MainSettings.Default.VersePanelDockState = (int)verseSelectionPanel.DockState;
+                    Properties.MainSettings.Default.BrowserPanelDockState = (int)browserPanel.DockState;
+                    Properties.MainSettings.Default.Save();
 
                     string configFile = Path.Combine(Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath), "DockPanel.config");
                     if (m_bSaveLayout)
@@ -222,7 +313,7 @@ namespace BibleTaggingUtil
                     e.Cancel = false;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 var cm = System.Reflection.MethodBase.GetCurrentMethod();
                 var name = cm.DeclaringType.FullName + "." + cm.Name;
@@ -252,51 +343,52 @@ namespace BibleTaggingUtil
         private void LoadBibles()
         {
             Tracing.TraceEntry(MethodBase.GetCurrentMethod().Name);
-  
+
             string taggedFolder = string.Empty;
 
+            string targetBiblesFolder = Properties.TargetBibles.Default.TargetBiblesFolder;
+            string targetBible = Properties.TargetBibles.Default.TargetBible;
+            string biblesFolder = Path.Combine(targetBiblesFolder, targetBible);
 
-
-            string biblesFolder = Properties.Settings.Default.BiblesFolder;
             try
             {
                 while (true)
                 {
-                    if (string.IsNullOrEmpty(biblesFolder) && !Directory.Exists(biblesFolder))
-                    {
-                        GetBiblesFolder();
-                        biblesFolder = Properties.Settings.Default.BiblesFolder;
-                        if (string.IsNullOrEmpty(biblesFolder))
-                        {
-                            CloseForm();
-                            return;
-                        }
-                    }
+                    //if (string.IsNullOrEmpty(biblesFolder) && !Directory.Exists(biblesFolder))
+                    //{
+                    //    GetBiblesFolder();
+                    //    biblesFolder = Properties.MainSettings.Default.BiblesFolder;
+                    //    if (string.IsNullOrEmpty(biblesFolder))
+                    //    {
+                    //        CloseForm();
+                    //        return;
+                    //    }
+                    //}
 
                     // Load configuration
-                    config = new ConfigurationHolder();
+                    config = ConfigurationHolder.Instance;
                     string confResult = config.ReadBiblesConfig(biblesFolder);
-                    if (!string.IsNullOrEmpty(confResult))
-                    {
-                        MessageBox.Show(confResult);
-                        GetBiblesFolder();
-                        biblesFolder = Properties.Settings.Default.BiblesFolder;
-                        if (string.IsNullOrEmpty(biblesFolder))
-                        {
-                            CloseForm();
-                            return;
-                        }
-                        else
-                        {
-                            confResult = config.ReadBiblesConfig(biblesFolder);
-                            if (!string.IsNullOrEmpty(confResult))
-                            {
-                                MessageBox.Show(confResult);
-                                CloseForm();
-                                return;
-                            }
-                        }
-                    }
+                    //if (!string.IsNullOrEmpty(confResult))
+                    //{
+                    //    MessageBox.Show(confResult);
+                    //    GetBiblesFolder();
+                    //    biblesFolder = Properties.MainSettings.Default.BiblesFolder;
+                    //    if (string.IsNullOrEmpty(biblesFolder))
+                    //    {
+                    //        CloseForm();
+                    //        return;
+                    //    }
+                    //    else
+                    //    {
+                    //        confResult = config.ReadBiblesConfig(biblesFolder);
+                    //        if (!string.IsNullOrEmpty(confResult))
+                    //        {
+                    //            MessageBox.Show(confResult);
+                    //            CloseForm();
+                    //            return;
+                    //        }
+                    //    }
+                    //}
 
                     taggedFolder = Path.GetDirectoryName(config.TaggedBible);
 
@@ -318,6 +410,7 @@ namespace BibleTaggingUtil
                         break;
                     }
                 }
+                /*
                 if (string.IsNullOrEmpty(config.TopReferenceVersion))
                 {
                     topReferencePath = Path.Combine(refFolder, "KJV");
@@ -330,20 +423,12 @@ namespace BibleTaggingUtil
                         topReferencePath = Path.Combine(refFolder, "KJV");
                     }
                 }
+                */
 
 
-
-                editorPanel.TargetBibleName(Path.GetFileName(biblesFolder));
-                target.BibleName = Path.GetFileName(biblesFolder);
-                osisTarget.BibleName = Path.GetFileName(biblesFolder);
-                string refBibleName = Path.GetFileName(topReferencePath);
-                referenceTopVersion.BibleName = refBibleName;
-                editorPanel.TopReferenceBibleName(refBibleName);
-
-                referenceTAGNT.BibleName = "TAGNT";
-                referenceTOTHT.BibleName = "TOTHT";
-
-
+                editorPanel.TargetBibleName = targetBible;
+                target.BibleName = targetBible;
+                osisTarget.BibleName = targetBible;
             }
             catch (Exception ex)
             {
@@ -352,116 +437,141 @@ namespace BibleTaggingUtil
                 Tracing.TraceException(name, ex.Message);
             }
 
-            WaitCursorControl(true);
 
-            string[] files = Directory.GetFiles(taggedFolder);
-            if (files.Length > 0)
+            while (true)
             {
-                string ext = Path.GetExtension(files[0]);
-                Properties.Settings.Default.Osis = false;
-                //               if (Properties.Settings.Default.Osis)
-                if (ext.ToLower() == ".xml")
+                if (string.IsNullOrEmpty(Properties.TargetBibles.Default.TargetBible) ||
+                    string.IsNullOrEmpty(Properties.TargetBibles.Default.TargetBiblesFolder))
                 {
-                    Properties.Settings.Default.Osis = true;
-
-                    generateOSISToolStripMenuItem.Visible = false;
-                    usfmToolStripMenuItem.Visible = false;
-                    oSISToolStripMenuItem.Visible = true;
-                    generateSWORDFilesToolStripMenuItem.Visible = false;
-                    saveHebrewToolStripMenuItem.Visible = false;
-                    saveKJVPlainToolStripMenuItem.Visible = false;
-
-                    osisTarget.LoadBibleFile(files[0], true, false);
+                    DialogResult res = ShowMessageBox("At least one Target must be selected\r\nYes: to set the target Bible\r\nNo: to quit.",
+                        "Target Missing", MessageBoxButtons.YesNo);
+                    if (res == DialogResult.No)
+                    {
+                        Application.Exit();
+                    }
+                    GetSettings(startup: true);
                 }
-                else
-                    target.LoadBibleFile(files[0], true, false);
-                VerseSelectionPanel.SetBookCount(target.BookCount);
+                else { break; }
             }
-            else
-            {
-                DialogResult res = ShowMessageBox("Tagged folder is empty\r\nSelect another Bible Folder?", "Error!", MessageBoxButtons.YesNo);
-                if (res == DialogResult.Yes)
-                {
-                    biblesFolder = string.Empty;
-                }
-                else
-                {
-                    CloseForm();
-                    return;
-                }
-            }
+
+            LoadTarget();
 
             StartGui();
 
-            /*            if (string.IsNullOrEmpty(config.KJV) || !System.IO.File.Exists(config.KJV))
-                        {
-                            MessageBox.Show("KJV is missing");
-                            CloseForm();
-                            return;
-                        }
-            */
+            WaitCursorControl(true);
 
             this.Closing -= BibleTaggingForm_Closing;
             this.Closing += BibleTaggingForm_Closing;
 
-            if (!LoadReferenceFiles(topReferencePath, referenceTopVersion)) { CloseForm(); return; }
-            if (!LoadReferenceFiles(tothtPath, referenceTOTHT)) { CloseForm(); return; }
-            if (!LoadReferenceFiles(tagntPath, referenceTAGNT)) { CloseForm(); return; }
-
-
- /*           bool result = false;
-            files = Directory.GetFiles(topReferencePath);
-            for (int i = 0; i < files.Length; i++)
+            if (!Properties.ReferenceBibles.Default.TopRefSkip)
             {
-                result = referenceTopVersion.LoadBibleFile(files[i], i == 0, i != (files.Length - 1));
+                string refBibleName = Properties.ReferenceBibles.Default.TopReference; //Path.GetFileName(settingsForm.ReferenceTopVersionPath);
+                referenceTopVersion.BibleName = refBibleName;
+                editorPanel.TopReferenceBibleName = refBibleName;
+                if (!LoadReferenceFiles(settingsForm.ReferenceTopVersionPath, referenceTopVersion)) { CloseForm(); return; }
             }
 
-//            referenceTopVersion.LoadBibleFile(config.KJV, true, false);
-
-            StartGui();
-
-            files = Directory.GetFiles(tothtPath);
-            for (int i = 0; i < files.Length; i++)
+            if (!Properties.ReferenceBibles.Default.OtRefSkip)
             {
-                result = referenceTOTHT.LoadBibleFile(files[i], i == 0, i != (files.Length - 1));
-            }
-*/
+                referenceTOTHT.BibleName = Properties.ReferenceBibles.Default.TAOTReference;//otReference;
 
-            /*           if (config.HebrewReferences.Count > 0)
-                       {
-                           for (int i = 0; i < config.HebrewReferences.Count; i++)
-                           {
-                               result = referenceTOTHT.LoadBibleFile(config.HebrewReferences[i], i == 0, i != (config.HebrewReferences.Count -1));
-                           }
-                       }*/
- /*           if (!result)
-            {
-                MessageBox.Show("Loading Hebrew reference  failed");
-                CloseForm();
-                return;
+                if (!LoadReferenceFiles(settingsForm.ReferenceTAOTPath, referenceTOTHT)) { CloseForm(); return; }
             }
 
-            files = Directory.GetFiles(tagntPath);
-            for (int i = 0; i < files.Length; i++)
+            if (!Properties.ReferenceBibles.Default.NtRefSkip)
             {
-                result = referenceTAGNT.LoadBibleFile(files[i], i == 0, i != (files.Length - 1));
-            }
-            if (!result)
-            {
-                MessageBox.Show("Loading Greek reference  failed");
-                CloseForm();
-                return;
+                referenceTAGNT.BibleName = Properties.ReferenceBibles.Default.TANTReference; //ntReference;
+                if (!LoadReferenceFiles(settingsForm.ReferenceTANTPath, referenceTAGNT)) { CloseForm(); return; }
+
+                #region fix strongs multiple occurance suffix
+                Dictionary<string, string> refs = new Dictionary<string, string>(); 
+                foreach (( string refrence, Verse ver) in referenceTAGNT.Bible)
+                {
+                    foreach (VerseWord word in ver)
+                    {
+                        if(!word.VarCorrected && word.VarUsed && word.Strong.Count == 1)
+                        {
+                            StrongsNumber sn = word.Strong[0];
+                            int count = 0;
+                            foreach (VerseWord w in ver)
+                            {
+                                if(w.Strong.Count ==  1 && w.Strong[0].Number == sn.Number)
+                                    count++;
+                            }
+                            if (count > 1)
+                            {
+                                int currentPos = 1;
+                                for (int i = 0; i < ver.Count; i++)
+                                {
+                                    VerseWord w = ver[i];
+                                    if (w.Strong.Count == 1)
+                                    {
+                                        if (w.Strong.Count == 1 && w.Strong[0].Number == sn.Number)
+                                        {
+                                            w.Strong[0].SetOccurance(currentPos++);
+                                            w.VarCorrected = true;
+                                            if (refs.ContainsKey(refrence))
+                                            {
+                                                if (!refs[refrence].Contains(w.StrongStringS))
+                                                {
+                                                    refs[refrence] += string.Format("\t({0}) {1}", count, w.StrongStringS);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                refs[refrence] = string.Format("({0}) {1}", count, w.StrongStringS);
+                                            }
+                                        }
+                                    } else
+                                    {
+                                        if (w.Strong.ToStringD().Contains(sn.ToStringD()))
+                                        {
+                                            for(int j = 0; j < w.Strong.Count; j++)
+                                            {
+                                                StrongsNumber s = w.Strong[j];
+                                                if (s.Number == sn.Number)
+                                                {
+                                                    s.SetOccurance(currentPos++);
+                                                    w.VarCorrected = true;
+                                                    if (refs.ContainsKey(refrence))
+                                                    {
+                                                        if (!refs[refrence].Contains(w.StrongStringS))
+                                                        {
+                                                            refs[refrence] += string.Format("\t({0}) {1}", count, w.StrongStringS);
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        refs[refrence] = string.Format("({0}) {1}", count, w.StrongStringS);
+                                                    }
+
+                                                }
+                                            }
+                                        }
+
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                }
+                //string path = @"c:\tmp\corrections.txt";
+                //using (StreamWriter sw = new StreamWriter(path))
+                //{
+                //    foreach ((string r, string v) in refs)
+                //    {
+                //        sw.WriteLine(r + "\t" + v);
+                //    }
+                //}
+                #endregion fix strongs multiple occurance suffix
             }
 
-            StartGui();
-*/
             target.ActivatePeriodicTimer();
 
+            editorPanel.ClearNavStack();
+
             WaitCursorControl(false);
-            //verseSelectionPanel.CurrentBook = Properties.Settings.Default.LastBook;
-            //verseSelectionPanel.CurrentChapter = Properties.Settings.Default.LastChapter;
-            //verseSelectionPanel.CurrentVerse = Properties.Settings.Default.LastVerse;
-            //verseSelectionPanel.FireVerseChanged();
         }
 
         private bool LoadReferenceFiles(string folderPath, BibleVersion reference)
@@ -469,17 +579,24 @@ namespace BibleTaggingUtil
             bool result = false;
 
             string[] files = Directory.GetFiles(folderPath);
-            Dictionary <int,string> fileDict = new Dictionary<int,string>();
-            foreach (string file in files)
+            Dictionary<int, string> fileDict = new Dictionary<int, string>();
+            if (files.Length == 1)
             {
-                int key = 0;
-                string fileName = Path.GetFileName(file);
-                int idx = fileName.IndexOf('.');
-                if(!int.TryParse(fileName.Substring(0,idx), out key) )
+                fileDict.Add(0, files[0]);
+            }
+            else
+            {
+                foreach (string file in files)
                 {
-                    MessageBox.Show("File name in wrong format: " + fileName);
+                    int key = 0;
+                    string fileName = Path.GetFileName(file);
+                    int idx = fileName.IndexOf('.');
+                    if (!int.TryParse(fileName.Substring(0, idx), out key))
+                    {
+                        MessageBox.Show("File name in wrong format: " + fileName);
+                    }
+                    fileDict.Add(key - 1, file);
                 }
-                fileDict.Add(key-1, file);
             }
             for (int i = 0; i < fileDict.Keys.Count; i++)
             {
@@ -491,7 +608,7 @@ namespace BibleTaggingUtil
                 MessageBox.Show("Loading " + refName + " failed");
             }
             else
-               StartGui();
+                StartGui();
 
             return result;
         }
@@ -508,9 +625,19 @@ namespace BibleTaggingUtil
             }
             else
             {
-                verseSelectionPanel.CurrentBook = Properties.Settings.Default.LastBook;
-                verseSelectionPanel.CurrentChapter = Properties.Settings.Default.LastChapter;
-                verseSelectionPanel.CurrentVerse = Properties.Settings.Default.LastVerse;
+                if(Properties.MainSettings.Default.LastBook < 0)
+                { Properties.MainSettings.Default.LastBook = 0; }
+                verseSelectionPanel.CurrentBook = Properties.MainSettings.Default.LastBook;
+
+
+                if (Properties.MainSettings.Default.LastChapter < 0)
+                { Properties.MainSettings.Default.LastChapter = 0; }
+                verseSelectionPanel.CurrentChapter = Properties.MainSettings.Default.LastChapter;
+
+
+                if (Properties.MainSettings.Default.LastVerse < 0)
+                { Properties.MainSettings.Default.LastVerse = 0; }
+                verseSelectionPanel.CurrentVerse = Properties.MainSettings.Default.LastVerse;
                 verseSelectionPanel.FireVerseChanged();
                 editorPanel.TargetDirty = false;
             }
@@ -530,14 +657,17 @@ namespace BibleTaggingUtil
             {
                 if (wait)
                 {
+                    if (progressForm == null)
+                        progressForm = new ProgressForm(this);
                     this.Cursor = Cursors.WaitCursor;
                     //waitCursorAnimation.Visible = true;
                     //aitCursorAnimation.BringToFront();
                     progressForm.Clear();
-
+                    progressForm.TopMost = true;
+                    progressForm.Visible = true;
                     //progressForm.Location = new Point((this.Width / 2) - (progressForm.Width / 2),
                     //                                  (this.Height / 2) - (progressForm.Height / 2));
-                     
+
                     progressForm.Show();
 
                     progressForm.Location = new Point(
@@ -551,10 +681,15 @@ namespace BibleTaggingUtil
                 }
                 else
                 {
+                    if (progressForm == null)
+                        return;
                     this.Cursor = Cursors.Default;
                     //waitCursorAnimation.Visible = false;
                     progressForm.Progress = 0;
                     progressForm.Visible = false;
+                    progressForm.Dispose();
+                    progressForm = null;
+
                     menuStrip1.Enabled = true;
                     verseSelectionPanel.Enabled = true;
                     editorPanel.Enabled = true;
@@ -572,11 +707,11 @@ namespace BibleTaggingUtil
                     Action safeWrite = delegate { UpdateProgress(label, progress); };
                     Invoke(safeWrite);
                 }
-                catch (Exception ex){ }   
+                catch (Exception ex) { }
             }
             else
             {
-                progressForm.Label = label;
+                progressForm.UpdateLabel(label);
                 progressForm.Progress = progress;
             }
         }
@@ -589,7 +724,7 @@ namespace BibleTaggingUtil
             {
                 // Call this same method but append THREAD2 to the text
                 //Action safeWrite = delegate { ShowMessageBox(text, caption, buttons); };
-                result = (DialogResult) Invoke(new Func<DialogResult>(() => ShowMessageBox(text, caption, buttons)));
+                result = (DialogResult)Invoke(new Func<DialogResult>(() => ShowMessageBox(text, caption, buttons)));
             }
             else
             {
@@ -600,13 +735,13 @@ namespace BibleTaggingUtil
 
         #region public properties
 
-        public ConfigurationHolder Config { get { return config; } }    
-        public EditorPanel EditorPanel { get { return editorPanel; } }  
+        public ConfigurationHolder Config { get { return config; } }
+        public EditorPanel EditorPanel { get { return editorPanel; } }
         public VerseSelectionPanel VerseSelectionPanel { get { return verseSelectionPanel; } }
         public TargetVersion Target { get { return target; } }
         public TargetOsisVersion OsisTarget { get { return osisTarget; } }
-        public ReferenceTopVersion TopVersion { get {return referenceTopVersion; } }
-        public ReferenceVersionTOTHT TOTHT { get { return referenceTOTHT; } }
+        public ReferenceTopVersion TopVersion { get { return referenceTopVersion; } }
+        public ReferenceVersionTAHOT TOTHT { get { return referenceTOTHT; } }
         public ReferenceVersionTAGNT TAGNT { get { return referenceTAGNT; } }
 
         #endregion public properties
@@ -677,6 +812,7 @@ namespace BibleTaggingUtil
         /// <summary>
         /// 
         /// </summary>
+        [Obsolete]
         private void GetBiblesFolder()
         {
             Tracing.TraceEntry(MethodBase.GetCurrentMethod().Name);
@@ -694,7 +830,7 @@ namespace BibleTaggingUtil
                 {
                     folderPath = folderBrowserDialog1.SelectedPath;
                 }
-                Properties.Settings.Default.BiblesFolder = folderPath;
+                //Properties.MainSettings.Default.BiblesFolder = folderPath;
             }
         }
 
@@ -726,26 +862,6 @@ namespace BibleTaggingUtil
             return biblePath;
         }
 
-        /// <summary>
-        /// Get Bible folder to work with
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void setBibleFolderToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-            this.Enabled = false;
-            GetBiblesFolder();
-            string folder = Properties.Settings.Default.BiblesFolder;
-            if (!string.IsNullOrEmpty(folder))
-            {
-                target.SaveUpdates();
-                editorPanel.ClearCurrentVerse();
-                new Thread(() => { LoadBibles(); }).Start();
-            }
-            this.Enabled = true;
-        }
-
         #endregion Bible File Loading
 
         /// <summary>
@@ -755,10 +871,13 @@ namespace BibleTaggingUtil
         /// <param name="e"></param>
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SettingsForm settingsForm = new SettingsForm();
+            GetSettings(startup: false);
+        }
 
-            int priodicSaveTime = Properties.Settings.Default.PeriodicSaveTime;
-            if(priodicSaveTime > 0)
+        private void GetSettings(bool startup = false)
+        {
+            int priodicSaveTime = Properties.MainSettings.Default.PeriodicSaveTime;
+            if (priodicSaveTime > 0)
             {
                 settingsForm.PeriodicSaveEnabled = true;
                 settingsForm.SavePeriod = priodicSaveTime;
@@ -770,253 +889,100 @@ namespace BibleTaggingUtil
             DialogResult result = settingsForm.ShowDialog();
             if (result == DialogResult.OK)
             {
-                if(settingsForm.PeriodicSaveEnabled)
+                if (settingsForm.PeriodicSaveEnabled)
                 {
-                    Properties.Settings.Default.PeriodicSaveTime = settingsForm.SavePeriod;
+                    Properties.MainSettings.Default.PeriodicSaveTime = settingsForm.SavePeriod;
                 }
                 else
                 {
-                    Properties.Settings.Default.PeriodicSaveTime = 0;
+                    Properties.MainSettings.Default.PeriodicSaveTime = 0;
                 }
                 target.ActivatePeriodicTimer();
-            }
-        }
 
-        /// <summary>
-        /// Save KJV Plain
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void saveKJVPlainToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                // construce Updates fileName
-                string targetBibleFileFolder = Properties.Settings.Default.TargetBibleFileFolder;
-                if (string.IsNullOrEmpty(targetBibleFileFolder))
+                if (!startup)
                 {
-                    targetBibleFileFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "bibles");
-                }
-
-                if (Directory.Exists(targetBibleFileFolder))
-                {
-                    MessageBox.Show("Directorund\r\n" + targetBibleFileFolder);
-                }
-
-                using (StreamWriter outputFile = new StreamWriter(Path.Combine(targetBibleFileFolder, "kjv_plain.txt")))
-                {
-
-                    for (int i = 0; i < Constants.osisNames.Length; i++)
+                    new Thread(() =>
                     {
-                        // construct reference
-                        string bookName = Constants.osisNames[i];
-                        if (bookName == "Exod")
-                            break;
-                        BibleBook book = verseSelectionPanel.BibleBooks[bookName];
-                        if (verseSelectionPanel.UseAltNames)
-                            bookName = book.BookAltName;
-                        int[] lastVerses = book.LastVerse;
-                        //int idx = 0;
-                        for (int chapter = 0; chapter < lastVerses.Length; chapter++)
+                        try
                         {
-                            try
-                            {
-                                int lastVerse = book.LastVerse[chapter];
-                                for (int verse = 1; verse <= lastVerse; verse++)
-                                {
-                                    string verseRef = string.Format("{0:s} {1:d}:{2:d}", bookName, chapter + 1, verse);
-                                    if (referenceTopVersion.Bible.ContainsKey(verseRef))
-                                    {
-                                        string line = string.Format("{0:s} {1:s}", verseRef, Utils.GetVerseText(referenceTopVersion.Bible[verseRef], false));
-                                        outputFile.WriteLine(line);
-                                    }
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                var cm = System.Reflection.MethodBase.GetCurrentMethod();
-                                var name = cm.DeclaringType.FullName + "." + cm.Name;
-                                Tracing.TraceException(name, ex.Message);
-                            }
+                            UpdateBibles(settingsForm.ChangedFlags);
                         }
-                    }
+                        catch (Exception ex)
+                        {
+                            var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                            var name = cm.DeclaringType.FullName + "." + cm.Name;
+                            Tracing.TraceException(name, ex.Message);
+                            HandleException(ex);
+                        }
+                    }).Start();
                 }
-            }
-            catch (Exception ex)
-            {
-                var cm = System.Reflection.MethodBase.GetCurrentMethod();
-                var name = cm.DeclaringType.FullName + "." + cm.Name;
-                Tracing.TraceException(name, ex.Message);
             }
         }
 
-        /// <summary>
-        /// Get Hebrew Line
-        /// </summary>
-        /// <param name="verseWords"></param>
-        /// <returns></returns>
-        private string[] GetHebrewLine(Verse verseWords)
+        private void LoadTarget()
         {
-            string[] lines = new string[2];
+            WaitCursorControl(true);
+            string targetBibleName = Properties.TargetBibles.Default.TargetBible;
+            string targetBiblesFolder = Properties.TargetBibles.Default.TargetBiblesFolder;
+            target.BibleName = targetBibleName;
+            editorPanel.TargetBibleName = targetBibleName;
+            osisTarget.BibleName = targetBibleName;
 
-            try
+            editorPanel.ClearCurrentVerse();
+
+            string bibleFolder = Path.Combine(targetBiblesFolder, targetBibleName);
+            string taggedFolder = Path.Combine(bibleFolder, "tagged");
+            string[] files = Directory.GetFiles(taggedFolder);
+            if (files.Length > 0)
             {
-                List<string> words = new List<string>();
-                List<string> hebrew = new List<string>();
-                List<string> transliteration = new List<string>();
-                List<string> tags = new List<string>();
-
-                for (int i = 0; i < verseWords.Count; i++)
+                string ext = Path.GetExtension(files[0]);
+                Properties.MainSettings.Default.Osis = false;
+                //               if (Properties.MainSettings.Default.Osis)
+                if (ext.ToLower() == ".xml")
                 {
-                    VerseWord verseWord = verseWords[i];
-                    words.Add(verseWord.Word);
-                    hebrew.Add(verseWord.Hebrew);
-                    transliteration.Add(verseWord.Transliteration);
-                    if (verseWord.Strong.Length > 0)
-                    {
-                        string s = String.Empty;
-                        bool E = (verseWord.Hebrew.Trim() == "אֱלֹהִים");
-                        bool Y = (verseWord.Hebrew.Trim() == "יהוה");
-                        bool strongIsE = (verseWord.Strong[0].Trim() == "0430");
-                        bool strongIsY = ((verseWord.Strong[0].Trim() == "3068") || (verseWord.Strong[0].Trim() == "3069"));
+                    Properties.MainSettings.Default.Osis = true;
 
-                        if (E || Y)
-                        {
-                            // special treatment for אֱלֹהִים & יהוה
-                            if ((E && strongIsE) || (Y && strongIsY))
-                                s = "<" + verseWord.Strong[0] + ">";
-                        }
-                        else
-                        {
-                            s = verseWord.Strong[0];
-                        }
+                    generateOSISToolStripMenuItem.Visible = false;
+                    usfmToolStripMenuItem.Visible = false;
+                    oSISToolStripMenuItem.Visible = true;
+                    generateSWORDFilesToolStripMenuItem.Visible = false;
+                    //saveHebrewToolStripMenuItem.Visible = false;
+                    //saveKJVPlainToolStripMenuItem.Visible = false;
 
-                        if (verseWord.Strong.Length > 1)
-                        {
-                            for (int j = 1; j < verseWord.Strong.Length; j++)
-                            {
-                                strongIsE = (verseWord.Strong[j].Trim() == "0430");
-                                strongIsY = ((verseWord.Strong[j].Trim() == "3068") || (verseWord.Strong[j].Trim() == "3069"));
-                                if (E || Y)
-                                {
-                                    // special treatment for אֱלֹהִים & יהוה
-                                    if ((E && strongIsE) || (Y && strongIsY))
-                                    {
-                                        if (!string.IsNullOrEmpty(s))
-                                            s += " ";
-                                        s += verseWord.Strong[j];
-                                    }
-                                }
-                                else
-                                {
-                                    if (!string.IsNullOrEmpty(s))
-                                        s += " ";
-                                    s += "<" + verseWord.Strong[j] + ">";
-                                }
-                            }
-                        }
-                        tags.Add(s.Trim());
-                    }
-                    else
-                        tags.Add("");
+                    osisTarget.LoadBibleFile(files[0], true, false);
                 }
-                string[] hebrewA = hebrew.ToArray();
-                string[] tagsA = tags.ToArray();
-                string line0 = string.Empty;
-                string line1 = string.Empty;
-                for (int i = 0; i < hebrewA.Length; i++)
-                {
-                    if (tagsA[i].Trim()[0] == '9')
-                        continue;
-                    line0 += string.IsNullOrWhiteSpace(hebrewA[i]) ? hebrewA[i] : (" " + hebrewA[i]);
-                    line1 += string.IsNullOrWhiteSpace(tagsA[i]) ? tagsA[i] : (" " + tagsA[i]);
-                }
-                lines[0] = line0;
-                lines[1] = line1;
+                else
+                    target.LoadBibleFile(files[0], true, false);
+                VerseSelectionPanel.SetBookCount(target.BookCount);
             }
-            catch (Exception ex)
-            {
-                var cm = System.Reflection.MethodBase.GetCurrentMethod();
-                var name = cm.DeclaringType.FullName + "." + cm.Name;
-                Tracing.TraceException(name, ex.Message);
-            }
-            return lines;
+
+            WaitCursorControl(false);
         }
-
-        /// <summary>
-        /// Save Hebrew
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void saveHebrewToolStripMenuItem_Click(object sender, EventArgs e)
+        private void UpdateBibles(SettingsFlags flags)
         {
-            try
+            if (flags.TopRefChanged && !Properties.ReferenceBibles.Default.TopRefSkip)
             {
-                string targetBibleFileFolder = Properties.Settings.Default.TargetBibleFileFolder;
-                if (string.IsNullOrEmpty(targetBibleFileFolder))
-                {
-                    targetBibleFileFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "bibles");
-                }
-
-                using (StreamWriter outputFileH = new StreamWriter(Path.Combine(targetBibleFileFolder, "hebrew.txt")))
-                {
-                    using (StreamWriter outputFileT = new StreamWriter(Path.Combine(targetBibleFileFolder, "tags.txt")))
-                    {
-                        for (int i = 0; i < Constants.osisNames.Length; i++)
-                        {
-                            // construct reference
-                            string bookName = Constants.osisNames[i];
-                            if (bookName == "Exod")
-                                break;
-
-                            BibleBook book = verseSelectionPanel.BibleBooks[bookName];
-                            if (verseSelectionPanel.UseAltNames)
-                                bookName = book.BookAltName;
-                            int[] lastVerses = book.LastVerse;
-                            //int idx = 0;
-                            for (int chapter = 0; chapter < lastVerses.Length; chapter++)
-                            {
-                                try
-                                {
-                                    int lastVerse = book.LastVerse[chapter];
-                                    for (int verse = 1; verse <= lastVerse; verse++)
-                                    {
-                                        string verseRef = string.Format("{0:s} {1:d}:{2:d}", bookName, chapter + 1, verse);
-                                        if (TOTHT.Bible.ContainsKey(verseRef))
-                                        {
-                                            ///
-                                            string[] lines = GetHebrewLine(TOTHT.Bible[verseRef]);
-                                            outputFileH.WriteLine(string.Format("{0:s} {1:s}", verseRef, lines[0]));
-                                            outputFileT.WriteLine(string.Format("{0:s} {1:s}", verseRef, lines[1]));
-                                            ///
-                                        }
-                                    }
-                                }
-                                catch (Exception ex)
-                                {
-                                    var cm = System.Reflection.MethodBase.GetCurrentMethod();
-                                    var name = cm.DeclaringType.FullName + "." + cm.Name;
-                                    Tracing.TraceException(name, ex.Message);
-                                }
-                            }
-                        }
-
-                    }
-                }
+                WaitCursorControl(true);
+                string refBibleName = Path.GetFileName(settingsForm.ReferenceTopVersionPath);
+                referenceTopVersion.BibleName = refBibleName;
+                editorPanel.TopReferenceBibleName = refBibleName;
+                if (!LoadReferenceFiles(settingsForm.ReferenceTopVersionPath, referenceTopVersion)) { CloseForm(); return; }
+                WaitCursorControl(false);
             }
-            catch (Exception ex)
+            if (flags.TargetBibleChanged || flags.VersificaltionChanged)
             {
-                var cm = System.Reflection.MethodBase.GetCurrentMethod();
-                var name = cm.DeclaringType.FullName + "." + cm.Name;
-                Tracing.TraceException(name, ex.Message);
+                verseSelectionPanel.SetVersification();
+                string currentRef = editorPanel.CurrentVerseRef;
+                LoadTarget();
+                verseSelectionPanel.GotoVerse(currentRef);
             }
         }
 
-        public void FindVerse (string tag)
+        public void FindVerse(BibleVersion version, string tag)
         {
             try
             {
-                string newRef = editorPanel.CurrentVerse;
+                string newRef = editorPanel.CurrentVerseRef;
                 while (true)
                 {
                     newRef = verseSelectionPanel.GetNextRef(newRef);
@@ -1032,7 +998,7 @@ namespace BibleTaggingUtil
                     {
                         string bookName = newRef.Substring(0, 3);
                         string targetRef = newRef.Replace(bookName, Target[bookName]);
-                        text = Utils.GetVerseText(Target.Bible[targetRef], true);
+                        text = Utils.GetVerseText(version.Bible[targetRef], true);
                     }
                     catch (Exception ex)
                     {
@@ -1057,7 +1023,7 @@ namespace BibleTaggingUtil
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 var cm = System.Reflection.MethodBase.GetCurrentMethod();
                 var name = cm.DeclaringType.FullName + "." + cm.Name;
@@ -1065,11 +1031,15 @@ namespace BibleTaggingUtil
             }
         }
 
+
+        /// <summary>
+        /// finds the a tag that ids repeated in two consequetive cells
+        /// </summary>
         public void FindRepetitive()
         {
             try
             {
-                string newRef = editorPanel.CurrentVerse;
+                string newRef = editorPanel.CurrentVerseRef;
                 bool more = true;
                 while (more)
                 {
@@ -1089,7 +1059,7 @@ namespace BibleTaggingUtil
                         string bookName = newRef.Substring(0, 3);
                         string targetRef = newRef.Replace(bookName, Target[bookName]);
                         Verse v = Target.Bible[targetRef];
-                        for (int i = 0; i < (v.Count -1); i++)
+                        for (int i = 0; i < (v.Count - 1); i++)
                         {
                             if (v[i].Strong[0] == v[i + 1].Strong[0])
                             {
@@ -1122,11 +1092,21 @@ namespace BibleTaggingUtil
             new Thread(
                 () =>
                 {
-                    WaitCursorControl(true);
-                    OSIS_Generator generator = new OSIS_Generator(config);
-                    generator.Generate(target);
-                    WaitCursorControl(false);
-                    RunOsis2mod(config.OSIS[OsisConstants.output_file], config.OSIS[OsisConstants.osisIDWork]);
+                    try
+                    {
+                        WaitCursorControl(true);
+                        OSIS_Generator generator = new OSIS_Generator(config);
+                        generator.Generate(target);
+                        WaitCursorControl(false);
+                        RunOsis2mod(config.OSIS[OsisConstants.output_file], config.OSIS[OsisConstants.osisIDWork]);
+                    }
+                    catch (Exception ex)
+                    {
+                        var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                        var name = cm.DeclaringType.FullName + "." + cm.Name;
+                        Tracing.TraceException(name, ex.Message);
+                        HandleException(ex);
+                    }
                 }).Start();
         }
         #endregion Generate SWORD Files Main Menu
@@ -1137,10 +1117,24 @@ namespace BibleTaggingUtil
             new Thread(
                 () =>
                 {
-                    WaitCursorControl(true);
-                    OSIS_Generator generator = new OSIS_Generator(config);
-                    generator.Generate(target);
-                    WaitCursorControl(false);
+                    try
+                    {
+                        WaitCursorControl(true);
+                        UpdateProgress("Generating OSIS File", -1);
+                        //OSIS_Generator generator = new OSIS_Generator(config);
+                        OsisGenerator generator = new OsisGenerator(config);
+                        generator.Generate(target, true);
+                        if(Properties.TargetBibles.Default.TargetBible.Contains("ara"))
+                            generator.Generate(target, true);
+                        WaitCursorControl(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                        var name = cm.DeclaringType.FullName + "." + cm.Name;
+                        Tracing.TraceException(name, ex.Message);
+                        HandleException(ex);
+                    }
                 }).Start();
         }
 
@@ -1148,19 +1142,33 @@ namespace BibleTaggingUtil
         {
             target.SaveUpdates();
 
-            if (Properties.Settings.Default.Osis)
+            if (Properties.MainSettings.Default.Osis)
             {
                 // copy last changes to the output xml
-                string taggedFolder = Path.Combine(Properties.Settings.Default.BiblesFolder, "tagged");
+                string targetBiblesFolder = BibleTaggingUtil.Properties.TargetBibles.Default.TargetBiblesFolder;
+                string targetBible = BibleTaggingUtil.Properties.TargetBibles.Default.TargetBible;
+                string biblesFolder = Path.Combine(targetBiblesFolder, targetBible);
+
+                string taggedFolder = Path.Combine(biblesFolder, "tagged");
                 string LastChanged = Directory.GetFiles(taggedFolder)[0];
-                string outputXml = Path.Combine(Properties.Settings.Default.BiblesFolder, config.OSIS[OsisConstants.output_file]);
+                string outputXml = Path.Combine(biblesFolder, config.OSIS[OsisConstants.output_file]);
                 System.IO.File.Copy(LastChanged, outputXml, true);
             }
 
             new Thread(
                 () =>
                 {
-                    RunOsis2mod(config.OSIS[OsisConstants.output_file], config.OSIS[OsisConstants.osisIDWork]);
+                    try
+                    {
+                        RunOsis2mod(config.OSIS[OsisConstants.output_file], config.OSIS[OsisConstants.osisIDWork]);
+                    }
+                    catch (Exception ex)
+                    {
+                        var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                        var name = cm.DeclaringType.FullName + "." + cm.Name;
+                        Tracing.TraceException(name, ex.Message);
+                        HandleException(ex);
+                    }
                 }).Start();
         }
 
@@ -1174,10 +1182,20 @@ namespace BibleTaggingUtil
             new Thread(
                 () =>
                 {
-                    WaitCursorControl(true);
-                    USFM_Generator generator = new USFM_Generator(this, config);
-                    generator.Generate();
-                    WaitCursorControl(false);
+                    try
+                    {
+                        WaitCursorControl(true);
+                        USFM_Generator generator = new USFM_Generator(this, config);
+                        generator.Generate();
+                        WaitCursorControl(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                        var name = cm.DeclaringType.FullName + "." + cm.Name;
+                        Tracing.TraceException(name, ex.Message);
+                        HandleException(ex);
+                    }
                 }).Start();
         }
 
@@ -1185,10 +1203,21 @@ namespace BibleTaggingUtil
         {
             USFM2OSIS usfm2osis = new USFM2OSIS(this, config);
             new Thread(
-               () => {
-                   WaitCursorControl(true);
-                   usfm2osis.Convert();
-                   WaitCursorControl(false);
+               () =>
+               {
+                   try
+                   {
+                       WaitCursorControl(true);
+                       usfm2osis.Convert();
+                       WaitCursorControl(false);
+                   }
+                   catch (Exception ex)
+                   {
+                       var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                       var name = cm.DeclaringType.FullName + "." + cm.Name;
+                       Tracing.TraceException(name, ex.Message);
+                       HandleException(ex);
+                   }
                }).Start();
         }
 
@@ -1196,7 +1225,17 @@ namespace BibleTaggingUtil
         {
             new Thread(() =>
             {
-                RunOsis2mod(config.USFM2OSIS[Usfm2OsisConstants.outputFileName], config.USFM2OSIS[Usfm2OsisConstants.osisIDWork]);
+                try
+                {
+                    RunOsis2mod(config.USFM2OSIS[Usfm2OsisConstants.outputFileName], config.USFM2OSIS[Usfm2OsisConstants.osisIDWork]);
+                }
+                catch (Exception ex)
+                {
+                    var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                    var name = cm.DeclaringType.FullName + "." + cm.Name;
+                    Tracing.TraceException(name, ex.Message);
+                    HandleException(ex);
+                }
             }).Start();
 
         }
@@ -1213,7 +1252,10 @@ namespace BibleTaggingUtil
             {
                 WaitCursorControl(true);
                 UpdateProgress("Creating SWORD Module", -1);
-                string biblesFolder = Properties.Settings.Default.BiblesFolder;
+                string targetBiblesFolder = BibleTaggingUtil.Properties.TargetBibles.Default.TargetBiblesFolder;
+                string targetBible = BibleTaggingUtil.Properties.TargetBibles.Default.TargetBible;
+                string biblesFolder = Path.Combine(targetBiblesFolder, targetBible);
+
                 string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
                 string modulesFolder = Path.Combine(appData, "Sword\\modules\\texts\\ztext");
                 string backupFolderName = string.Format("{0:s}_{1:s}", targetFolderName, DateTime.Now.ToString("yyyy_MM_dd_HH_mm"));
@@ -1270,13 +1312,16 @@ namespace BibleTaggingUtil
 
 
             Process process = new Process();
-                 StringBuilder outputStringBuilder = new StringBuilder();
-                StringBuilder errorStringBuilder = new StringBuilder();
-           try
+            StringBuilder outputStringBuilder = new StringBuilder();
+            StringBuilder errorStringBuilder = new StringBuilder();
+            try
             {
                 process.StartInfo.FileName = executable;
                 process.StartInfo.WorkingDirectory = crosswirePath;
-                process.StartInfo.Arguments = targetFolder + " " + xmlFile + " -v NRSV -b 4 -z";
+                string versification = config.OSIS[OsisConstants.versification];
+                if (string.IsNullOrEmpty(versification))
+                    versification = "KJV";
+                process.StartInfo.Arguments = string.Format("{0} {1} -v {2} -b 4 -z", targetFolder, xmlFile, versification);
 
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 process.StartInfo.CreateNoWindow = true;
@@ -1299,7 +1344,7 @@ namespace BibleTaggingUtil
                 process.CancelOutputRead();
 
                 int secondCounter = 0;
-                while(errorStringBuilder.Length == 0)
+                while (errorStringBuilder.Length == 0)
                 {
                     Thread.Sleep(1000);
                     if (++secondCounter > 15)
@@ -1345,7 +1390,7 @@ namespace BibleTaggingUtil
 
         private void saveUpdatedTartgetToolStripMenuItem_Click(object sender, EventArgs e)
         {
-                target.SaveUpdates();
+            target.SaveUpdates();
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1368,9 +1413,8 @@ namespace BibleTaggingUtil
                 target.BibleName = bibleName;
                 target.LoadBibleFile(files[0], true, false);
                 WaitCursorControl(false);
-
                 VerseSelectionPanel.SetBookCount(target.BookCount);
-
+                
 
             }
         }
@@ -1378,6 +1422,109 @@ namespace BibleTaggingUtil
         internal void EnableSaveButton(bool v)
         {
             editorPanel.EnableSaveButton(v);
+        }
+
+        private void exportTranslatorTagsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new Thread(() =>
+            {
+                try
+                {
+                    ExportTranslatorTags();
+                }
+                catch (Exception ex)
+                {
+                    var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                    var name = cm.DeclaringType.FullName + "." + cm.Name;
+                    Tracing.TraceException(name, ex.Message);
+                    HandleException(ex);
+                }
+            }).Start();
+
+        }
+        private void ExportTranslatorTags()
+        {
+            if (translationTags == null)
+                translationTags = new TranslationTagsEx(this);
+
+            if (Properties.MainSettings.Default.Osis)
+                translationTags.Export(OsisTarget, TOTHT, TAGNT);
+            else
+                translationTags.Export(Target, TOTHT, TAGNT);
+        }
+
+
+        private void serachReportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SearchReportForm search = new SearchReportForm(Target, TOTHT, TAGNT, TopVersion);
+            search.ShowDialog();
+        }
+
+        private void tAHOTEnglishToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string path = @"c:\temp\tahot_eng.txt";
+            using (StreamWriter sw = new StreamWriter(path))
+            {
+                foreach ((string reference, Verse verse) in referenceTOTHT.Bible)
+                {
+                    string originalRef = referenceTOTHT.GetCorrectReference(reference);
+                    string verseReference = originalRef.Replace(" ", ".").Replace(":", ".");
+
+
+                    foreach (VerseWord word in verse)
+                    {
+                        string line = string.Format("{0}#{1}\t{2}", verseReference, word.WordNumber, word.Word);
+                        sw.WriteLine(line);
+
+                    }
+                }
+            }
+        }
+
+        private void EnableRestoreMenu()
+        {
+            string targetBibleFolder = Path.Combine(Properties.TargetBibles.Default.TargetBiblesFolder,
+                                        Properties.TargetBibles.Default.TargetBible);
+            string taggedFolder = Path.Combine(targetBibleFolder, "tagged");
+            string oldTaggedFolder = Path.Combine(taggedFolder, "OldTagged");
+            if (Directory.Exists(oldTaggedFolder) && Directory.GetFiles(oldTaggedFolder).Length > 0)
+            {
+                restoreToolStripMenuItem.Enabled = true;
+            }
+            else
+            { restoreToolStripMenuItem.Enabled = false; }
+        }
+
+
+        private void restoreToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (restoreTarget == null)
+                restoreTarget = new RestoreTarget();
+
+            DialogResult result = restoreTarget.ShowDialog();
+            if(result == DialogResult.OK)
+            {
+                new Thread(() =>
+                {
+                    try
+                    {
+                        string currentRef = editorPanel.CurrentVerseRef;
+                        LoadTarget();
+                        verseSelectionPanel.GotoVerse(currentRef);
+                    }
+                    catch (Exception ex)
+                    {
+                        var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                        var name = cm.DeclaringType.FullName + "." + cm.Name;
+                        Tracing.TraceException(name, ex.Message);
+                        HandleException(ex);
+                    }
+                }).Start();
+            }
+
+            restoreTarget.Dispose();
+            restoreTarget = null;
+
         }
     }
 }
