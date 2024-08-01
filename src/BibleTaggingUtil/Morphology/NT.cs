@@ -15,13 +15,29 @@ namespace BibleTaggingUtil.Morphology
             {
                 {"A", "Adjective"},
                 {"ADV", "Adverb"},
+                {"C", "Reciprocal pronoun"},
+                {"COND", "Conditional particle or conjunction"},
                 {"CONJ", "Conjunction"},
+                {"D", "Demonstrative pronoun"},
+                {"F", "Reflexive pronoun"},
+                {"HEB", "Hebrew transliterated word"},
+                {"I", "Interrogative pronoun"},
+                {"INJ", "Interjection"},
+                {"K", "Correlative pronoun"},
                 {"N", "Noun"},
-                {"P", "Pronoun"},
+                {"NUI", "Adjective - Indeclinable Numeral"},
+                {"P", "Personal pronoun"},
                 {"PREP", "Preposition"},
                 {"PRT", "Particle"},
+                {"Q", "Correlative or Interrogative pronoun"},
+                {"R", "Relative pronoun"},
+                {"S", "Posessive pronoun"},
                 {"T", "Article"},
-                {"V", "Verb"}
+                {"ARAF", "Aramaic transliterated word"},
+                {"ARAM", "Aramaic transliterated word"},
+                {"ARAN", "Aramaic transliterated word"},
+                {"V", "Verb"},
+                {"X", "Indefinite pronoun"}
             };
 
         private Dictionary<char, string> tense = new Dictionary<char, string>()
@@ -29,16 +45,24 @@ namespace BibleTaggingUtil.Morphology
             {'A', "Aorist"},
             {'F', "Future"},
             {'I', "Imperfect"},
+            {'L', "Pluperfect"},
             {'P', "Present"},
-            {'X', "Perfect"},
-            {'Y', "Pluperfect"}
+            {'R', "Perfect"},
+            {'Y', "Pluperfect"},
+            {'X', "indefinite tense"}
         };
 
         private Dictionary<char, string> voice = new Dictionary<char, string>()
         {
             {'A', "Active"},
+            {'D', "Middle Deponent"},
+            {'E', "Either Middle or Passive"},
             {'M', "Middle"},
-            {'P', "Passive"}
+            {'N', "Middle or Passive Deponent"},
+            {'O', "Passive Deponent"},
+            {'P', "Passive"},
+            {'Q', "impersonal active"},
+            {'X', "indefinite voice"}
         };
 
         private Dictionary<char, string> mood = new Dictionary<char, string>()
@@ -46,6 +70,7 @@ namespace BibleTaggingUtil.Morphology
             {'M', "Imperative"},
             {'I', "Indicative"},
             {'N', "Infinitive"},
+            {'O', "Optative"},
             {'P', "Participle"},
             {'S', "Subjunctiv"}
         };
@@ -55,7 +80,8 @@ namespace BibleTaggingUtil.Morphology
             {'A', "Accusative"},
             {'D', "Dative"},
             {'G', "Genitive"},
-            {'N', "Nominative"}
+            {'N', "Nominative"},
+            {'V', "Vocative"}
         };
 
         private Dictionary<char, string> gender = new Dictionary<char, string>()
@@ -113,8 +139,72 @@ namespace BibleTaggingUtil.Morphology
                         case "T":
                         case "P":
                             if (morfParts[1].Length == 3)
-                                result += ParseNounMorf(morfParts[1]);
+                            {
+                                bool specific = true;
+                                switch (morfParts[1][0])
+                                {
+                                    case '1':
+                                        result += "1st ";
+                                        break;
+                                    case '2':
+                                        result += "2nd ";
+                                        break;
+                                    case '3':
+                                        result += "3rd ";
+                                        break;
+                                    default:
+                                        specific = false;
+                                        break;
+
+                                }
+                                result += specific? 
+                                    ParseNounMorf(morfParts[1].Substring(1)) : 
+                                    ParseNounMorf(morfParts[1]);
+                            }
                             break;
+
+                        case "F":
+                            if (morfParts[1].Length == 4)
+                            {
+                                switch (morfParts[1][0])
+                                {
+                                    case '1':
+                                        result += "1st ";
+                                        break;
+                                    case '2':
+                                        result += "2nd ";
+                                        break;
+                                    case '3':
+                                        result += "3rd ";
+                                        break;
+                                }
+                                result += ParseNounMorf(morfParts[1].Substring(1));
+                            }
+                            break;
+
+                        case "S":
+                            if (morfParts[1].Length == 5)
+                            {
+                                string pre = morfParts[1].Substring(0,2);
+                                switch (pre)
+                                {
+                                    case "1S":
+                                        result += "1st Singular ";
+                                        break;
+                                    case "2S":
+                                        result += "2nd Singular ";
+                                        break;
+                                    case "1P":
+                                        result += "1st Plural ";
+                                        break;
+                                    case "2P":
+                                        result += "2nd Plural ";
+                                        break;
+                                }
+                                result += ParseNounMorf(morfParts[1].Substring(2));
+                            }
+                            break;
+
                         default:
                             result += "\r\n" + morf;
                             break;
@@ -137,7 +227,18 @@ namespace BibleTaggingUtil.Morphology
             string aorist = string.Empty;
             if(verbMorf1.Length == 4)
             {
-                aorist += verbMorf1[0] + " ";
+                switch (verbMorf1[0])
+                {
+                    case '1':
+                        aorist += "1st ";
+                        break;
+                    case '2':
+                        aorist += "2nd ";
+                        break;
+                    case '3':
+                        aorist += "3rd ";
+                        break;
+                }
                 verbMorf1 = verbMorf1.Substring(1);
             }
             if (verbMorf1.Length == 3) 
@@ -170,12 +271,21 @@ namespace BibleTaggingUtil.Morphology
         private string ParseNounMorf(string morfString)
         {
             string result = string.Empty;
+            if (morfString == "NUI")
+                result = "Indeclinable Numeral";
+            else if (morfString == "PRI")
+                result = "Indeclinable Proper Noun";
 
-            if (morfString.Length == 3)
+            else if (morfString.Length == 3)
             {
                 result += "Case: " + morfCase[morfString[0]] + "\r\n";
                 result += "Number: " + number[morfString[1]] + "\r\n";
                 result += "Gender: " + gender[morfString[2]] + "\r\n";
+            }
+            else if (morfString.Length == 2)
+            {
+                result += "Case: " + morfCase[morfString[0]] + "\r\n";
+                result += "Number: " + number[morfString[1]] + "\r\n";
             }
 
                 return result;
