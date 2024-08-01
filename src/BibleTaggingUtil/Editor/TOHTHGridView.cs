@@ -257,14 +257,10 @@ namespace BibleTaggingUtil.Editor
             //base.OnCellFormatting(e);
         }
 
+        private Morphology.NT morfNT = new Morphology.NT();
         private string GetMorphologyDetails(string morf)
         {
-            string result = morf;
-            if (morf != null)
-            { 
-            }
-
-            return result;
+            return morfNT.GetMorphologyDetails(morf);
         }
 
         /// <summary>

@@ -41,6 +41,7 @@ namespace BibleTaggingUtil
         /// 
         /// </summary>");
         /// <param name="vplFile">");Verse perline file</param>");
+        [Obsolete]
         public void Generate(TargetVersion targetVersion, bool publicDomain = false)
         {
             //string bibleVplFile = string.Empty;

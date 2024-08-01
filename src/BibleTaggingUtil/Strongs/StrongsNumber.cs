@@ -63,6 +63,15 @@ namespace BibleTaggingUtil.Strongs
             }
         }
 
+        public void SetOccurance(int occ)
+        {
+            if(occ > 0)
+            {
+                Occurance = occ;
+                occurance = ((char)(occ + 0x40)).ToString();
+            }
+        }
+
         public bool IsEmpty
         {
             get { return Prefix == string.Empty; }

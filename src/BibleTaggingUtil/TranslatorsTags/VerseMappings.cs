@@ -203,6 +203,18 @@ namespace BibleTaggingUtil.TranslatorsTags
                 map[vRef].Add(new int[] { ch, v, 0, -1, v, 4, -1 });
                 //==============================================================
                 book = "Luk"; // KJV
+                ch = 1; v = 73;
+                vRef = string.Format("{0} {1}:{2}", book, ch, v); ;
+                map.Add(vRef, new List<int[]>());
+                map[vRef].Add(new int[] { ch, v, 0, -1, v , 0, 8 });
+
+                v += 1;
+                vRef = string.Format("{0} {1}:{2}", book, ch, v); ;
+                map.Add(vRef, new List<int[]>());
+                map[vRef].Add(new int[] { ch, v, 0, 1, v-1, 8, -1 });
+                map[vRef].Add(new int[] { ch, v, 1, -1, v, 0, -1 });
+                //==============================================================
+                book = "Luk"; // KJV
                 ch = 6; v = 17;
                 vRef = string.Format("{0} {1}:{2}", book, ch, v); ;
                 map.Add(vRef, new List<int[]>());
@@ -215,7 +227,12 @@ namespace BibleTaggingUtil.TranslatorsTags
                 map[vRef].Add(new int[] { ch, v, 0, -1, v, 10, -1 });
                 //==============================================================
                 book = "Luk"; // KJV
-                ch = 7; v = 19;
+                ch = 7; v = 18;
+                vRef = string.Format("{0} {1}:{2}", book, ch, v); ;
+                map.Add(vRef, new List<int[]>());
+                map[vRef].Add(new int[] { ch, v, 0, -1, v, 0, 9});
+
+                v += 1;
                 vRef = string.Format("{0} {1}:{2}", book, ch, v); ;
                 map.Add(vRef, new List<int[]>());
                 map[vRef].Add(new int[] { ch, v, 0, 4, v - 1, 9, -1 });
@@ -521,6 +538,14 @@ namespace BibleTaggingUtil.TranslatorsTags
                 vRef = string.Format("{0} {1}:{2}", book, ch, v); ;
                 map.Add(vRef, new List<int[]>());
                 map[vRef].Add(new int[] { ch, v, 0, -1, v, 2, -1 });
+                //==============================================================
+                book = "Heb";  // KJV ???
+                ch = 6; v = 6;
+                vRef = string.Format("{0} {1}:{2}", book, ch, v); ;
+                map.Add(vRef, new List<int[]>());
+                map[vRef].Add(new int[] { ch, v, 0, 1, v, 0, 2 });
+                map[vRef].Add(new int[] { ch, v, 1, 1, v-2, 0, 1 });
+                map[vRef].Add(new int[] { ch, v, 2, -1, v, 2, -1 });
                 //==============================================================
                 book = "Heb";  // KJV ???
                 ch = 7; v = 20;

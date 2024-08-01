@@ -59,6 +59,7 @@ namespace BibleTaggingUtil
         public const string bible_vpl_file = "bible-vpl-file";
         public const string output_file = "output-file";
         public const string output_file_publicDomaind = "output-file-pd";
+        public const string versification = "versification";
         public const string forInjeel = "forInjeel";
 
         public static string[] osisNames =

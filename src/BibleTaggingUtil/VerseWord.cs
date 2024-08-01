@@ -16,6 +16,10 @@ namespace BibleTaggingUtil
         public VerseWord(string ancientWord, string english, StrongsCluster strong, string transliteration, string reference, string morphology = "", string rootStrong = "", string wordType = "", string altVerseNumber = "", string wordNumber = "", string meaningVar = "", string dictForm = "", string dictGloss = "")
         {
             this.Reference = reference;
+            if (Reference == "Luk 24:11")
+            {
+                int x = 0;
+            }
             Testament = Utils.GetTestament(reference);
 
             if (this.Testament == BibleTestament.OT)
@@ -35,6 +39,7 @@ namespace BibleTaggingUtil
             DictForm = dictForm;
             DictGloss = dictGloss;
             this.VarUsed = false;
+            this.VarCorrected = false;
 
             bool useVar = false;
             if (!string.IsNullOrEmpty(meaningVar))
@@ -167,6 +172,7 @@ namespace BibleTaggingUtil
         public string RootStrong { get; private set; }
         public string WordType { get; private set; }
         public bool VarUsed { get; private set; }
+        public bool VarCorrected { get; set; }
 
         public override string ToString()
         {
@@ -207,7 +213,7 @@ namespace BibleTaggingUtil
                                 include = !Properties.OsisFileGeneration.Default.GreekTagsToExclude.Contains(strongNum);
                             else
                                 include = !Properties.OsisFileGeneration.Default.HebrewTagsToExclude.Contains(strongNum);
-                            validCount--;
+                            if(!include) validCount--;
                         }
 
                         if (include)

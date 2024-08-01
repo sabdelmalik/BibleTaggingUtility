@@ -27,6 +27,7 @@ using BibleTaggingUtil.TranslationTags;
 using BibleTaggingUtil.Settings;
 using BibleTaggingUtil.Versification;
 using BibleTaggingUtil.Restore;
+using BibleTaggingUtil.Strongs;
 
 namespace BibleTaggingUtil
 {
@@ -481,6 +482,89 @@ namespace BibleTaggingUtil
             {
                 referenceTAGNT.BibleName = Properties.ReferenceBibles.Default.TANTReference; //ntReference;
                 if (!LoadReferenceFiles(settingsForm.ReferenceTANTPath, referenceTAGNT)) { CloseForm(); return; }
+
+                #region fix strongs multiple occurance suffix
+                Dictionary<string, string> refs = new Dictionary<string, string>(); 
+                foreach (( string refrence, Verse ver) in referenceTAGNT.Bible)
+                {
+                    foreach (VerseWord word in ver)
+                    {
+                        if(!word.VarCorrected && word.VarUsed && word.Strong.Count == 1)
+                        {
+                            StrongsNumber sn = word.Strong[0];
+                            int count = 0;
+                            foreach (VerseWord w in ver)
+                            {
+                                if(w.Strong.Count ==  1 && w.Strong[0].Number == sn.Number)
+                                    count++;
+                            }
+                            if (count > 1)
+                            {
+                                int currentPos = 1;
+                                for (int i = 0; i < ver.Count; i++)
+                                {
+                                    VerseWord w = ver[i];
+                                    if (w.Strong.Count == 1)
+                                    {
+                                        if (w.Strong.Count == 1 && w.Strong[0].Number == sn.Number)
+                                        {
+                                            w.Strong[0].SetOccurance(currentPos++);
+                                            w.VarCorrected = true;
+                                            if (refs.ContainsKey(refrence))
+                                            {
+                                                if (!refs[refrence].Contains(w.StrongStringS))
+                                                {
+                                                    refs[refrence] += string.Format("\t({0}) {1}", count, w.StrongStringS);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                refs[refrence] = string.Format("({0}) {1}", count, w.StrongStringS);
+                                            }
+                                        }
+                                    } else
+                                    {
+                                        if (w.Strong.ToStringD().Contains(sn.ToStringD()))
+                                        {
+                                            for(int j = 0; j < w.Strong.Count; j++)
+                                            {
+                                                StrongsNumber s = w.Strong[j];
+                                                if (s.Number == sn.Number)
+                                                {
+                                                    s.SetOccurance(currentPos++);
+                                                    w.VarCorrected = true;
+                                                    if (refs.ContainsKey(refrence))
+                                                    {
+                                                        if (!refs[refrence].Contains(w.StrongStringS))
+                                                        {
+                                                            refs[refrence] += string.Format("\t({0}) {1}", count, w.StrongStringS);
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        refs[refrence] = string.Format("({0}) {1}", count, w.StrongStringS);
+                                                    }
+
+                                                }
+                                            }
+                                        }
+
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                }
+                //string path = @"c:\tmp\corrections.txt";
+                //using (StreamWriter sw = new StreamWriter(path))
+                //{
+                //    foreach ((string r, string v) in refs)
+                //    {
+                //        sw.WriteLine(r + "\t" + v);
+                //    }
+                //}
+                #endregion fix strongs multiple occurance suffix
             }
 
             target.ActivatePeriodicTimer();
@@ -1234,7 +1318,10 @@ namespace BibleTaggingUtil
             {
                 process.StartInfo.FileName = executable;
                 process.StartInfo.WorkingDirectory = crosswirePath;
-                process.StartInfo.Arguments = targetFolder + " " + xmlFile + " -v NRSV -b 4 -z";
+                string versification = config.OSIS[OsisConstants.versification];
+                if (string.IsNullOrEmpty(versification))
+                    versification = "KJV";
+                process.StartInfo.Arguments = string.Format("{0} {1} -v {2} -b 4 -z", targetFolder, xmlFile, versification);
 
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 process.StartInfo.CreateNoWindow = true;

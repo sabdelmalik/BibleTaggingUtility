@@ -866,13 +866,13 @@ namespace BibleTaggingUtil.Editor
                 {
                     dgv.CurrentCell = dgv.Rows[tagsRow].Cells[cells[0]];
                 }
-                dgv.Rows[tagsRow].Cells[cells[0]].Style.BackColor = Color.Yellow;
+                dgv.Rows[tagsRow].Cells[cells[0]].Style.BackColor = Color.Gold;
             }
             else if (cells.Count != 0)
             {
                 for (int i = 0; i < cells.Count; i++)
                 {
-                    dgv.Rows[tagsRow].Cells[cells[i]].Style.BackColor = Color.Yellow;
+                    dgv.Rows[tagsRow].Cells[cells[i]].Style.BackColor = Color.Gold;
                 }
                 //if (dgv != dgvTarget)
                 //    if (firstHalf)

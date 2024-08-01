@@ -102,6 +102,11 @@ namespace BibleTaggingUtil.TranslationTags
 
             List<TranslatorWord> newVerse = new List<TranslatorWord>();
 
+            if (verseRef == "Heb 6:6")
+            {
+                int x = 0;
+            }
+
             #region set repeated word indices and counts
             Dictionary<string, List<VerseWord>> temp = new Dictionary<string, List<VerseWord>>();
             for (int i = 0; i < greekVerse.Count; i++)
@@ -192,6 +197,8 @@ namespace BibleTaggingUtil.TranslationTags
                         bool comb = false;
                         foreach (StrongsNumber strong in verse[i].Strong.Strongs)
                         {
+                            if (string.IsNullOrEmpty(strong.ToString()))
+                                continue;
                             //VerseWord gw = greekVerse.GetWordFromStrong(strong.ToStringS(), lastGrkIndex, comb); // offset);
                             List<VerseWord> gwList = greekVerse.GetWordListFromStrong(strong);//, lastGrkIndex, comb); // offset);
                             VerseWord gw = null;
@@ -564,14 +571,15 @@ namespace BibleTaggingUtil.TranslationTags
                     string Gloss = "Gloss";
 
                     // Table columns after the Arabic word
+                    // in the order to be displayed
                     // key = title
                     // val = variable
                     Dictionary<string, string> outputTable = new Dictionary<string, string>();
-                    outputTable.Add(AncientWord, "");
-                    outputTable.Add(Transliteration, "");
                     outputTable.Add(Strongs, "");
+                    outputTable.Add(AncientWord, "");
                     outputTable.Add(Lexicon, "");
                     outputTable.Add(Gloss, "");
+                    outputTable.Add(Transliteration, "");
                     outputTable.Add(Morphology, "");
                     outputTable.Add(AncientWordVerse, "");
                     //outputTable.Add(WordByWord, "");

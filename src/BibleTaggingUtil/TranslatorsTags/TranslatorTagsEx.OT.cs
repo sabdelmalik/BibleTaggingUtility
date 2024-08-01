@@ -233,6 +233,9 @@ namespace BibleTaggingUtil.TranslationTags
                         bool comb = false;
                         foreach (StrongsNumber strong in verse[i].Strong.Strongs)
                         {
+                            if (string.IsNullOrEmpty(strong.ToString()))
+                                continue;
+
                             // int offset = 0;
                             //                            if (usedStrongs.Keys.Contains(strong.ToStringS()))
                             //                                offset = usedStrongs[strong.ToStringS()];
