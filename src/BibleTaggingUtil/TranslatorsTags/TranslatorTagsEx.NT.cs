@@ -35,7 +35,7 @@ namespace BibleTaggingUtil.TranslationTags
             string originalRef = verseRef.Replace(book, bookName);
             int colon = originalRef.IndexOf(':');
             string verseNum = originalRef.Substring(colon);
-            if(verseRef == "1Th 1:3")
+            if(verseRef == "1Ti 6:22")
             {
                 int x = 0;
             }

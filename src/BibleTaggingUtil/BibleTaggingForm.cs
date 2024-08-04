@@ -1095,8 +1095,7 @@ namespace BibleTaggingUtil
                     try
                     {
                         WaitCursorControl(true);
-                        OSIS_Generator generator = new OSIS_Generator(config);
-                        generator.Generate(target);
+                        GenerateOsisXML();
                         WaitCursorControl(false);
                         RunOsis2mod(config.OSIS[OsisConstants.output_file], config.OSIS[OsisConstants.osisIDWork]);
                     }
@@ -1115,27 +1114,32 @@ namespace BibleTaggingUtil
         private void generateOSISToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new Thread(
-                () =>
-                {
-                    try
-                    {
-                        WaitCursorControl(true);
-                        UpdateProgress("Generating OSIS File", -1);
-                        //OSIS_Generator generator = new OSIS_Generator(config);
-                        OsisGenerator generator = new OsisGenerator(config);
-                        generator.Generate(target, true);
-                        if(Properties.TargetBibles.Default.TargetBible.Contains("ara"))
-                            generator.Generate(target, true);
-                        WaitCursorControl(false);
-                    }
-                    catch (Exception ex)
-                    {
-                        var cm = System.Reflection.MethodBase.GetCurrentMethod();
-                        var name = cm.DeclaringType.FullName + "." + cm.Name;
-                        Tracing.TraceException(name, ex.Message);
-                        HandleException(ex);
-                    }
-                }).Start();
+        () =>
+        {
+            try
+            {
+                WaitCursorControl(true);
+                UpdateProgress("Generating OSIS File", -1);
+                GenerateOsisXML();
+                WaitCursorControl(false);
+            }
+            catch (Exception ex)
+            {
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
+                HandleException(ex);
+            }
+        }).Start();
+        }
+
+        private void GenerateOsisXML()
+        {
+            OsisGenerator generator = new OsisGenerator(config);
+            if (Properties.TargetBibles.Default.TargetBible.Contains("ara"))
+                generator.Generate(target, true);
+            else
+                generator.Generate(target, false);
         }
 
         private void generateSWORDFilesOsisToolStripMenuItem_Click(object sender, EventArgs e)

@@ -45,6 +45,10 @@ namespace BibleTaggingUtil.Versification
         { 
             switch(Properties.TargetBibles.Default.Versification.ToUpper())
             {
+                case "ARASVD_SB":
+                    versification = new AraSVD_sb();
+                    break;
+
                 case "KJV":
                     versification = new KJV();
                     break;

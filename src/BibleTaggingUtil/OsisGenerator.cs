@@ -216,7 +216,7 @@ namespace BibleTaggingUtil
                     }
                     else if (currentBook == "Ezra" && currentChapter == "5" && verseNum == "7")
                     {
-                        // need to split, combine, save, the the remainaing text
+                        // need to split, combine, save, the remainaing text
                         string endtext = "هكَذَا:"; // هكَذَا: <1836>";
                         int idx = verse.IndexOf(endtext);
 
@@ -245,9 +245,14 @@ namespace BibleTaggingUtil
                     }
                     else if (currentBook == "1Tim" && currentChapter == "6" && verseNum == "21")
                     {
-
-                        int idx = verse.IndexOf("٢٢");
-                        verseText = (verse.SubVerse(0, idx) + verse.SubVerse(idx+1)).OsisVerseData;
+                        previousVerse = verse;
+                        continue;
+                    }
+                    else if (currentBook == "1Tim" && currentChapter == "6" && verseNum == "22")
+                    {
+                        verseText = (previousVerse + verse).OsisVerseData;
+                        previousVerse = new Verse();
+                        verseNum = "21";
                     }
                     else if (currentBook == "3John" && currentChapter == "1" && verseNum == "14")
                     {
