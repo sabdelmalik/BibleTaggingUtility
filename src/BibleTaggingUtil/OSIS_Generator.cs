@@ -17,6 +17,7 @@ using BibleTaggingUtil.BibleVersions;
 
 namespace BibleTaggingUtil
 {
+    [Obsolete]
     public class OSIS_Generator
     {
         Dictionary<string, string> osisConf = new Dictionary<string, string>();

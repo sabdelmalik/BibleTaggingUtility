@@ -30,7 +30,7 @@ namespace BibleTaggingUtil.Settings
                 ProcessTargetBibles();
             }
 
-            string[] versifications = { "KJV", "NRSV" };
+            string[] versifications = { "AraSVD_sb", "KJV", "NRSV" };
             cbVersification.Items.Clear();
             cbVersification.Items.AddRange( versifications );
             if (!string.IsNullOrEmpty(Properties.TargetBibles.Default.Versification))

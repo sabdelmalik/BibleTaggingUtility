@@ -493,6 +493,17 @@ namespace BibleTaggingUtil.TranslatorsTags
                 map.Add(vRef, new List<int[]>());
                 map[vRef].Add(new int[] { ch, v, 0, -1, v, 3, -1 });
                 //==============================================================
+                book = "1Ti";  // KJV
+                ch = 6; v = 21;
+                vRef = string.Format("{0} {1}:{2}", book, ch, v); ;
+                map.Add(vRef, new List<int[]>());
+                map[vRef].Add(new int[] { ch, v, 0, -1, v, 0, 7 });
+
+                v += 1;
+                vRef = string.Format("{0} {1}:{2}", book, ch, v); ;
+                map.Add(vRef, new List<int[]>());
+                map[vRef].Add(new int[] { ch, v, 0, -1, v-1, 7, 12 });
+                //==============================================================
                 book = "1Th";  // KJV
                 ch = 1; v = 2;
                 vRef = string.Format("{0} {1}:{2}", book, ch, v); ;

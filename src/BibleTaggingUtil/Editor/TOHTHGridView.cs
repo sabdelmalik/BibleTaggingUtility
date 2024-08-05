@@ -246,12 +246,15 @@ namespace BibleTaggingUtil.Editor
 
         protected override void OnCellFormatting(DataGridViewCellFormattingEventArgs e)
         {
-            if (this[0,e.RowIndex].Value.ToString() == "GMR")
+            if (this.Rows.Count > 1 && this[0, 1].Value.ToString() == "GRK")
             {
-                for (int i = 1; i < this.ColumnCount; i++)
+                if (this[0, e.RowIndex].Value.ToString() == "GMR")
                 {
-                    DataGridViewCell cell = this.Rows[e.RowIndex].Cells[i];
-                    cell.ToolTipText = GetMorphologyDetails(cell.Value.ToString());
+                    for (int i = 1; i < this.ColumnCount; i++)
+                    {
+                        DataGridViewCell cell = this.Rows[e.RowIndex].Cells[i];
+                        cell.ToolTipText = GetMorphologyDetails(cell.Value.ToString());
+                    }
                 }
             }
             //base.OnCellFormatting(e);
