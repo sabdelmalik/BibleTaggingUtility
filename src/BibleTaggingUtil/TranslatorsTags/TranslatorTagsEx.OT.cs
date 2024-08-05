@@ -38,7 +38,7 @@ namespace BibleTaggingUtil.TranslationTags
             string originalRef = verseRef.Replace(book, bookName);
             int colon = originalRef.IndexOf(':');
             string verseNum = originalRef.Substring(colon);
-            if (verseRef == "1Sa 10:1")
+            if (verseRef == "Gen 1:11")
             {
                 int a = 0;
             }
@@ -221,6 +221,10 @@ namespace BibleTaggingUtil.TranslationTags
                 int lastHebIndex = -1;
                 for (int i = startIndex; i < startIndex + count; i++)
                 {
+                    if (i== 15)
+                    {
+                        int x = startIndex;
+                    }
                     List<OriginalWordDetails> ow = new List<OriginalWordDetails>();
 
                     if (verse[i].Strong == null || verse[i].Strong.Count == 0 ||
@@ -245,11 +249,11 @@ namespace BibleTaggingUtil.TranslationTags
                             VerseWord hw = null;
                             if (hwList.Count == 0)
                             {
-                                otErrors.Add(string.Format("Empty hwList:  {0}\t{1}-{2}\t{3}",
+                                /*otErrors.Add(string.Format("Empty hwList:  {0}\t{1}-{2}\t{3}",
                                    verseRef,
                                    verse[i].WordIndex,
                                    verse[i].Word,
-                                   strong));
+                                   strong));*/
                             }
                             if (hwList.Count > 1)
                             {
@@ -335,7 +339,7 @@ namespace BibleTaggingUtil.TranslationTags
                                                                 }
                                 */
                             }
-                            else
+                            else if(hwList.Count == 1)
                             {
                                 hw = hwList[0];
                             }
