@@ -273,7 +273,9 @@ namespace BibleTaggingUtil
 
 
             }
-            sw.WriteLine("</div>");
+            sw.WriteLine("</chapter>");
+            sw.WriteLine("</div> <!-- book -->");
+            sw.WriteLine("</div> <!-- bookGroup -->");
 
             currentBook = string.Empty;
             currentChapter = string.Empty;
