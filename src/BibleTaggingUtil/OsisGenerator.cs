@@ -18,10 +18,9 @@ namespace BibleTaggingUtil
             this.osisConf = config.OSIS;
         }
 
-        public void Generate(TargetVersion targetVersion, bool publicDomain = false)
+        public void Generate(TargetVersion targetVersion, bool publicDomain = false, bool forInjeel = false)
         {
             string outputFile = string.Empty;
-            bool forInjeel = false;
 
             try
             {
@@ -32,11 +31,11 @@ namespace BibleTaggingUtil
                 //                if (osisConf.ContainsKey(OsisConstants.bible_vpl_file))
                 //                    bibleVplFile = osisConf[OsisConstants.bible_vpl_file];
 
-                if (osisConf.ContainsKey(OsisConstants.forInjeel))
-                {
-                    string temp = osisConf[OsisConstants.forInjeel];
-                    forInjeel = (temp.ToLower() == "true");
-                }
+                //if (osisConf.ContainsKey(OsisConstants.forInjeel))
+                //{
+                //    string temp = osisConf[OsisConstants.forInjeel];
+                //    forInjeel = (temp.ToLower() == "true");
+                //}
 
 
                 if (osisConf.ContainsKey(OsisConstants.output_file))
@@ -51,6 +50,17 @@ namespace BibleTaggingUtil
                 if (string.IsNullOrEmpty(outputFile))
                     throw new Exception("Configuration must contain an entry for output-file or output-file");
 
+                string outExt = Path.GetExtension(outputFile);
+                string outName = Path.GetFileNameWithoutExtension(outputFile);
+                if (osisConf.ContainsKey(OsisConstants.revision))
+                {
+                    outName += "-" + osisConf[OsisConstants.revision];
+                }
+                if (forInjeel)
+                {
+                    outName += "-ForInjeel";
+                }
+                outputFile = string.Format("{0}.{1}", outName, outExt);
                 string osisFile = Path.Combine(biblesFolder, outputFile);
                 if (File.Exists(osisFile))
                     File.Delete(osisFile);
@@ -445,7 +455,15 @@ namespace BibleTaggingUtil
 
                 sw.WriteLine("<p>OSIS 2.1.1 version</p>");
                 if (osisConf.ContainsKey(OsisConstants.revision))
-                    sw.WriteLine(String.Format("<p>{0}</p>", osisConf[OsisConstants.revision]));
+                {
+                    string rev = osisConf[OsisConstants.revision];
+                    if (osisConf.ContainsKey(OsisConstants.revision_prefix))
+                    {
+                        rev += " " + osisConf[OsisConstants.revision_prefix];
+                    }
+
+                    sw.WriteLine(String.Format("<p>{0}</p>", rev));
+                }
 
                 sw.WriteLine("</revisionDesc>");
 

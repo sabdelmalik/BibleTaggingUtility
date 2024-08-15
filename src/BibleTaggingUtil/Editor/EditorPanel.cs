@@ -1017,22 +1017,22 @@ namespace BibleTaggingUtil.Editor
 
         private void picDecreaseFont_Click(object sender, EventArgs e)
         {
-            Font font = dgvTopVersion.DefaultCellStyle.Font;
-            dgvTopVersion.DefaultCellStyle.Font = new Font(font.Name, font.Size - 1);
+            System.Drawing.Font font = dgvTopVersion.DefaultCellStyle.Font;
+            dgvTopVersion.DefaultCellStyle.Font = new System.Drawing.Font(font.Name, font.Size - 1);
             font = dgvTopVersion.DefaultCellStyle.Font;
-            dgvTarget.DefaultCellStyle.Font = new Font(font.Name, font.Size - 1);
+            dgvTarget.DefaultCellStyle.Font = new System.Drawing.Font(font.Name, font.Size - 1);
             font = dgvTOTHT.DefaultCellStyle.Font;
-            dgvTOTHT.DefaultCellStyle.Font = new Font(font.Name, font.Size - 1);
+            dgvTOTHT.DefaultCellStyle.Font = new System.Drawing.Font(font.Name, font.Size - 1);
 
         }
         private void picIncreaseFont_Click(object sender, EventArgs e)
         {
-            Font font = dgvTopVersion.DefaultCellStyle.Font;
-            dgvTopVersion.DefaultCellStyle.Font = new Font(font.Name, font.Size + 1);
+            System.Drawing.Font font = dgvTopVersion.DefaultCellStyle.Font;
+            dgvTopVersion.DefaultCellStyle.Font = new System.Drawing.Font(font.Name, font.Size + 1);
             font = dgvTopVersion.DefaultCellStyle.Font;
-            dgvTarget.DefaultCellStyle.Font = new Font(font.Name, font.Size + 1);
+            dgvTarget.DefaultCellStyle.Font = new System.Drawing.Font(font.Name, font.Size + 1);
             font = dgvTOTHT.DefaultCellStyle.Font;
-            dgvTOTHT.DefaultCellStyle.Font = new Font(font.Name, font.Size + 1);
+            dgvTOTHT.DefaultCellStyle.Font = new System.Drawing.Font(font.Name, font.Size + 1);
         }
 
         private void picEnableEdit_Click(object sender, EventArgs e)
