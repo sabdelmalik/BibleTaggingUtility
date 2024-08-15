@@ -1136,8 +1136,12 @@ namespace BibleTaggingUtil
         private void GenerateOsisXML()
         {
             OsisGenerator generator = new OsisGenerator(config);
-            if (Properties.TargetBibles.Default.TargetBible.Contains("ara"))
+            string n = Properties.TargetBibles.Default.TargetBible;
+            if (Properties.TargetBibles.Default.TargetBible.ToLower().Contains("ara"))
+            {
                 generator.Generate(target, true);
+                generator.Generate(target, true, true); // for Injeel
+            }
             else
                 generator.Generate(target, false);
         }

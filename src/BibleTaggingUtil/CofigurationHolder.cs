@@ -112,8 +112,8 @@ namespace BibleTaggingUtil
                     if (equal == -1) continue;
 
                     string[] parts = new string[2];
-                    parts[0] = line.Substring(0, equal);
-                    parts[1] = line.Substring(equal + 1);
+                    parts[0] = line.Substring(0, equal).Trim();
+                    parts[1] = line.Substring(equal + 1).Trim();
 
 
 
