@@ -1,12 +1,22 @@
 # BibleTaggingUtility
  Add and/or correct Strong's tags
  
-In order to use this utility, you need to create a bible folder on your system e.g. MyBible.
-The folder should contain a configuration file BiblesConfig.txt and a subfolder named tagged
+In order to use this utility, you need to have a bibles folder in your system, which contains a folder for each bible to be tagged.
+
+For Example
+    Bibles (folder)
+       +---MyBible (folder)
+             +--- tagged (folder)
+             +---BibleConfig.txt (file)
+       +---MyOtherBible (folder)
+             +--- tagged (folder)
+             +---BibleConfig.txt (file)
+
+Each Bible folder should contain a configuration file BiblesConfig.txt and a subfolder named tagged.
 The tagged subfolder should contain only one file which is the version of the tagged bible to be edited or corrected in a verse per line text file format (see note) as in the following example:<br>
 Gen 1:13 And the evening <06153> and the morning <01242> were the third <07992> day <03117>. <br>
 ================== <br>
-Note: For release 5, you can use an already tagged OSIS xml file for the purpose of modifying the tag values.<br>
+Note: For release 5 and above, you can use an already tagged OSIS xml file for the purpose of modifying the tag values.<br>
 ================== <br>
 <br>
 Refer to [**BibleTaggingPreperation**](https://github.com/sabdelmalik/BibleTaggingPreperation) for generating the initial tagged file.<br>
