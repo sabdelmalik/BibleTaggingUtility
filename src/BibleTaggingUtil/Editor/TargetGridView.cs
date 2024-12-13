@@ -22,7 +22,6 @@ namespace BibleTaggingUtil.Editor
 {
     public class TargetGridView : DataGridView
     {
-
         public event VerseViewChangedEventHandler VerseViewChanged;
         public event RefernceHighlightRequestEventHandler RefernceHighlightRequest;
         public event GotoVerseRequestEventHandler GotoVerseRequest;

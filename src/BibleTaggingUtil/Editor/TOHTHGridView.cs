@@ -263,7 +263,22 @@ namespace BibleTaggingUtil.Editor
         private Morphology.NT morfNT = new Morphology.NT();
         private string GetMorphologyDetails(string morf)
         {
-            return morfNT.GetMorphologyDetails(morf);
+            string result = string.Empty;
+            if (morf.Contains("/"))
+            {
+                string[] parts = morf.Split('/');
+
+                foreach (string m in parts)
+                {
+                    result += m.Trim() + ":\r\n"+ morfNT.GetMorphologyDetails(m.Trim()) + "\r\n";
+                }
+            }
+            else
+            {
+                result = morfNT.GetMorphologyDetails(morf);
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -289,7 +304,6 @@ namespace BibleTaggingUtil.Editor
             List<string> varUsed = new List<string>();
             List<string> wordNumber = new List<string>();
             StrongsCluster tagLable = new StrongsCluster("TAG");
-
             try
             {
                 words.Add("ENG");
@@ -308,6 +322,10 @@ namespace BibleTaggingUtil.Editor
                 for (int i = 0; i < verseWords.Count; i++)
                 {
                     VerseWord verseWord = verseWords[i];
+                    if(verseWord.Reference.Contains("5:48") && i == 9)
+                    {
+                        int x = 0;
+                    }    
                     words.Add(verseWord.Word);
                     greek.Add(verseWord.Greek);
                     dictForm.Add(verseWord.DictForm);

@@ -89,7 +89,13 @@ namespace BibleTaggingUtil.Editor
                     {
                         this.Rows[1].Cells[i].Style.BackColor = Color.Yellow;
                     }
+                    
+                    if (Properties.ReferenceBibles.Default.TopRightToLeft)
+                        this.Columns[i].DisplayIndex = verseWords.Length - i - 1;
+                    else
+                        this.Columns[i].DisplayIndex = i;
                 }
+
 
                 this.ClearSelection();
 
