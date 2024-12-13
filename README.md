@@ -45,7 +45,7 @@ ot-vpl-file=ot_tagged_text.txt<br>
 nt-vpl-file=nt_tagged_text.txt<br>
 output-file=mybible.xml<br>
 
-# Utility short-cut keys
+## Utility short-cut keys
 Ctrl-S Save<br>
 Ctrl-Y Redo<br>
 Ctrl-Z Undo<br>
