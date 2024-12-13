@@ -4,13 +4,13 @@
 In order to use this utility, you need to have a bibles folder in your system, which contains a folder for each bible to be tagged.<br>
 <br>
 For Example<br><br>
-    Bibles (folder)<br>
-        +---MyBible (folder)<br>
-             +--- tagged (folder)<br>
-             +---BibleConfig.txt (file)<br>
-        +---MyOtherBible (folder)<br>
-             +--- tagged (folder)<br>
-             +---BibleConfig.txt (file)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Bibles (folder)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+---MyBible (folder)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+--- tagged (folder)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+---BibleConfig.txt (file)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+---MyOtherBible (folder)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+--- tagged (folder)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+---BibleConfig.txt (file)<br>
 <br>
 Each Bible folder should contain a configuration file BiblesConfig.txt and a subfolder named tagged.
 The tagged subfolder should contain only one file which is the version of the tagged bible to be edited or corrected in a verse per line text file format (see note) as in the following example:<br>
