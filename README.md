@@ -1,17 +1,17 @@
 # BibleTaggingUtility
  Add and/or correct Strong's tags
  
-In order to use this utility, you need to have a bibles folder in your system, which contains a folder for each bible to be tagged.
-
-For Example
-    Bibles (folder)
-       +---MyBible (folder)
-             +--- tagged (folder)
-             +---BibleConfig.txt (file)
-       +---MyOtherBible (folder)
-             +--- tagged (folder)
-             +---BibleConfig.txt (file)
-
+In order to use this utility, you need to have a bibles folder in your system, which contains a folder for each bible to be tagged.<br>
+<br>
+For Example<br><br>
+    Bibles (folder)<br>
+       +---MyBible (folder)<br>
+             +--- tagged (folder)<br>
+             +---BibleConfig.txt (file)<br>
+       +---MyOtherBible (folder)<br>
+             +--- tagged (folder)<br>
+             +---BibleConfig.txt (file)<br>
+<br>
 Each Bible folder should contain a configuration file BiblesConfig.txt and a subfolder named tagged.
 The tagged subfolder should contain only one file which is the version of the tagged bible to be edited or corrected in a verse per line text file format (see note) as in the following example:<br>
 Gen 1:13 And the evening <06153> and the morning <01242> were the third <07992> day <03117>. <br>
@@ -47,10 +47,10 @@ output-file=mybible.xml<br>
 
 #Utility short-cut keys
 Ctrl-S Save<br>
-Ctrl-Y Redo
-Ctrl-Z Undo
-Pg dn Next verse
-Pg up Previous verse
+Ctrl-Y Redo<br>
+Ctrl-Z Undo<br>
+Pg dn Next verse<br>
+Pg up Previous verse<br>
 
 ## Drag and Drop behaviour
 When a tag is dragged from a reference verse (top two tables) to the target verse (bottom table), the dragged tag will replace the existing tag(s).<br>
