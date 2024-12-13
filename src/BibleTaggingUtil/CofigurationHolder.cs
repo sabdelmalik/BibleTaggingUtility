@@ -66,6 +66,13 @@ namespace BibleTaggingUtil
             //Properties.MainSettings.Default.TargetTextDirection = "LTR";
 
             ParseState state = ParseState.NONE;
+
+            HebrewReferences.Clear();
+            GreekReferences.Clear();
+            OSIS.Clear();
+            USFM.Clear();
+            USFM2OSIS.Clear();
+
             string templine = string.Empty;
 
             using (StreamReader sr = new StreamReader(configFilePath))

@@ -105,12 +105,13 @@ namespace BibleTaggingUtil.Settings
         private void checkBoxRTL_CheckedChanged(object sender, EventArgs e)
         {
             Properties.TargetBibles.Default.RightToLeft = checkBoxRTL.Checked;
-
+            changedFlags.TargetBibleChanged = true;
         }
 
         private void checkBoxTR_Byz_CheckedChanged(object sender, EventArgs e)
         {
             Properties.TargetBibles.Default.UseGrkMeaningVar = checkBoxTR_Byz.Checked;
+            changedFlags.MainNtChanged= true;
         }
 
         private void cbVersification_SelectedIndexChanged(object sender, EventArgs e)

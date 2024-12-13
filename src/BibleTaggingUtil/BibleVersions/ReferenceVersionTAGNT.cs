@@ -169,7 +169,7 @@ namespace BibleTaggingUtil.BibleVersions
                             chapterNum.TrimStart('0'),
                             verseNum.TrimStart('0'));
 
-                    if(verseRef == "Heb 10:34")
+                    if(verseRef == "Mat 5:48")
                     {
                         int x = 0;
                     }
@@ -194,6 +194,10 @@ namespace BibleTaggingUtil.BibleVersions
                     dStrong = dStrong.Trim('/');
                     grammar = grammar.Trim('/');
 
+                    if(grammar.Contains("/"))
+                    {
+                        int x = 0;
+                    }
                     string[] strongsList = sStrong.Split(',');
                     for(int i = 0; i < strongsList.Length; i++)
                         strongsList[i] = strongsList[i].Trim();

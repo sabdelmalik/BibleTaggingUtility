@@ -66,6 +66,8 @@ namespace BibleTaggingUtil.Settings
             checkbTopRefSkip.Checked = Properties.ReferenceBibles.Default.TopRefSkip;
             checkbOtRefSkip.Checked = Properties.ReferenceBibles.Default.OtRefSkip;
             checkbNtRefSkip.Checked = Properties.ReferenceBibles.Default.NtRefSkip;
+            checkBoxTopRTL.Checked = Properties.ReferenceBibles.Default.TopRightToLeft;
+
         }
         public string ReferenceTopVersionPath
         {
@@ -141,16 +143,25 @@ namespace BibleTaggingUtil.Settings
         private void CheckbOtRefSkip_CheckedChanged(object sender, System.EventArgs e)
         {
             Properties.ReferenceBibles.Default.OtRefSkip = checkbOtRefSkip.Checked;
+            changedFlags.MainOtChanged = true;
         }
 
         private void CheckbNtRefSkip_CheckedChanged(object sender, System.EventArgs e)
         {
             Properties.ReferenceBibles.Default.NtRefSkip = checkbNtRefSkip.Checked;
+            changedFlags.MainNtChanged = true;
         }
 
         private void CheckbTopRefSkip_CheckedChanged(object sender, System.EventArgs e)
         {
             Properties.ReferenceBibles.Default.TopRefSkip = checkbTopRefSkip.Checked;
+            changedFlags.TopRefChanged = true;
+        }
+
+        private void checkBoxTopRTL_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.ReferenceBibles.Default.TopRightToLeft = checkBoxRTL.Checked;
+            changedFlags.TopRefChanged = true;
         }
 
 
