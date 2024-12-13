@@ -5,10 +5,10 @@ In order to use this utility, you need to have a bibles folder in your system, w
 <br>
 For Example<br><br>
     Bibles (folder)<br>
-       +---MyBible (folder)<br>
+        +---MyBible (folder)<br>
              +--- tagged (folder)<br>
              +---BibleConfig.txt (file)<br>
-       +---MyOtherBible (folder)<br>
+        +---MyOtherBible (folder)<br>
              +--- tagged (folder)<br>
              +---BibleConfig.txt (file)<br>
 <br>
