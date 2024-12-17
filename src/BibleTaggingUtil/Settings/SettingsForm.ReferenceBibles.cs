@@ -109,9 +109,9 @@ namespace BibleTaggingUtil.Settings
 
         private void cbTopReference_SelectedIndexChanged(object sender, EventArgs e)
         {
+            changedFlags.TopRefChanged = false;
             if (Properties.ReferenceBibles.Default.TopReference != cbTopReference.Text)
             {
-                changedFlags.TopRefChanged = false;
                 Properties.ReferenceBibles.Default.TopReference = cbTopReference.Text;
                 topRefSet = true;
                 changedFlags.TopRefChanged = true;
@@ -154,14 +154,23 @@ namespace BibleTaggingUtil.Settings
 
         private void CheckbTopRefSkip_CheckedChanged(object sender, System.EventArgs e)
         {
-            Properties.ReferenceBibles.Default.TopRefSkip = checkbTopRefSkip.Checked;
-            changedFlags.TopRefChanged = true;
+            changedFlags.TopRefChanged = false;
+            if (Properties.ReferenceBibles.Default.TopRefSkip != checkbTopRefSkip.Checked)
+            {
+                Properties.ReferenceBibles.Default.TopRefSkip = checkbTopRefSkip.Checked;
+                changedFlags.TopRefChanged = true;
+            }
         }
 
         private void checkBoxTopRTL_CheckedChanged(object sender, EventArgs e)
         {
-            Properties.ReferenceBibles.Default.TopRightToLeft = checkBoxRTL.Checked;
-            changedFlags.TopRefChanged = true;
+
+            changedFlags.TopRefChanged = false;
+            if (Properties.ReferenceBibles.Default.TopRightToLeft != checkBoxTopRTL.Checked)
+            {
+                Properties.ReferenceBibles.Default.TopRightToLeft = checkBoxTopRTL.Checked;
+                changedFlags.TopRefChanged = true;
+            }
         }
 
 

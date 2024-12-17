@@ -296,13 +296,17 @@ namespace BibleTaggingUtil
                 }
                 else
                 {
+                    Properties.MainSettings.Default.VersePanelDockState = (int)verseSelectionPanel.DockState;
+                    Properties.MainSettings.Default.BrowserPanelDockState = (int)browserPanel.DockState;
+
+                    Properties.MainSettings.Default.LastBook = VerseSelectionPanel.CurrentBook;
+                    Properties.MainSettings.Default.LastChapter = VerseSelectionPanel.CurrentChapter;
+                    Properties.MainSettings.Default.LastVerse = VerseSelectionPanel.CurrentVerse;
+                    Properties.MainSettings.Default.Save();
 
                     // Save the Verses Updates
 
                     target.SaveUpdates();
-                    Properties.MainSettings.Default.VersePanelDockState = (int)verseSelectionPanel.DockState;
-                    Properties.MainSettings.Default.BrowserPanelDockState = (int)browserPanel.DockState;
-                    Properties.MainSettings.Default.Save();
 
                     string configFile = Path.Combine(Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath), "DockPanel.config");
                     if (m_bSaveLayout)
@@ -964,6 +968,8 @@ namespace BibleTaggingUtil
         }
         private void UpdateBibles(SettingsFlags flags)
         {
+            string currentRef = editorPanel.CurrentVerseRef;
+
             if (flags.TopRefChanged && !Properties.ReferenceBibles.Default.TopRefSkip)
             {
                 WaitCursorControl(true);
@@ -986,20 +992,19 @@ namespace BibleTaggingUtil
             if (flags.MainNtChanged && !Properties.ReferenceBibles.Default.NtRefSkip)
             {
                 WaitCursorControl(true);
-                
+
                 referenceTAGNT.BibleName = Properties.ReferenceBibles.Default.TANTReference; //ntReference;
                 if (!LoadReferenceFiles(settingsForm.ReferenceTANTPath, referenceTAGNT)) { CloseForm(); return; }
-                
+
                 WaitCursorControl(false);
             }
 
             if (flags.TargetBibleChanged || flags.VersificaltionChanged)
             {
                 verseSelectionPanel.SetVersification();
-                string currentRef = editorPanel.CurrentVerseRef;
                 LoadTarget();
-                verseSelectionPanel.GotoVerse(currentRef);
             }
+            verseSelectionPanel.GotoVerse(currentRef);
         }
 
         public void FindVerse(BibleVersion version, string tag)
