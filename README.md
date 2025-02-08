@@ -69,3 +69,5 @@ Select the two words that their tags to be swapped. Right click one of them and 
 To select two words, click on the first word to select it. While pressing Ctrl, click the second word.
 ## Deleteing tag value
 Right click the tag to delete using the context menu
+## Directly editing a tag
+Press F2 to Directly edit the tag
