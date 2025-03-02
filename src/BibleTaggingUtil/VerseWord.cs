@@ -224,8 +224,35 @@ namespace BibleTaggingUtil
                                 strongStr += string.Format(" strong:{0}", number.ToStringS());
                         }
                     }
-                    if(!string.IsNullOrEmpty(strongStr))
-                        result = string.Format("<w lemma=\"{0}\">{1}</w>", strongStr.Trim(), Word);
+                    if (!string.IsNullOrEmpty(strongStr))
+                    {
+                        string w = Word;
+                        char[] special = {'.','\'', '"', ',', '?', '’', '‘', '”', '“' }; 
+                        string suffix = string.Empty;
+                        string prefix = string.Empty;
+                        while(true)
+                        {
+                                if (special.Contains(w[w.Length - 1]))
+                                {
+                                    suffix = w[w.Length - 1] + suffix;
+                                    w = w.Substring(0, w.Length - 1);
+                                }
+                                else
+                                    break;
+                        }
+                        while (true)
+                        {
+                            if (special.Contains(w[0]))
+                            {
+                                prefix += w[0];
+                                w = w.Substring(1);
+                            }
+                            else
+                                break;
+                        }
+
+                        result = string.Format("{0}<w lemma=\"{1}\">{2}</w>{3}", prefix, strongStr.Trim(), w, suffix);
+                    }
                     else
                         result = string.Format("<w>{0}</w>", Word);
                 }

@@ -47,7 +47,7 @@ namespace BibleTaggingUtil.TranslationTags
             {
                 int a = 0;
             }
-            if (verse.HasPsalmTitle && verseNum == ":1")
+            if (verse.HasPsalmTitle && verseNum == ":1" && !otVerseMap.ContainsKey(verseRef))
             {
                 string originalPrevRef = originalRef.Replace(verseNum, ":0");
                 Verse title = new Verse();
@@ -79,6 +79,30 @@ namespace BibleTaggingUtil.TranslationTags
                 int len = 0;
                 try
                 {
+                    #region Psalms with Map && Title
+
+                    // Deal with psalms that have title
+                    if (verse.HasPsalmTitle && verseNum == ":1")
+                    {
+                        Verse psVerse = new Verse();
+                        int indx = 0;
+                        int indxAdjust = 0;
+                        while (true)
+                        {
+                            if (verse[indx].Word.Trim() == "*")
+                            {
+                                indx++;
+                                indxAdjust++;
+                                continue;
+                            }
+                            psVerse[indx- indxAdjust] = verse[indx];
+                            indx++;
+                            if (indx == verse.Count) break;
+                        }
+                        verse = psVerse;
+                    }
+                    #endregion Psalms with Map && Title
+
                     foreach (int[] map in otVerseMap[verseRef])
                     {
                         //  ch  v  s  l  v  s    
@@ -369,7 +393,7 @@ namespace BibleTaggingUtil.TranslationTags
                                 {
                                     arabic2HebrewMap[i] = new List<int> { hw.WordIndex };
                                 }
-                                OriginalWordDetails wd = new OriginalWordDetails(hw.RootStrong, hw.Morphology, hw.Hebrew, hw.WordIndex, hw.Transliteration, hw.Word, hw.WordNumber, hw.WordType, hw.AltVerseNumber, hw.Reference);
+                                OriginalWordDetails wd = new OriginalWordDetails(hw.RootStrong, hw.Morphology, hw.Hebrew, hw.WordIndex, hw.Transliteration, hw.Word, hw.WordNumber, hw.WordType, hw.AltVerseNumber, hw.Reference, hw.DictForm, hw.DictGloss);
                                 ow.Add(wd);
                             }
                         }
@@ -625,9 +649,19 @@ namespace BibleTaggingUtil.TranslationTags
                         int x = 0;
                     }
                     sw.WriteLine(verseRef.Replace(" ", ".").Replace(":", "."));
-                    sw.WriteLine("========");
-                    sw.WriteLine("Ara W#\tArabic\tStrongs\tGrammar\tHeb w#\tHebrew\tTransliteration\tWord-by-word");
-                    //sw.WriteLine("ESV W#\tArabic\tStrongs\tGrammar\tHeb w#\tHebrew\tTransliteration\tWord-by-word");
+                    sw.WriteLine("========>>>");
+                    // 0. Ara W#	
+                    // 1. Arabic	
+                    // 2. Strongs	
+                    // 3. Hebrew	
+                    // 4. Lexicon	
+                    // 5. Gloss	
+                    // 6. Transliteration	
+                    // 7. Grammar	
+                    // 8. Grk w#
+
+                    sw.WriteLine("Ara W#\tArabic\tStrongs\tHebrew\tLexicon\tGloss\tTransliteration\tGrammar\tHeb w#");
+                    //sw.WriteLine("Ara W#\tArabic\tStrongs\tGrammar\tHeb w#\tHebrew\tTransliteration\tWord-by-word");
                     int arabicIndexAdjust = 1;
                     foreach (TranslatorWord word in verseWords)
                     {
@@ -666,6 +700,8 @@ namespace BibleTaggingUtil.TranslationTags
                             string AncientWord = string.Empty;
                             string Transliteration = string.Empty;
                             string WordByWord = string.Empty;
+                            string lex = string.Empty;
+                            string gloss = string.Empty;
 
                             foreach (OriginalWordDetails owd in word.OtiginalWords)
                             {
@@ -694,19 +730,34 @@ namespace BibleTaggingUtil.TranslationTags
                                 AncientWord += owd.AncientWord + "; ";
                                 Transliteration += owd.Transliteration + "; ";
                                 WordByWord += owd.WordByWord + "; ";
+                                lex += owd.DictForm + "; ";
+                                gloss += owd.DictGloss + "; ";
                             }
 
-                            //line = string.Format("{0}\t{1}\t{2}\t{3}\t{4}#{5}\t{6}\t{7}\t{8}",
-                            line = string.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}",
+                            // 0. Ara W#	
+                            // 1. Arabic	
+                            // 2. Strongs	
+                            // 3. Hebrew	
+                            // 4. Lexicon	
+                            // 5. Gloss	
+                            // 6. Transliteration	
+                            // 7. Grammar	
+                            // 8. Grk w#
+
+                            //line = string.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}",
+                            line = string.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}",
                                 araWordNo,
                                 word.Word,
                                 Strongs.TrimEnd(new char[] { ';', ' ' }),
-                                Morphology.TrimEnd(new char[] { ';', ' ' }),
-                                AncientWordVerse.TrimEnd(new char[] { ';', ' ' }),
-                                //AncientWordNumber.TrimEnd(new char[] { ';', ' ' }),
                                 AncientWord.TrimEnd(new char[] { ';', ' ' }),
+                                lex.TrimEnd(new char[] { ';', ' ' }),
+                                gloss.TrimEnd(new char[] { ';', ' ' }),
                                 Transliteration.TrimEnd(new char[] { ';', ' ' }),
-                                WordByWord.TrimEnd(new char[] { ';', ' ' }));
+                                Morphology.TrimEnd(new char[] { ';', ' ' }),
+                                AncientWordVerse.TrimEnd(new char[] { ';', ' ' }));
+                                //AncientWordNumber.TrimEnd(new char[] { ';', ' ' })
+                                
+                                //WordByWord.TrimEnd(new char[] { ';', ' ' }));
                             if (string.IsNullOrEmpty(araWordNo))
                             {
                                 if (!(Strongs.Contains("H0853") && AncientWord.TrimEnd(new char[] { ';', ' ' }) == "אֶת") && !Strongs.Contains("H0834"))// && !Strongs.Contains("H4994")) // אֲשֶׁר֙ אֶת 
@@ -724,6 +775,7 @@ namespace BibleTaggingUtil.TranslationTags
                         else
                             sw.WriteLine(line);
                     }
+                    sw.WriteLine("<<<========");
                     sw.WriteLine();
                 }
                 catch (Exception ex)

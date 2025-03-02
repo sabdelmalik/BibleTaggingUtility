@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -106,7 +107,7 @@ namespace BibleTaggingUtil.BibleVersions
                                 {
                                     AddBookName(line);
                                 }
-                                if(line.StartsWith("3Jo 1:15"))
+                                if (line.StartsWith("John 9:3"))
                                 {
                                     int x = 0;
                                 }

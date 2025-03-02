@@ -226,6 +226,8 @@ namespace BibleTaggingUtil.BibleVersions
             }
 
         }
+
+        [Obsolete]
         protected void ParseLine3(string wordLine)
         {
             if (string.IsNullOrEmpty(wordLine))
@@ -366,6 +368,10 @@ namespace BibleTaggingUtil.BibleVersions
             if (string.IsNullOrEmpty(line))
                 return;
 
+            if (line.StartsWith('#'))  // commented out line
+                return;
+
+            line = line.Replace("//", "/").Replace("/ /", "/");
             /*
              * Heb (&Eng) Ref & Type	Hebrew	Transliteration	English translation	dStrongs = Lexical = Gloss	Grammar	Meaning Variants	Spelling Variants	Conjoin word	sStrong+Instance	Alt Strongs
              * 
@@ -407,7 +413,7 @@ namespace BibleTaggingUtil.BibleVersions
                     string wordNum = match.Groups[5].Value;
                     string wordType = match.Groups[6].Value;
                     string hebrewRaw = match.Groups[7].Value;
-                    string transliteration = match.Groups[8].Value;
+                    string transliteration = match.Groups[8].Value.Trim().Replace(";", ",").Replace("/", ";");
                     string english = match.Groups[9].Value;
                     string dStrong = match.Groups[10].Value;
                     string grammar = match.Groups[11].Value;
@@ -416,7 +422,7 @@ namespace BibleTaggingUtil.BibleVersions
                     string rootStrong = match.Groups[14].Value;
                     string altdStrong = match.Groups[15].Value;
                     string cojoinWord = match.Groups[16].Value;
-                    string expandedStrong = match.Groups[16].Value;
+                    string expandedStrong = match.Groups[17].Value;
 
                     string verseRef = string.Format("{0} {1}:{2}", bookName,
                             chapterNum, //.TrimStart('0'),
@@ -425,13 +431,79 @@ namespace BibleTaggingUtil.BibleVersions
                     string[] heberewTemp = hebrewRaw.Split('\\');
                     string hebrew = heberewTemp[0].Replace("/", " ");
 
-                    if(verseRef == "Gen 1:1" && wordNum == "04")
+                    if(verseRef == "Gen 30:11" && wordNum == "03")
                     {
                         int n = 0;
                     }
                     //string[] strongsTemp = dStrong.Replace("{", "").Replace("}", "").Split('\\');
                     string[] strongsParts = rootStrong.Split('/');
                     StrongsCluster strongsList = new StrongsCluster(strongsParts);
+
+                    //  Expanded Strong tags    H9002=ו=and/{H0553=אָמֵץ=to strengthen}"
+                    //                          {H1167G=בַּעַל=: master»master:1_master;_leader}/H9023=Ps3m=his
+                    //                          {H3478=יִשְׂרָאֵל=Israel»Israel@Gen.25.26-Rev}
+                    string[] exParts = expandedStrong.Split('/');
+                    string strg = string.Empty;
+                    string lex = string.Empty;
+                    string gloss = string.Empty;
+                    foreach(string exPart in exParts)
+                    {
+                        bool root = false;
+                        string exEntry = exPart.Trim();
+                        // is it the root
+                        int strt = exEntry.IndexOf("{");
+                        int end = exEntry.IndexOf("}");
+                        if (strt != -1 && end > strt)
+                        {
+                            root = true;
+                            exEntry = exEntry.Substring(strt+1, end - strt - 1).Trim();
+                        }
+
+                        int bs = exEntry.IndexOf('\\');
+                        if (bs > 0)
+                            exEntry = exEntry.Substring(0, bs);
+
+                        string[] parts = exEntry.Trim().Split('=');
+                        if(parts.Length == 3)
+                        {
+                            if (root)
+                                strg += $"{{{parts[0].Replace(";", ",")}}};";
+                            else
+                                strg += $"{parts[0].Replace(";", ",")};";
+
+                            if (root)
+                                lex += $"{{{parts[1].Replace(";", ",")}}};";
+                            else
+                               lex += $"{parts[1].Replace(";", ",")};";
+
+                            // the gloss
+                            string gls = parts[2].Trim();
+                            if (gls.Contains('»'))
+                            {
+                                // sub meanings
+                                if (gls.Contains('@'))
+                                {
+                                    // people or place
+                                    int idx = gls.IndexOf('»');
+                                    gls = gls.Substring(0, idx).Trim();
+                                }
+                                else
+                                {
+                                    if (gls.StartsWith(":"))
+                                        gls = gls.Substring(1);
+                                    int idx = gls.IndexOf('»');
+                                    gls = gls.Substring(0, idx).Trim();
+                                }
+                            }
+                            if (root)
+                                gloss += $"{{{gls.Replace(";", ",")}}};";
+                            else
+                                gloss += $"{gls.Replace(";", ",")};";
+                        }
+                    }
+                    dStrong = strg.Trim(';');
+                    lex = lex.Trim(';');
+                    gloss = gloss.Trim(';');
 
                     if (string.IsNullOrEmpty(currentVerseRef))
                     {
@@ -453,7 +525,7 @@ namespace BibleTaggingUtil.BibleVersions
                     }
 
                     int wordNumber= bible[currentVerseRef].Count;
-                    bible[currentVerseRef][wordNumber] = new VerseWord(hebrew, english, strongsList, transliteration, currentVerseRef, grammar, dStrong, wordType, altVerseNum, wordNum, meaningVar);
+                    bible[currentVerseRef][wordNumber] = new VerseWord(hebrew, english, strongsList, transliteration, currentVerseRef, grammar, dStrong, wordType, altVerseNum, wordNum, meaningVar, lex, gloss);
                 }
                 else // not a word line
                     return;

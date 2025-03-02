@@ -377,20 +377,37 @@ namespace BibleTaggingUtil.Editor
                 string[] verseWords = new string[verse.Count];
                 string[] verseTags = new string[verse.Count];
                 StrongsCluster[] strongsClusters = new StrongsCluster[verse.Count];
+
+                GridAncientWord[] ancientWords = null;
+                if (verse.AncientVerse != null)
+                    ancientWords = new GridAncientWord[verse.Count];
+              
                 oldTestament = (verse[0].Testament == BibleTestament.OT);
                 for (int i = 0; i < verse.Count; i++)
                 {
                     verseWords[i] = verse[i].Word;
                     verseTags[i] = verse[i].Strong.ToString();
+                    StrongsCluster strongs = verse[i].Strong;
                     strongsClusters[i] = verse[i].Strong;
-/*                    for (int j = 0; j < verse[i].Strong.Count; j++)
-                        //verseTags[i] += "<" + verse[i].Strong[j] + "> ";
-                        verseTags[i] += verse[i].Strong[j];
-                    if (verseTags[i] == null)
-                        verseTags[i] = string.Empty;
-                    else
-                        verseTags[i] = verseTags[i].Trim();
-*/
+
+                    if (verse.AncientVerse != null)
+                    {
+                        List<VerseWord> aw = new List<VerseWord>();
+                        foreach(StrongsNumber s in strongs.Strongs)
+                        {
+                            aw.Add(verse.AncientVerse.GetWordFromStrong(s.ToStringD()));
+                        }
+                        //VerseWord aw = verse.AncientVerse.GetWordFromStrong(verseTags[i]);
+                        ancientWords[i] = new GridAncientWord( aw, oldTestament, verse.AncientVerse);
+                    }
+                    /*                    for (int j = 0; j < verse[i].Strong.Count; j++)
+                                                //verseTags[i] += "<" + verse[i].Strong[j] + "> ";
+                                                verseTags[i] += verse[i].Strong[j];
+                                            if (verseTags[i] == null)
+                                                verseTags[i] = string.Empty;
+                                            else
+                                                verseTags[i] = verseTags[i].Trim();
+                        */
                 }
 
                 int col = -1;
@@ -411,6 +428,9 @@ namespace BibleTaggingUtil.Editor
 
                 this.ColumnCount = verseWords.Length;
                 this.Rows.Add(verseWords);
+                if(ancientWords is not null)
+                    this.Rows.Add(ancientWords);
+
                 this.Rows.Add(wordNumber);
 
                 this.Rows.Add(strongsClusters);
@@ -472,7 +492,7 @@ namespace BibleTaggingUtil.Editor
                 this.ClearSelection();
 
                 this.Rows[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                this.Rows[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                this.Rows[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 this.Rows[0].ReadOnly = true;
                 this[0,tRow].Selected = true;
                 this.CurrentCell = this[0, tRow];
@@ -528,6 +548,10 @@ namespace BibleTaggingUtil.Editor
                     StrongsCluster tag = ((StrongsCluster)this[i, Rows.Count - 1].Value);
  
                     verse[i] = new VerseWord((string)this[i, 0].Value, tag, reference);
+                    if(this.Rows.Count == 4)
+                    {
+                        verse.AncientVerse = ((GridAncientWord)(this[i, 1].Value)).AncientVerse;
+                    }
                     if (osis)
                     {
                         verse[i].OsisTagIndex = CurrentVerse[i].OsisTagIndex;
@@ -939,4 +963,30 @@ namespace BibleTaggingUtil.Editor
     public delegate void RefernceHighlightRequestEventHandler(object sender, StrongsCluster tag, bool firstHalf);
     public delegate void GotoVerseRequestEventHandler(object sender, string reference);
 
+    internal class GridAncientWord
+    {
+        public GridAncientWord(List<VerseWord> ancientVerseWord, bool oldTestament, Verse ancientVerse)
+        {
+            AncientVerseWord = ancientVerseWord;
+            OldTestament = oldTestament;
+            AncientVerse = ancientVerse;
+        }
+
+        public List<VerseWord> AncientVerseWord { get; }
+        public bool OldTestament { get; }
+        public Verse AncientVerse { get; }
+        public override string ToString()
+        {
+            string result = string.Empty;
+            foreach (VerseWord w in AncientVerseWord)
+            {
+                if (OldTestament)
+                   result += (AncientVerseWord is null) ? string.Empty : w.Hebrew + " ";
+                else
+                    result += (AncientVerseWord is null) ? string.Empty : w.Greek + " ";
+            }
+            return result.Trim();
+        }
+
+    }
 }

@@ -7,6 +7,13 @@ using System.Threading.Tasks;
 
 namespace BibleTaggingUtil.Versification
 {
+    /// <summary>
+    /// Book	            AraSVD	    AVDDV
+    /// II Kings            4=44	    4=43
+    /// Psalms	            72=20	    72=19
+    /// Revelation of John	12=18	    12=17
+
+    /// </summary>
     internal class AraSVD_sb : VersificationBase
     {
         public AraSVD_sb()
@@ -64,7 +71,7 @@ namespace BibleTaggingUtil.Versification
   43, 33, 34, 31, 34, 34, 24, 46, 21, 43,
   29, 53,
   // II Kings
-  18, 25, 27, 44, 27, 33, 20, 29, 37, 36,
+  18, 25, 27, 43, 27, 33, 20, 29, 37, 36,
   21, 21, 25, 29, 38, 20, 41, 37, 37, 21,
   26, 20, 37, 20, 30,
   // I Chronicles
@@ -97,7 +104,7 @@ namespace BibleTaggingUtil.Versification
   13, 11, 5, 26, 17, 11, 9, 14, 20, 23,
   19, 9, 6, 7, 23, 13, 11, 11, 17, 12,
   8, 12, 11, 10, 13, 20, 7, 35, 36, 5,
-  24, 20, 28, 23, 10, 12, 20, 72, 13, 19,
+  24, 19, 28, 23, 10, 12, 20, 72, 13, 19,
   16, 8, 18, 12, 13, 17, 7, 18, 52, 17,
   16, 15, 5, 23, 11, 13, 12, 9, 9, 5,
   8, 28, 22, 35, 45, 48, 43, 13, 31, 7,
@@ -234,7 +241,7 @@ namespace BibleTaggingUtil.Versification
   25,
   // Revelation of John
   20, 29, 22, 11, 14, 17, 17, 13, 21, 11,
-  19, 18, 18, 20, 8, 21, 18, 24, 21, 15,
+  19, 17, 18, 20, 8, 21, 18, 24, 21, 15,
   27, 21
 };
 

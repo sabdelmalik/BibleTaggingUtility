@@ -100,187 +100,198 @@ namespace BibleTaggingUtil
             sw.WriteLine("<div type=\"bookGroup\">");
             foreach (string reference in targetVersion.Bible.Keys)
             {
-                Verse verse = targetVersion.Bible[reference];
-
-                string bookName = string.Empty;
-                string chapterNum = string.Empty;
-                string verseNum = string.Empty;
-
-                Match m = Regex.Match(reference, refPattern);
-                if (m.Success)
+                if(reference == "Mat 2:5")
                 {
-                    bookName = m.Groups[1].Value;
-                    chapterNum = m.Groups[2].Value;
-                    verseNum = m.Groups[3].Value;
+                    int x = 0;
                 }
-
-                int currentBookIndex = targetVersion.GetBookIndex(bookName);
-
-                string bookOsisName = OsisConstants.osisNames[currentBookIndex];
-
-                if (currentBook != bookOsisName)
+                try
                 {
-                    // a new book
+                    Verse verse = targetVersion.Bible[reference];
 
-                    if (!string.IsNullOrEmpty(currentBook))
+                    string bookName = string.Empty;
+                    string chapterNum = string.Empty;
+                    string verseNum = string.Empty;
+
+                    Match m = Regex.Match(reference, refPattern);
+                    if (m.Success)
                     {
+                        bookName = m.Groups[1].Value;
+                        chapterNum = m.Groups[2].Value;
+                        verseNum = m.Groups[3].Value;
+                    }
+
+                    int currentBookIndex = targetVersion.GetBookIndex(bookName);
+
+                    string bookOsisName = OsisConstants.osisNames[currentBookIndex];
+
+                    if (currentBook != bookOsisName)
+                    {
+                        // a new book
+
+                        if (!string.IsNullOrEmpty(currentBook))
+                        {
+                            if (!string.IsNullOrEmpty(currentChapter))
+                            {
+                                // we are at the end of a chapter
+                                sw.WriteLine("</chapter>");
+                                currentChapter = string.Empty;
+                            }
+                            // and we are at the end of a book
+                            //if (currentBookIndex >= 39 && osisConf[OsisConstants.osisIDWork].ToLower().Contains("ara"))
+                            //{
+                            //    string colophonStart = "<div type=\"colophon\">";
+                            //    if (currentBook == "Rom")
+                            //    {
+                            //        sw.WriteLine(colophonStart);
+                            //        sw.WriteLine("كُتِبَتْ إِلَى أَهْلِ رُومِيَةَ مِنْ كُورِنْثُوسَ عَلَى يَدِ فِيبِي خَادِمَةِ كَنِيسَةِ كَنْخَرِيَا");
+                            //        sw.WriteLine("</div>");
+                            //    }
+                            //    else if (currentBook == "Eph")
+                            //    {
+                            //        sw.WriteLine(colophonStart);
+                            //        sw.WriteLine("كُتِبَتْ إِلَى أَهْلِ أَفَسُسَ مِنْ رُومِيَةَ عَلَى يَدِ تِيخِيكُسَ");
+                            //        sw.WriteLine("</div>");
+                            //    }
+                            //    else if (currentBook == "Phil")
+                            //    {
+                            //        sw.WriteLine(colophonStart);
+                            //        sw.WriteLine("كُتِبَتْ إِلَى أَهْلِ فِيلِبِّي مِنْ رُومِيَةَ عَلَى يَدِ أَبَفْرُودِتُسَ");
+                            //        sw.WriteLine("</div>");
+                            //    }
+                            //    else if (currentBook == "Col")
+                            //    {
+                            //        sw.WriteLine(colophonStart);
+                            //        sw.WriteLine("كُتِبَتْ إِلَى أَهْلِ كُولُوسِّي مِنْ رُومِيَةَ بِيَدِ تِيخِيكُسَ وأُنِسِيمُسَ");
+                            //        sw.WriteLine("</div>");
+                            //    }
+                            //    else if (currentBook == "Phlm")
+                            //    {
+                            //        sw.WriteLine(colophonStart);
+                            //        sw.WriteLine("إِلَى فِلِيمُونَ كُتِبَتْ مِنْ رُومِيَةَ عَلَى يَدِ أُنِسِيمُسَ اٌلْخَادِمِ");
+                            //        sw.WriteLine("</div>");
+                            //    }
+                            //    else if (currentBook == "Heb")
+                            //    {
+                            //        sw.WriteLine(colophonStart);
+                            //        sw.WriteLine("إِلَى الْعِبْرانِيِّينَ، كُتِبَتْ مِنْ إِيطَالِيَا، عَلَى يَدِ تِيمُوثَاوُسَ");
+                            //        sw.WriteLine("</div>");
+                            //    }
+                            //}
+                            sw.WriteLine("</div>");
+
+                            if (currentBookIndex == 39 && inOT)
+                            {
+                                // We've just started the NT
+                                inOT = false;
+                                sw.WriteLine("</div>");
+                                sw.WriteLine("<div type=\"bookGroup\">");
+                            }
+                        }
+                        currentBook = bookOsisName;
+                        // start tag for the new book
+                        sw.WriteLine(string.Format("<div type='book' osisID='{0}'>", currentBook));
+                    }
+
+                    if (currentChapter != chapterNum)
+                    {
+                        // this is a new chapter
                         if (!string.IsNullOrEmpty(currentChapter))
                         {
                             // we are at the end of a chapter
                             sw.WriteLine("</chapter>");
-                            currentChapter = string.Empty;
                         }
-                        // and we are at the end of a book
-                        if (currentBookIndex >= 39 && osisConf[OsisConstants.osisIDWork].ToLower().Contains("ara"))
+                        currentChapter = chapterNum;
+                        // start tag for the new chapter
+                        sw.WriteLine(string.Format("<chapter osisID='{0}.{1}'>", currentBook, currentChapter));
+                    }
+
+
+                    // Handle Psalm headers - enclose in <hebrewTitle> tag for Arbic Bible
+                    if (osisConf[OsisConstants.osisIDWork].ToLower().Contains("ara") &&
+                        (currentBook == "Ps" && verseNum == "1"))
+                    {
+                        if (verse.HasPsalmTitle)
                         {
-                            string colophonStart = "<div type=\"colophon\">";
-                            if (currentBook == "Rom")
-                            {
-                                sw.WriteLine(colophonStart);
-                                sw.WriteLine("كُتِبَتْ إِلَى أَهْلِ رُومِيَةَ مِنْ كُورِنْثُوسَ عَلَى يَدِ فِيبِي خَادِمَةِ كَنِيسَةِ كَنْخَرِيَا");
-                                sw.WriteLine("</div>");
-                            }
-                            else if (currentBook == "Eph")
-                            {
-                                sw.WriteLine(colophonStart);
-                                sw.WriteLine("كُتِبَتْ إِلَى أَهْلِ أَفَسُسَ مِنْ رُومِيَةَ عَلَى يَدِ تِيخِيكُسَ");
-                                sw.WriteLine("</div>");
-                            }
-                            else if (currentBook == "Phil")
-                            {
-                                sw.WriteLine(colophonStart);
-                                sw.WriteLine("كُتِبَتْ إِلَى أَهْلِ فِيلِبِّي مِنْ رُومِيَةَ عَلَى يَدِ أَبَفْرُودِتُسَ");
-                                sw.WriteLine("</div>");
-                            }
-                            else if (currentBook == "Col")
-                            {
-                                sw.WriteLine(colophonStart);
-                                sw.WriteLine("كُتِبَتْ إِلَى أَهْلِ كُولُوسِّي مِنْ رُومِيَةَ بِيَدِ تِيخِيكُسَ وأُنِسِيمُسَ");
-                                sw.WriteLine("</div>");
-                            }
-                            else if (currentBook == "Phlm")
-                            {
-                                sw.WriteLine(colophonStart);
-                                sw.WriteLine("إِلَى فِلِيمُونَ كُتِبَتْ مِنْ رُومِيَةَ عَلَى يَدِ أُنِسِيمُسَ اٌلْخَادِمِ");
-                                sw.WriteLine("</div>");
-                            }
-                            else if (currentBook == "Heb")
-                            {
-                                sw.WriteLine(colophonStart);
-                                sw.WriteLine("إِلَى الْعِبْرانِيِّينَ، كُتِبَتْ مِنْ إِيطَالِيَا، عَلَى يَدِ تِيمُوثَاوُسَ");
-                                sw.WriteLine("</div>");
-                            }
+                            sw.WriteLine(string.Format("<title canonical=\"true\" type=\"psalm\">{0}</title>", verse.OsisPsalmTitleData));
                         }
-                        sw.WriteLine("</div>");
+                    }
 
-                        if (currentBookIndex == 39 && inOT)
+                    string verseText = verse.OsisVerseData;
+                    if (forInjeel)
+                    {
+                        // Injeel
+                        // Ezra 5:6 ٦ صُورَةُ الرِّسَالَةِ الَّتِي أَرْسَلَهَا تَتْنَايُ وَالِي عَبْرِ النَّهْرِ وَشَتَرْبُوزْنَايُ وَرُفَقَاؤُهُمَا الأَفَرْسَكِيِّينَ الَّذِينَ فِي عَبْرِ النَّهْرِ إِلَى دَارِيُوسَ الْمَلِكِ. أَرْسَلُوا إِلَيْهِ رِسَالَةً وَكَانَ مَكْتُوبًا فِيهَا هكَذَا:
+                        // Ezra 5:7 «لِدَارِيُوسَ الْمَلِكِ كُلُّ سَلاَمٍ.
+                        // SVD
+                        // Ezra 5:6 صُورَةُ الرِّسَالَةِ الَّتِي أَرْسَلَهَا تَتْنَايُ وَالِي عَبْرِ النَّهْرِ وَشَتَرْبُوزْنَايُ وَرُفَقَاؤُهُمَا الأَفَرْسَكِيِّينَ الَّذِينَ فِي عَبْرِ النَّهْرِ إِلَى دَارِيُوسَ الْمَلِكِ.
+                        // Ezra 5:7 أَرْسَلُوا إِلَيْهِ رِسَالَةً وَكَانَ مَكْتُوبًا فِيهَا هكَذَا: «لِدَارِيُوسَ الْمَلِكِ كُلُّ سَلاَمٍ.
+                        if (currentBook == "Ezra" && currentChapter == "5" && verseNum == "6")
                         {
-                            // We've just started the NT
-                            inOT = false;
-                            sw.WriteLine("</div>");
-                            sw.WriteLine("<div type=\"bookGroup\">");
+                            previousVerse = verse;
+                            continue;
                         }
-                    }
-                    currentBook = bookOsisName;
-                    // start tag for the new book
-                    sw.WriteLine(string.Format("<div type='book' osisID='{0}'>", currentBook));
-                }
+                        else if (currentBook == "Ezra" && currentChapter == "5" && verseNum == "7")
+                        {
+                            // need to split, combine, save, the remainaing text
+                            string endtext = "هكَذَا:"; // هكَذَا: <1836>";
+                            int idx = verse.IndexOf(endtext);
 
-                if (currentChapter != chapterNum)
+                            Verse verse6 = previousVerse + verse.SubVerse(0, idx + 1);
+
+                            sw.WriteLine(string.Format("<verse osisID='{0}.{1}.{2}'>{3}</verse>", currentBook, currentChapter, "6", verse6.OsisVerseData));
+                            previousVerse = new Verse();
+                            verseText = verse.SubVerse(idx + 1).OsisVerseData;
+                        }
+                        else if (currentBook == "Dan" && currentChapter == "2" && verseNum == "14")
+                        {
+                            previousVerse = verse;
+                            continue;
+                        }
+                        else if (currentBook == "Dan" && currentChapter == "2" && verseNum == "15")
+                        {
+                            // need to split, combine, save, the the remainaing text
+                            string endtext = "الْمَلِكِ:"; // الْمَلِكِ: <4430>";
+                            int idx = verse.IndexOf(endtext);
+
+                            Verse verse14 = previousVerse + verse.SubVerse(0, idx + 1);
+
+                            sw.WriteLine(string.Format("<verse osisID='{0}.{1}.{2}'>{3}</verse>", currentBook, currentChapter, "14", verse14.OsisVerseData));
+                            previousVerse = new Verse();
+                            verseText = verse.SubVerse(idx + 1).OsisVerseData;
+                        }
+                        else if (currentBook == "1Tim" && currentChapter == "6" && verseNum == "21")
+                        {
+                            previousVerse = verse;
+                            continue;
+                        }
+                        else if (currentBook == "1Tim" && currentChapter == "6" && verseNum == "22")
+                        {
+                            verseText = (previousVerse + verse).OsisVerseData;
+                            previousVerse = new Verse();
+                            verseNum = "21";
+                        }
+                        else if (currentBook == "3John" && currentChapter == "1" && verseNum == "14")
+                        {
+                            previousVerse = verse;
+                            continue;
+                        }
+                        else if (currentBook == "3John" && currentChapter == "1" && verseNum == "15")
+                        {
+                            verseText = (previousVerse + verse).OsisVerseData;
+                            previousVerse = new Verse();
+                            verseNum = "14";
+                        }
+
+
+                    }
+
+                    sw.WriteLine(string.Format("<verse osisID='{0}.{1}.{2}'>{3}</verse>", currentBook, currentChapter, verseNum, verseText));
+                }
+                catch (Exception ex)
                 {
-                    // this is a new chapter
-                    if (!string.IsNullOrEmpty(currentChapter))
-                    {
-                        // we are at the end of a chapter
-                        sw.WriteLine("</chapter>");
-                    }
-                    currentChapter = chapterNum;
-                    // start tag for the new chapter
-                    sw.WriteLine(string.Format("<chapter osisID='{0}.{1}'>", currentBook, currentChapter));
+                    int x = 0;
+                    throw ex;
                 }
-
-
-                // Handle Psalm headers - enclose in <hebrewTitle> tag for Arbic Bible
-                if (osisConf[OsisConstants.osisIDWork].ToLower().Contains("ara") &&
-                    (currentBook == "Ps" && verseNum == "1"))
-                {
-                    if (verse.HasPsalmTitle)
-                    {
-                        sw.WriteLine(string.Format("<title canonical=\"true\" type=\"psalm\">{0}</title>", verse.OsisPsalmTitleData));
-                    }
-                }
-
-                string verseText = verse.OsisVerseData;
-                if (forInjeel)
-                {
-                    // Injeel
-                    // Ezra 5:6 ٦ صُورَةُ الرِّسَالَةِ الَّتِي أَرْسَلَهَا تَتْنَايُ وَالِي عَبْرِ النَّهْرِ وَشَتَرْبُوزْنَايُ وَرُفَقَاؤُهُمَا الأَفَرْسَكِيِّينَ الَّذِينَ فِي عَبْرِ النَّهْرِ إِلَى دَارِيُوسَ الْمَلِكِ. أَرْسَلُوا إِلَيْهِ رِسَالَةً وَكَانَ مَكْتُوبًا فِيهَا هكَذَا:
-                    // Ezra 5:7 «لِدَارِيُوسَ الْمَلِكِ كُلُّ سَلاَمٍ.
-                    // SVD
-                    // Ezra 5:6 صُورَةُ الرِّسَالَةِ الَّتِي أَرْسَلَهَا تَتْنَايُ وَالِي عَبْرِ النَّهْرِ وَشَتَرْبُوزْنَايُ وَرُفَقَاؤُهُمَا الأَفَرْسَكِيِّينَ الَّذِينَ فِي عَبْرِ النَّهْرِ إِلَى دَارِيُوسَ الْمَلِكِ.
-                    // Ezra 5:7 أَرْسَلُوا إِلَيْهِ رِسَالَةً وَكَانَ مَكْتُوبًا فِيهَا هكَذَا: «لِدَارِيُوسَ الْمَلِكِ كُلُّ سَلاَمٍ.
-                    if (currentBook == "Ezra" && currentChapter == "5" && verseNum == "6")
-                    {
-                        previousVerse = verse;
-                        continue;
-                    }
-                    else if (currentBook == "Ezra" && currentChapter == "5" && verseNum == "7")
-                    {
-                        // need to split, combine, save, the remainaing text
-                        string endtext = "هكَذَا:"; // هكَذَا: <1836>";
-                        int idx = verse.IndexOf(endtext);
-
-                        Verse verse6 = previousVerse + verse.SubVerse(0, idx + 1);
-
-                        sw.WriteLine(string.Format("<verse osisID='{0}.{1}.{2}'>{3}</verse>", currentBook, currentChapter, "6", verse6.OsisVerseData));
-                        previousVerse = new Verse();
-                        verseText = verse.SubVerse(idx + 1).OsisVerseData;
-                    }
-                    else if (currentBook == "Dan" && currentChapter == "2" && verseNum == "14")
-                    {
-                        previousVerse = verse;
-                        continue;
-                    }
-                    else if (currentBook == "Dan" && currentChapter == "2" && verseNum == "15")
-                    {
-                        // need to split, combine, save, the the remainaing text
-                        string endtext = "الْمَلِكِ:"; // الْمَلِكِ: <4430>";
-                        int idx = verse.IndexOf(endtext);
-
-                        Verse verse14 = previousVerse + verse.SubVerse(0, idx + 1);
-
-                        sw.WriteLine(string.Format("<verse osisID='{0}.{1}.{2}'>{3}</verse>", currentBook, currentChapter, "14", verse14.OsisVerseData));
-                        previousVerse = new Verse();
-                        verseText = verse.SubVerse(idx + 1).OsisVerseData;
-                    }
-                    else if (currentBook == "1Tim" && currentChapter == "6" && verseNum == "21")
-                    {
-                        previousVerse = verse;
-                        continue;
-                    }
-                    else if (currentBook == "1Tim" && currentChapter == "6" && verseNum == "22")
-                    {
-                        verseText = (previousVerse + verse).OsisVerseData;
-                        previousVerse = new Verse();
-                        verseNum = "21";
-                    }
-                    else if (currentBook == "3John" && currentChapter == "1" && verseNum == "14")
-                    {
-                        previousVerse = verse;
-                        continue;
-                    }
-                    else if (currentBook == "3John" && currentChapter == "1" && verseNum == "15")
-                    {
-                        verseText = (previousVerse + verse).OsisVerseData;
-                        previousVerse = new Verse();
-                        verseNum = "14";
-                    }
-
-
-                }
-
-                sw.WriteLine(string.Format("<verse osisID='{0}.{1}.{2}'>{3}</verse>", currentBook, currentChapter, verseNum, verseText));
-
 
             }
             sw.WriteLine("</chapter>");
