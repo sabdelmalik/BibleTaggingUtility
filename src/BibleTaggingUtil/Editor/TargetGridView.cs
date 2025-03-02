@@ -387,11 +387,17 @@ namespace BibleTaggingUtil.Editor
                 {
                     verseWords[i] = verse[i].Word;
                     verseTags[i] = verse[i].Strong.ToString();
+                    StrongsCluster strongs = verse[i].Strong;
                     strongsClusters[i] = verse[i].Strong;
 
                     if (verse.AncientVerse != null)
                     {
-                        VerseWord aw = verse.AncientVerse.GetWordFromStrong(verseTags[i]);
+                        List<VerseWord> aw = new List<VerseWord>();
+                        foreach(StrongsNumber s in strongs.Strongs)
+                        {
+                            aw.Add(verse.AncientVerse.GetWordFromStrong(s.ToStringD()));
+                        }
+                        //VerseWord aw = verse.AncientVerse.GetWordFromStrong(verseTags[i]);
                         ancientWords[i] = new GridAncientWord( aw, oldTestament, verse.AncientVerse);
                     }
                     /*                    for (int j = 0; j < verse[i].Strong.Count; j++)
@@ -959,22 +965,27 @@ namespace BibleTaggingUtil.Editor
 
     internal class GridAncientWord
     {
-        public GridAncientWord(VerseWord ancientVerseWord, bool oldTestament, Verse ancientVerse)
+        public GridAncientWord(List<VerseWord> ancientVerseWord, bool oldTestament, Verse ancientVerse)
         {
             AncientVerseWord = ancientVerseWord;
             OldTestament = oldTestament;
             AncientVerse = ancientVerse;
         }
 
-        public VerseWord AncientVerseWord { get; }
+        public List<VerseWord> AncientVerseWord { get; }
         public bool OldTestament { get; }
         public Verse AncientVerse { get; }
         public override string ToString()
         {
-            if (OldTestament)
-                return (AncientVerseWord is null) ? string.Empty : AncientVerseWord.Hebrew;
-            else
-                return (AncientVerseWord is null) ? string.Empty : AncientVerseWord.Greek;
+            string result = string.Empty;
+            foreach (VerseWord w in AncientVerseWord)
+            {
+                if (OldTestament)
+                   result += (AncientVerseWord is null) ? string.Empty : w.Hebrew + " ";
+                else
+                    result += (AncientVerseWord is null) ? string.Empty : w.Greek + " ";
+            }
+            return result.Trim();
         }
 
     }

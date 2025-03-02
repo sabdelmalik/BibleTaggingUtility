@@ -574,37 +574,34 @@ namespace BibleTaggingUtil
             #region change to allow display greek/hebrew words in the target
             if (target != null && target.Bible != null && target.Bible.Count > 0)
             {
-                if (referenceTOTHT != null && referenceTOTHT.Bible != null && referenceTOTHT.Bible.Count > 0)
+                foreach ((string reference, Verse v) in target.Bible)
                 {
-                    foreach((string reference, Verse v ) in target.Bible)
+                    int idx = reference.IndexOf(' ');
+                    string bk = reference.Substring(0, idx);
+
+                    int bkIdx = target.GetBookIndex(bk);
+                    if (bkIdx > 38 && referenceTAGNT != null && referenceTAGNT.Bible != null && referenceTAGNT.Bible.Count > 0)
                     {
-                        if(referenceTOTHT.Bible.ContainsKey(reference))
+                        string ntbk = referenceTAGNT.GetBookNameFromIndex(bkIdx);
+                        string ntCorrectReference = $"{ntbk}{reference.Substring(idx)}";
+                        if (referenceTAGNT.Bible.ContainsKey(ntCorrectReference))
                         {
-                            v.AncientVerse = referenceTOTHT.Bible[reference];
+                            v.AncientVerse = referenceTAGNT.Bible[ntCorrectReference];
                         }
                     }
-                }
-
-                if (referenceTAGNT != null && referenceTAGNT.Bible != null && referenceTAGNT.Bible.Count > 0)
-                {
-                    foreach ((string reference, Verse v) in target.Bible)
+                    else if (referenceTOTHT != null && referenceTOTHT.Bible != null && referenceTOTHT.Bible.Count > 0)
                     {
-                        int idx = reference.IndexOf(' ');
-                        string bk = reference.Substring(0, idx);
+                        string otbk = referenceTOTHT.GetBookNameFromIndex(bkIdx);
+                        string otCorrectReference = $"{otbk}{reference.Substring(idx)}";
 
-                        int bkIdx = target.GetBookIndex(bk);
-                        string ntbk = referenceTAGNT.GetBookNameFromIndex(bkIdx);
-                        string correctReference = $"{ntbk}{reference.Substring(idx)}"; 
-
-                        if (referenceTAGNT.Bible.ContainsKey(correctReference))
+                        if (referenceTOTHT.Bible.ContainsKey(otCorrectReference))
                         {
-                            v.AncientVerse = referenceTAGNT.Bible[correctReference];
+                            v.AncientVerse = referenceTOTHT.Bible[otCorrectReference];
                         }
                     }
                 }
                 UpdateTargetGrid();
             }
-
             #endregion change to allow display greek/hebrew words in the target
 
 
