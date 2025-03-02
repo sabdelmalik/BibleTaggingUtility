@@ -247,9 +247,10 @@ namespace BibleTaggingUtil.Editor
             }
 
             Verse verseWords = null;
+            Verse ancientVerse = null;
             try
             {
-                UpdateTOTHT(e.VerseReference);
+                ancientVerse = UpdateTOTHT(e.VerseReference);
                 /*
                 // TOTHT view
                 if (testament == TestamentEnum.OLD) //  && container.TOTHT.Bible.ContainsKey(e.VerseReferenceAlt))
@@ -377,7 +378,7 @@ namespace BibleTaggingUtil.Editor
 
         }
 
-        private void UpdateTOTHT(string verseReference) //Verse verseWords)//, BibleTestament testament)
+        private Verse UpdateTOTHT(string verseReference) //Verse verseWords)//, BibleTestament testament)
         {
             string bk = string.Empty;
             string ch = string.Empty;
@@ -441,6 +442,8 @@ namespace BibleTaggingUtil.Editor
             tbTH_Previous.ForeColor = Color.Black;
 
             dgvTOTHT.Update(verseWords, testament);
+
+            return verseWords;
         }
 
         /// <summary>
@@ -1129,12 +1132,19 @@ namespace BibleTaggingUtil.Editor
 
         private void picRefresh_Click(object sender, EventArgs e)
         {
+            RefreshGrid(true);
+        }
+
+        public void RefreshGrid(bool save)
+        {
             int savedColumn = dgvTarget.CurrentCell.ColumnIndex;
             int savedRow = dgvTarget.CurrentCell.RowIndex;
 
             string reference = tbCurrentReference.Text;
-            dgvTarget.SaveVerse(reference);
+            if (save)
+                dgvTarget.SaveVerse(reference);
             Verse v = osis ? container.OsisTarget.Bible[reference] : container.Target.Bible[reference];
+
             dgvTarget.Update(v);
 
             dgvTarget.CurrentCell = dgvTarget[savedColumn, savedRow];

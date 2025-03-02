@@ -28,6 +28,7 @@ using BibleTaggingUtil.Settings;
 using BibleTaggingUtil.Versification;
 using BibleTaggingUtil.Restore;
 using BibleTaggingUtil.Strongs;
+using System.Drawing.Text;
 
 namespace BibleTaggingUtil
 {
@@ -570,11 +571,60 @@ namespace BibleTaggingUtil
 
             target.ActivatePeriodicTimer();
 
+            #region change to allow display greek/hebrew words in the target
+            if (target != null && target.Bible != null && target.Bible.Count > 0)
+            {
+                if (referenceTOTHT != null && referenceTOTHT.Bible != null && referenceTOTHT.Bible.Count > 0)
+                {
+                    foreach((string reference, Verse v ) in target.Bible)
+                    {
+                        if(referenceTOTHT.Bible.ContainsKey(reference))
+                        {
+                            v.AncientVerse = referenceTOTHT.Bible[reference];
+                        }
+                    }
+                }
+
+                if (referenceTAGNT != null && referenceTAGNT.Bible != null && referenceTAGNT.Bible.Count > 0)
+                {
+                    foreach ((string reference, Verse v) in target.Bible)
+                    {
+                        int idx = reference.IndexOf(' ');
+                        string bk = reference.Substring(0, idx);
+
+                        int bkIdx = target.GetBookIndex(bk);
+                        string ntbk = referenceTAGNT.GetBookNameFromIndex(bkIdx);
+                        string correctReference = $"{ntbk}{reference.Substring(idx)}"; 
+
+                        if (referenceTAGNT.Bible.ContainsKey(correctReference))
+                        {
+                            v.AncientVerse = referenceTAGNT.Bible[correctReference];
+                        }
+                    }
+                }
+                UpdateTargetGrid();
+            }
+
+            #endregion change to allow display greek/hebrew words in the target
+
+
             editorPanel.ClearNavStack();
 
             WaitCursorControl(false);
         }
 
+        private void UpdateTargetGrid()
+        {
+            if (InvokeRequired)
+            {
+                Action safeUpdate = delegate { UpdateTargetGrid(); };
+                Invoke(safeUpdate);
+            }
+            else
+            {
+                editorPanel.RefreshGrid(false);
+            }
+        }
         private bool LoadReferenceFiles(string folderPath, BibleVersion reference)
         {
             bool result = false;
@@ -620,9 +670,9 @@ namespace BibleTaggingUtil
 
             if (InvokeRequired)
             {
-                // Call this same method but append THREAD2 to the text
-                Action safeWrite = delegate { StartGui(); };
-                Invoke(safeWrite);
+                // Call this same method 
+                Action safeStart = delegate { StartGui(); };
+                Invoke(safeStart);
             }
             else
             {

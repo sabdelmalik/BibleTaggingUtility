@@ -111,6 +111,8 @@ namespace BibleTaggingUtil.Editor
             List<string> altVerseNumber = new List<string>();
             List<string> wordNumber = new List<string>();
             List<string> meaningVar = new List<string>();
+            List<string> lexicalForm = new List<string>();
+            List<string> gloss = new List<string>();
             StrongsCluster tagLable = new StrongsCluster("TAG");
             try
             {
@@ -119,6 +121,8 @@ namespace BibleTaggingUtil.Editor
                 altVerseNumber.Add("ALT");
                 wordNumber.Add("W #");
                 wordType.Add("TYP");
+                lexicalForm.Add("LEX");
+                gloss.Add("GLS");
                 morphology.Add("GMR");
                 meaningVar.Add("VAR");
                 transliteration.Add("XLT");
@@ -137,6 +141,8 @@ namespace BibleTaggingUtil.Editor
                     altVerseNumber.Add(verseWord.AltVerseNumber);
                     wordNumber.Add(verseWord.WordNumber);
                     meaningVar.Add(verseWord.MeaningVar);
+                    lexicalForm.Add(verseWord.DictForm);
+                    gloss.Add(verseWord.DictGloss);
                     tags.Add(verseWord.Strong);
 /*
                     if (verseWord.Strong.Count > 0)
@@ -201,6 +207,10 @@ namespace BibleTaggingUtil.Editor
                 this.Rows.Add(altVerseNumber.ToArray());
                 this.Rows.Add(wordNumber.ToArray());
                 this.Rows.Add(wordType.ToArray());
+
+                this.Rows.Add(lexicalForm.ToArray());
+                this.Rows.Add(gloss.ToArray());
+
                 this.Rows.Add(morphology.ToArray());
                 this.Rows.Add(meaningVar.ToArray());
                 this.Rows.Add(transliteration.ToArray());

@@ -169,7 +169,7 @@ namespace BibleTaggingUtil.BibleVersions
                             chapterNum.TrimStart('0'),
                             verseNum.TrimStart('0'));
 
-                    if(verseRef == "Mat 5:48")
+                    if(verseRef == "Mrk 7:37")
                     {
                         int x = 0;
                     }
@@ -202,9 +202,18 @@ namespace BibleTaggingUtil.BibleVersions
                     for(int i = 0; i < strongsList.Length; i++)
                         strongsList[i] = strongsList[i].Trim();
 
-                    string[] dictParts = dictionaryFormGloss.Split('=');
-                    string dictForm = dictParts[0];
-                    string dictGloss = dictParts.Length > 1 ? dictParts[1] : string.Empty;
+                    // ὑπέρ=above/for + περισσῶς=more-abundantly
+                    string dictForm = string.Empty;
+                    string dictGloss = string.Empty;
+                    string[] dictionaryGlossParts = dictionaryFormGloss.Split('+');
+                    foreach (string dictionaryGlossPart in dictionaryGlossParts)
+                    {
+                        string[] dictGlossParts = dictionaryGlossPart.Trim().Split('=');
+                        dictForm += dictGlossParts[0].Trim() + "/";
+                        dictGloss = (dictGlossParts.Length > 1 ? dictGlossParts[1] : string.Empty) + "/";
+                    }
+                    dictForm = dictForm.Trim('/');
+                    dictGloss = dictGloss.Trim('/');
 
                     if (string.IsNullOrEmpty(currentVerseRef))
                     {

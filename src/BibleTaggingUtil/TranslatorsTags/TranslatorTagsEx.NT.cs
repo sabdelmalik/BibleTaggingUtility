@@ -35,7 +35,7 @@ namespace BibleTaggingUtil.TranslationTags
             string originalRef = verseRef.Replace(book, bookName);
             int colon = originalRef.IndexOf(':');
             string verseNum = originalRef.Substring(colon);
-            if(verseRef == "1Ti 6:22")
+            if(verseRef == "2Th 2:13")
             {
                 int x = 0;
             }
@@ -102,7 +102,7 @@ namespace BibleTaggingUtil.TranslationTags
 
             List<TranslatorWord> newVerse = new List<TranslatorWord>();
 
-            if (verseRef == "Heb 6:6")
+            if (verseRef == "Mar 7:37")
             {
                 int x = 0;
             }
@@ -309,7 +309,21 @@ namespace BibleTaggingUtil.TranslationTags
                                     target2GreekMap[i] = new List<int> { gw.WordIndex };
                                 }
                                 OriginalWordDetails wd = new OriginalWordDetails(gw.RootStrong, gw.Morphology, gw.Greek, gw.WordIndex, gw.Transliteration, gw.Word, gw.WordNumber, gw.WordType, gw.AltVerseNumber, gw.Reference,dictForm:gw.DictForm, dictGloss:gw.DictGloss);
-                                ow.Add(wd);
+                                bool add = true;
+                                if(ow.Count > 0)
+                                {
+                                    foreach (OriginalWordDetails owd in ow)
+                                    {
+                                        if (owd.AncientWordNumber == wd.AncientWordNumber &&
+                                            owd.AncientWordIndex == wd.AncientWordIndex && 
+                                            owd.Strongs == wd.Strongs)
+                                        {
+                                            add = false; break;
+                                        }
+                                    }
+                                }
+                                if(add)
+                                    ow.Add(wd);
                             }
                         }
                     }
@@ -585,7 +599,7 @@ namespace BibleTaggingUtil.TranslationTags
                     //outputTable.Add(WordByWord, "");
 
                     sw.WriteLine(verseRef.Replace(" ", ".").Replace(":", "."));
-                    sw.WriteLine("========");
+                    sw.WriteLine("========>>>");
                     //sw.WriteLine("Ara W#\tArabic\tStrongs\tGrammar\tGrk w#\tGreek\tTransliteration\tWord-by-word\tLexicon\tGloss");
                     //sw.WriteLine("Ara W#\tArabic\tStrongs\tGrammar\tGrk w#\tGreek\tTransliteration\tLexicon\tGloss");
                     //sw.WriteLine("ESV W#\tArabic\tStrongs\tGrammar\tGrk w#\tGreek\tTransliteration\tWord-by-word");
@@ -746,6 +760,7 @@ namespace BibleTaggingUtil.TranslationTags
                         else
                             sw.WriteLine(line);
                     }
+                    sw.WriteLine("<<<========");
                     sw.WriteLine();
                 }
                 catch (Exception ex)
@@ -784,7 +799,7 @@ namespace BibleTaggingUtil.TranslationTags
                     try
                     {
                         sw.WriteLine(verseRef.Replace(" ", ".").Replace(":", "."));
-                        sw.WriteLine("========");
+                        sw.WriteLine("========>>>");
                         sw.WriteLine("Ara W#\tTarget\tStrongs\tGrammar\tGrk w#\tGreek\tTransliteration\tWord-by-word");
                         //sw.WriteLine("ESV W#\tTarget\tStrongs\tGrammar\tGrk w#\tGreek\tTransliteration\tWord-by-word");
                         int targetIndexAdjust = 1;

@@ -214,6 +214,33 @@ namespace BibleTaggingUtil
             return result;
         }
 
+        public VerseWord GetWordFromStrong(string strong)
+        {
+            VerseWord result = null;
+            if (!string.IsNullOrEmpty(strong))
+            {
+                try
+                {
+                    // search forward
+                    for (int i = 0; i < verse.Count; i++)
+                    {
+                        if (verse[i].StrongString.Contains(strong))
+                        {
+                            result = verse[i];
+                            break;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                    var name = cm.DeclaringType.FullName + "." + cm.Name;
+                    Tracing.TraceException(name, ex.Message);
+                }
+            }
+            return result;
+        }
+
         /// <summary>
         /// Creates a deep copy of itself
         /// </summary>
@@ -227,7 +254,12 @@ namespace BibleTaggingUtil
             {
                 this.verse[i] = (VerseWord)verseToClone[i].Clone();
             }
+
+            this.AncientVerse = verseToClone.AncientVerse;
+
         }
+
+        public Verse AncientVerse { get; set; }
 
         public void UpdateWord(int index, string word)
         {
