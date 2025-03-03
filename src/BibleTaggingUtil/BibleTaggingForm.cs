@@ -572,6 +572,17 @@ namespace BibleTaggingUtil
             target.ActivatePeriodicTimer();
 
             #region change to allow display greek/hebrew words in the target
+            AddAncientWords();
+            #endregion change to allow display greek/hebrew words in the target
+
+
+            editorPanel.ClearNavStack();
+
+            WaitCursorControl(false);
+        }
+
+        private void AddAncientWords()
+        {
             if (target != null && target.Bible != null && target.Bible.Count > 0)
             {
                 foreach ((string reference, Verse v) in target.Bible)
@@ -602,14 +613,7 @@ namespace BibleTaggingUtil
                 }
                 UpdateTargetGrid();
             }
-            #endregion change to allow display greek/hebrew words in the target
-
-
-            editorPanel.ClearNavStack();
-
-            WaitCursorControl(false);
         }
-
         private void UpdateTargetGrid()
         {
             if (InvokeRequired)
@@ -1004,6 +1008,9 @@ namespace BibleTaggingUtil
                 }
                 else
                     target.LoadBibleFile(files[0], true, false);
+
+                AddAncientWords();
+
                 VerseSelectionPanel.SetBookCount(target.BookCount);
             }
 

@@ -1137,6 +1137,9 @@ namespace BibleTaggingUtil.Editor
 
         public void RefreshGrid(bool save)
         {
+            if (dgvTarget.CurrentCell is null)
+                return;
+
             int savedColumn = dgvTarget.CurrentCell.ColumnIndex;
             int savedRow = dgvTarget.CurrentCell.RowIndex;
 
