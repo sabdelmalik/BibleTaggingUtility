@@ -428,6 +428,7 @@ namespace BibleTaggingUtil.Editor
 
                 this.ColumnCount = verseWords.Length;
                 this.Rows.Add(verseWords);
+                
                 if(ancientWords is not null)
                     this.Rows.Add(ancientWords);
 
@@ -491,8 +492,12 @@ namespace BibleTaggingUtil.Editor
 
                 this.ClearSelection();
 
-                this.Rows[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                this.Rows[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                if(Properties.TargetBibles.Default.RightToLeft)
+                    this.Rows[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                if (ancientWords is not null && oldTestament)
+                    this.Rows[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+                this.Rows[this.Rows.Count -1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 this.Rows[0].ReadOnly = true;
                 this[0,tRow].Selected = true;
                 this.CurrentCell = this[0, tRow];
@@ -981,9 +986,9 @@ namespace BibleTaggingUtil.Editor
             foreach (VerseWord w in AncientVerseWord)
             {
                 if (OldTestament)
-                   result += (AncientVerseWord is null) ? string.Empty : w.Hebrew + " ";
+                   result += (w is null) ? string.Empty : w.Hebrew + " ";
                 else
-                    result += (AncientVerseWord is null) ? string.Empty : w.Greek + " ";
+                    result += (w is null) ? string.Empty : w.Greek + " ";
             }
             return result.Trim();
         }
