@@ -727,6 +727,11 @@ namespace BibleTaggingUtil.Editor
                     this.CurrentVerse[col].Strong = new StrongsCluster();
                     SaveVerse(CurrentVerseReferece);
                     this.Update(CurrentVerse);
+                    SaveVerse(CurrentVerseReferece);
+
+                    this[col, Rows.Count - 1].Selected = true;
+                    this.CurrentCell = this[col, Rows.Count - 1];
+                    FireVerseViewChanged();
 
                 }
             }
