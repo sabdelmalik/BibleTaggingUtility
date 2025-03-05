@@ -20,6 +20,8 @@ namespace BibleTaggingUtil.Settings
             targetBiblesFolder = Properties.TargetBibles.Default.TargetBiblesFolder;
             checkBoxRTL.Checked = Properties.TargetBibles.Default.RightToLeft;
             checkBoxTR_Byz.Checked = Properties.TargetBibles.Default.UseGrkMeaningVar;
+            checkBoxAncientLex.Checked = Properties.TargetBibles.Default.ShowAncientWord;
+            checkBoxAncientMeaning.Checked = Properties.TargetBibles.Default.ShowAncientMeaning;
             if (string.IsNullOrEmpty(targetBiblesFolder) )
             {
                 tbTargetBiblesFolder.Text = string.Empty;
@@ -112,6 +114,18 @@ namespace BibleTaggingUtil.Settings
         {
             Properties.TargetBibles.Default.UseGrkMeaningVar = checkBoxTR_Byz.Checked;
             changedFlags.MainNtChanged= true;
+        }
+
+        private void checkBoxAncientLex_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.TargetBibles.Default.ShowAncientWord = checkBoxAncientLex.Checked;
+            changedFlags.TargetBibleChanged = true;
+        }
+
+        private void checkBoxAncientMeaning_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.TargetBibles.Default.ShowAncientMeaning = checkBoxAncientMeaning.Checked;
+            changedFlags.TargetBibleChanged = true;
         }
 
         private void cbVersification_SelectedIndexChanged(object sender, EventArgs e)

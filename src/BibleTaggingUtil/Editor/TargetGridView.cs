@@ -379,8 +379,12 @@ namespace BibleTaggingUtil.Editor
                 StrongsCluster[] strongsClusters = new StrongsCluster[verse.Count];
 
                 GridAncientWord[] ancientWords = null;
+                GridAncientMeaning[] ancientMeanings = null;
                 if (verse.AncientVerse != null)
+                {
                     ancientWords = new GridAncientWord[verse.Count];
+                    ancientMeanings = new GridAncientMeaning[verse.Count];
+                }
               
                 oldTestament = (verse[0].Testament == BibleTestament.OT);
                 for (int i = 0; i < verse.Count; i++)
@@ -399,6 +403,7 @@ namespace BibleTaggingUtil.Editor
                         }
                         //VerseWord aw = verse.AncientVerse.GetWordFromStrong(verseTags[i]);
                         ancientWords[i] = new GridAncientWord( aw, oldTestament, verse.AncientVerse);
+                        ancientMeanings[i] = new GridAncientMeaning( aw, oldTestament, verse.AncientVerse);
                     }
                     /*                    for (int j = 0; j < verse[i].Strong.Count; j++)
                                                 //verseTags[i] += "<" + verse[i].Strong[j] + "> ";
@@ -429,8 +434,11 @@ namespace BibleTaggingUtil.Editor
                 this.ColumnCount = verseWords.Length;
                 this.Rows.Add(verseWords);
                 
-                if(ancientWords is not null)
+                if(Properties.TargetBibles.Default.ShowAncientWord && ancientWords is not null)
                     this.Rows.Add(ancientWords);
+
+                if(Properties.TargetBibles.Default.ShowAncientMeaning && ancientMeanings is not null)
+                    this.Rows.Add(ancientMeanings);
 
                 this.Rows.Add(wordNumber);
 
@@ -494,7 +502,7 @@ namespace BibleTaggingUtil.Editor
 
                 if(Properties.TargetBibles.Default.RightToLeft)
                     this.Rows[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                if (ancientWords is not null && oldTestament)
+                if (Properties.TargetBibles.Default.ShowAncientWord && ancientWords is not null && oldTestament)
                     this.Rows[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 
                 this.Rows[this.Rows.Count -1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -553,7 +561,9 @@ namespace BibleTaggingUtil.Editor
                     StrongsCluster tag = ((StrongsCluster)this[i, Rows.Count - 1].Value);
  
                     verse[i] = new VerseWord((string)this[i, 0].Value, tag, reference);
-                    if(this.Rows.Count == 4)
+                    if((Properties.TargetBibles.Default.ShowAncientWord ||
+                        Properties.TargetBibles.Default.ShowAncientMeaning) &&
+                        this.Rows.Count > 3)
                     {
                         verse.AncientVerse = ((GridAncientWord)(this[i, 1].Value)).AncientVerse;
                     }
@@ -994,4 +1004,29 @@ namespace BibleTaggingUtil.Editor
         }
 
     }
+
+    internal class GridAncientMeaning
+    {
+        public GridAncientMeaning(List<VerseWord> ancientVerseWord, bool oldTestament, Verse ancientVerse)
+        {
+            AncientVerseWord = ancientVerseWord;
+            OldTestament = oldTestament;
+            AncientVerse = ancientVerse;
+        }
+
+        public List<VerseWord> AncientVerseWord { get; }
+        public bool OldTestament { get; }
+        public Verse AncientVerse { get; }
+        public override string ToString()
+        {
+            string result = string.Empty;
+            foreach (VerseWord w in AncientVerseWord)
+            {
+                result += (w is null) ? string.Empty : w.Word + " ";
+            }
+            return result.Trim();
+        }
+
+    }
+
 }

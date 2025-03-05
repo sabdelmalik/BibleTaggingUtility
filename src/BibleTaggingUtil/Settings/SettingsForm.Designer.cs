@@ -90,6 +90,8 @@ namespace BibleTaggingUtil.Settings
             translationTagsFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
             ttRefBibleSkip = new System.Windows.Forms.ToolTip(components);
             targetBiblesFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
+            checkBoxAncientLex = new System.Windows.Forms.CheckBox();
+            checkBoxAncientMeaning = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)nudSavePeriod).BeginInit();
             tabControl1.SuspendLayout();
             targetBible.SuspendLayout();
@@ -141,7 +143,7 @@ namespace BibleTaggingUtil.Settings
             // 
             btnCancel.Anchor = System.Windows.Forms.AnchorStyles.None;
             btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            btnCancel.Location = new System.Drawing.Point(749, 25);
+            btnCancel.Location = new System.Drawing.Point(607, 25);
             btnCancel.Margin = new System.Windows.Forms.Padding(4);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new System.Drawing.Size(130, 44);
@@ -156,7 +158,7 @@ namespace BibleTaggingUtil.Settings
             btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             btnOK.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             btnOK.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            btnOK.Location = new System.Drawing.Point(206, 25);
+            btnOK.Location = new System.Drawing.Point(159, 25);
             btnOK.Margin = new System.Windows.Forms.Padding(4);
             btnOK.Name = "btnOK";
             btnOK.Size = new System.Drawing.Size(130, 44);
@@ -190,13 +192,15 @@ namespace BibleTaggingUtil.Settings
             tabControl1.Margin = new System.Windows.Forms.Padding(4);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new System.Drawing.Size(1086, 591);
+            tabControl1.Size = new System.Drawing.Size(897, 591);
             tabControl1.TabIndex = 6;
             // 
             // targetBible
             // 
             targetBible.Controls.Add(cbVersification);
             targetBible.Controls.Add(label15);
+            targetBible.Controls.Add(checkBoxAncientMeaning);
+            targetBible.Controls.Add(checkBoxAncientLex);
             targetBible.Controls.Add(checkBoxTR_Byz);
             targetBible.Controls.Add(checkBoxRTL);
             targetBible.Controls.Add(cbTargetBibles);
@@ -207,7 +211,7 @@ namespace BibleTaggingUtil.Settings
             targetBible.Location = new System.Drawing.Point(4, 34);
             targetBible.Margin = new System.Windows.Forms.Padding(4);
             targetBible.Name = "targetBible";
-            targetBible.Size = new System.Drawing.Size(1078, 553);
+            targetBible.Size = new System.Drawing.Size(889, 553);
             targetBible.TabIndex = 4;
             targetBible.Text = "Target Bible";
             targetBible.UseVisualStyleBackColor = true;
@@ -215,10 +219,10 @@ namespace BibleTaggingUtil.Settings
             // cbVersification
             // 
             cbVersification.FormattingEnabled = true;
-            cbVersification.Location = new System.Drawing.Point(286, 240);
+            cbVersification.Location = new System.Drawing.Point(216, 237);
             cbVersification.Margin = new System.Windows.Forms.Padding(4);
             cbVersification.Name = "cbVersification";
-            cbVersification.Size = new System.Drawing.Size(663, 33);
+            cbVersification.Size = new System.Drawing.Size(532, 33);
             cbVersification.TabIndex = 15;
             cbVersification.SelectedIndexChanged += cbVersification_SelectedIndexChanged;
             // 
@@ -235,7 +239,7 @@ namespace BibleTaggingUtil.Settings
             // checkBoxTR_Byz
             // 
             checkBoxTR_Byz.AutoSize = true;
-            checkBoxTR_Byz.Location = new System.Drawing.Point(800, 181);
+            checkBoxTR_Byz.Location = new System.Drawing.Point(515, 178);
             checkBoxTR_Byz.Margin = new System.Windows.Forms.Padding(4);
             checkBoxTR_Byz.Name = "checkBoxTR_Byz";
             checkBoxTR_Byz.Size = new System.Drawing.Size(142, 29);
@@ -247,7 +251,7 @@ namespace BibleTaggingUtil.Settings
             // checkBoxRTL
             // 
             checkBoxRTL.AutoSize = true;
-            checkBoxRTL.Location = new System.Drawing.Point(286, 181);
+            checkBoxRTL.Location = new System.Drawing.Point(216, 178);
             checkBoxRTL.Margin = new System.Windows.Forms.Padding(4);
             checkBoxRTL.Name = "checkBoxRTL";
             checkBoxRTL.Size = new System.Drawing.Size(180, 29);
@@ -259,10 +263,10 @@ namespace BibleTaggingUtil.Settings
             // cbTargetBibles
             // 
             cbTargetBibles.FormattingEnabled = true;
-            cbTargetBibles.Location = new System.Drawing.Point(286, 111);
+            cbTargetBibles.Location = new System.Drawing.Point(216, 108);
             cbTargetBibles.Margin = new System.Windows.Forms.Padding(4);
             cbTargetBibles.Name = "cbTargetBibles";
-            cbTargetBibles.Size = new System.Drawing.Size(663, 33);
+            cbTargetBibles.Size = new System.Drawing.Size(532, 33);
             cbTargetBibles.TabIndex = 12;
             cbTargetBibles.SelectedIndexChanged += cbTargetBibles_SelectedIndexChanged;
             // 
@@ -278,10 +282,10 @@ namespace BibleTaggingUtil.Settings
             // 
             // tbTargetBiblesFolder
             // 
-            tbTargetBiblesFolder.Location = new System.Drawing.Point(286, 46);
+            tbTargetBiblesFolder.Location = new System.Drawing.Point(216, 43);
             tbTargetBiblesFolder.Margin = new System.Windows.Forms.Padding(4);
             tbTargetBiblesFolder.Name = "tbTargetBiblesFolder";
-            tbTargetBiblesFolder.Size = new System.Drawing.Size(663, 33);
+            tbTargetBiblesFolder.Size = new System.Drawing.Size(532, 33);
             tbTargetBiblesFolder.TabIndex = 9;
             tbTargetBiblesFolder.Text = "Target Bibles Folder";
             // 
@@ -301,7 +305,7 @@ namespace BibleTaggingUtil.Settings
             button1.BackgroundImage = Properties.Resources.ellipsisTX;
             button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             button1.Font = new System.Drawing.Font("Wingdings", 10.2F);
-            button1.Location = new System.Drawing.Point(1002, 44);
+            button1.Location = new System.Drawing.Point(804, 40);
             button1.Margin = new System.Windows.Forms.Padding(4);
             button1.Name = "button1";
             button1.Size = new System.Drawing.Size(45, 39);
@@ -741,7 +745,7 @@ namespace BibleTaggingUtil.Settings
             tableLayoutPanel1.RowCount = 2;
             tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 85.409256F));
             tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 14.5907469F));
-            tableLayoutPanel1.Size = new System.Drawing.Size(1094, 702);
+            tableLayoutPanel1.Size = new System.Drawing.Size(905, 702);
             tableLayoutPanel1.TabIndex = 7;
             // 
             // panel1
@@ -751,7 +755,7 @@ namespace BibleTaggingUtil.Settings
             panel1.Location = new System.Drawing.Point(4, 603);
             panel1.Margin = new System.Windows.Forms.Padding(4);
             panel1.Name = "panel1";
-            panel1.Size = new System.Drawing.Size(1086, 95);
+            panel1.Size = new System.Drawing.Size(897, 95);
             panel1.TabIndex = 7;
             // 
             // tableLayoutPanel2
@@ -766,8 +770,32 @@ namespace BibleTaggingUtil.Settings
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 1;
             tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            tableLayoutPanel2.Size = new System.Drawing.Size(1086, 95);
+            tableLayoutPanel2.Size = new System.Drawing.Size(897, 95);
             tableLayoutPanel2.TabIndex = 5;
+            // 
+            // checkBoxAncientLex
+            // 
+            checkBoxAncientLex.AutoSize = true;
+            checkBoxAncientLex.Location = new System.Drawing.Point(216, 324);
+            checkBoxAncientLex.Margin = new System.Windows.Forms.Padding(4);
+            checkBoxAncientLex.Name = "checkBoxAncientLex";
+            checkBoxAncientLex.Size = new System.Drawing.Size(212, 29);
+            checkBoxAncientLex.TabIndex = 13;
+            checkBoxAncientLex.Text = "Show Ancient Words";
+            checkBoxAncientLex.UseVisualStyleBackColor = true;
+            checkBoxAncientLex.CheckedChanged += checkBoxAncientLex_CheckedChanged;
+            // 
+            // checkBoxAncientMeaning
+            // 
+            checkBoxAncientMeaning.AutoSize = true;
+            checkBoxAncientMeaning.Location = new System.Drawing.Point(515, 324);
+            checkBoxAncientMeaning.Margin = new System.Windows.Forms.Padding(4);
+            checkBoxAncientMeaning.Name = "checkBoxAncientMeaning";
+            checkBoxAncientMeaning.Size = new System.Drawing.Size(233, 29);
+            checkBoxAncientMeaning.TabIndex = 13;
+            checkBoxAncientMeaning.Text = "Show Ancient Meaning";
+            checkBoxAncientMeaning.UseVisualStyleBackColor = true;
+            checkBoxAncientMeaning.CheckedChanged += checkBoxAncientMeaning_CheckedChanged;
             // 
             // SettingsForm
             // 
@@ -776,7 +804,7 @@ namespace BibleTaggingUtil.Settings
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             AutoSize = true;
             CancelButton = btnCancel;
-            ClientSize = new System.Drawing.Size(1094, 702);
+            ClientSize = new System.Drawing.Size(905, 702);
             Controls.Add(tableLayoutPanel1);
             Margin = new System.Windows.Forms.Padding(4);
             Name = "SettingsForm";
@@ -867,5 +895,9 @@ namespace BibleTaggingUtil.Settings
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox checkBoxAncientMeaning;
+        private System.Windows.Forms.CheckBox checkBoxAncientLex;
     }
 }
