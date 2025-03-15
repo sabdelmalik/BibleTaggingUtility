@@ -65,9 +65,9 @@ to highlight adjacent words, click the first word, and while the mouse is down, 
 (not available for osis xml)<br>
 If a target word cell contains more than word, it can be split into separate words. Click the word cell to select it. Right click the cell and click Split from the context menu.
 ## Swapping two tags
-Select the two words that their tags to be swapped. Right click one of them and click the cell then click Swap from the context menu.
+Select the two words that their tags are to be swapped. Right click one of them then click Swap from the context menu.
 To select two words, click the first word to select it. While pressing Ctrl, click the second word.
 ## Deleting tag value
-Right click the tag to delete using the context menu
+Right click the tag to delete using the context menu. Alternatively, select the tag, then press the delete key. 
 ## Directly editing a tag
-Press F2 to Directly edit the tag
+Press F2 to Enable editing the current tag cell.
