@@ -63,11 +63,11 @@ The merged cells must be adjacent words, otherwise you will not see the Merge me
 to highlight adjacent words, click on the first word, and while the mouse is down, drag it to the right or left as required.
 ## Splitting a multi word cell
 (not available for osis xml)<br>
-If a target word cell contains more than word, it can be split into seperate words. Click the word cell to select it. Right click the cell and click Split from the contxt menu.
+If a target word cell contains more than word, it can be split into separate words. Click the word cell to select it. Right click the cell and click Split from the context menu.
 ## Swapping two tags
-Select the two words that their tags to be swapped. Right click one of them and click the cell and click Swap from the contxt menu.
+Select the two words that their tags to be swapped. Right click one of them and click the cell and click Swap from the context menu.
 To select two words, click on the first word to select it. While pressing Ctrl, click the second word.
-## Deleteing tag value
+## Deleting tag value
 Right click the tag to delete using the context menu
 ## Directly editing a tag
 Press F2 to Directly edit the tag
