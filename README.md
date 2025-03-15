@@ -60,7 +60,7 @@ However, if the dragged tag is dropped while the Ctrl key is pressed, it is adde
 (not available for osis xml)<br>
 Highlight the target words, then right click on one of them. Click on Merge from the context menu.
 The merged cells must be adjacent words, otherwise you will not see the Merge menu.
-to higlight adjacent words, click on the first word, and while the mouse is down, dag it to the right or left as required.
+to highlight adjacent words, click on the first word, and while the mouse is down, drag it to the right or left as required.
 ## Splitting a multi word cell
 (not available for osis xml)<br>
 If a target word cell contains more than word, it can be split into seperate words. Click the word cell to select it. Right click the cell and click Split from the contxt menu.
