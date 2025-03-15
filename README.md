@@ -71,3 +71,6 @@ To select two words, click the first word to select it. While pressing Ctrl, cli
 Right click the tag to delete using the context menu. Alternatively, select the tag, then press the delete key. 
 ## Directly editing a tag
 Press F2 to Enable editing the current tag cell.
+## Use of the Blue Letter Bible Panel
+A double click on any tag in the bottom row of any grid will retrieve its definition in the Blue Letter Bible Panel. If the cell contains more than one Strong’s number, a context menu will let the user select one of them.
+
