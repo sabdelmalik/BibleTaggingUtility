@@ -12,7 +12,7 @@ namespace BibleTaggingUtil.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.9.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.12.0.0")]
     internal sealed partial class TargetBibles : global::System.Configuration.ApplicationSettingsBase {
         
         private static TargetBibles defaultInstance = ((TargetBibles)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new TargetBibles())));
@@ -80,6 +80,30 @@ namespace BibleTaggingUtil.Properties {
             }
             set {
                 this["UseGrkMeaningVar"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowAncientWord {
+            get {
+                return ((bool)(this["ShowAncientWord"]));
+            }
+            set {
+                this["ShowAncientWord"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowAncientMeaning {
+            get {
+                return ((bool)(this["ShowAncientMeaning"]));
+            }
+            set {
+                this["ShowAncientMeaning"] = value;
             }
         }
     }
