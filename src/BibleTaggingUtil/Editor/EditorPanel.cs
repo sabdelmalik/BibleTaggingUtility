@@ -1144,9 +1144,16 @@ namespace BibleTaggingUtil.Editor
             int savedRow = dgvTarget.CurrentCell.RowIndex;
 
             string reference = tbCurrentReference.Text;
+
+            int bkIndex = Utils.GetBookIndex(reference);
+            string targetBook = container.Target.GetBookNameFromIndex(bkIndex);
+
+            int space = reference.IndexOf(' ');
+            string targetReference = reference.Replace(reference.Substring(0, space), targetBook);
+
             if (save)
                 dgvTarget.SaveVerse(reference);
-            Verse v = osis ? container.OsisTarget.Bible[reference] : container.Target.Bible[reference];
+            Verse v = osis ? container.OsisTarget.Bible[reference] : container.Target.Bible[targetReference];
 
             dgvTarget.Update(v);
 
