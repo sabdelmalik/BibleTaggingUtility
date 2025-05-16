@@ -771,7 +771,7 @@ namespace BibleTaggingUtil.TranslationTags
                             }
                         }
                         if (publicDomain)
-                            sw.WriteLine(Utils.RemoveDiacritics(line));
+                            sw.WriteLine(line); // Utils.RemoveDiacritics(line));
                         else
                             sw.WriteLine(line);
                     }

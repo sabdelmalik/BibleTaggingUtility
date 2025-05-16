@@ -35,7 +35,7 @@ namespace BibleTaggingUtil.TranslationTags
             string originalRef = verseRef.Replace(book, bookName);
             int colon = originalRef.IndexOf(':');
             string verseNum = originalRef.Substring(colon);
-            if(verseRef == "2Th 2:13")
+            if(verseRef == "Mar 7:20")
             {
                 int x = 0;
             }
@@ -69,7 +69,10 @@ namespace BibleTaggingUtil.TranslationTags
                             if (grkChapter > 1) grkChapter--;
                             mapVerse = tagnt.LastVerse(bookName, grkChapter);
                         }
-                        string grkRef = string.Format("{0} {1}:{2}", bk, grkChapter, mapVerse);
+
+                        int bkIndex = container.Target.GetBookIndex(bk);
+                        string grkBk = tagnt.GetBookNameFromIndex(bkIndex);
+                        string grkRef = string.Format("{0} {1}:{2}", grkBk, grkChapter, mapVerse);
 
                         // get the greek verse
                         Verse greekVerse = tagnt.Bible[grkRef];
@@ -756,7 +759,7 @@ namespace BibleTaggingUtil.TranslationTags
                             }
                         }
                         if (publicDomain)
-                            sw.WriteLine(Utils.RemoveDiacritics(line));
+                            sw.WriteLine(line); // Utils.RemoveDiacritics(line));
                         else
                             sw.WriteLine(line);
                     }

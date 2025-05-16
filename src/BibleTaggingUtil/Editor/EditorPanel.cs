@@ -1059,7 +1059,10 @@ namespace BibleTaggingUtil.Editor
                 }
                 else
                 {
-                    container.FindVerse(container.Target, cbTagToFind.Text);
+                    if (Control.ModifierKeys == Keys.Shift)
+                        container.FindVerse(container.Target, cbTagToFind.Text, true);
+                    else
+                        container.FindVerse(container.Target, cbTagToFind.Text);
                 }
             }
         }

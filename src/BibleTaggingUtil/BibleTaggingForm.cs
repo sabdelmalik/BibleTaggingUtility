@@ -29,6 +29,7 @@ using BibleTaggingUtil.Versification;
 using BibleTaggingUtil.Restore;
 using BibleTaggingUtil.Strongs;
 using System.Drawing.Text;
+using System.Text.RegularExpressions;
 
 namespace BibleTaggingUtil
 {
@@ -1056,7 +1057,8 @@ namespace BibleTaggingUtil
             }
         }
 
-        public void FindVerse(BibleVersion version, string tag)
+        List <string> foundArabicWords = new List <string>();
+        public void FindVerse(BibleVersion version, string tag, bool singleTag=false)
         {
             try
             {
@@ -1094,8 +1096,29 @@ namespace BibleTaggingUtil
 
                         }
                     }
-                    else if (text.Contains(tag))
+                    else if (singleTag)
                     {
+                        // first a quick check
+                        if (!text.Contains(tag))
+                            continue;
+
+                        string pattern1 = $@"([ \u0600-\u06FF]+)\s(<{tag}>)\s([.,\u0600-\u06FF]+)";
+
+                        Match m = Regex.Match(text, pattern1);
+                        if (m.Success)
+                        {
+                            string word = Utils.RemoveDiacritics(m.Groups[1].Value);
+                            if (foundArabicWords.Contains(word))
+                                continue;
+                            foundArabicWords.Add(word);
+                            verseSelectionPanel.GotoVerse(newRef);
+                            break;
+                        }
+
+                    }
+                    else if (!singleTag && text.Contains(tag))
+                    {
+                        foundArabicWords.Clear();
                         verseSelectionPanel.GotoVerse(newRef);
                         break;
                     }
@@ -1111,7 +1134,7 @@ namespace BibleTaggingUtil
 
 
         /// <summary>
-        /// finds the a tag that ids repeated in two consequetive cells
+        /// finds the tag that is repeated in two consecutive cells
         /// </summary>
         public void FindRepetitive()
         {
