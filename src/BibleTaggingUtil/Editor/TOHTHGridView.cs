@@ -109,6 +109,7 @@ namespace BibleTaggingUtil.Editor
             List<string> rootStrongs = new List<string>();
             List<string> wordType =   new List<string>();
             List<string> altVerseNumber = new List<string>();
+            List<string> altStrongs = new List<string>();
             List<string> wordNumber = new List<string>();
             List<string> meaningVar = new List<string>();
             List<string> lexicalForm = new List<string>();
@@ -126,6 +127,7 @@ namespace BibleTaggingUtil.Editor
                 morphology.Add("GMR");
                 meaningVar.Add("VAR");
                 transliteration.Add("XLT");
+                altStrongs.Add("A_S");
                 rootStrongs.Add("STG");
                 tags.Add(tagLable);
 
@@ -137,6 +139,7 @@ namespace BibleTaggingUtil.Editor
                     morphology.Add(verseWord.Morphology);
                     transliteration.Add(verseWord.Transliteration);
                     rootStrongs.Add(verseWord.RootStrong);
+                    altStrongs.Add(verseWord.AltStrongs);
                     wordType.Add(verseWord.WordType);
                     altVerseNumber.Add(verseWord.AltVerseNumber);
                     wordNumber.Add(verseWord.WordNumber);
@@ -214,6 +217,7 @@ namespace BibleTaggingUtil.Editor
                 this.Rows.Add(morphology.ToArray());
                 this.Rows.Add(meaningVar.ToArray());
                 this.Rows.Add(transliteration.ToArray());
+                this.Rows.Add(altStrongs.ToArray());
                 this.Rows.Add(rootStrongs.ToArray());
                 this.Rows.Add(tags.ToArray());
 
@@ -309,6 +313,7 @@ namespace BibleTaggingUtil.Editor
             List<StrongsCluster> tags = new List<StrongsCluster>();
             List<string> morphology = new List<string>();
             List<string> rootStrongs = new List<string>();
+            List<string> altStrongs = new List<string>();
             List<string> wordType = new List<string>();
             List<string> altVerseNumber = new List<string>();
             List<string> varUsed = new List<string>();
@@ -326,6 +331,7 @@ namespace BibleTaggingUtil.Editor
                 wordType.Add("TYP");
                 morphology.Add("GMR");
                 transliteration.Add("XLT");
+                altStrongs.Add("A_S");
                 rootStrongs.Add("STG");
                 tags.Add(tagLable);
 
@@ -343,6 +349,7 @@ namespace BibleTaggingUtil.Editor
                     morphology.Add(verseWord.Morphology);
                     transliteration.Add(verseWord.Transliteration);
                     rootStrongs.Add(verseWord.RootStrong);
+                    altStrongs.Add(verseWord.AltStrongs);
                     wordType.Add(verseWord.WordType);
                     altVerseNumber.Add(verseWord.AltVerseNumber);
                     varUsed.Add(verseWord.VarUsed ? "*****" : "");
@@ -376,6 +383,7 @@ namespace BibleTaggingUtil.Editor
                 int typeRow = 8;
                 this.Rows.Add(morphology.ToArray());
                 this.Rows.Add(transliteration.ToArray());
+                this.Rows.Add(altStrongs.ToArray());
                 this.Rows.Add(rootStrongs.ToArray());
                 this.Rows.Add(tags.ToArray());
 

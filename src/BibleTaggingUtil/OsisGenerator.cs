@@ -210,6 +210,10 @@ namespace BibleTaggingUtil
                     if (osisConf[OsisConstants.osisIDWork].ToLower().Contains("ara") &&
                         (currentBook == "Ps" && verseNum == "1"))
                     {
+                        if (chapterNum == "72")
+                        {
+                            int x = 0;
+                        }
                         if (verse.HasPsalmTitle)
                         {
                             sw.WriteLine(string.Format("<title canonical=\"true\" type=\"psalm\">{0}</title>", verse.OsisPsalmTitleData));

@@ -109,7 +109,11 @@ namespace BibleTaggingUtil.BibleVersions
         {
             if (string.IsNullOrEmpty(line))
                 return;
-
+            //if (line.StartsWith("Mat.2.8#19"))
+            if (line.StartsWith("Mat.1.1#01"))
+            {
+                int x = 0;
+            }
             /*
              * Heb (&Eng) Ref & Type	Hebrew	Transliteration	English translation	dStrongs = Lexical = Gloss	Grammar	Meaning Variants	Spelling Variants	Conjoin word	sStrong+Instance	Alt Strongs
              * 
@@ -131,7 +135,7 @@ namespace BibleTaggingUtil.BibleVersions
 
             //            string regexPattern = @"([1-9a-zA-Z]+)\.([0-9]{1,3})\.([0-9]{1,3})\({0,1}[0-9.]*\){0,1}\#([0-9]{0,3})\=([()LQKR])\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t";
             //string regexPattern = @"([1-9a-zA-Z]+)\.([0-9]{1,3})\.([0-9]{1,3})\[{0,1}[0-9.]*\]{0,1}\#([0-9]{1,3})\=([()NKO{1,6})\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)";
-            string regexPattern = @"([1-9a-zA-Z]+)\.([0-9]{1,3})\.([0-9]{1,3})([[{(]{0,1}[0-9.]*[]})]{0,1})\#([0-9]{1,3})\=([()a-zA-Z]{1,8})\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)"; //\t([^\t]*)";
+            string regexPattern = @"([1-9a-zA-Z]+)\.([0-9]{1,3})\.([0-9]{1,3})([[{(]{0,1}[0-9.]*[]})]{0,1})\#([0-9]{1,3})\=([()a-zA-Z]{1,8})\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t{0,1}([^\t]*)"; //\t([^\t]*)";
 
             try
             {
@@ -163,7 +167,7 @@ namespace BibleTaggingUtil.BibleVersions
                     string submeaning = match.Groups[15].Value;
                     string cojoinWord = match.Groups[16].Value;
                     string sStrong = match.Groups[17].Value;
-                    string altStrong = match.Groups[18].Value;
+                    string altStrongs = match.Groups[18].Value;
 
                     string verseRef = string.Format("{0} {1}:{2}", bookName,
                             chapterNum.TrimStart('0'),
@@ -240,7 +244,7 @@ namespace BibleTaggingUtil.BibleVersions
                     {
                         meaningVar = string.Empty;
                     }
-                    bible[currentVerseRef][wordNumber] = new VerseWord(greek, english, new StrongsCluster(strongsList), transliteration, currentVerseRef, grammar, dStrong, wordType, altVerseNum, wordNum, meaningVar: meaningVar, dictForm:dictForm,dictGloss:dictGloss);
+                    bible[currentVerseRef][wordNumber] = new VerseWord(greek, english, new StrongsCluster(strongsList), transliteration, currentVerseRef, grammar, dStrong, wordType, altVerseNum, wordNum, meaningVar: meaningVar, dictForm:dictForm,dictGloss:dictGloss, altStrongs:altStrongs);
                 }
                 else // not a word line
                     return;

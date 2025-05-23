@@ -105,7 +105,7 @@ namespace BibleTaggingUtil.TranslationTags
 
             List<TranslatorWord> newVerse = new List<TranslatorWord>();
 
-            if (verseRef == "Mar 7:37")
+            if (verseRef == "Heb 7:21")
             {
                 int x = 0;
             }
@@ -623,9 +623,9 @@ namespace BibleTaggingUtil.TranslationTags
                             string[] parts = word.Word.Split(new char[] { ' ' });
                             if (parts.Length == 1)
                             {
-                                if (parts[0] == "-" || parts[0] == "\u00ad")
-                                    arabicIndexAdjust--;
-                                else
+                                //if (parts[0] == "-" || parts[0] == "\u00ad")
+                                //    arabicIndexAdjust--;
+                                //else
                                     araWordNo = string.Format("#{0:d2}", word.TargetWordIndex + arabicIndexAdjust);
                             }
                             else

@@ -487,18 +487,18 @@ namespace BibleTaggingUtil
                 if (!LoadReferenceFiles(settingsForm.ReferenceTANTPath, referenceTAGNT)) { CloseForm(); return; }
 
                 #region fix strongs multiple occurance suffix
-                Dictionary<string, string> refs = new Dictionary<string, string>(); 
-                foreach (( string refrence, Verse ver) in referenceTAGNT.Bible)
+                Dictionary<string, string> refs = new Dictionary<string, string>();
+                foreach ((string refrence, Verse ver) in referenceTAGNT.Bible)
                 {
                     foreach (VerseWord word in ver)
                     {
-                        if(!word.VarCorrected && word.VarUsed && word.Strong.Count == 1)
+                        if (!word.VarCorrected && word.VarUsed && word.Strong.Count == 1)
                         {
                             StrongsNumber sn = word.Strong[0];
                             int count = 0;
                             foreach (VerseWord w in ver)
                             {
-                                if(w.Strong.Count ==  1 && w.Strong[0].Number == sn.Number)
+                                if (w.Strong.Count == 1 && w.Strong[0].Number == sn.Number)
                                     count++;
                             }
                             if (count > 1)
@@ -525,11 +525,12 @@ namespace BibleTaggingUtil
                                                 refs[refrence] = string.Format("({0}) {1}", count, w.StrongStringS);
                                             }
                                         }
-                                    } else
+                                    }
+                                    else
                                     {
                                         if (w.Strong.ToStringD().Contains(sn.ToStringD()))
                                         {
-                                            for(int j = 0; j < w.Strong.Count; j++)
+                                            for (int j = 0; j < w.Strong.Count; j++)
                                             {
                                                 StrongsNumber s = w.Strong[j];
                                                 if (s.Number == sn.Number)
@@ -678,7 +679,7 @@ namespace BibleTaggingUtil
             }
             else
             {
-                if(Properties.MainSettings.Default.LastBook < 0)
+                if (Properties.MainSettings.Default.LastBook < 0)
                 { Properties.MainSettings.Default.LastBook = 0; }
                 verseSelectionPanel.CurrentBook = Properties.MainSettings.Default.LastBook;
 
@@ -985,7 +986,7 @@ namespace BibleTaggingUtil
 
             string bibleFolder = Path.Combine(targetBiblesFolder, targetBibleName);
             config.ReadBiblesConfig(bibleFolder);
-            
+
             string taggedFolder = Path.Combine(bibleFolder, "tagged");
             string[] files = Directory.GetFiles(taggedFolder);
             if (files.Length > 0)
@@ -1041,10 +1042,10 @@ namespace BibleTaggingUtil
             if (flags.MainNtChanged && !Properties.ReferenceBibles.Default.NtRefSkip)
             {
                 WaitCursorControl(true);
-                
+
                 referenceTAGNT.BibleName = Properties.ReferenceBibles.Default.TANTReference; //ntReference;
                 if (!LoadReferenceFiles(settingsForm.ReferenceTANTPath, referenceTAGNT)) { CloseForm(); return; }
-                
+
                 WaitCursorControl(false);
             }
 
@@ -1057,8 +1058,8 @@ namespace BibleTaggingUtil
             }
         }
 
-        List <string> foundArabicWords = new List <string>();
-        public void FindVerse(BibleVersion version, string tag, bool singleTag=false)
+        Dictionary<string, string> foundArabicWords = new Dictionary<string, string>();
+        public void FindVerse(BibleVersion version, string tag, bool singleTag = false)
         {
             try
             {
@@ -1107,10 +1108,11 @@ namespace BibleTaggingUtil
                         Match m = Regex.Match(text, pattern1);
                         if (m.Success)
                         {
-                            string word = Utils.RemoveDiacritics(m.Groups[1].Value);
-                            if (foundArabicWords.Contains(word))
+                            string arabicWord = m.Groups[1].Value.Trim();
+                            string word = Utils.RemoveDiacritics(arabicWord);
+                            if (foundArabicWords.ContainsKey(word))
                                 continue;
-                            foundArabicWords.Add(word);
+                            foundArabicWords[word] = arabicWord;
                             verseSelectionPanel.GotoVerse(newRef);
                             break;
                         }
@@ -1636,7 +1638,7 @@ namespace BibleTaggingUtil
                 restoreTarget = new RestoreTarget();
 
             DialogResult result = restoreTarget.ShowDialog();
-            if(result == DialogResult.OK)
+            if (result == DialogResult.OK)
             {
                 new Thread(() =>
                 {
@@ -1658,6 +1660,151 @@ namespace BibleTaggingUtil
 
             restoreTarget.Dispose();
             restoreTarget = null;
+
+        }
+
+        class AltData
+        {
+            public AltData(string reference, int tagntWordNum, string strongs, string altStrongs, string greek, string lexicon)
+            {
+                TagntWordNum = tagntWordNum;
+                Strongs = strongs;
+                AltStrongs = altStrongs;
+                Greek = greek;
+                Lexicon = lexicon;
+                Reference = reference;
+            }
+
+            public string Reference {  get; }
+            public int TagntWordNum { get; }
+            public string Greek {  get; }
+            public string Lexicon {  get; }
+            public string Strongs { get; }
+            public string AltStrongs { get; }
+
+            public override string ToString()
+            {
+                return $"{Reference}: [{TagntWordNum}] - {Lexicon}={Strongs}, {Greek}={AltStrongs}";
+            }
+
+            public string Identifier
+            {
+                get
+                {
+                    return $"{Lexicon}={Strongs}, {Greek}={AltStrongs}";
+                }
+            }
+            public string LexStrongs
+            {
+                get
+                {
+                    return $"{Strongs}={Lexicon}";
+                }
+            }
+        }
+
+        /// <summary>
+        /// key = lex strong, greek strong
+        /// </summary>
+        Dictionary<string, List<AltData>> variences = new Dictionary<string, List<AltData>>();
+        Dictionary<string, List<AltData>> variences2 = new Dictionary<string, List<AltData>>();
+        Dictionary<string, List<AltData>> variences3 = new Dictionary<string, List<AltData>>();
+        List<AltData> altStrongs = new List<AltData> ();
+        List<AltData> alt2Strongs = new List<AltData> ();
+        List<AltData> alt3Strongs = new List<AltData> ();
+        List<AltData> altMultiStrongs = new List<AltData> ();
+        List<string> lexStrongs = new List<string> ();
+        List<string> lexStrongs2 = new List<string> ();
+        List<string> lexStrongs3 = new List<string> ();
+        private void generateAltStrongsTableStripMenuItem_Click(object sender, EventArgs e)
+        {
+            altStrongs.Clear();
+            alt2Strongs.Clear();
+            alt3Strongs.Clear();
+            altMultiStrongs.Clear();
+            foreach ((string reference, Verse verse) in referenceTAGNT.Bible)
+            {
+                for (int i = 0; i < verse.Count; i++)
+                {
+                    VerseWord word = verse[i];
+                    try
+                    {
+                        if (!string.IsNullOrEmpty(word.AltStrongs))
+                        {
+                            //Verse targetVerse = target.Bible[reference];
+                            if (word.Strong.Count > 1)
+                            {
+                                if (word.Strong.Count == 2)
+                                    alt2Strongs.Add(new AltData(reference, word.WordIndex, word.Strong.ToStringD(), word.AltStrongs, word.Greek, word.DictForm));
+                                else if (word.Strong.Count == 3)
+                                    alt3Strongs.Add(new AltData(reference, word.WordIndex, word.Strong.ToStringD(), word.AltStrongs, word.Greek, word.DictForm));
+                                else
+                                    altMultiStrongs.Add(new AltData(reference, word.WordIndex, word.Strong.ToStringD(), word.AltStrongs, word.Greek, word.DictForm));
+
+                            }
+                            else
+                                altStrongs.Add(new AltData(reference, word.WordIndex, word.Strong.ToStringD(), word.AltStrongs, word.Greek, word.DictForm));
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+                        int x = 0;
+                    }
+                }
+
+            }
+            StringBuilder sb = new StringBuilder();
+            StringBuilder sb2 = new StringBuilder();
+            StringBuilder sb3 = new StringBuilder();
+
+            Extract(altStrongs, variences, lexStrongs, sb);
+            Extract(alt2Strongs, variences2, lexStrongs2, sb2);
+            Extract(alt3Strongs, variences3, lexStrongs3, sb3);
+
+            System.IO.File.WriteAllText(@"C:\tmp\AltStrong.txt", sb.ToString());
+            System.IO.File.WriteAllText(@"C:\tmp\AltStrong2.txt", sb2.ToString());
+            System.IO.File.WriteAllText(@"C:\tmp\AltStrong3.txt", sb3.ToString());
+
+        }
+
+        private void Extract(List<AltData> altStrongs, Dictionary<string, List<AltData>> variences, List<string> lexStrongs, StringBuilder sb)
+        {
+            variences.Clear();
+            lexStrongs.Clear();
+
+            foreach (AltData data in altStrongs)
+            {
+                string id = data.Identifier;
+                if (variences.ContainsKey(id))
+                {
+                    variences[id].Add(data);
+                }
+                else
+                {
+                    variences[id] = new List<AltData> { data };
+                    if (altStrongs == this.altStrongs)
+                    {
+                        sb.Append("==========================================\r\n");
+                        sb.Append(data.ToString());
+                        sb.Append("\r\n");
+                    }
+                    if (!lexStrongs.Contains(data.LexStrongs))
+                        lexStrongs.Add(data.LexStrongs);
+                }
+            }
+            if (altStrongs == this.alt2Strongs || altStrongs == this.alt3Strongs)
+            {
+                foreach (string id in variences.Keys)
+                {
+                    foreach (AltData data in variences[id])
+                    { 
+                        sb.Append(data.ToString()); 
+                        sb.Append("\r\n"); 
+                    }
+                    sb.Append("==========================================\r\n");
+                }
+            }
+
 
         }
     }
