@@ -110,7 +110,7 @@ namespace BibleTaggingUtil.BibleVersions
             if (string.IsNullOrEmpty(line))
                 return;
             //if (line.StartsWith("Mat.2.8#19"))
-            if (line.StartsWith("Mat.1.1#01"))
+            if (line.StartsWith("2Co.7.12#21"))
             {
                 int x = 0;
             }

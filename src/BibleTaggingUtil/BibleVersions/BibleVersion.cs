@@ -247,7 +247,7 @@ namespace BibleTaggingUtil.BibleVersions
             }
 
             string reference = string.Format("{0} {1}:{2}", book, chapter, verseNo);
-            if(reference == "Psa 18:1")
+            if(reference == "Mat 21:16")
             { 
                 int x = 0;
             }
@@ -268,6 +268,10 @@ namespace BibleTaggingUtil.BibleVersions
                 string versePart = verseParts[i].Trim();
                 if (string.IsNullOrEmpty(versePart))
                     continue; // some extra space
+                if(versePart.Contains("infants"))
+                {
+                    int x = 0;
+                }
                 if (i == 0 || versePart[0] != '<' ) // add i == 0 test because a verse can not start with a tag.
                 {
                     // this is a word
@@ -295,7 +299,9 @@ namespace BibleTaggingUtil.BibleVersions
 
                     if (verseParts[i] == "<>")
                     {
-                        tmpTag = "<>";
+                        // if tmpTag is not empty, ignore this empty tag
+                        if (string.IsNullOrEmpty(tmpTag))
+                            tmpTag = "<>";
                     }
                     else
                     {

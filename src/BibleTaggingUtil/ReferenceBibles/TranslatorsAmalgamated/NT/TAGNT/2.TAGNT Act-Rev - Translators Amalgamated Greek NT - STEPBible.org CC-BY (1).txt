@@ -54302,7 +54302,7 @@ Word & Type	Greek	English translation	dStrongs = Grammar	Dictionary form =  Glos
 1Co.15.31#03=NKO	ἀποθνῄσκω, (apothnēskō)	I die,	G0599=V-PAI-1S	ἀποθνήσκω=to die	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			estoy muriendo	to die	#03	G0599					
 1Co.15.31#04=NKO	νὴ (nē)	as surely as	G3513=PRT	νή=as surely as	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			por	as surely as	#04	G3513					
 1Co.15.31#05=NKO	τὴν (tēn)	<the>	G3588=T-ASF	ὁ=the/this/who	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			la	the	#05»07:G2746	G3588_A					
-1Co.15.31#06=NK(O)	ὑμετέραν (humeteran)	in you	G4771=A-ASF	ὑμέτερος=your	NA28+NA27+Tyn+SBL+WH+Treg+Byz+KJV	ἡμετέραν (O=hēmeteran) our own - G2251=S-1PASF in: TR		suya	your	#06»07:G2746	G4771	G2251, , G5212	v ἡμετέραν  (<i>hēmeteran</i>) 'our own' occurs in a few manuscripts (TR) instead of ὑμετέραν  (<i>humeteran</i>) 'in you' in older manuscripts (NA28+NA27+Tyn+SBL+WH+Treg+Byz+KJV)			
+1Co.15.31#06=NK(O)	ὑμετέραν (humeteran)	in you	G4771=A-ASF	ὑμέτερος=your	NA28+NA27+Tyn+SBL+WH+Treg+Byz+KJV	ἡμετέραν (O=hēmeteran) our own - G2251=S-1PASF in: TXR		suya	your	#06»07:G2746	G4771	G2251, , G5212	v ἡμετέραν  (<i>hēmeteran</i>) 'our own' occurs in a few manuscripts (TR) instead of ὑμετέραν  (<i>humeteran</i>) 'in you' in older manuscripts (NA28+NA27+Tyn+SBL+WH+Treg+Byz+KJV)			
 1Co.15.31#07=NKO	καύχησιν, (kauchēsin)	boasting,	G2746=N-ASF	καύχησις=pride	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			causa de gloriarse	pride	#07	G2746					
 1Co.15.31#08=NO	ἀδελφοί, (adelphoi)	brothers	G0080=N-VPM	ἀδελφός=brother	NA28+NA27+Tyn+WH+Treg			hermanos	brother	#08	G0080		^ ἀδελφοί,  (<i>adelphoi</i>) 'brothers' is only in older manuscripts (NA28+NA27+Tyn+WH+Treg)			
 1Co.15.31#09=NKO	ἣν (hēn)	which	G3739=R-ASF	ὅς, ἥ=which	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			cual	which	#09»10:G2192	G3739					
@@ -59356,10 +59356,10 @@ Word & Type	Greek	English translation	dStrongs = Grammar	Dictionary form =  Glos
 2Co.7.12#18=NKO	φανερωθῆναι (phanerōthēnai)	being revealed	G5319=V-APN	φανερόω=to manifest	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			ser manifiesto	to manifest	#18	G5319					
 2Co.7.12#19=NKO	τὴν (tēn)	the	G3588=T-ASF	ὁ=the/this/who	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			la	the	#19»20:G4710	G3588_D					
 2Co.7.12#20=NKO	σπουδὴν (spoudēn)	earnestness	G4710=N-ASF	σπουδή=diligence	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			rapidez	diligence	#20	G4710					
-2Co.7.12#21=NKO	ὑμῶν (humōn)	of you	G4771=P-2GP	σύ=you	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			de ustedes	of you	#21«20:G4710	G4771_B	G5216				
+2Co.7.12#21=NKO	ὑμῶν (humōn)	of you	G4771=P-2GP	σύ=you	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz	ἡμῶν (O=hēmōn) of us - G3165=P-1GP in: ELZ+TR+TXR		de ustedes	of you	#21«20:G4710	G4771_B	G5216				
 2Co.7.12#22=NKO	τὴν (tēn)	which [is]	G3588=T-ASF	ὁ=the/this/who	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			a la	the	#22»23:G5228	G3588_E					
 2Co.7.12#23=NKO	ὑπὲρ (huper)	for	G5228=PREP	ὑπέρ=above/for	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			por	above	#23	G5228					
-2Co.7.12#24=NKO	ἡμῶν (hēmōn)	us	G3165=P-1GP	ἐγώ=I/we	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			de nosotros	of us	#24«23:G5228	G3165	G2257				
+2Co.7.12#24=NKO	ἡμῶν (hēmōn)	us	G3165=P-1GP	ἐγώ=I/we	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz	ὑμῶν (O=humōn) you - G5216=P-2GP in: ELZ+TR+TXR		de nosotros	of us	#24«23:G5228	G3165	G2257				
 2Co.7.12#25=NKO	πρὸς (pros)	to	G4314=PREP	πρός=to/with	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			hacia	to	#25	G4314					
 2Co.7.12#26=NKO	ὑμᾶς (humas)	you	G4771=P-2AP	σύ=you	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			a ustedes	you	#26«25:G4314	G4771_C	G5209				
 2Co.7.12#27=NKO	ἐνώπιον (enōpion)	before	G1799=PREP	ἐνώπιον=before	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			a vista de	before	#27	G1799					
@@ -75393,7 +75393,7 @@ Col.2.13#15=NO	ὑμᾶς (humas)	you	G4771=P-2AP	σύ=you	NA28+NA27+Tyn+SBL+WH
 Col.2.13#16=NKO	σὺν (sun)	with	G4862=PREP	σύν=with	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			junto con	with	#16	G4862					
 Col.2.13#17=NKO	αὐτῷ (autō)	Him	G0846=P-DSM	αὐτός=he/she/it/self	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			él	to him	#17«16:G4862	G0846	G3778				
 Col.2.13#18=NKO	χαρισάμενος (charisamenos)	having forgiven	G5483=V-ADP-NSM	χαρίζω=to give grace	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			habiendo perdonado por bondad inmerecida	to give grace	#18	G5483					
-Col.2.13#19=NKO	ἡμῖν (hēmin)	us	G3165=P-1DP	ἐγώ=I/we	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			a nosotros	to us	#19«18:G5483	G3165	G2254				
+Col.2.13#19=NKO	ἡμῖν (hēmin)	us	G3165=P-1DP	ἐγώ=I/we	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz	ὑμῖν (O=humin) you - G5213=P-2DP in: ELZ+TR+TXR		a nosotros	to us	#19«18:G5483	G3165	G2254				
 Col.2.13#20=NKO	πάντα (panta)	all	G3956=A-APN	πᾶς=all	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			todas	all	#20	G3956					
 Col.2.13#21=NKO	τὰ (ta)	the	G3588=T-APN	ὁ=the/this/who	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			las	the	#21»22:G3900	G3588_D					
 Col.2.13#22=NKO	παραπτώματα· (paraptōmata)	transgressions;	G3900=N-APN	παράπτωμα=trespass	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			transgresiones	trespass	#22	G3900_B					
@@ -77684,7 +77684,7 @@ Word & Type	Greek	English translation	dStrongs = Grammar	Dictionary form =  Glos
 1Th.2.15#09=K	ἰδίους (idious)	[their] own	G2398=A-APM	ἴδιος=one's own/private	TR+Byz			propios	one's own	#09	G2398		^ ἰδίους  (<i>idious</i>) '[their] own' is only in traditional manuscripts (TR+Byz)			
 1Th.2.15#10=NKO	προφήτας (prophētas)	prophets	G4396=N-APM	προφήτης=prophet	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			voceros	prophets	#10	G4396					
 1Th.2.15#11=NKO	καὶ (kai)	and	G2532=CONJ	καί=and	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			y	and	#11	G2532_C					
-1Th.2.15#12=NK(O)	ἡμᾶς (hēmas)	us	G3165=P-1AP	ἐγώ=I/we	NA28+NA27+Tyn+SBL+WH+Treg+Byz+KJV	ὑμᾶς (O=humas) you - G5209=P-2AP in: TR		a nosotros	us	#12»13:G1559	G3165	G5209, , G2248	v ὑμᾶς  (<i>humas</i>) 'you' occurs in a few manuscripts (TR) instead of ἡμᾶς  (<i>hēmas</i>) 'us' in older manuscripts (NA28+NA27+Tyn+SBL+WH+Treg+Byz+KJV)			
+1Th.2.15#12=NK(O)	ἡμᾶς (hēmas)	us	G3165=P-1AP	ἐγώ=I/we	NA28+NA27+Tyn+SBL+WH+Treg+Byz+KJV	ὑμᾶς (O=humas) you - G5209=P-2AP in: TXR		a nosotros	us	#12»13:G1559	G3165	G5209, , G2248	v ὑμᾶς  (<i>humas</i>) 'you' occurs in a few manuscripts (TR) instead of ἡμᾶς  (<i>hēmas</i>) 'us' in older manuscripts (NA28+NA27+Tyn+SBL+WH+Treg+Byz+KJV)			
 1Th.2.15#13=NKO	ἐκδιωξάντων (ekdiōxantōn)	having driven out	G1559=V-AAP-GPM	ἐκδιώκω=to persecute	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			habiendo perseguido hacia fuera	to persecute	#13	G1559					
 1Th.2.15#14=NKO	καὶ (kai)	and	G2532=CONJ	καί=and	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			y	and	#14	G2532_D					
 1Th.2.15#15=NKO	θεῷ (theō)	God	G2316=N-DSM-T	θεός=God	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			a Dios	God	#15	G2316					
@@ -86431,7 +86431,7 @@ Tit.2.10#10=NKO	διδασκαλίαν (didaskalian)	doctrine	G1319=N-ASF	δι�
 Tit.2.10#11=no	τὴν (tēn)	which [is]	G3588=T-ASF	ὁ=the/this/who	NA28+NA27+Tyn+SBL+WH+Treg			la	[that] which [is]	#11«10:G1319	G3588_b					
 Tit.2.10#12=NKO	τοῦ (tou)	of the	G3588=T-GSM	ὁ=the/this/who	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			de el	the	#12»13:G4990	G3588_C					
 Tit.2.10#13=NKO	σωτῆρος (sōtēros)	Savior	G4990=N-GSM	σωτήρ=savior	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			Salvador	savior	#13	G4990					
-Tit.2.10#14=NK(O)	ἡμῶν (hēmōn)	of us	G3165=P-1GP	ἐγώ=I/we	NA28+NA27+Tyn+SBL+WH+Treg+Byz+KJV	ὑμῶν (O=humōn) of you - G5216=P-2GP in: TR		nuestro	our	#14«13:G4990	G3165	G5216, , G2257	v ὑμῶν  (<i>humōn</i>) 'of you' occurs in a few manuscripts (TR) instead of ἡμῶν  (<i>hēmōn</i>) 'of us' in older manuscripts (NA28+NA27+Tyn+SBL+WH+Treg+Byz+KJV)			
+Tit.2.10#14=NK(O)	ἡμῶν (hēmōn)	of us	G3165=P-1GP	ἐγώ=I/we	NA28+NA27+Tyn+SBL+WH+Treg+Byz+KJV	ὑμῶν (O=humōn) of you - G5216=P-2GP in: TXR		nuestro	our	#14«13:G4990	G3165	G5216, , G2257	v ὑμῶν  (<i>humōn</i>) 'of you' occurs in a few manuscripts (TR) instead of ἡμῶν  (<i>hēmōn</i>) 'of us' in older manuscripts (NA28+NA27+Tyn+SBL+WH+Treg+Byz+KJV)			
 Tit.2.10#15=NKO	θεοῦ (theou)	God	G2316=N-GSM-T	θεός=God	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			Dios	God	#15	G2316					
 Tit.2.10#16=NKO	κοσμῶσιν (kosmōsin)	they may adorn	G2885=V-PAS-3P	κοσμέω=to arrange	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			esté siendo adornada	to arrange	#16	G2885					
 Tit.2.10#17=NKO	ἐν (en)	in	G1722=PREP	ἐν=in/on/among	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			en	in	#17	G1722					
@@ -98871,7 +98871,7 @@ Jas.5.12#27=NKO	οὔ, (ou)	[be] no,	G3756=PRT-N	οὐ=no	NA28+NA27+Tyn+SBL+WH+T
 Jas.5.12#28=NKO	ἵνα (ina)	so that	G2443=CONJ	ἵνα=in order that/to	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			para que	in order that	#28	G2443	G3363				
 Jas.5.12#29=NKO	μὴ (mē)	not	G3361=PRT-N	μή=not	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			no	not	#29»32:G4098	G3361_B					
 Jas.5.12#30=N(k)O	ὑπὸ (hupo)	under	G5259H=PREP	ὑπό=by/under	NA28+NA27+Tyn+SBL+WH+Treg	εἴς (t=eis) into - G1519=PREP in: TR+Byz		bajo	: under»by/under|2_under	#30	G5259	G1519				
-Jas.5.12#31=NK(O)	κρίσιν (krisin)	judgment	G2920=N-ASF	κρίσις=judgment	NA28+NA27+Tyn+SBL+WH+Treg+KJV	ὑπὸκρίσιν (O=hupokrisin) hypocrisy - G5272=N-ASF in: TR+Byz		juicio	judgment	#31	G2920	G5272	v ὑπὸκρίσιν  (<i>hupokrisin</i>) 'hypocrisy' occurs in a few manuscripts (TR+Byz) instead of κρίσιν  (<i>krisin</i>) 'judgment' in older manuscripts (NA28+NA27+Tyn+SBL+WH+Treg+KJV)			
+Jas.5.12#31=NK(O)	κρίσιν (krisin)	judgment	G2920=N-ASF	κρίσις=judgment	NA28+NA27+Tyn+SBL+WH+Treg+KJV	ὑπὸκρίσιν (O=hupokrisin) hypocrisy - G5272=N-ASF in: TXR+BXyz		juicio	judgment	#31	G2920	G5272	v ὑπὸκρίσιν  (<i>hupokrisin</i>) 'hypocrisy' occurs in a few manuscripts (TR+Byz) instead of κρίσιν  (<i>krisin</i>) 'judgment' in older manuscripts (NA28+NA27+Tyn+SBL+WH+Treg+KJV)			
 Jas.5.12#32=NKO	πέσητε.¶ (pesēte)	you may fall.	G4098=V-2AAS-2P	πίπτω=to collapse	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			caigan	to collapse	#32	G4098					
 																
 # Jas.5.13	Κακοπαθεῖ 	τις 	ἐν 	ὑμῖν; 	προσευχέσθω· 	εὐθυμεῖ 	τις; 	ψαλλέτω. 								
@@ -107552,7 +107552,7 @@ Word & Type	Greek	English translation	dStrongs = Grammar	Dictionary form =  Glos
 Word & Type	Greek	English translation	dStrongs = Grammar	Dictionary form =  Gloss	editions	Meaning variants	Spelling variants	Spanish translation	Sub-meaning	Conjoin word	sStrong+Instance	Alt Strongs				
 2Jn.1.3#01=NKO	ἔσται (estai)	Will be	G1510=V-FDI-3S	εἰμί=to be	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			Será	to be	#01	G1510	G2071				
 2Jn.1.3#02=NKO	μεθ᾽ (meth᾽)	with	G3326=PREP	μετά=with/after	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			con	with	#02	G3326					
-2Jn.1.3#03=NKO	ἡμῶν (hēmōn)	us	G3165=P-1GP	ἐγώ=I/we	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			nosotros	of us	#03«02:G3326	G3165	G2257				
+2Jn.1.3#03=NKO	ἡμῶν (hēmōn)	us	G3165=P-1GP	ἐγώ=I/we	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz	ὑμῶν (O=humōn) of you - G5216=P-2GP in: TR+TXR+Elz		nosotros	of us	#03«02:G3326	G3165	G2257				
 2Jn.1.3#04=NKO	χάρις (charis)	grace	G5485=N-NSF	χάρις=grace	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			bondad inmerecida	grace	#04	G5485					
 2Jn.1.3#05=NKO	ἔλεος (eleos)	mercy	G1656=N-NSN	ἔλεος=mercy	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			misericordia	mercy	#05	G1656					
 2Jn.1.3#06=NKO	εἰρήνη (eirēnē)	[and] peace	G1515=N-NSF	εἰρήνη=peace	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			paz	peace	#06	G1515					

@@ -1761,9 +1761,134 @@ namespace BibleTaggingUtil
             Extract(alt2Strongs, variences2, lexStrongs2, sb2);
             Extract(alt3Strongs, variences3, lexStrongs3, sb3);
 
-            System.IO.File.WriteAllText(@"C:\tmp\AltStrong.txt", sb.ToString());
-            System.IO.File.WriteAllText(@"C:\tmp\AltStrong2.txt", sb2.ToString());
-            System.IO.File.WriteAllText(@"C:\tmp\AltStrong3.txt", sb3.ToString());
+            //System.IO.File.WriteAllText(@"C:\tmp\AltStrong.txt", sb.ToString());
+            //System.IO.File.WriteAllText(@"C:\tmp\AltStrong2.txt", sb2.ToString());
+            //System.IO.File.WriteAllText(@"C:\tmp\AltStrong3.txt", sb3.ToString());
+
+            // ===================================================
+            StringBuilder sb4 = new StringBuilder();
+            SortedDictionary<string, SortedDictionary<string, string>> altMap = new SortedDictionary<string, SortedDictionary<string, string>>();
+            foreach (AltData data in altStrongs)
+            {
+                string grk = data.Greek.Replace(".", "").
+           Replace(",", "").
+           Replace(";", "").
+           Replace(";", "").
+           Replace(":", "").
+           Replace("·", "").
+           Replace("¶", "");
+                if (grk == "εἰμί")
+                {
+                    int x = 0;
+                }
+                if (altMap.ContainsKey(data.Strongs))
+                {
+                    SortedDictionary<string, string> mapped = altMap[data.Strongs];
+
+                    if (!mapped.ContainsKey(grk))
+                    {
+                        mapped[grk] = data.AltStrongs;
+                    }
+                }
+                else
+                {
+                    altMap[data.Strongs] = new SortedDictionary<string, string>
+                    {
+                        {grk, data.AltStrongs},
+                    };
+                }
+            }
+            foreach ((string s, SortedDictionary<string, string> m) in altMap)
+            {
+                foreach ((string gr, string ast) in m)
+                {
+     
+                    if (ast != s && !ast.Contains(','))
+                    {
+                        sb4.Append($"{s}\t{gr}\t{ast}\t{{\"{gr}\", \"{ast}\"}},");
+                        sb4.Append("\r\n");
+                    }
+                }
+            }
+            System.IO.File.WriteAllText(@"C:\tmp\AltStrongMap.txt", sb4.ToString());
+
+            // ===================================================
+            sb4.Clear();
+            altMap.Clear();
+            foreach (AltData data in alt2Strongs)
+            {
+                     string grk = data.Greek.Replace(".", "").
+                Replace(",", "").
+                Replace(";", "").
+                Replace(";", "").
+                Replace(":", "").
+                Replace("·", "").
+                Replace("¶", "");
+               if (altMap.ContainsKey(data.Strongs))
+                {
+                    SortedDictionary<string, string> mapped = altMap[data.Strongs];
+
+                    if (!mapped.ContainsKey(grk))
+                    {
+                        mapped[grk] = data.AltStrongs;
+                    }
+                }
+                else
+                {
+                    altMap[data.Strongs] = new SortedDictionary<string, string>
+                    {
+                        {grk, data.AltStrongs},
+                    };
+                }
+            }
+            foreach ((string s, SortedDictionary<string, string> m) in altMap)
+            {
+                foreach ((string gr, string ast) in m)
+                {
+                        sb4.Append($"{s}\t{gr}\t{ast}");
+                        sb4.Append("\r\n");
+                }
+            }
+            System.IO.File.WriteAllText(@"C:\tmp\Alt2StrongMap.txt", sb4.ToString());
+
+            // ===================================================
+            sb4.Clear();
+            altMap.Clear();
+            foreach (AltData data in alt3Strongs)
+            {
+                string grk = data.Greek.Replace(".", "").
+           Replace(",", "").
+           Replace(";", "").
+           Replace(";", "").
+           Replace(":", "").
+           Replace("·", "").
+           Replace("¶", "");
+                if (altMap.ContainsKey(data.Strongs))
+                {
+                    SortedDictionary<string, string> mapped = altMap[data.Strongs];
+
+                    if (!mapped.ContainsKey(grk))
+                    {
+                        mapped[grk] = data.AltStrongs;
+                    }
+                }
+                else
+                {
+                    altMap[data.Strongs] = new SortedDictionary<string, string>
+                    {
+                        {grk, data.AltStrongs},
+                    };
+                }
+            }
+            foreach ((string s, SortedDictionary<string, string> m) in altMap)
+            {
+                foreach ((string gr, string ast) in m)
+                {
+                    sb4.Append($"{s}\t{gr}\t{ast}");
+                    sb4.Append("\r\n");
+                }
+            }
+            System.IO.File.WriteAllText(@"C:\tmp\Alt3StrongMap.txt", sb4.ToString());
 
         }
 
