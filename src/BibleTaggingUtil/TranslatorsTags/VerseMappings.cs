@@ -441,8 +441,8 @@ namespace BibleTaggingUtil.TranslatorsTags
                 v += 1;
                 vRef = string.Format("{0} {1}:{2}", book, ch, v); ;
                 map.Add(vRef, new List<int[]>());
-                map[vRef].Add(new int[] { ch, v, 0, 2, v - 1, 9, -1 });
-                map[vRef].Add(new int[] { ch, v, 2, -1, v, 0, -1 });
+                map[vRef].Add(new int[] { ch, v, 0, 3, v - 1, 9, -1 });
+                map[vRef].Add(new int[] { ch, v, 3, -1, v, 0, -1 });
                 //==============================================================
                 book = "Eph";  // KJV ???
                 ch = 2; v = 14;

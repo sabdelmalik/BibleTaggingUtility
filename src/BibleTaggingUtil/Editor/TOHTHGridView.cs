@@ -260,36 +260,52 @@ namespace BibleTaggingUtil.Editor
 
         protected override void OnCellFormatting(DataGridViewCellFormattingEventArgs e)
         {
-            if (this.Rows.Count > 1 && this[0, 1].Value.ToString() == "GRK")
+            //if (this.Rows.Count > 1 && this[0, 1].Value.ToString() == "GRK" )
             {
                 if (this[0, e.RowIndex].Value.ToString() == "GMR")
                 {
                     for (int i = 1; i < this.ColumnCount; i++)
                     {
                         DataGridViewCell cell = this.Rows[e.RowIndex].Cells[i];
-                        cell.ToolTipText = GetMorphologyDetails(cell.Value.ToString());
+                        cell.ToolTipText = GetMorphologyDetails(this[0, 1].Value.ToString(), cell.Value.ToString());
                     }
                 }
             }
+
             //base.OnCellFormatting(e);
         }
 
         private Morphology.NT morfNT = new Morphology.NT();
-        private string GetMorphologyDetails(string morf)
+        private Morphology.OT morfOT = new Morphology.OT();
+        private string GetMorphologyDetails(string lang, string morf)
         {
             string result = string.Empty;
-            if (morf.Contains("/"))
+            if (lang == "GRK")
             {
-                string[] parts = morf.Split('/');
-
-                foreach (string m in parts)
+                if (morf.Contains("/"))
                 {
-                    result += m.Trim() + ":\r\n"+ morfNT.GetMorphologyDetails(m.Trim()) + "\r\n";
+                    string[] parts = morf.Split('/');
+
+                    foreach (string m in parts)
+                    {
+                        result += m.Trim() + ":\r\n" + morfNT.GetMorphologyDetails(m.Trim()) + "\r\n";
+                    }
+                }
+                else
+                {
+                    result = morfNT.GetMorphologyDetails(morf);
                 }
             }
             else
             {
-                result = morfNT.GetMorphologyDetails(morf);
+                try
+                {
+                    result = morfOT.GetMorphologyDetails(morf);
+                }
+                catch (Exception ex)
+                {
+                    int x = 0;
+                }
             }
 
             return result;
@@ -309,6 +325,7 @@ namespace BibleTaggingUtil.Editor
             List<string> greek = new List<string>();
             List<string> dictForm = new List<string>();
             List<string> dictGloss = new List<string>();
+            List<string> conjoin = new List<string>();
             List<string> transliteration = new List<string>();
             List<StrongsCluster> tags = new List<StrongsCluster>();
             List<string> morphology = new List<string>();
@@ -325,6 +342,7 @@ namespace BibleTaggingUtil.Editor
                 greek.Add("GRK");
                 dictForm.Add("LEX");
                 dictGloss.Add("GLS");
+                conjoin.Add("CNJ");
                 altVerseNumber.Add("ALT");
                 varUsed.Add("VAR");
                 wordNumber.Add("W #");
@@ -344,6 +362,7 @@ namespace BibleTaggingUtil.Editor
                     }    
                     words.Add(verseWord.Word);
                     greek.Add(verseWord.Greek);
+                    conjoin.Add(verseWord.ConjoinWord);
                     dictForm.Add(verseWord.DictForm);
                     dictGloss.Add(verseWord.DictGloss);
                     morphology.Add(verseWord.Morphology);
@@ -373,12 +392,13 @@ namespace BibleTaggingUtil.Editor
 
                 this.Rows.Add(words.ToArray());
                 this.Rows.Add(greek.ToArray());
-                this.Rows.Add(empty.ToArray());
+                //this.Rows.Add(empty.ToArray());
                 this.Rows.Add(dictGloss.ToArray());
                 this.Rows.Add(dictForm.ToArray());
                 this.Rows.Add(altVerseNumber.ToArray());
                 this.Rows.Add(varUsed.ToArray());
                 this.Rows.Add(wordNumber.ToArray());
+                this.Rows.Add(conjoin.ToArray());
                 this.Rows.Add(wordType.ToArray());
                 int typeRow = 8;
                 this.Rows.Add(morphology.ToArray());

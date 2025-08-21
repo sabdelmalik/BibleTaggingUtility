@@ -165,7 +165,7 @@ namespace BibleTaggingUtil.BibleVersions
                     string spellingVar = match.Groups[13].Value;
                     string spanish = match.Groups[14].Value;
                     string submeaning = match.Groups[15].Value;
-                    string cojoinWord = match.Groups[16].Value;
+                    string conjoinWord = match.Groups[16].Value;
                     string sStrong = match.Groups[17].Value;
                     string altStrongs = match.Groups[18].Value;
 
@@ -244,7 +244,7 @@ namespace BibleTaggingUtil.BibleVersions
                     {
                         meaningVar = string.Empty;
                     }
-                    bible[currentVerseRef][wordNumber] = new VerseWord(greek, english, new StrongsCluster(strongsList), transliteration, currentVerseRef, grammar, dStrong, wordType, altVerseNum, wordNum, meaningVar: meaningVar, dictForm:dictForm,dictGloss:dictGloss, altStrongs:altStrongs);
+                    bible[currentVerseRef][wordNumber] = new VerseWord(greek, english, new StrongsCluster(strongsList), transliteration, currentVerseRef, grammar, dStrong, wordType, altVerseNum, wordNum, meaningVar: meaningVar, dictForm:dictForm,dictGloss:dictGloss, altStrongs:altStrongs, conjoin:conjoinWord);
                 }
                 else // not a word line
                     return;
