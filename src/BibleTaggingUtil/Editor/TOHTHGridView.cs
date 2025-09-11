@@ -29,7 +29,7 @@ namespace BibleTaggingUtil.Editor
             {
                 if (e.Button == MouseButtons.Left &&
                                 e.Clicks == 1 &&
-                                e.RowIndex >= this.Rows.Count - 2 &&
+                                e.RowIndex == this.Rows.Count - 1 &&
                                 e.ColumnIndex > 0 &&
                                 this.SelectedCells.Count > 0)
                 {
@@ -328,6 +328,7 @@ namespace BibleTaggingUtil.Editor
             List<string> conjoin = new List<string>();
             List<string> transliteration = new List<string>();
             List<StrongsCluster> tags = new List<StrongsCluster>();
+            List<StrongsCluster> dTags = new List<StrongsCluster>();
             List<string> morphology = new List<string>();
             List<string> rootStrongs = new List<string>();
             List<string> altStrongs = new List<string>();
@@ -352,6 +353,7 @@ namespace BibleTaggingUtil.Editor
                 altStrongs.Add("A_S");
                 rootStrongs.Add("STG");
                 tags.Add(tagLable);
+                dTags.Add(tagLable);
 
                 for (int i = 0; i < verseWords.Count; i++)
                 {
@@ -374,6 +376,7 @@ namespace BibleTaggingUtil.Editor
                     varUsed.Add(verseWord.VarUsed ? "*****" : "");
                     wordNumber.Add(verseWord.WordNumber);
                     tags.Add(verseWord.Strong);
+                    dTags.Add(verseWord.dStrong);
 
                     /*                   string strng = string.Empty;
                                        foreach (string s in verseWord.Strong)
@@ -405,9 +408,12 @@ namespace BibleTaggingUtil.Editor
                 this.Rows.Add(transliteration.ToArray());
                 this.Rows.Add(altStrongs.ToArray());
                 this.Rows.Add(rootStrongs.ToArray());
-                this.Rows.Add(tags.ToArray());
+                if(Properties.ReferenceBibles.Default.dStrongs)
+                    this.Rows.Add(dTags.ToArray());
+                else
+                    this.Rows.Add(tags.ToArray());
 
-                this.ClearSelection();
+                    this.ClearSelection();
 
                 for (int i = 1; i < words.Count; i++)
                 {

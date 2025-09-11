@@ -21320,7 +21320,7 @@ Psa.23.6#04=L	יִ֭רְדְּפוּ/נִי	Yir.de.fu./ni	they will pursue/ me	{
 Psa.23.6#05=L	כָּל\־	kol-	all	{H3605}\H9014	HNcmsc			H3605			{H3605=כֹּל=all}\H9014=־=link					
 Psa.23.6#06=L	יְמֵ֣י	ye.Mei	[the] days of	{H3117G}	HNcmpc			H3117G_A			{H3117G=יוֹם=: day»day;_when:1_day;_when;_period}					
 Psa.23.6#07=L	חַיָּ֑/י	chai.Ya/i	life/ my	{H2416E}/H9020	HNcmpc/Sp1bs			H2416E			{H2416E=חַיִּים=life}/H9020=Ps1c=my					
-Psa.23.6#08=L	וְ/שַׁבְתִּ֥י	ve./shav.Ti	and/ I will return	H9001/{H7725G}	Hc/Vqq1cs			H7725G	H3427		H9001=ו=&/{H7725G=שׁוּב=: return»to return:1_return}					
+Psa.23.6#08=L	וְ/שַׁבְתִּ֥י	ve./shav.Ti	and/ I will dwell	H9001/{HH3427}	Hc/Vqq1cs			H3427	H7725G		H9001=ו=&/{H3427=שׁוּב=: return»to dwell:1_return}					
 Psa.23.6#09=L	בְּ/בֵית\־	be./veit-	in/ [the] house of	H9003/{H1004Q}\H9014	HR/Ncmsc			H1004Q			H9003=ב=in/{H1004Q=בַּ֫יִת=: home»house:6_temple}\H9014=־=link					
 Psa.23.6#10=L	יְ֝הוָ֗ה	Yah.weh	Yahweh	{H3068G}	HNpt			H3068G			{H3068G=יהוה=LORD»LORD@Gen.1.1-Heb}					
 Psa.23.6#11=L	לְ/אֹ֣רֶךְ	le./'O.rekh	for/ length of	H9005/{H0753}	HR/Ncmsc			H0753			H9005=ל=to/{H0753=אֹ֫רֶךְ=length}					
@@ -74891,7 +74891,7 @@ Sng.4.8#03=L	כַּלָּ֔ה	ka.Lah	O bride	{H3618G}	HNcfsa			H3618G			{H3618G=
 Sng.4.8#04=L	אִתִּ֖/י	'i.T/i	with/ me	{H0854}/H9030	HR/Sp1bs			H0854_B			{H0854=אֵת=with}/H9030=Os1c=me					
 Sng.4.8#05=L	מִ/לְּבָנ֣וֹן	mi./le.va.Non	from/ Lebanon	H9006/{H3844G}	HR/Npl			H3844G_B			H9006=מ=from/{H3844G=לְבָנוֹן=Lebanon»Lebanon@Deu.1.7-Zec}					
 Sng.4.8#06=L	תָּב֑וֹאִי	ta.Vo.'i	you will come	{H0935G}	HVqi2fs			H0935G			{H0935G=בּוֹא=: come»to come (in):1_come;_go_in}					
-Sng.4.8#07=L	תָּשׁ֣וּרִי\׀	ta.Shu.ri	you will come down	{H7788}\H9015	HVqi2fs			H7788	H7789		{H7788=שׁוּר=to travel}\H9015=׀=separate					
+Sng.4.8#07=L	תָּשׁ֣וּרִי\׀	ta.Shu.ri	you observe/ she	{H7789}\H9015	HVqi2fs			H7789	H7788		{H7789=שׁוּר=to observe}\H9015=׀=separate					
 Sng.4.8#08=L	מֵ/רֹ֣אשׁ	me./Rosh	from/ [the] top of	H9006/{H7218I}	HR/Ncmsc			H7218I_A			H9006=מ=from/{H7218I=רֹאשׁ=: top»head:3_top;_best}					
 Sng.4.8#09=L	אֲמָנָ֗ה	'a.ma.Nah	Amana	{H0549G}	HNpl			H0549G			{H0549G=אֲמָנָה=Amana»Amana@Sng.4.8}					
 Sng.4.8#10=L	מֵ/רֹ֤אשׁ	me./Rosh	from/ [the] top of	H9006/{H7218I}	HR/Ncmsc			H7218I_B			H9006=מ=from/{H7218I=רֹאשׁ=: top»head:3_top;_best}					

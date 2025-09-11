@@ -13,7 +13,7 @@ namespace BibleTaggingUtil
     [Serializable()]
     public class VerseWord : ICloneable
     {
-        public VerseWord(string ancientWord, string english, StrongsCluster strong, string transliteration, string reference, string morphology = "", string rootStrong = "", string wordType = "", string altVerseNumber = "", string wordNumber = "", string meaningVar = "", string dictForm = "", string dictGloss = "", string altStrongs = "", string conjoin = "")
+        public VerseWord(string ancientWord, string english, StrongsCluster strong,  StrongsCluster dStrong, string transliteration, string reference, string morphology = "", string rootStrong = "", string wordType = "", string altVerseNumber = "", string wordNumber = "", string meaningVar = "", string dictForm = "", string dictGloss = "", string altStrongs = "", string conjoin = "")
         {
             this.Reference = reference;
             if (Reference == "Luk 24:11")
@@ -29,6 +29,7 @@ namespace BibleTaggingUtil
 
             this.Word = english;
             this.Strong = strong;
+            this.dStrong = dStrong;
             this.Transliteration = transliteration;
             Morphology = morphology;
             RootStrong = rootStrong;
@@ -143,6 +144,7 @@ namespace BibleTaggingUtil
         public string DictGloss { get; private set; }
         public string AltStrongs { get; private set; }
         public StrongsCluster Strong { get; set; }
+        public StrongsCluster dStrong { get; set; }
 
         public String StrongStringEx
         {

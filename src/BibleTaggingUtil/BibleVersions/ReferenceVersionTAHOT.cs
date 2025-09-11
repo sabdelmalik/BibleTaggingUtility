@@ -209,7 +209,7 @@ namespace BibleTaggingUtil.BibleVersions
                     int wordNumber = verseWords.Count;
                     if (englishWord.ToLower() != "verseend" && strongList[0].Number != 9001 && strongList[0].Number != 9014 && strongList[0].Number != 9015)
                     {
-                        verseWords[wordNumber] = new VerseWord(hebrew, englishWord, strongList, "", currentVerseRef, morphology);
+                        verseWords[wordNumber] = new VerseWord(hebrew, englishWord, strongList, strongList, "", currentVerseRef, morphology);
                         if (bible.ContainsKey(currentVerseRef))
                             bible[currentVerseRef] = verseWords;
                         else
@@ -341,7 +341,7 @@ namespace BibleTaggingUtil.BibleVersions
                     int wordNumber = verseWords.Count;
                     if (englishWord.ToLower() != "verseend" && strongList[0].Number != 9001 && strongList[0].Number != 9014 && strongList[0].Number != 9015)
                     {
-                        verseWords[wordNumber] = new VerseWord(hebrew, englishWord, strongList, "", currentVerseRef, "");
+                        verseWords[wordNumber] = new VerseWord(hebrew, englishWord, strongList, strongList, "", currentVerseRef, "");
                         if (bible.ContainsKey(currentVerseRef))
                             bible[currentVerseRef] = verseWords;
                         else
@@ -525,7 +525,7 @@ namespace BibleTaggingUtil.BibleVersions
                     }
 
                     int wordNumber= bible[currentVerseRef].Count;
-                    bible[currentVerseRef][wordNumber] = new VerseWord(hebrew, english, strongsList, transliteration, currentVerseRef, grammar, dStrong, wordType, altVerseNum, wordNum, meaningVar, lex, gloss);
+                    bible[currentVerseRef][wordNumber] = new VerseWord(hebrew, english, strongsList, strongsList, transliteration, currentVerseRef, grammar, dStrong, wordType, altVerseNum, wordNum, meaningVar, lex, gloss);
                 }
                 else // not a word line
                     return;
