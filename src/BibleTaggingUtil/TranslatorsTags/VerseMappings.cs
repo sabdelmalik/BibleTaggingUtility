@@ -441,8 +441,8 @@ namespace BibleTaggingUtil.TranslatorsTags
                 v += 1;
                 vRef = string.Format("{0} {1}:{2}", book, ch, v); ;
                 map.Add(vRef, new List<int[]>());
-                map[vRef].Add(new int[] { ch, v, 0, 2, v - 1, 9, -1 });
-                map[vRef].Add(new int[] { ch, v, 2, -1, v, 0, -1 });
+                map[vRef].Add(new int[] { ch, v, 0, 3, v - 1, 9, -1 });
+                map[vRef].Add(new int[] { ch, v, 3, -1, v, 0, -1 });
                 //==============================================================
                 book = "Eph";  // KJV ???
                 ch = 2; v = 14;
@@ -500,7 +500,7 @@ namespace BibleTaggingUtil.TranslatorsTags
                 vRef = string.Format("{0} {1}:{2}", book, ch, v); ;
                 map.Add(vRef, new List<int[]>());
                 map[vRef].Add(new int[] { ch, v, 0, 4, v - 1, 10, -1 });
-                map[vRef].Add(new int[] { ch, v, 3, -1, v, 0, -1 });
+                map[vRef].Add(new int[] { ch, v, 4, -1, v, 0, -1 });
                 //==============================================================
                 book = "Col";  // KJV
                 ch = 1; v = 21;
@@ -588,8 +588,8 @@ namespace BibleTaggingUtil.TranslatorsTags
                 v += 1;
                 vRef = string.Format("{0} {1}:{2}", book, ch, v); ;
                 map.Add(vRef, new List<int[]>());
-                map[vRef].Add(new int[] { ch, v, 0, 6, v - 1, 6, -1 });
-                map[vRef].Add(new int[] { ch, v, 6, -1, v, 0, -1 });
+                map[vRef].Add(new int[] { ch, v, 0, 7, v - 1, 6, -1 });
+                map[vRef].Add(new int[] { ch, v, 7, -1, v, 0, -1 });
                 //==============================================================
                 book = "1Pe";  // KJV ???
                 ch = 3; v = 15;

@@ -11,6 +11,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -412,7 +413,7 @@ namespace BibleTaggingUtil.TranslationTags
                 int indexOffset = 1;
                 bool doContinue = false;
 
-                Dictionary<int, int> reverseMap = new Dictionary<int, int>();
+                Dictionary<int, List<int>> reverseMap = new Dictionary<int, List<int>>();
                 Dictionary<int, List<int>> correctedMap = new Dictionary<int, List<int>>();
 
                 // fill in the Arabic Words missing from map
@@ -447,7 +448,7 @@ namespace BibleTaggingUtil.TranslationTags
                 // making room at the end for the unmapped Arabic words
                 for (int i = 0; i < (hebrewVerse.Count + missingArabicWords); i++)
                 {
-                    reverseMap[i] = -1;
+                    reverseMap[i] = new List<int> { -1 };
                 }
 
                 int restoredAllowance = 100;  // alowance for restored Hebrew words (RHW) e.g. if 3 RHW follow word index 5, they will be numbered 501, 502, 503
@@ -456,7 +457,11 @@ namespace BibleTaggingUtil.TranslationTags
                 {
                     foreach (int idx in mapValues)
                     {
-                        reverseMap[idx] = (mapKey + 1) * restoredAllowance; // allow for in-between Hebrew and avoid 0 index
+                        //reverseMap[idx] = (mapKey + 1) * restoredAllowance; // allow for in-between Hebrew and avoid 0 index
+                        if (reverseMap[idx].Count == 1 && reverseMap[idx][0] == -1)
+                            reverseMap[idx][0] = (mapKey + 1) * restoredAllowance; // allow for in-between Greek and avoid 0 index
+                        else
+                            reverseMap[idx].Add((mapKey + 1) * restoredAllowance);
                     }
                 }
 
@@ -465,34 +470,37 @@ namespace BibleTaggingUtil.TranslationTags
                 List<int> seenAraIndeces = new List<int>();
                 foreach (int hIndex in reverseMap.Keys)
                 {
-                    if (reverseMap[hIndex] == -1)
+                    if (reverseMap[hIndex][0] == -1)
                     {
-                        reverseMap[hIndex] = ++lastAraIndex;
+                        reverseMap[hIndex][0] = ++lastAraIndex;
                     }
                     else
                     {
-                        if (!seenAraIndeces.Contains(reverseMap[hIndex]))
+                        if (!seenAraIndeces.Contains(reverseMap[hIndex][0]))
                         {
                             // this code is to deal with an Arabic word with multiple Hebrew words with gaps in btween
-                            lastAraIndex = reverseMap[hIndex];
+                            lastAraIndex = reverseMap[hIndex][0];
                             seenAraIndeces.Add(lastAraIndex);
                         }
                     }
                 }
 
                 SortedDictionary<int, List<int>> newMap = new SortedDictionary<int, List<int>>();
-                foreach ((int hIndex, int aIndex) in reverseMap)
+                foreach ((int hIndex, List<int> aIndexL) in reverseMap)
                 {
-                    if (newMap.ContainsKey(aIndex))
+                    foreach (int aIndex in aIndexL)
                     {
-                        newMap[aIndex].Add(hIndex);
-                    }
-                    else
-                    {
-                        if (hIndex < hebrewVerse.Count)
-                            newMap[aIndex] = new List<int> { hIndex };
+                        if (newMap.ContainsKey(aIndex))
+                        {
+                            newMap[aIndex].Add(hIndex);
+                        }
                         else
-                            newMap[aIndex] = new List<int> { };
+                        {
+                            if (hIndex < hebrewVerse.Count)
+                                newMap[aIndex] = new List<int> { hIndex };
+                            else
+                                newMap[aIndex] = new List<int> { };
+                        }
                     }
                 }
 
@@ -771,7 +779,7 @@ namespace BibleTaggingUtil.TranslationTags
                             }
                         }
                         if (publicDomain)
-                            sw.WriteLine(Utils.RemoveDiacritics(line));
+                            sw.WriteLine(line); // Utils.RemoveDiacritics(line));
                         else
                             sw.WriteLine(line);
                     }

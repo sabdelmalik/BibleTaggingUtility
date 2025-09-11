@@ -109,7 +109,11 @@ namespace BibleTaggingUtil.BibleVersions
         {
             if (string.IsNullOrEmpty(line))
                 return;
-
+            //if (line.StartsWith("Mat.2.8#19"))
+            if (line.StartsWith("2Co.7.12#21"))
+            {
+                int x = 0;
+            }
             /*
              * Heb (&Eng) Ref & Type	Hebrew	Transliteration	English translation	dStrongs = Lexical = Gloss	Grammar	Meaning Variants	Spelling Variants	Conjoin word	sStrong+Instance	Alt Strongs
              * 
@@ -131,7 +135,7 @@ namespace BibleTaggingUtil.BibleVersions
 
             //            string regexPattern = @"([1-9a-zA-Z]+)\.([0-9]{1,3})\.([0-9]{1,3})\({0,1}[0-9.]*\){0,1}\#([0-9]{0,3})\=([()LQKR])\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t";
             //string regexPattern = @"([1-9a-zA-Z]+)\.([0-9]{1,3})\.([0-9]{1,3})\[{0,1}[0-9.]*\]{0,1}\#([0-9]{1,3})\=([()NKO{1,6})\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)";
-            string regexPattern = @"([1-9a-zA-Z]+)\.([0-9]{1,3})\.([0-9]{1,3})([[{(]{0,1}[0-9.]*[]})]{0,1})\#([0-9]{1,3})\=([()a-zA-Z]{1,8})\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)"; //\t([^\t]*)";
+            string regexPattern = @"([1-9a-zA-Z]+)\.([0-9]{1,3})\.([0-9]{1,3})([[{(]{0,1}[0-9.]*[]})]{0,1})\#([0-9]{1,3})\=([()a-zA-Z]{1,8})\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t([^\t]*)\t{0,1}([^\t]*)"; //\t([^\t]*)";
 
             try
             {
@@ -161,9 +165,9 @@ namespace BibleTaggingUtil.BibleVersions
                     string spellingVar = match.Groups[13].Value;
                     string spanish = match.Groups[14].Value;
                     string submeaning = match.Groups[15].Value;
-                    string cojoinWord = match.Groups[16].Value;
+                    string conjoinWord = match.Groups[16].Value;
                     string sStrong = match.Groups[17].Value;
-                    string altStrong = match.Groups[18].Value;
+                    string altStrongs = match.Groups[18].Value;
 
                     string verseRef = string.Format("{0} {1}:{2}", bookName,
                             chapterNum.TrimStart('0'),
@@ -185,10 +189,12 @@ namespace BibleTaggingUtil.BibleVersions
                     string dStrong = string.Empty;
                     string grammar = string.Empty;
                     string[] dstrongGrammarParts = dStrongGrammer.Split('+');
+                    List<string> dStrongsList = new List<string>(); 
                     foreach (string dstrongGrammarPart in dstrongGrammarParts)
                     {
                         string[] dstrongParts = dstrongGrammarPart.Trim().Split('=');
                         dStrong += dstrongParts[0].Trim() + "/";
+                        dStrongsList.Add(dstrongParts[0].Trim());
                         grammar = (dstrongParts.Length > 1 ? dstrongParts[1] : string.Empty) + "/";
                     }
                     dStrong = dStrong.Trim('/');
@@ -198,9 +204,34 @@ namespace BibleTaggingUtil.BibleVersions
                     {
                         int x = 0;
                     }
-                    string[] strongsList = sStrong.Split(',');
-                    for(int i = 0; i < strongsList.Length; i++)
-                        strongsList[i] = strongsList[i].Trim();
+                    string[] strongsList = sStrong.Split(',', StringSplitOptions.TrimEntries);
+                    if (strongsList.Length > 1)
+                    {
+                        int x = 0;
+                    }
+                    // update dStrongs with position suffix
+                    for(int i=0; i < strongsList.Length; i++)
+                    {
+                        if (strongsList[i].Length == 5)
+                            continue;
+                        string strg = strongsList[i].Substring(0, 5);
+                        string suf = strongsList[i].Substring(5);
+                        for (int j=0; j < dStrongsList.Count; j++)
+                        {
+                            if(dStrongsList[j].StartsWith (strg))
+                            {
+                                if (dStrongsList[j].Length > 5)
+                                {
+                                    int x = 0;
+                                }
+                                dStrongsList[j] += suf;
+                                
+                            }
+                        }
+                    }
+                     
+                    //for(int i = 0; i < strongsList.Length; i++)
+                    //    strongsList[i] = strongsList[i].Trim();
 
                     // ὑπέρ=above/for + περισσῶς=more-abundantly
                     string dictForm = string.Empty;
@@ -240,7 +271,7 @@ namespace BibleTaggingUtil.BibleVersions
                     {
                         meaningVar = string.Empty;
                     }
-                    bible[currentVerseRef][wordNumber] = new VerseWord(greek, english, new StrongsCluster(strongsList), transliteration, currentVerseRef, grammar, dStrong, wordType, altVerseNum, wordNum, meaningVar: meaningVar, dictForm:dictForm,dictGloss:dictGloss);
+                    bible[currentVerseRef][wordNumber] = new VerseWord(greek, english, new StrongsCluster(strongsList), new StrongsCluster(dStrongsList.ToArray()), transliteration, currentVerseRef, grammar, dStrong, wordType, altVerseNum, wordNum, meaningVar: meaningVar, dictForm:dictForm,dictGloss:dictGloss, altStrongs:altStrongs, conjoin:conjoinWord);
                 }
                 else // not a word line
                     return;

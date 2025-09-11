@@ -29,7 +29,7 @@ namespace BibleTaggingUtil.Editor
             {
                 if (e.Button == MouseButtons.Left &&
                                 e.Clicks == 1 &&
-                                e.RowIndex >= this.Rows.Count - 2 &&
+                                e.RowIndex == this.Rows.Count - 1 &&
                                 e.ColumnIndex > 0 &&
                                 this.SelectedCells.Count > 0)
                 {
@@ -109,6 +109,7 @@ namespace BibleTaggingUtil.Editor
             List<string> rootStrongs = new List<string>();
             List<string> wordType =   new List<string>();
             List<string> altVerseNumber = new List<string>();
+            List<string> altStrongs = new List<string>();
             List<string> wordNumber = new List<string>();
             List<string> meaningVar = new List<string>();
             List<string> lexicalForm = new List<string>();
@@ -126,6 +127,7 @@ namespace BibleTaggingUtil.Editor
                 morphology.Add("GMR");
                 meaningVar.Add("VAR");
                 transliteration.Add("XLT");
+                altStrongs.Add("A_S");
                 rootStrongs.Add("STG");
                 tags.Add(tagLable);
 
@@ -137,6 +139,7 @@ namespace BibleTaggingUtil.Editor
                     morphology.Add(verseWord.Morphology);
                     transliteration.Add(verseWord.Transliteration);
                     rootStrongs.Add(verseWord.RootStrong);
+                    altStrongs.Add(verseWord.AltStrongs);
                     wordType.Add(verseWord.WordType);
                     altVerseNumber.Add(verseWord.AltVerseNumber);
                     wordNumber.Add(verseWord.WordNumber);
@@ -214,6 +217,7 @@ namespace BibleTaggingUtil.Editor
                 this.Rows.Add(morphology.ToArray());
                 this.Rows.Add(meaningVar.ToArray());
                 this.Rows.Add(transliteration.ToArray());
+                this.Rows.Add(altStrongs.ToArray());
                 this.Rows.Add(rootStrongs.ToArray());
                 this.Rows.Add(tags.ToArray());
 
@@ -256,36 +260,52 @@ namespace BibleTaggingUtil.Editor
 
         protected override void OnCellFormatting(DataGridViewCellFormattingEventArgs e)
         {
-            if (this.Rows.Count > 1 && this[0, 1].Value.ToString() == "GRK")
+            //if (this.Rows.Count > 1 && this[0, 1].Value.ToString() == "GRK" )
             {
                 if (this[0, e.RowIndex].Value.ToString() == "GMR")
                 {
                     for (int i = 1; i < this.ColumnCount; i++)
                     {
                         DataGridViewCell cell = this.Rows[e.RowIndex].Cells[i];
-                        cell.ToolTipText = GetMorphologyDetails(cell.Value.ToString());
+                        cell.ToolTipText = GetMorphologyDetails(this[0, 1].Value.ToString(), cell.Value.ToString());
                     }
                 }
             }
+
             //base.OnCellFormatting(e);
         }
 
         private Morphology.NT morfNT = new Morphology.NT();
-        private string GetMorphologyDetails(string morf)
+        private Morphology.OT morfOT = new Morphology.OT();
+        private string GetMorphologyDetails(string lang, string morf)
         {
             string result = string.Empty;
-            if (morf.Contains("/"))
+            if (lang == "GRK")
             {
-                string[] parts = morf.Split('/');
-
-                foreach (string m in parts)
+                if (morf.Contains("/"))
                 {
-                    result += m.Trim() + ":\r\n"+ morfNT.GetMorphologyDetails(m.Trim()) + "\r\n";
+                    string[] parts = morf.Split('/');
+
+                    foreach (string m in parts)
+                    {
+                        result += m.Trim() + ":\r\n" + morfNT.GetMorphologyDetails(m.Trim()) + "\r\n";
+                    }
+                }
+                else
+                {
+                    result = morfNT.GetMorphologyDetails(morf);
                 }
             }
             else
             {
-                result = morfNT.GetMorphologyDetails(morf);
+                try
+                {
+                    result = morfOT.GetMorphologyDetails(morf);
+                }
+                catch (Exception ex)
+                {
+                    int x = 0;
+                }
             }
 
             return result;
@@ -305,10 +325,13 @@ namespace BibleTaggingUtil.Editor
             List<string> greek = new List<string>();
             List<string> dictForm = new List<string>();
             List<string> dictGloss = new List<string>();
+            List<string> conjoin = new List<string>();
             List<string> transliteration = new List<string>();
             List<StrongsCluster> tags = new List<StrongsCluster>();
+            List<StrongsCluster> dTags = new List<StrongsCluster>();
             List<string> morphology = new List<string>();
             List<string> rootStrongs = new List<string>();
+            List<string> altStrongs = new List<string>();
             List<string> wordType = new List<string>();
             List<string> altVerseNumber = new List<string>();
             List<string> varUsed = new List<string>();
@@ -320,14 +343,17 @@ namespace BibleTaggingUtil.Editor
                 greek.Add("GRK");
                 dictForm.Add("LEX");
                 dictGloss.Add("GLS");
+                conjoin.Add("CNJ");
                 altVerseNumber.Add("ALT");
                 varUsed.Add("VAR");
                 wordNumber.Add("W #");
                 wordType.Add("TYP");
                 morphology.Add("GMR");
                 transliteration.Add("XLT");
+                altStrongs.Add("A_S");
                 rootStrongs.Add("STG");
                 tags.Add(tagLable);
+                dTags.Add(tagLable);
 
                 for (int i = 0; i < verseWords.Count; i++)
                 {
@@ -338,16 +364,19 @@ namespace BibleTaggingUtil.Editor
                     }    
                     words.Add(verseWord.Word);
                     greek.Add(verseWord.Greek);
+                    conjoin.Add(verseWord.ConjoinWord);
                     dictForm.Add(verseWord.DictForm);
                     dictGloss.Add(verseWord.DictGloss);
                     morphology.Add(verseWord.Morphology);
                     transliteration.Add(verseWord.Transliteration);
                     rootStrongs.Add(verseWord.RootStrong);
+                    altStrongs.Add(verseWord.AltStrongs);
                     wordType.Add(verseWord.WordType);
                     altVerseNumber.Add(verseWord.AltVerseNumber);
                     varUsed.Add(verseWord.VarUsed ? "*****" : "");
                     wordNumber.Add(verseWord.WordNumber);
                     tags.Add(verseWord.Strong);
+                    dTags.Add(verseWord.dStrong);
 
                     /*                   string strng = string.Empty;
                                        foreach (string s in verseWord.Strong)
@@ -366,20 +395,25 @@ namespace BibleTaggingUtil.Editor
 
                 this.Rows.Add(words.ToArray());
                 this.Rows.Add(greek.ToArray());
-                this.Rows.Add(empty.ToArray());
+                //this.Rows.Add(empty.ToArray());
                 this.Rows.Add(dictGloss.ToArray());
                 this.Rows.Add(dictForm.ToArray());
                 this.Rows.Add(altVerseNumber.ToArray());
                 this.Rows.Add(varUsed.ToArray());
                 this.Rows.Add(wordNumber.ToArray());
+                this.Rows.Add(conjoin.ToArray());
                 this.Rows.Add(wordType.ToArray());
                 int typeRow = 8;
                 this.Rows.Add(morphology.ToArray());
                 this.Rows.Add(transliteration.ToArray());
+                this.Rows.Add(altStrongs.ToArray());
                 this.Rows.Add(rootStrongs.ToArray());
-                this.Rows.Add(tags.ToArray());
+                if(Properties.ReferenceBibles.Default.dStrongs)
+                    this.Rows.Add(dTags.ToArray());
+                else
+                    this.Rows.Add(tags.ToArray());
 
-                this.ClearSelection();
+                    this.ClearSelection();
 
                 for (int i = 1; i < words.Count; i++)
                 {

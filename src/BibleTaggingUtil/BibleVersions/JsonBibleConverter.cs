@@ -102,7 +102,7 @@ namespace BibleTaggingUtil.BibleVersions
                     string? greek = (string)verseWord["Greek"];
                     string? xlit = (string)verseWord["Transliteration"];
                     
-                    VerseWord theWord = new VerseWord(isHebrew ? hebrew : greek, word, new StrongsCluster(strongs), xlit, reference, morf);
+                    VerseWord theWord = new VerseWord(isHebrew ? hebrew : greek, word, new StrongsCluster(strongs), new StrongsCluster(strongs), xlit, reference, morf);
                     theVerse[wordIndex++] = theWord;
                 }
                 bible[currentReference] = theVerse;

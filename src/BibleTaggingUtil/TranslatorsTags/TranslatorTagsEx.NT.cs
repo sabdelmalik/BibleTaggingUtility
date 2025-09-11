@@ -35,7 +35,7 @@ namespace BibleTaggingUtil.TranslationTags
             string originalRef = verseRef.Replace(book, bookName);
             int colon = originalRef.IndexOf(':');
             string verseNum = originalRef.Substring(colon);
-            if(verseRef == "2Th 2:13")
+            if(verseRef == "Mar 7:20")
             {
                 int x = 0;
             }
@@ -69,7 +69,10 @@ namespace BibleTaggingUtil.TranslationTags
                             if (grkChapter > 1) grkChapter--;
                             mapVerse = tagnt.LastVerse(bookName, grkChapter);
                         }
-                        string grkRef = string.Format("{0} {1}:{2}", bk, grkChapter, mapVerse);
+
+                        int bkIndex = container.Target.GetBookIndex(bk);
+                        string grkBk = tagnt.GetBookNameFromIndex(bkIndex);
+                        string grkRef = string.Format("{0} {1}:{2}", grkBk, grkChapter, mapVerse);
 
                         // get the greek verse
                         Verse greekVerse = tagnt.Bible[grkRef];
@@ -102,7 +105,7 @@ namespace BibleTaggingUtil.TranslationTags
 
             List<TranslatorWord> newVerse = new List<TranslatorWord>();
 
-            if (verseRef == "Mar 7:37")
+            if (verseRef == "Tit 3:13")
             {
                 int x = 0;
             }
@@ -341,7 +344,7 @@ namespace BibleTaggingUtil.TranslationTags
                 int indexOffset = 1;
                 bool doContinue = false;
 
-                Dictionary<int, int> reverseMap = new Dictionary<int, int>();
+                Dictionary<int, List<int>> reverseMap = new Dictionary<int, List<int>>();
                 Dictionary<int, List<int>> correctedMap = new Dictionary<int, List<int>>();
 
                 // fill in the Target Words missing from map
@@ -376,52 +379,59 @@ namespace BibleTaggingUtil.TranslationTags
                 // making room at the end for the unmapped Target words
                 for (int i = 0; i < (greekVerse.Count + missingTargetWords); i++)
                 {
-                    reverseMap[i] = -1;
+                    reverseMap[i] = new List<int> { -1 };
                 }
 
-                int restoredAllowance = 100;  // alowance for restored Greek words (RHW) e.g. if 3 RHW follow word index 5, they will be numbered 501, 502, 503
+                int restoredAllowance = 100;  // alowance for restored Greek words (RGW) e.g. if 3 RGW follow word index 5, they will be numbered 501, 502, 503
                 // assign target indices to greek indeces
                 foreach ((int mapKey, List<int> mapValues) in correctedMap)
                 {
                     foreach (int idx in mapValues)
                     {
-                        reverseMap[idx] = (mapKey + 1) * restoredAllowance; // allow for in-between Greek and avoid 0 index
+                        if (reverseMap[idx].Count == 1 && reverseMap[idx][0] == -1)
+                            reverseMap[idx][0] = (mapKey + 1) * restoredAllowance; // allow for in-between Greek and avoid 0 index
+                        else
+                            reverseMap[idx].Add((mapKey + 1) * restoredAllowance);
                     }
                 }
 
                 // fill in the gaps
                 int lastAraIndex = 0;
                 List<int> seenAraIndeces = new List<int>();
-                foreach (int hIndex in reverseMap.Keys)
+                foreach (int gIndex in reverseMap.Keys)
                 {
-                    if (reverseMap[hIndex] == -1)
+                    if (reverseMap[gIndex][0] == -1)
                     {
-                        reverseMap[hIndex] = ++lastAraIndex;
+                        reverseMap[gIndex][0] = ++lastAraIndex;
                     }
                     else
                     {
-                        if (!seenAraIndeces.Contains(reverseMap[hIndex]))
+                        if (!seenAraIndeces.Contains(reverseMap[gIndex][0]))
                         {
-                            // this code is to deal with an Target word with multiple Greek words with gaps in btween
-                            lastAraIndex = reverseMap[hIndex];
+                            // this code is to deal with a Target word with multiple Greek words with gaps in btween
+                            lastAraIndex = reverseMap[gIndex][0];
                             seenAraIndeces.Add(lastAraIndex);
                         }
                     }
                 }
 
                 SortedDictionary<int, List<int>> newMap = new SortedDictionary<int, List<int>>();
-                foreach ((int hIndex, int aIndex) in reverseMap)
+                foreach ((int gIndex, List<int> aIndexL) in reverseMap)
                 {
-                    if (newMap.ContainsKey(aIndex))
+                    foreach (int aIndex in aIndexL)
                     {
-                        newMap[aIndex].Add(hIndex);
-                    }
-                    else
-                    {
-                        if (hIndex < greekVerse.Count)
-                            newMap[aIndex] = new List<int> { hIndex };
+
+                        if (newMap.ContainsKey(aIndex))
+                        {
+                            newMap[aIndex].Add(gIndex);
+                        }
                         else
-                            newMap[aIndex] = new List<int> { };
+                        {
+                            if (gIndex < greekVerse.Count)
+                                newMap[aIndex] = new List<int> { gIndex };
+                            else
+                                newMap[aIndex] = new List<int> { };
+                        }
                     }
                 }
 
@@ -620,9 +630,9 @@ namespace BibleTaggingUtil.TranslationTags
                             string[] parts = word.Word.Split(new char[] { ' ' });
                             if (parts.Length == 1)
                             {
-                                if (parts[0] == "-" || parts[0] == "\u00ad")
-                                    arabicIndexAdjust--;
-                                else
+                                //if (parts[0] == "-" || parts[0] == "\u00ad")
+                                //    arabicIndexAdjust--;
+                                //else
                                     araWordNo = string.Format("#{0:d2}", word.TargetWordIndex + arabicIndexAdjust);
                             }
                             else
@@ -756,7 +766,7 @@ namespace BibleTaggingUtil.TranslationTags
                             }
                         }
                         if (publicDomain)
-                            sw.WriteLine(Utils.RemoveDiacritics(line));
+                            sw.WriteLine(line); // Utils.RemoveDiacritics(line));
                         else
                             sw.WriteLine(line);
                     }

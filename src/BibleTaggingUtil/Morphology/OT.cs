@@ -85,5 +85,594 @@ txtArray: ["Hebrew","Aramaic","conjunction","and","adverb","lately","preposition
 
          */
 
+        public string GetMorphologyDetails(string morf)
+        {
+            StringBuilder result = new StringBuilder();
+
+            if (morf != null)
+            {
+                string lang = morf.Substring(0, 1);
+                result.Append($"Language: {language[lang]}");
+                result.Append("\r\n");
+
+                string[] morfParts = morf.Substring(1).Split(new char[] { '/' });
+                for (int i = 0; i < morfParts.Length; i++)
+                {
+                    string morfPart = morfParts[i];
+                    result.Append(ParseMorf(lang, morfPart));
+                    if (morfParts.Length > 1 && i < morfParts.Length - 1)
+                        result.Append("\r\n================\r\n");
+                }
+            }
+
+            return result.ToString();
+        }
+
+        private string ParseMorf(string lang, string morf)
+        {
+            StringBuilder result = new StringBuilder();
+            string fun = morf.Substring(0, 1);
+            morf = morf.Substring(1);
+
+            //result.Append($"Function: {ot_function[fun]}");
+
+            switch (fun)
+            {
+                case "A":   // adjective
+                    result.Append(ParseAdjective(lang, morf));
+                    break;
+                case "C":   // conjunction
+                    result.Append(ParseConjunction(lang, morf));
+                    break;
+                case "D":   // adverb
+                    result.Append(ParseAdverb(lang, morf));
+                    break;
+                case "N":   // noun
+                    result.Append(ParseNoun(lang, morf));
+                    break;
+                case "P":   // pronoun
+                    result.Append(ParsePronoun(lang, morf));
+                    break;
+                case "R":   // preposition
+                    result.Append(ParsePreposition(lang, morf));
+                    break;
+                case "S":   // suffix
+                    result.Append(ParseSuffix(lang, morf));
+                    break;
+                case "T":   // particle
+                    result.Append(ParseParticle(lang, morf));
+                    break;
+                case "V":   // verb
+                    result.Append(ParseVerb(lang, morf));
+                    break;
+                case "c":   // conjunction
+                    result.Append(ParseConjunction(lang, morf));
+                    break;
+            }
+
+            return result.ToString();
+
+        }
+
+        private string ParseAdjective(string lang, string morf)
+        {
+            StringBuilder result = new StringBuilder();
+
+            if (morf.Length < 4)
+                return result.ToString();
+
+            string formText = string.Empty;
+            string genderText = string.Empty;
+            string numberText = string.Empty;
+            string stateText = string.Empty;
+
+            string formC = morf.Substring(0, 1);
+            string formCL = formC + lang;
+            if (ot_form.ContainsKey(formCL))
+                formText = ot_form[formCL];
+            else if (ot_form.ContainsKey(formC))
+                formText = ot_form[formC];
+
+            string genderC = morf.Substring(1, 1);
+            if (gender.ContainsKey(genderC))
+                genderText = gender[genderC];
+
+            string numberC = string.Empty;
+            numberC = morf.Substring(2, 1);
+            if (number.ContainsKey(numberC))
+                numberText = number[numberC];
+
+            string stateC = string.Empty;
+            stateC = morf.Substring(3, 1);
+            if (state.ContainsKey(stateC))
+                stateText = state[stateC];
+
+            result.Append($"Function: adjective\r\n");
+            result.Append($"Form: {formText}"); result.Append("\r\n");
+            result.Append($"Number: {numberText}"); result.Append("\r\n");
+            result.Append($"Gender: {genderText}"); result.Append("\r\n");
+            result.Append($"State: {stateText}"); result.Append("\r\n");
+
+            return result.ToString();
+        }
+        private string ParseConjunction(string lang, string morf)
+        {
+            StringBuilder result = new StringBuilder();
+
+            result.Append($"Function: conjunction");
+
+            return result.ToString();
+        }
+        private string ParseAdverb(string lang, string morf)
+        {
+            StringBuilder result = new StringBuilder();
+
+            result.Append($"Function: adverb");
+
+            return result.ToString();
+        }
+
+        /// <summary>
+        /// 0 form
+        /// 1 gender
+        /// 2 number - may not be present
+        /// 3 state  - may not be present
+        /// </summary>
+        /// <param name="lang"></param>
+        /// <param name="morf"></param>
+        /// <returns></returns>
+        private string ParseNoun(string lang, string morf)
+        {
+            StringBuilder result = new StringBuilder();
+
+            if (morf.Length < 2)
+                return result.ToString();
+
+            string formText = string.Empty;
+            string genderText = string.Empty;
+            string numberText = string.Empty;
+            string stateText = string.Empty;
+
+            string formC = morf.Substring(0, 1);
+            string formCN = formC + "N";
+            if (ot_form.ContainsKey(formCN))
+                formText = ot_form[formCN];
+            else if (ot_form.ContainsKey(formC))
+                formText = ot_form[formC];
+
+            string genderC = morf.Substring(1, 1);
+            if (gender.ContainsKey(genderC))
+                genderText = gender[genderC];
+
+            string numberC = string.Empty;
+            if (morf.Length > 2)
+            {
+                numberC = morf.Substring(2, 1);
+                if (number.ContainsKey(numberC))
+                    numberText = number[numberC];
+            }
+
+            string stateC = string.Empty;
+            if (morf.Length > 3)
+            {
+                stateC = morf.Substring(3, 1);
+                if (state.ContainsKey(stateC))
+                    stateText = state[stateC];
+            }
+
+            result.Append($"Function: noun\r\n");
+            result.Append($"Form: {formText}");
+            if (!string.IsNullOrEmpty(numberText))
+            {
+                result.Append("\r\n");
+                result.Append($"Number: {numberText}");
+            }
+            result.Append("\r\n");
+            result.Append($"Gender: {genderText}");
+            if (!string.IsNullOrEmpty(stateText))
+            {
+                result.Append("\r\n");
+                result.Append($"State: {stateText}");
+            }
+            return result.ToString();
+        }
+        private string ParsePronoun(string lang, string morf)
+        {
+            StringBuilder result = new StringBuilder();
+
+            string formText = string.Empty;
+            string personText = string.Empty;
+            string numberText = string.Empty;
+            string genderText = string.Empty;
+
+            result.Append($"Function: pronoun\r\n");
+
+            string formC = morf.Substring(0, 1);
+            if (ot_form.ContainsKey(formC))
+                formText = ot_form[formC];
+            result.Append($"Form: {formText}"); 
+
+            if (morf.Length > 1)
+            {
+                string personC = morf.Substring(1, 1);
+                if (person.ContainsKey(personC))
+                    personText = person[personC];
+                result.Append("\r\n");
+                result.Append($"Person: {personText}");
+            }
+
+            if (morf.Length > 3)
+            {
+                string numberC = morf.Substring(3, 1);
+                if (number.ContainsKey(numberC))
+                    numberText = number[numberC];
+                result.Append("\r\n");
+                result.Append($"Number: {numberText}"); 
+
+                string genderC = morf.Substring(2, 1);
+                if (gender.ContainsKey(genderC))
+                    genderText = gender[genderC];
+                result.Append("\r\n");
+                result.Append($"Gender: {genderText}");
+            }
+
+            return result.ToString();
+        }
+        private string ParsePreposition(string lang, string morf)
+        {
+            StringBuilder result = new StringBuilder();
+
+            result.Append($"Function: preposition");
+
+            return result.ToString();
+        }
+        private string ParseSuffix(string lang, string morf)
+        {
+            StringBuilder result = new StringBuilder();
+
+            string formText = string.Empty;
+            string personText = string.Empty;
+            string numberText = string.Empty;
+            string genderText = string.Empty;
+
+            string formC = string.Empty; 
+            string formCS = string.Empty; 
+            string personC = string.Empty;
+            string genderC = string.Empty;
+            string numberC = string.Empty;
+
+            result.Append($"Function: suffix\r\n");
+            formC = morf.Substring(0, 1);
+            formCS = formC + "S";
+            if (ot_form.ContainsKey(formCS))
+                formText = ot_form[formCS];
+            else if (ot_form.ContainsKey(formC))
+                formText = ot_form[formC];
+            result.Append($"Form: {formText}");
+
+            if (morf.Length > 1)
+            {
+                personC = morf.Substring(1, 1);
+                if (ot_form.ContainsKey(formC))
+                    formText = ot_form[formC];
+                result.Append("\r\n");
+                result.Append($"Person: {personText}");
+            }
+
+            if (morf.Length > 3)
+            {
+                numberC = morf.Substring(3, 1);
+                if (number.ContainsKey(numberC))
+                    numberText = number[numberC];
+                result.Append("\r\n");
+                result.Append($"Number: {numberText}");
+
+                genderC = morf.Substring(2, 1);
+                if (gender.ContainsKey(genderC))
+                    genderText = gender[genderC];
+                result.Append("\r\n");
+                result.Append($"Gender: {genderText}");
+            }
+
+            return result.ToString();
+        }
+        private string ParseParticle(string lang, string morf)
+        {
+            StringBuilder result = new StringBuilder();
+
+            string formText = string.Empty;
+
+            string formC = morf.Substring(0, 1);
+            string formCT = formC + "T";
+
+            if (ot_form.ContainsKey(formCT))
+                formText = ot_form[formCT];
+            else if (ot_form.ContainsKey(formC))
+                formText = ot_form[formC];
+
+            result.Append($"Function: particle\r\n");
+            result.Append($"Form: {formText}");
+
+            return result.ToString();
+        }
+
+        /// <summary>
+        /// 0 stem
+        /// 1 form
+        /// 2 person
+        /// 3 gender
+        /// 4 number
+        /// </summary>
+        /// <param name="lang"></param>
+        /// <param name="morf"></param>
+        /// <returns></returns>
+        private string ParseVerb(string lang, string morf)
+        {
+            StringBuilder result = new StringBuilder();
+
+            //if (morf.Length < 5)
+            //    return result.ToString();
+
+            string stemC = morf.Substring(0, 1);
+            string stemCL = stemC + lang;
+
+            string stemText = string.Empty;
+            string stemAction = string.Empty;
+            string stemVoice = string.Empty;
+
+            string formC = morf.Substring(1, 1);
+            string formCL = formC + lang;
+            string formCV = formC + "V";
+            string formText = string.Empty;
+            string formTense = string.Empty;
+            string formMood = string.Empty;
+
+            if (stem.ContainsKey(stemCL))
+                stemText = stem[stemCL];
+            else if (stem.ContainsKey(stemC))
+                stemText = stem[stemC];
+
+            if (ot_action.ContainsKey(stemC))
+                stemAction = ot_action[stemC];
+            if (ot_voice.ContainsKey(stemC))
+                stemVoice = ot_voice[stemC];
+
+            if (ot_form.ContainsKey(formCV))
+                formText = ot_form[formCV];
+            else if (ot_form.ContainsKey(formCL))
+                formText = ot_form[formCL];
+            else if (ot_form.ContainsKey(formC))
+                formText = ot_form[formC];
+
+            if (ot_tense.ContainsKey(formC))
+                formTense = ot_tense[formC];
+            if (ot_mood.ContainsKey(formC))
+                formMood = ot_mood[formC];
+
+            result.Append($"Function: verb\r\n");
+            result.Append($"Stem: {stemText}"); result.Append("\r\n");
+            result.Append($"  - Action: {stemAction}"); result.Append("\r\n");
+            result.Append($"  - Voice: {stemVoice}"); result.Append("\r\n");
+            result.Append($"Form: {formText}"); result.Append("\r\n");
+            result.Append($"  - Tense: {formTense}"); result.Append("\r\n");
+            result.Append($"  - Mood: {formMood}");
+
+            if (morf.Length == 5)
+            {
+                string personC = morf.Substring(2, 1);
+                string personText = string.Empty;
+
+                string genderC = morf.Substring(3, 1);
+                string genderText = string.Empty;
+
+                string numberC = morf.Substring(4, 1);
+                string numberText = string.Empty;
+
+
+                if (person.ContainsKey(personC))
+                    personText = person[personC];
+                if (number.ContainsKey(numberC))
+                    numberText = number[numberC];
+                if (gender.ContainsKey(genderC))
+                    genderText = gender[genderC];
+
+                result.Append("\r\n");
+                result.Append($"Person: {personText}"); result.Append("\r\n");
+                result.Append($"Number: {numberText}"); result.Append("\r\n");
+                result.Append($"Gender: {genderText}");
+            }
+            else if (morf.Length == 3)
+            {
+                string stateText = string.Empty;
+                string stateC = string.Empty;
+                stateC = morf.Substring(2, 1);
+                if (state.ContainsKey(stateC))
+                    stateText = state[stateC];
+                result.Append("\r\n");
+                result.Append($"State: {stateText}");
+            }
+
+            return result.ToString();
+        }
+
+
+        private Dictionary<string, string> language = new Dictionary<string, string>()
+{
+        {"A", "Aramaic"},
+        {"H", "Hebrew"},
+
+};
+        private Dictionary<string, string> ot_function = new Dictionary<string, string>()
+{
+        {"A", "adjective"},
+        {"C", "conjunction"},
+        {"D", "adverb"},
+        {"N", "noun"},
+        {"P", "pronoun"},
+        {"R", "preposition"},
+        {"S", "suffix"},
+        {"T", "particle"},
+        {"V", "verb"},
+        {"c", "conjunction"},
+};
+        private Dictionary<string, string> ot_form = new Dictionary<string, string>()
+{
+        {"aA", "common"},
+        {"aT", "definite article (aramaic)"},
+        {"c", "common"},
+        {"cA", "numerical"},
+        {"cT", "conditional"},
+        {"cV", "imperfective"},
+        {"d", "definite article (hebrew)"},
+        {"dR", "definite"},
+        {"dS", "directional"},
+        {"f", "infinitive"},
+        {"g", "gentilic"},
+        {"h", "paragogic hé"},
+        {"i", "interrogative"},
+        {"iV", "imperfective"},
+        {"jT", "interjection"},
+        {"jV", "imperfective"},
+        {"m", "demonstrative"},
+        {"n", "paragogic nun"},
+        {"nT", "negative"},
+        {"nV", "imperfective"},
+        {"oA", "numerical position"},
+        {"oT", "object indicator"},
+        {"p", "personal"},
+        {"pN", "proper"},
+        {"pV", "perfective"},
+        {"q", "consecutive perfective"},
+        {"rT", "relative"},
+        {"rV", "participle"},
+        {"s", "participle passive"},
+        {"u", "conjunction+imperfective"},
+        {"v", "imperative"},
+        {"w", "consecutive imperfective"},
+};
+        private Dictionary<string, string> stem = new Dictionary<string, string>()
+{
+        {"D", "nithpael"},
+        {"H", "hophal"},
+        {"M", "hithpaal"},
+        {"N", "niphal"},
+        {"O", "polal"},
+        {"PA", "ithpaal"},
+        {"PH", "pual"},
+        {"Q", "peil"},
+        {"a", "aphel"},
+        {"c", "tiphil"},
+        {"e", "shaphel"},
+        {"hA", "haphel"},
+        {"hH", "hiphil"},
+        {"i", "itpeel"},
+        {"pA", "pael"},
+        {"pH", "piel"},
+        {"qA", "peal"},
+        {"qH", "qal"},
+        {"tA", "hishtaphel"},
+        {"tH", "hithpael"},
+        {"uA", "hithpeel"},
+        {"uH", "hothpaal"},
+        {"v", "ishtaphel"},
+
+};
+        private Dictionary<string, string> person = new Dictionary<string, string>()
+{
+        {"1", "first"},
+        {"2", "second"},
+        {"3", "third"},
+};
+        private Dictionary<string, string> gender = new Dictionary<string, string>()
+{
+        {"b", "either gender"},
+        {"c", "either gender"},
+        {"f", "feminine"},
+        {"l", "location"},
+        {"m", "masculine"},
+        {"t", "title"},
+};
+        private Dictionary<string, string> number = new Dictionary<string, string>()
+{
+        {"d", "dual"},
+        {"p", "plural"},
+        {"s", "singular"},
+};
+        private Dictionary<string, string> state = new Dictionary<string, string>()
+{
+        {"a", "absolute"},
+        {"c", "construct"},
+        {"d", "definite"},
+};
+        private Dictionary<string, string> ot_action = new Dictionary<string, string>()
+{
+        {"D", "intensive/resultive"},
+        {"H", "causative/declarative"},
+        {"M", "intensive/resultive"},
+        {"N", "simple"},
+        {"O", "intensive/resultive"},
+        {"P", "intensive/resultive"},
+        {"Q", "simple"},
+        {"a", "causative/declarative"},
+        {"c", "causative/declarative"},
+        {"e", "causative/declarative"},
+        {"h", "causative/declarative"},
+        {"i", "simple"},
+        {"p", "intensive/resultive"},
+        {"q", "simple"},
+        {"t", "simple"},
+        {"u", "intensive/resultive"},
+        {"v", "causative/declarative"},
+};
+        private Dictionary<string, string> ot_voice = new Dictionary<string, string>()
+{
+        {"D", "passive"},
+        {"H", "passive"},
+        {"M", "reflexive/iterative"},
+        {"N", "passive"},
+        {"O", "passive"},
+        {"PA", "reflexive/iterative"},
+        {"PH", "passive"},
+        {"Q", "passive"},
+        {"a", "active"},
+        {"c", "active"},
+        {"e", "active"},
+        {"h", "active"},
+        {"i", "reflexive/iterative"},
+        {"p", "active"},
+        {"q", "active"},
+        {"qHs", "passive"},
+        {"t", "reflexive/iterative"},
+        {"u", "passive"},
+        {"v", "reflexive/iterative"},
+};
+        private Dictionary<string, string> ot_tense = new Dictionary<string, string>()
+{
+        {"c", "future/present"},
+        {"i", "future/present"},
+        {"j", "future/present"},
+        {"n", "future/present"},
+        {"p", "past/present"},
+        {"q", "future/present"},
+        {"u", "future/present"},
+        {"v", "present/future"},
+        {"w", "past/present"},
+};
+        private Dictionary<string, string> ot_mood = new Dictionary<string, string>()
+{
+        {"c", "cohortative"},
+        {"i", "indicative/jussive"},
+        {"iV1", "indicative/cohortative"},
+        {"j", "jussive"},
+        {"n", "indicative"},
+        {"p", "indicative"},
+        {"q", "indicative"},
+        {"u", "indicative"},
+        {"v", "imperative"},
+        {"w", "indicative"},
+
+};
+
+
     }
 }
