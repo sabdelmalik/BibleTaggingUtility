@@ -33629,7 +33629,7 @@ Jer.6.6#17=L	בְּ/קִרְבָּֽ/הּ\׃	be./kir.Ba/h	in/ midst/ its	H9003/{
 																
 Eng (Heb) Ref & Type	Hebrew	Transliteration	Translation	dStrongs	Grammar	Meaning Variants	Spelling Variants	Root dStrong+Instance	Alternative Strongs+Instance	Conjoin word	Expanded Strong tags					
 Jer.6.7#01=L	כְּ/הָקִ֥יר	ke./ha.Kir	as/ keeps cool	H9004/{H6979B}	HR/Vhcc			H6979B_A			H9004=כ=like/{H6979B=קָרַר=to cool}					
-Jer.6.7#02=Q(K)	בַּ֙יִר֙	be.ver	a well	{H0875}	HNcfsa	K= be.ver (בְּוֵר) "a cistern" (H0953A=HNcbsa)	L= בַּ֙וִר֙ ¦ ;	H0875	H0953A		{H0875=בְּאֵר=well}					
+Jer.6.7#02=Q(K)	בַּ֙יִר֙	be.ver	a cistern	{H0953A}	HNcbsa	K= be.ver (בְּוֵר) "a cistern" (H0875=HNcfsa)	L= בַּ֙וִר֙ ¦ ;	H0953A	H0875		{H0953A=בּוֹר=pit}					
 Jer.6.7#03=L	מֵימֶ֔י/הָ	mei.Mei./ha	water/ its	{H4325G}/H9024	HNcmpc/Sp3fs			H4325G			{H4325G=מַי=water}/H9024=Ps3f=her					
 Jer.6.7#04=L	כֵּ֖ן	ken	so	{H3651C}	HD			H3651C			{H3651C=כֵּן=so}					
 Jer.6.7#05=L	הֵקֵ֣רָה	he.Ke.rah	it has kept cool	{H6979B}	HVhp3fs			H6979B_B			{H6979B=קָרַר=to cool}					
@@ -115650,7 +115650,7 @@ Hos.11.6#01=L	וְ/חָלָ֥ה	ve./cha.Lah	and/ it will whirl	H9001/{H2342J}	Hc
 Hos.11.6#02=L	חֶ֙רֶב֙	che.rev	a sword	{H2719}	HNcfsa			H2719			{H2719=חֶ֫רֶב=sword}					
 Hos.11.6#03=L	בְּ/עָרָ֔י/ו	be./'a.Ra/v	in/ cities/ his	H9003/{H5892B}/H9023	HR/Ncmpc/Sp3ms			H5892B			H9003=ב=in/{H5892B=עִיר=city}/H9023=Ps3m=his					
 Hos.11.6#04=L	וְ/כִלְּתָ֥ה	ve./khi.le.Tah	and/ it will put an end to	H9001/{H3615H}	Hc/Vpq3fs			H3615H			H9001=ו=&/{H3615H=כָּלָה=: destroy»to end:2_destroy}					
-Hos.11.6#05=L	בַדָּ֖י/ו	va.Da/v	bars/ his	{H0907}/H9023	HNcmpc/Sp3ms			H0907	H0905G		{H0907=בַּד=bluster}/H9023=Ps3m=his					
+Hos.11.6#05=L	בַדָּ֖י/ו	va.Da/v	shoots/ his	{H0905G}/H9023	HNcmpc/Sp3ms			H0905G	H0907		{H0905G=בַּד=shoots}/H9023=Ps3m=his					
 Hos.11.6#06=L	וְ/אָכָ֑לָה	ve./'a.Kha.lah	and/ it will devour [them]	H9001/{H0398}	Hc/Vqq3fs			H0398			H9001=ו=&/{H0398=אָכַל=to eat}					
 Hos.11.6#07=L	מִֽ/מֹּעֲצ֖וֹתֵי/הֶֽם\׃	mi./mo.'a.Tzo.tei./Hem	from/ schemes/ their	H9006/{H4156}/H9028\H9016	HR/Ncfpc/Sp3mp			H4156			H9006=מ=from/{H4156=מוֹעֵצָה=counsel}/H9028=Pp3m=their\H9016=׃=verseEnd					
 																

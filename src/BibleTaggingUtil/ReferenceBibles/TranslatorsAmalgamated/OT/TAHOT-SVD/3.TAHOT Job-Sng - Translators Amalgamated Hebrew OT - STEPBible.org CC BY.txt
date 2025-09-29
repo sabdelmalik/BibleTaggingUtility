@@ -6492,7 +6492,7 @@ Job.17.16#04=L	אִם\־	'im-	or?	{H0518H}\H9014	HTc			H0518H			{H0518H=אִם=:
 Job.17.16#05=L	יַ֖חַד	Ya.chad	together	{H3162A}	HNcmsa			H3162A			{H3162A=יַ֫חַד=unitedness}					
 Job.17.16#06=L	עַל\־	'al-	to	{H5921A}\H9014	HR			H5921A			{H5921A=עַל=upon}\H9014=־=link					
 Job.17.16#07=L	עָפָ֣ר	'a.Far	[the] dust	{H6083}	HNcmsa			H6083			{H6083=עָפָר=dust}					
-Job.17.16#08=L	נָֽחַת\׃\ \ס	Na.chat	will we descend	{H5181}\H9016\ \H9018	HVqi1cp			H5181	H5183A		{H5181=נָחֵת=to descend}\H9016=׃=verseEnd\ \H9018=ס=section					
+Job.17.16#08=L	נָֽחַת\׃\ \ס	Na.chat	quietness of	{H5183A}\H9016\ \H9018	HNcfsc			H5183A	H5181		{H5183A=נָחֵת=quietness}\H9016=׃=verseEnd\ \H9018=ס=section					
 																
 # Job.18.1	Vai.ya.'an (וַ֭יַּעַן)	bil.Dad (בִּלְדַּ֥ד)	ha.shu.Chi (הַשֻּׁחִ֗י)	vai.yo.Mar (וַיֹּאמַֽר׃)												
 #_Translation	and/ he answered	Bildad	the/ Shuhite	and/ he said												
