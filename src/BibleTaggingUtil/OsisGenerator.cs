@@ -38,7 +38,7 @@ namespace BibleTaggingUtil
                 //}
 
 
-                if (osisConf.ContainsKey(OsisConstants.output_file))
+                if (osisConf.ContainsKey(OsisConstants.output_file)) // xml file
                 {
                     if (publicDomain)
                         outputFile = osisConf[OsisConstants.output_file_publicDomaind];

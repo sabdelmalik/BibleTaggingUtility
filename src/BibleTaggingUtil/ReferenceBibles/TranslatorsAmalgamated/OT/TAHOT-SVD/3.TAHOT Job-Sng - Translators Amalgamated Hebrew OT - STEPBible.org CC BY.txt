@@ -6651,7 +6651,7 @@ Job.18.12#02=L	רָעֵ֥ב	ra.'Ev	hungry	{H7457}	HAamsa			H7457			{H7457=רָע
 Job.18.12#03=L	אֹנ֑/וֹ	'o.N/o	trouble/ his	{H0202}/H9023	HNcmsc/Sp3ms			H0202	H0205		{H0202=אוֹן=strength}/H9023=Ps3m=his					
 Job.18.12#04=L	וְ֝/אֵ֗יד	ve./'Eid	and/ disaster	H9002/{H0343}	HC/Ncmsa			H0343			H9002=ו=and/{H0343=אֵיד=calamity}					
 Job.18.12#05=L	נָכ֥וֹן	na.Khon	[is] prepared	{H3559A}	HVNrmsa			H3559A			{H3559A=כּוּן=: prepare»to establish:1_prepare;_direct}					
-Job.18.12#06=L	לְ/צַלְעֽ/וֹ\׃	le./tzal.'/O	for/ stumbling/ his	H9005/{H6761}/H9023\H9016	HR/Ncmsc/Sp3ms			H6761	H6763		H9005=ל=to/{H6761=צֶ֫לַע=stumbling}/H9023=Ps3m=his\H9016=׃=verseEnd					
+Job.18.12#06=L	לְ/צַלְעֽ/וֹ\׃	le./tzal.'/O	at/ side/ his	H9005/{H6763}/H9023\H9016	HR/Ncmsc/Sp3ms			H6763	H6761		H9005=ל=at/{H6763=צֵלָע=side}/H9023=Ps3m=his\H9016=׃=verseEnd					
 																
 # Job.18.13	Yo.khal (יֹ֭אכַל)	ba.Dei (בַּדֵּ֣י)	o.Ro (עוֹר֑וֹ)	yo.Khal (יֹאכַ֥ל)	ba.Dav (בַּ֝דָּ֗יו)	be.Khor (בְּכ֣וֹר)	Ma.vet (מָֽוֶת׃)									
 #_Translation	it consumes	[the] parts of	skin/ his	it consumes	parts/ his	[the] firstborn of	death									
@@ -10836,7 +10836,7 @@ Job.30.22#02=L	אֶל\־	'el-	to	{H0413}\H9014	HR			H0413			{H0413=אֶל=to(war
 Job.30.22#03=L	ר֭וּחַ	Ru.ach	[the] wind	{H7307H}	HNcfsa			H7307H			{H7307H=רוּחַ=: breath»spirit:2_breath;_wind}					
 Job.30.22#04=L	תַּרְכִּיבֵ֑/נִי	tar.ki.Ve./ni	you make ride/ me	{H7392}/H9030	HVhi2ms/Sp1bs			H7392			{H7392=רָכַב=to ride}/H9030=Os1c=me					
 Job.30.22#05=L	וּ֝/תְמֹגְגֵ֗/נִי	u./te.mo.ge.Ge./ni	and/ you dissolve/ me	H9002/{H4127}/H9030	HC/Vpu2ms/Sp1bs			H4127			H9002=ו=and/{H4127=מוּג=to melt}/H9030=Os1c=me					
-Job.30.22#06=Q(K)	תּוּשִׁיָּֽה\׃	te.shu.veh	success	{H8454}\H9016	HNcfsa	K= te.shu.veh (תְּשֻׁוֶּה\׃) "you are laid down" (H7738\H9016=HVpi2ms)	L= תֻּשִׁוָּֽה\׃ ¦ ;	H8454	H7738, H7737A, (H8663}		{H8454=תּוּשִׁיָּה=wisdom}\H9016=׃=verseEnd					
+Job.30.22#06=Q(K)	תְּשֻׁוֶּה\׃	te.shu.veh	you are laid down	{H7738}\H9016	HVpi2ms	K= te.shu.veh (תְּשֻׁוֶּה\׃) "you are laid down" (H7738\H9016=HVpi2ms)	L= תֻּשִׁוָּֽה\׃ ¦ ;	H7738	H8454, H7737A, (H8663}		{H7738=שָׁוָה=to destroy}\H9016=׃=verseEnd					
 																
 # Job.30.23	ki- (כִּֽי־)	Ya.da'.ti (יָ֭דַעְתִּי)	Ma.vet (מָ֣וֶת)	te.shi.Ve.ni (תְּשִׁיבֵ֑נִי)	u.Veit (וּבֵ֖ית)	mo.'Ed (מוֹעֵ֣ד)	le.khol (לְכָל־)	Chai (חָֽי׃)								
 #_Translation	for	I know	death	you will bring/ me	and/ a house of	appointed meeting	for/ every	living [thing]								
@@ -35686,7 +35686,7 @@ Eng (Heb) Ref & Type	Hebrew	Transliteration	Translation	dStrongs	Grammar	Meaning
 Psa.77.10(77.11)#01=L	וָ֭/אֹמַר	Va./'o.mar	and/ I said	H9001/{H0559}	Hc/Vqw1cs			H0559			H9001=ו=&/{H0559=אָמַר=to say}					
 Psa.77.10(77.11)#02=L	חַלּ֣וֹתִ/י	cha.Lo.t/i	[is] wounding/ my	{H2470I}/H9040	HVpcc/Sp1bs			H2470I	H2490A		{H2470I=חָלָה=: grieved»be weak:3_grieved;_sorrowful}/H9040=Ss1c=I					
 Psa.77.10(77.11)#03=L	הִ֑יא	Hi'	it	{H1931}	HPp3fs			H1931			{H1931=הוּא=he;_she;_it}					
-Psa.77.10(77.11)#04=L	שְׁ֝נ֗וֹת	She.Not	[the] years of	{H8141}	HNcfpc			H8141	H8138A		{H8141=שָׁנָה=year}					
+Psa.77.10(77.11)#04=L	שְׁ֝נ֗וֹת	She.Not	[the] changed	{H8138A}	HVprmsa			H8138A	H8141		{H8138A=שָׁנָה=to change}					
 Psa.77.10(77.11)#05=L	יְמִ֣ין	ye.Min	[the] right [hand] of	{H3225G}	HNcfsc			H3225G			{H3225G=יָמִין=: right»right:1_right}					
 Psa.77.10(77.11)#06=L	עֶלְיֽוֹן\׃	el.Yon	[the] Most High	{H5945B}\H9016	HAamsa			H5945B			{H5945B=עֶלְיוֹן=Most High»LORD@Gen.1.1-Heb}\H9016=׃=verseEnd					
 																

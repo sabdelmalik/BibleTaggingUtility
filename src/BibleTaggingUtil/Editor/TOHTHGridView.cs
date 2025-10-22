@@ -107,7 +107,7 @@ namespace BibleTaggingUtil.Editor
             List<StrongsCluster> tags = new List<StrongsCluster>();
             List<string> morphology = new List<string>();
             List<string> rootStrongs = new List<string>();
-            List<string> wordType =   new List<string>();
+            List<string> wordType = new List<string>();
             List<string> altVerseNumber = new List<string>();
             List<string> altStrongs = new List<string>();
             List<string> wordNumber = new List<string>();
@@ -147,59 +147,60 @@ namespace BibleTaggingUtil.Editor
                     lexicalForm.Add(verseWord.DictForm);
                     gloss.Add(verseWord.DictGloss);
                     tags.Add(verseWord.Strong);
-/*
-                    if (verseWord.Strong.Count > 0)
-                    {
-                        string s = String.Empty;
-                        bool E = (verseWord.Hebrew.Trim() == "אֱלֹהִים");
-                        bool Y = (verseWord.Hebrew.Trim() == "יהוה");
-                        bool strongIsE = (verseWord.Strong[0].Number == 430);
-                        bool strongIsY = ((verseWord.Strong[0].Number == 3068) || (verseWord.Strong[0].Number == 3069));
+                    /*
+                                        if (verseWord.Strong.Count > 0)
+                                        {
+                                            string s = String.Empty;
+                                            bool E = (verseWord.Hebrew.Trim() == "אֱלֹהִים");
+                                            bool Y = (verseWord.Hebrew.Trim() == "יהוה");
+                                            bool strongIsE = (verseWord.Strong[0].Number == 430);
+                                            bool strongIsY = ((verseWord.Strong[0].Number == 3068) || (verseWord.Strong[0].Number == 3069));
 
-                        if (E || Y)
-                        {
-                            // special treatment for אֱלֹהִים & יהוה
-                            if ((E && strongIsE) || (Y && strongIsY))
-                                //s = "<" + verseWord.Strong[0] + ">";
-                                s= verseWord.Strong[0].ToStringEx();
-                        }
-                        else
-                        {
-                            //s = "<" + verseWord.Strong[0] + ">";
-                            s = verseWord.Strong[0].ToStringEx();
-                        }
+                                            if (E || Y)
+                                            {
+                                                // special treatment for אֱלֹהִים & יהוה
+                                                if ((E && strongIsE) || (Y && strongIsY))
+                                                    //s = "<" + verseWord.Strong[0] + ">";
+                                                    s= verseWord.Strong[0].ToStringEx();
+                                            }
+                                            else
+                                            {
+                                                //s = "<" + verseWord.Strong[0] + ">";
+                                                s = verseWord.Strong[0].ToStringEx();
+                                            }
 
-                        if (verseWord.Strong.Count > 1)
-                        {
-                            for (int j = 1; j < verseWord.Strong.Count; j++)
-                            {
-                                strongIsE = (verseWord.Strong[j].Number == 430);
-                                strongIsY = ((verseWord.Strong[j].Number == 3068) || (verseWord.Strong[j].Number == 3069));
-                                if (E || Y)
-                                {
-                                    // special treatment for אֱלֹהִים & יהוה
-                                    if ((E && strongIsE) || (Y && strongIsY))
-                                    {
-                                        if (!string.IsNullOrEmpty(s))
-                                            s += " ";
-                                        //s += "<" + verseWord.Strong[j] + ">";
-                                        s = verseWord.Strong[j].ToStringEx();
-                                    }
-                                }
-                                else
-                                {
-                                    if (!string.IsNullOrEmpty(s))
-                                        s += " ";
-                                    //s += "<" + verseWord.Strong[j] + ">";
-                                    s = verseWord.Strong[j].ToStringEx();
-                                }
-                            }
-                        }
-                        tags.Add(s.Trim());
-                    }
-                    else
-                        tags.Add("")
-*/;
+                                            if (verseWord.Strong.Count > 1)
+                                            {
+                                                for (int j = 1; j < verseWord.Strong.Count; j++)
+                                                {
+                                                    strongIsE = (verseWord.Strong[j].Number == 430);
+                                                    strongIsY = ((verseWord.Strong[j].Number == 3068) || (verseWord.Strong[j].Number == 3069));
+                                                    if (E || Y)
+                                                    {
+                                                        // special treatment for אֱלֹהִים & יהוה
+                                                        if ((E && strongIsE) || (Y && strongIsY))
+                                                        {
+                                                            if (!string.IsNullOrEmpty(s))
+                                                                s += " ";
+                                                            //s += "<" + verseWord.Strong[j] + ">";
+                                                            s = verseWord.Strong[j].ToStringEx();
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if (!string.IsNullOrEmpty(s))
+                                                            s += " ";
+                                                        //s += "<" + verseWord.Strong[j] + ">";
+                                                        s = verseWord.Strong[j].ToStringEx();
+                                                    }
+                                                }
+                                            }
+                                            tags.Add(s.Trim());
+                                        }
+                                        else
+                                            tags.Add("")
+                    */
+                    ;
                 }
 
                 //this.ColumnCount = verseWords.Count;
@@ -215,6 +216,7 @@ namespace BibleTaggingUtil.Editor
                 this.Rows.Add(gloss.ToArray());
 
                 this.Rows.Add(morphology.ToArray());
+                int morfRow = 7;
                 this.Rows.Add(meaningVar.ToArray());
                 this.Rows.Add(transliteration.ToArray());
                 this.Rows.Add(altStrongs.ToArray());
@@ -224,7 +226,7 @@ namespace BibleTaggingUtil.Editor
                 for (int i = 0; i < words.Count; i++)
                 {
                     string word = (string)this.Rows[1].Cells[i].Value;
-                    StrongsCluster tag = (StrongsCluster)this.Rows[this.RowCount-1].Cells[i].Value;
+                    StrongsCluster tag = (StrongsCluster)this.Rows[this.RowCount - 1].Cells[i].Value;
                     if (word.Contains("יהוה") || tag.ToString().Contains("3069") || tag.ToString().Contains("3068"))
                     {
                         this.Rows[1].Cells[i].Style.ForeColor = Color.Red;
@@ -235,13 +237,41 @@ namespace BibleTaggingUtil.Editor
                         this.Rows[1].Cells[i].Style.ForeColor = Color.Black;
                         this.Rows[this.RowCount - 1].Cells[i].Style.ForeColor = Color.Black;
                     }
-                    if (SearchTag!=null && tag.ToString().Contains(SearchTag))
+                    if (SearchTag != null && tag.ToString().Contains(SearchTag))
                     {
                         this.Rows[this.RowCount - 1].Cells[i].Style.ForeColor = Color.Maroon;
-                        if(RowCount > 2)
+                        if (RowCount > 2)
                             this.Rows[this.RowCount - 2].Cells[i].Style.BackColor = Color.Yellow;
                     }
 
+                }
+
+                // Color code repeated words with same strongs number and different morphology
+                int colourIndex = 0;
+                List<Color> colours = new List<Color>() { Color.Green, Color.Blue, Color.Red, Color.Brown, Color.DarkOrange, Color.Maroon };
+                Dictionary<string, int> repeated = new Dictionary<string, int>();
+                for (int i = 1; i < words.Count; i++)
+                {
+                    StrongsCluster tag = (StrongsCluster)this.Rows[this.RowCount - 1].Cells[i].Value;
+                    string morf = (string)this.Rows[morfRow].Cells[i].Value;
+                    for (int j = i + 1; j < words.Count; j++)
+                    {
+                        StrongsCluster tag2 = (StrongsCluster)this.Rows[this.RowCount - 1].Cells[j].Value;
+                        string morf2 = (string)this.Rows[morfRow].Cells[j].Value;
+                        if (tag.ToStringS() == tag2.ToStringS() && morf != morf2 && !tag.IsTagLable)
+                        {
+                            if (!repeated.ContainsKey(tag.ToStringS()))
+                            {
+                                repeated.Add(tag.ToStringS(), colourIndex);
+                                colourIndex = (colourIndex + 1) % colours.Count;
+                            }
+                            Color foreColor = colours[repeated[tag.ToStringS()]];
+                            this.Rows[morfRow].Cells[i].Style.ForeColor = foreColor;
+                            this.Rows[morfRow].Cells[i].Style.BackColor = Color.LightGray;
+                            this.Rows[morfRow].Cells[j].Style.ForeColor = foreColor;
+                            this.Rows[morfRow].Cells[j].Style.BackColor = Color.LightGray;
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -250,6 +280,7 @@ namespace BibleTaggingUtil.Editor
                 var name = cm.DeclaringType.FullName + "." + cm.Name;
                 Tracing.TraceException(name, ex.Message);
             }
+
 
             this.ClearSelection();
 
@@ -358,10 +389,10 @@ namespace BibleTaggingUtil.Editor
                 for (int i = 0; i < verseWords.Count; i++)
                 {
                     VerseWord verseWord = verseWords[i];
-                    if(verseWord.Reference.Contains("5:48") && i == 9)
+                    if (verseWord.Reference.Contains("5:48") && i == 9)
                     {
                         int x = 0;
-                    }    
+                    }
                     words.Add(verseWord.Word);
                     greek.Add(verseWord.Greek);
                     conjoin.Add(verseWord.ConjoinWord);
@@ -405,26 +436,57 @@ namespace BibleTaggingUtil.Editor
                 this.Rows.Add(wordType.ToArray());
                 int typeRow = 8;
                 this.Rows.Add(morphology.ToArray());
+                int morfRow = 9;
                 this.Rows.Add(transliteration.ToArray());
                 this.Rows.Add(altStrongs.ToArray());
                 this.Rows.Add(rootStrongs.ToArray());
-                if(Properties.ReferenceBibles.Default.dStrongs)
+                if (Properties.ReferenceBibles.Default.dStrongs)
                     this.Rows.Add(dTags.ToArray());
                 else
                     this.Rows.Add(tags.ToArray());
 
-                    this.ClearSelection();
+                this.ClearSelection();
 
+                // Gray out columns that are not tagged with a K strongs number
                 for (int i = 1; i < words.Count; i++)
                 {
                     string type = (string)this.Rows[typeRow].Cells[i].Value;
                     if (!type.ToUpper().Contains("K"))
                     {
-                        for (int j = 0; j < this.RowCount; j++) { 
+                        for (int j = 0; j < this.RowCount; j++)
+                        {
                             this.Rows[j].Cells[i].Style.BackColor = Color.LightGray;
                         }
                     }
- 
+
+                }
+
+                // Color code repeated words with same strongs number and different morphology
+                int colourIndex = 0;
+                List<Color> colours = new List<Color>() { Color.Green, Color.Blue, Color.Red, Color.Brown, Color.DarkOrange, Color.Maroon };
+                Dictionary<string, int> repeated = new Dictionary<string, int>();
+                for (int i = 1; i < words.Count; i++)
+                {
+                    StrongsCluster tag = (StrongsCluster)this.Rows[this.RowCount - 1].Cells[i].Value;
+                    string morf = (string)this.Rows[morfRow].Cells[i].Value;
+                    for (int j = i + 1; j < words.Count; j++)
+                    {
+                        StrongsCluster tag2 = (StrongsCluster)this.Rows[this.RowCount - 1].Cells[j].Value;
+                        string morf2 = (string)this.Rows[morfRow].Cells[j].Value;
+                        if (tag.ToStringS() == tag2.ToStringS() && morf != morf2 && !tag.IsTagLable)
+                        {
+                            if (!repeated.ContainsKey(tag.ToStringS()))
+                            {
+                                repeated.Add(tag.ToStringS(), colourIndex);
+                                colourIndex = (colourIndex + 1) % colours.Count;
+                            }
+                            Color foreColor = colours[repeated[tag.ToStringS()]];
+                            this.Rows[morfRow].Cells[i].Style.ForeColor = foreColor;
+                            this.Rows[morfRow].Cells[i].Style.BackColor = Color.LightGray;
+                            this.Rows[morfRow].Cells[j].Style.ForeColor = foreColor;
+                            this.Rows[morfRow].Cells[j].Style.BackColor = Color.LightGray;
+                        }
+                    }
                 }
 
 
@@ -436,6 +498,37 @@ namespace BibleTaggingUtil.Editor
                 var cm = System.Reflection.MethodBase.GetCurrentMethod();
                 var name = cm.DeclaringType.FullName + "." + cm.Name;
                 Tracing.TraceException(name, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Highlights unused strongs numbers in dgvTarget tags row
+        /// </summary>
+        /// <param name="dgvTarget"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        internal void HighlightUnusedStrongs(TargetGridView dgvTarget)
+        {
+            if (this.Rows.Count == 0 || dgvTarget.Rows.Count == 0)
+                return;
+            int tagsRowIndex = this.Rows.Count - 1;
+            int targetTagsRowIndex = dgvTarget.Rows.Count - 1;
+            for (int i = 1; i < this.ColumnCount; i++)
+            {
+                StrongsCluster tag = (StrongsCluster)this.Rows[tagsRowIndex].Cells[i].Value;
+                bool used = false;
+                for (int j = 0; j < dgvTarget.ColumnCount; j++)
+                {
+                    StrongsCluster targetTag = (StrongsCluster)dgvTarget.Rows[targetTagsRowIndex].Cells[j].Value;
+                    if (targetTag.ToStringS().Contains(tag.ToStringS()) && !tag.IsTagLable)
+                    {
+                        used = true;
+                        break;
+                    }
+                }
+                if (!used && !tag.IsTagLable)
+                {
+                    this.Rows[tagsRowIndex].Cells[i].Style.BackColor = Color.LightPink;
+                }
             }
         }
     }

@@ -52392,7 +52392,7 @@ Exo.24.10#04=L	יִשְׂרָאֵ֑ל	Yis.ra.'El	Israel	{H3478}	HNpl			H3478			{
 Exo.24.10#05=L	וְ/תַ֣חַת	ve./Ta.chat	and/ [was] under	H9002/{H8478G}	HC/Ncmsc			H8478G			H9002=ו=and/{H8478G=תַּחַת=: under»underneath:1_under;_below}					
 Exo.24.10#06=L	רַגְלָ֗י/ו	rag.La/v	feet/ his	{H7272}/H9023	HNcfdc/Sp3ms			H7272			{H7272=רֶ֫גֶל=foot}/H9023=Ps3m=his					
 Exo.24.10#07=L	כְּ/מַעֲשֵׂה֙	ke./ma.'a.Seh	like/ [the] working of	H9004/{H4639G}	HR/Ncmsc			H4639G			H9004=כ=like/{H4639G=מַעֲשֶׂה=: work»deed:3_work;_product}					
-Exo.24.10#08=L	לִבְנַ֣ת	liv.Nat	<the> pavement of	{H3843}	HNcfsc			H3843	H3840		{H3843=לְבֵנָה=brick}					
+Exo.24.10#08=L	לִבְנַ֣ת	liv.Nat	<the> pavement of	{H3843}	HNcfsc			H3840	H3843		{H3840=לְבֵנָה=pavement}					
 Exo.24.10#09=L	הַ/סַּפִּ֔יר	ha./sa.Pir	<the>/ sapphire	H9009/{H5601}	HTd/Ncmsa			H5601			H9009=ה=the/{H5601=סַפִּיר=sapphire}					
 Exo.24.10#10=L	וּ/כְ/עֶ֥צֶם	u./khe./'E.tzem	and/ like/ [the] substance of	H9002/H9004/{H6106H}	HC/R/Ncfsc			H6106H			H9002=ו=and/H9004=כ=like/{H6106H=עֶ֫צֶם=: same»bone:2_same;_very}					
 Exo.24.10#11=L	הַ/שָּׁמַ֖יִם	ha./sha.Ma.yim	the/ heavens	H9009/{H8064}	HTd/Ncmpa			H8064			H9009=ה=the/{H8064=שָׁמַיִם=heaven}					

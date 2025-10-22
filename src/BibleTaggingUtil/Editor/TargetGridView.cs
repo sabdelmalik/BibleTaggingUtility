@@ -582,7 +582,7 @@ namespace BibleTaggingUtil.Editor
                 {
                     string oldVerse = bible[reference].ToString();
                     bible[reference] = verse;
-                    Tracing.TraceInfo(name, "OLD: " + oldVerse, "NEW: " + verse.ToString());
+                    Tracing.TraceInfo(name, reference, "OLD: " + oldVerse, "NEW: " + verse.ToString());
 
                 }
                 else
@@ -750,8 +750,14 @@ namespace BibleTaggingUtil.Editor
         }
         protected override void OnDragDrop(DragEventArgs drgevent)
         {
+            var cm = System.Reflection.MethodBase.GetCurrentMethod();
+            var name = cm.DeclaringType.FullName + "." + cm.Name;
+
             DragData data = drgevent.Data.GetData(typeof(DragData)) as DragData;
             StrongsCluster droppedValue = data.Tag;
+
+            Tracing.TraceEntry(name, $"StrongsCluster = {droppedValue.ToString()}");
+            
             Point cursorLocation = this.PointToClient(new Point(drgevent.X, drgevent.Y));
             try
             {
@@ -764,6 +770,7 @@ namespace BibleTaggingUtil.Editor
                         if (data.ColumnIndex == hittest.ColumnIndex)
                             return;
                     }
+                    Tracing.TraceInfo(name, $"Hit at column {hittest.ColumnIndex}, row {hittest.RowIndex}");
                     int savedColumn = this.CurrentCell.ColumnIndex;
                     int savedRow = this.CurrentCell.RowIndex;
                     if (this.CurrentVerse != null)
@@ -803,8 +810,6 @@ namespace BibleTaggingUtil.Editor
             }
             catch(Exception ex)
             {
-                var cm = System.Reflection.MethodBase.GetCurrentMethod();
-                var name = cm.DeclaringType.FullName + "." + cm.Name;
                 Tracing.TraceException(name, ex.Message);
             }
 

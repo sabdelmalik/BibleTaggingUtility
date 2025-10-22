@@ -1200,7 +1200,18 @@ namespace BibleTaggingUtil
                         WaitCursorControl(true);
                         GenerateOsisXML();
                         WaitCursorControl(false);
-                        RunOsis2mod(config.OSIS[OsisConstants.output_file], config.OSIS[OsisConstants.osisIDWork]);
+                        //RunOsis2mod(config.OSIS[OsisConstants.output_file], config.OSIS[OsisConstants.osisIDWork]);
+                        string outputFile = config.OSIS[OsisConstants.output_file];
+                        string outExt = Path.GetExtension(outputFile);
+                        string outName = Path.GetFileNameWithoutExtension(outputFile);
+                        if (config.OSIS.ContainsKey(OsisConstants.revision))
+                        {
+                            outName += "-" + config.OSIS[OsisConstants.revision];
+                        }
+                        outputFile = string.Format("{0}.{1}", outName, outExt);
+
+                        //RunOsis2mod(config.OSIS[OsisConstants.output_file], config.OSIS[OsisConstants.osisIDWork]);
+                        RunOsis2mod(outputFile, config.OSIS[OsisConstants.osisIDWork]);
                     }
                     catch (Exception ex)
                     {
@@ -1379,9 +1390,19 @@ namespace BibleTaggingUtil
 
                 string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
                 string modulesFolder = Path.Combine(appData, "Sword\\modules\\texts\\ztext");
+                string configFolder = Path.Combine(appData, "Sword\\mods.d");
+                string configFileName = $"{targetFolderName}.conf";
                 string backupFolderName = string.Format("{0:s}_{1:s}", targetFolderName, DateTime.Now.ToString("yyyy_MM_dd_HH_mm"));
                 string backupPath = Path.Combine(biblesFolder, backupFolderName);
                 targetFolder = Path.Combine(modulesFolder, targetFolderName);
+
+                // copy config file if exists
+                string sourceConfigFile = Path.Combine(biblesFolder, configFileName); 
+                if(System.IO.File.Exists(sourceConfigFile))
+                {
+                    string targetConfigFile = Path.Combine(configFolder, configFileName);
+                    System.IO.File.Copy(sourceConfigFile, targetConfigFile, true);
+                }
                 if (Directory.Exists(targetFolder))
                 {
                     // backup currentModule
@@ -1442,7 +1463,7 @@ namespace BibleTaggingUtil
                 string versification = config.OSIS[OsisConstants.versification];
                 if (string.IsNullOrEmpty(versification))
                     versification = "KJV";
-                process.StartInfo.Arguments = string.Format("{0} {1} -v {2} -b 4 -z", targetFolder, xmlFile, versification);
+                process.StartInfo.Arguments = string.Format("\"{0}\" \"{1}\" -v {2} -b 4 -z", targetFolder, xmlFile, versification);
 
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 process.StartInfo.CreateNoWindow = true;

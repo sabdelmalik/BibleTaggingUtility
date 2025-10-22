@@ -97,7 +97,7 @@ namespace BibleTaggingUtil.Editor
             this.CloseButtonVisible = false;
             this.CloseButton = false;
 
-             picRedo.Image.RotateFlip(RotateFlipType.Rotate180FlipY);
+            picRedo.Image.RotateFlip(RotateFlipType.Rotate180FlipY);
             //picRedo.Invalidate();
 
             picNextVerse.Image.RotateFlip(RotateFlipType.Rotate90FlipNone);
@@ -220,7 +220,7 @@ namespace BibleTaggingUtil.Editor
             if (BackForwardClicked)
                 BackForwardClicked = false;
             else
-            navStackBack.Push(oldReference);
+                navStackBack.Push(oldReference);
             tbCurrentReference.Text = e.VerseReference;
             dgvTarget.CurrentVerseReferece = e.VerseReference;
             string bookName = e.VerseReference.Substring(0, 3);
@@ -321,7 +321,7 @@ namespace BibleTaggingUtil.Editor
                     if (tbTarget.Text.ToLower().Contains("arabic") && container.OsisTarget.Bible.ContainsKey(reference))
                         DoSepecialHandling(reference);
                     Verse v = null;
-                    if(osis)
+                    if (osis)
                     {
                         if (container.OsisTarget.Bible.ContainsKey(reference))
                             v = container.OsisTarget.Bible[reference];
@@ -408,7 +408,8 @@ namespace BibleTaggingUtil.Editor
             string current = string.Format("{0} {1}:{2}", actualBookName, ch, vsi);
             string next = string.Format("{0} {1}:{2}", actualBookName, ch, vsi + 1);
             string previous = string.Empty;
-            /*if (vsi > 1)*/ previous = string.Format("{0} {1}:{2}", actualBookName, ch, vsi - 1);
+            /*if (vsi > 1)*/
+            previous = string.Format("{0} {1}:{2}", actualBookName, ch, vsi - 1);
 
             if (testament == BibleTestament.OT)
             {
@@ -1260,7 +1261,7 @@ namespace BibleTaggingUtil.Editor
                 string currentReference = tbCurrentReference.Text;
                 navStackForward.Push(currentReference);
 
-                string prevRef =  navStackBack.Pop();
+                string prevRef = navStackBack.Pop();
                 verse.GotoVerse(prevRef);
             }
 
@@ -1277,6 +1278,11 @@ namespace BibleTaggingUtil.Editor
                 string prevRef = navStackForward.Pop();
                 verse.GotoVerse(prevRef);
             }
+        }
+        private void btnUnused_Click(object sender, EventArgs e)
+        {
+            // highlight columns in the dgvTOTHT where the strong's numbers are not used in dgvTarget
+            dgvTOTHT.HighlightUnusedStrongs(dgvTarget);
         }
     }
 }

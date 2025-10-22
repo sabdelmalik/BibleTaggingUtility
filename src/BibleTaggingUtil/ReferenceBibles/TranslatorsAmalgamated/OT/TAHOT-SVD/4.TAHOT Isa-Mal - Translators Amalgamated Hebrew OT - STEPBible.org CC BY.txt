@@ -4691,7 +4691,7 @@ Isa.10.13#08=L	נְבֻנ֑וֹתִי	ne.vu.No.ti	I have understanding	{H0995}	H
 Isa.10.13#09=L	וְ/אָסִ֣יר\׀	ve./'a.Sir	and/ I may remove	H9002/{H5493G}\H9015	HC/Vhu1cs			H5493G			H9002=ו=and/{H5493G=סוּר=: remove»to turn aside:1_remove}\H9015=׀=separate					
 Isa.10.13#10=L	גְּבוּלֹ֣ת	ge.vu.Lot	[the] boundaries of	{H1367}	HNcfpc			H1367			{H1367=גְּבוּלָה=border}					
 Isa.10.13#11=L	עַמִּ֗ים	'a.Mim	peoples	{H5971A}	HNcmpa			H5971A			{H5971A=עַם=: people»people:1_people;_nation}					
-Isa.10.13#12=Q(K)	וַ/עֲתוּדֽוֹתֵי/הֶם֙	va./'a.ti.do.tei./hem	and/ provisions/ their	H9002/{H6259}/H9028	HC/Ncfpc/Sp3mp	K= va./'a.ti.do.tei./hem (וַ/עֲתִידֹתֵי/הֶם) "and/ treasures/ their" (H9002/H6264/H9028=HC/Ncfpc/Sp3mp)	L= וַ/עֲתיּדֹֽתֵי/הֶם֙ ¦ ;	H6259	H6264		H9002=ו=and/{H6259=עָתוּד=ready}/H9028=Pp3m=their					
+Isa.10.13#12=Q(K)	וַ/עֲתוּדֽוֹתֵי/הֶם֙	va./'a.ti.do.tei./hem	and/ provisions/ their	H9002/{H6264}/H9028	HC/Ncfpc/Sp3mp	K= va./'a.ti.do.tei./hem (וַ/עֲתִידֹתֵי/הֶם) "and/ treasures/ their" (H9002/H6264/H9028=HC/Ncfpc/Sp3mp)	L= וַ/עֲתיּדֹֽתֵי/הֶם֙ ¦ ;	H6264	H6259		H9002=ו=and/{H6264=עָתִיד=treasures}/H9028=Pp3m=their					
 Isa.10.13#13=L	שׁוֹשֵׂ֔תִי	sho.Se.ti	I have plundered	{H8154}	HVpp1cs			H8154			{H8154=שָׁסָה=to plunder}					
 Isa.10.13#14=L	וְ/אוֹרִ֥יד	ve./'o.Rid	and/ I may bring down	H9002/{H3381}	HC/Vhu1cs			H3381			H9002=ו=and/{H3381=יָרַד=to go down}					
 Isa.10.13#15=L	כַּ/אבִּ֖יר	ka./Bir	like/ a mighty [man]	H9004/{H0047G}	HR/Aamsa			H0047G	H3524_B		H9004=כ=like/{H0047G=אַבִּיר=: ox»mighty:1_ox}					
@@ -129238,7 +129238,7 @@ Zep.3.8#04=L	נְאֻם\־	ne.'um-	[the] utterance of	{H5002}\H9014	HNcmsc			H50
 Zep.3.8#05=L	יְהוָ֔ה	Yah.weh	Yahweh	{H3068G}	HNpt			H3068G			{H3068G=יהוה=LORD»LORD@Gen.1.1-Heb}					
 Zep.3.8#06=L	לְ/י֖וֹם	le./Yom	for/ [the] day	H9005/{H3117G}	HR/Ncmsc			H3117G			H9005=ל=to/{H3117G=יוֹם=: day»day;_when:1_day;_when;_period}					
 Zep.3.8#07=L	קוּמִ֣/י	ku.M/i	to arise/ I	{H6965B}/H9040	HVqcc/Sp1bs			H6965B			{H6965B=קוּם=: rise»to arise:1_rise;_get_going}/H9040=Ss1c=I					
-Zep.3.8#08=L	לְ/עַ֑ד	le./'Ad	for/ booty	H9005/{H5707}	HR/Ncmsa			H5707	H5706		H9005=ל=to/{H5707=עֵד=witness}					
+Zep.3.8#08=L	לְ/עַ֑ד	le./'Ad	for/ booty	H9005/{H5706}	HR/Ncmsa			H5706	H5707		H9005=ל=to/{H5706=עֵד=prey}					
 Zep.3.8#09=L	כִּ֣י	ki	for	{H3588A}	HTc			H3588A_A			{H3588A=כִּי=for}					
 Zep.3.8#10=L	מִשְׁפָּטִ/י֩	mish.pa.T/i	judgment/ my	{H4941G}/H9020	HNcmsc/Sp1bs			H4941G			{H4941G=מִשְׁפָּט=: judgement»justice:1_judgement;_punishment}/H9020=Ps1c=my					
 Zep.3.8#11=L	לֶ/אֱסֹ֨ף	le./'e.Sof	[is] to/ gather	H9005/{H0622}	HR/Vqcc			H0622			H9005=ל=to/{H0622=אָסַף=to gather}					

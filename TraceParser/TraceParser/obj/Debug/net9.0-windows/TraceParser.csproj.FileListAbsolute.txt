@@ -1,0 +1,17 @@
+D:\Documents\MyProjects\STEP\BibleTaggingUtility\TraceParser\TraceParser\bin\Debug\net9.0-windows\TraceParser.exe
+D:\Documents\MyProjects\STEP\BibleTaggingUtility\TraceParser\TraceParser\bin\Debug\net9.0-windows\TraceParser.deps.json
+D:\Documents\MyProjects\STEP\BibleTaggingUtility\TraceParser\TraceParser\bin\Debug\net9.0-windows\TraceParser.runtimeconfig.json
+D:\Documents\MyProjects\STEP\BibleTaggingUtility\TraceParser\TraceParser\bin\Debug\net9.0-windows\TraceParser.dll
+D:\Documents\MyProjects\STEP\BibleTaggingUtility\TraceParser\TraceParser\bin\Debug\net9.0-windows\TraceParser.pdb
+D:\Documents\MyProjects\STEP\BibleTaggingUtility\TraceParser\TraceParser\obj\Debug\net9.0-windows\TraceParser.MainForm.resources
+D:\Documents\MyProjects\STEP\BibleTaggingUtility\TraceParser\TraceParser\obj\Debug\net9.0-windows\TraceParser.csproj.GenerateResource.cache
+D:\Documents\MyProjects\STEP\BibleTaggingUtility\TraceParser\TraceParser\obj\Debug\net9.0-windows\TraceParser.GeneratedMSBuildEditorConfig.editorconfig
+D:\Documents\MyProjects\STEP\BibleTaggingUtility\TraceParser\TraceParser\obj\Debug\net9.0-windows\TraceParser.AssemblyInfoInputs.cache
+D:\Documents\MyProjects\STEP\BibleTaggingUtility\TraceParser\TraceParser\obj\Debug\net9.0-windows\TraceParser.AssemblyInfo.cs
+D:\Documents\MyProjects\STEP\BibleTaggingUtility\TraceParser\TraceParser\obj\Debug\net9.0-windows\TraceParser.csproj.CoreCompileInputs.cache
+D:\Documents\MyProjects\STEP\BibleTaggingUtility\TraceParser\TraceParser\obj\Debug\net9.0-windows\TraceParser.sourcelink.json
+D:\Documents\MyProjects\STEP\BibleTaggingUtility\TraceParser\TraceParser\obj\Debug\net9.0-windows\TraceParser.dll
+D:\Documents\MyProjects\STEP\BibleTaggingUtility\TraceParser\TraceParser\obj\Debug\net9.0-windows\refint\TraceParser.dll
+D:\Documents\MyProjects\STEP\BibleTaggingUtility\TraceParser\TraceParser\obj\Debug\net9.0-windows\TraceParser.pdb
+D:\Documents\MyProjects\STEP\BibleTaggingUtility\TraceParser\TraceParser\obj\Debug\net9.0-windows\TraceParser.genruntimeconfig.cache
+D:\Documents\MyProjects\STEP\BibleTaggingUtility\TraceParser\TraceParser\obj\Debug\net9.0-windows\ref\TraceParser.dll
