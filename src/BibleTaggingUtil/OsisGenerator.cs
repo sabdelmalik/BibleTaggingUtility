@@ -100,7 +100,7 @@ namespace BibleTaggingUtil
             sw.WriteLine("<div type=\"bookGroup\">");
             foreach (string reference in targetVersion.Bible.Keys)
             {
-                if(reference == "Mat 2:5")
+                if(reference == "ACT 26:14")
                 {
                     int x = 0;
                 }
@@ -294,7 +294,7 @@ namespace BibleTaggingUtil
                 catch (Exception ex)
                 {
                     int x = 0;
-                    throw ex;
+                   // throw ex;
                 }
 
             }

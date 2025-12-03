@@ -309,7 +309,7 @@ namespace BibleTaggingUtil.Editor
                         // TODO handle osis save
                     }
                     else
-                        dgvTarget.SaveVerse(oldReference);
+                         dgvTarget.SaveVerse(oldReference);
                 }
 
 
@@ -1083,7 +1083,7 @@ namespace BibleTaggingUtil.Editor
                 {
                     bookIndex = Array.IndexOf(Constants.osisAltNames, book);
                     if (bookIndex < 0)
-                        bookIndex = Array.IndexOf(Constants.ubsNames, book);
+                        bookIndex = Array.IndexOf(Constants.ubsNames.Keys.ToArray(), book);
                 }
                 if (bookIndex >= 0)
                 {

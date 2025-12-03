@@ -190,7 +190,10 @@ namespace BibleTaggingUtil
                 GetSettings(startup: true);
                 if (Properties.ReferenceBibles.Default.Configured)
                     break;
-                DialogResult result = MessageBox.Show("Incomplete Settings! \r\n Do you want to retry settings", "Settings", MessageBoxButtons.YesNo);
+                DialogResult result = MessageBox.Show("Incomplete Settings! \r\n Do you want to retry settings",
+                    "Settings",
+                    MessageBoxButtons.YesNo, 
+                    MessageBoxIcon.None, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 if (result == DialogResult.No)
                 {
                     Application.Exit();
@@ -248,7 +251,8 @@ namespace BibleTaggingUtil
             {
                 string caption = "Exception";
                 string text = "An exception occurred!\r\nThe application will terminate.\r\nDo you want to Save before termination?";
-                DialogResult result = MessageBox.Show(text, caption, MessageBoxButtons.YesNo);
+                DialogResult result = MessageBox.Show(text, caption, MessageBoxButtons.YesNo,
+                                        MessageBoxIcon.None, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 if (result == DialogResult.Yes)
                 {
                     if (Properties.MainSettings.Default.Osis)
@@ -396,7 +400,9 @@ namespace BibleTaggingUtil
 
                     if (!Directory.Exists(taggedFolder))
                     {
-                        DialogResult res = ShowMessageBox("Tagged folder does not exist\r\nSelect another Bible Folder?", "Error!", MessageBoxButtons.YesNo);
+                        DialogResult res = ShowMessageBox(
+                            "Tagged folder does not exist\r\nSelect another Bible Folder?",
+                            "Error!", MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         if (res == DialogResult.Yes)
                         {
                             GetSettings(startup: false);
@@ -447,7 +453,7 @@ namespace BibleTaggingUtil
                     string.IsNullOrEmpty(Properties.TargetBibles.Default.TargetBiblesFolder))
                 {
                     DialogResult res = ShowMessageBox("At least one Target must be selected\r\nYes: to set the target Bible\r\nNo: to quit.",
-                        "Target Missing", MessageBoxButtons.YesNo);
+                        "Target Missing", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
                     if (res == DialogResult.No)
                     {
                         Application.Exit();
@@ -647,7 +653,8 @@ namespace BibleTaggingUtil
                     int idx = fileName.IndexOf('.');
                     if (!int.TryParse(fileName.Substring(0, idx), out key))
                     {
-                        MessageBox.Show("File name in wrong format: " + fileName);
+                        MessageBox.Show("File name in wrong format: " + fileName, "Error!", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                     }
                     fileDict.Add(key - 1, file);
                 }
@@ -659,7 +666,8 @@ namespace BibleTaggingUtil
             if (!result)
             {
                 string refName = Path.GetFileName(folderPath);
-                MessageBox.Show("Loading " + refName + " failed");
+                MessageBox.Show("Loading " + refName + " failed", "Error!", MessageBoxButtons.OK, 
+                    MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
             else
                 StartGui();
@@ -770,7 +778,7 @@ namespace BibleTaggingUtil
             }
         }
 
-        private DialogResult ShowMessageBox(string text, string caption, MessageBoxButtons buttons)
+        private DialogResult ShowMessageBox(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton)
         {
             DialogResult result = DialogResult.OK;
 
@@ -778,11 +786,11 @@ namespace BibleTaggingUtil
             {
                 // Call this same method but append THREAD2 to the text
                 //Action safeWrite = delegate { ShowMessageBox(text, caption, buttons); };
-                result = (DialogResult)Invoke(new Func<DialogResult>(() => ShowMessageBox(text, caption, buttons)));
+                result = (DialogResult)Invoke(new Func<DialogResult>(() => ShowMessageBox(text, caption, buttons, icon, defaultButton)));
             }
             else
             {
-                result = MessageBox.Show(text, caption, buttons);
+                result = MessageBox.Show(text, caption, buttons, icon, defaultButton, MessageBoxOptions.DefaultDesktopOnly);
             }
             return result;
         }
@@ -1408,7 +1416,9 @@ namespace BibleTaggingUtil
                     // backup currentModule
                     if (Directory.Exists(backupPath))
                     {
-                        DialogResult res = ShowMessageBox("Overwrite old backup", "Do you want to overwrite existing Backup folder\r\n" + backupPath, MessageBoxButtons.YesNo);
+                        DialogResult res = ShowMessageBox(
+                            "Do you want to overwrite existing Backup folder\r\n" + backupPath,
+                            "Overwrite old backup", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
                         if (res == DialogResult.Yes)
                         {
                             Directory.Delete(backupPath, true);
@@ -1499,19 +1509,24 @@ namespace BibleTaggingUtil
                 if (processExited == false) // we timed out...
                 {
                     process.Kill();
-                    MessageBox.Show("Module Generation Timed out!");
+                    MessageBox.Show("Module Generation Timed out!",
+                                "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+
                 }
                 else
                 {
                     if (process.ExitCode == 0)
                     {
                         Tracing.TraceInfo(MethodBase.GetCurrentMethod().Name, error);
-                        MessageBox.Show("Module Generation Completed Successfully!");
+                        MessageBox.Show("Module Generation Completed Successfully!", "Success",
+                                        MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+
                     }
                     else
                     {
                         Tracing.TraceError(MethodBase.GetCurrentMethod().Name, error);
-                        MessageBox.Show("Module Generation failed! " + process.ExitCode.ToString());
+                        MessageBox.Show("Module Generation failed! " + process.ExitCode.ToString(),
+                            "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                     }
                 }
 

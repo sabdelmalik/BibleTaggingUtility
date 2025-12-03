@@ -55,7 +55,7 @@ namespace SM.Bible.Formats.USFM
                 string usbName = string.Empty;
                 int bookIndex = Array.IndexOf(Constants.osisAltNames, textInfo.ToTitleCase(altName));
                 if (Constants.osisAltNames.Contains(altName, StringComparer.OrdinalIgnoreCase))
-                    usbName = Constants.ubsNames[bookIndex];
+                    usbName = Constants.ubsNames.Keys.ToArray()[bookIndex];
                 else
                 {
                     Console.WriteLine("Error parsing " +  key);
@@ -256,9 +256,9 @@ namespace SM.Bible.Formats.USFM
                 TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
                 string code = textInfo.ToTitleCase(id.Code.ToLower());
                   
-                if (Constants.ubsNames.Contains(code, StringComparer.OrdinalIgnoreCase))
+                if (Constants.ubsNames.Keys.ToArray().Contains(code, StringComparer.OrdinalIgnoreCase))
                 {
-                    string fileNamePrefix = Constants.usfmFileNamePrefixes[Array.IndexOf(Constants.ubsNames, textInfo.ToTitleCase(code))];
+                    string fileNamePrefix = Constants.usfmFileNamePrefixes[Array.IndexOf(Constants.ubsNames.Keys.ToArray(), textInfo.ToTitleCase(code))];
                     fileName = string.Format("{0}{1}-{2}.{3}",
                                         fileNamePrefix.ToUpper(),
                                         usfmConf[UsfmConstants.usfmLang].ToLower(),

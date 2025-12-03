@@ -15,6 +15,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Windows.Forms.Design;
 using System.Xml;
 using System.Xml.Linq;
@@ -85,6 +86,11 @@ namespace BibleTaggingUtil.BibleVersions
             Tracing.TraceEntry(MethodBase.GetCurrentMethod().Name, textFilePath, more);
             bool result = false;
 
+            if (this is TargetVersion)
+            {
+                FixFileIfCorrupt(textFilePath);
+            }
+
             if (File.Exists(textFilePath))
             {
                 result = true;
@@ -132,17 +138,85 @@ namespace BibleTaggingUtil.BibleVersions
             {
                 for (int i = 0; i < bookNamesList.Count; i++)
                 {
-                    bookNames.Add(Constants.ubsNames[i], bookNamesList[i]);
+                    bookNames.Add(Constants.ubsNames.Keys.ToArray()[i], bookNamesList[i]);
                 }
             }
             else if (bookNamesList.Count == 27)
             {
                for (int i = 0; i < bookNamesList.Count; i++)
                 {
-                    bookNames.Add(Constants.ubsNames[i+39], bookNamesList[i]);
+                    bookNames.Add(Constants.ubsNames.Keys.ToArray()[i+39], bookNamesList[i]);
                 }
             }
             return result;
+        }
+
+        private void FixFileIfCorrupt(string textFilePath)
+        {
+            string[] ntLastBookAbbreviations = { "rev", "rv", "re", "apoc" };
+            string[] otLastBookAbbreviations = { "mal", "ml", "malachi" };
+            string[] lines = File.ReadAllLines(textFilePath);
+            string lastLine = lines[lines.Length - 1];
+            bool goodLine = false;
+
+            string badReference = string.Empty;
+            try
+            {
+                while (!goodLine && lines.Length > 1)
+                {
+                    Match mTx = Regex.Match(lastLine, @"^([0-9A-Za-z]+)\s([0-9]+):([0-9]+)\s*(.*)");
+                    if (mTx.Success)
+                    {
+                        string chapter = mTx.Groups[2].Value.Trim();
+                        string verseNo = mTx.Groups[3].Value.Trim();
+                        String book = mTx.Groups[1].Value;
+                        if (ntLastBookAbbreviations.Contains(book.ToLower()))
+                        {
+                            if (chapter == "22" && verseNo == "21")
+                            {
+                                goodLine = true;
+                                break;
+                            }
+                        }
+
+                        else if (otLastBookAbbreviations.Contains(book.ToLower()))
+                        {
+                            if (chapter == "4" && verseNo == "6")
+                            {
+                                goodLine = true;
+                                break;
+                            }
+                        }
+                        badReference = string.Format("{0} {1}:{2}", book, chapter, verseNo);
+
+                    }
+                    // remove last line
+                    List<string> newLines = new List<string>();
+                    for (int i = 0; i < lines.Length - 1; i++)
+                    {
+                        newLines.Add(lines[i]);
+                    }
+                    lines = newLines.ToArray();
+                    lastLine = lines[lines.Length - 1];
+                }
+            }
+            catch (Exception ex)
+            {
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
+                throw;
+            }
+
+            if (!string.IsNullOrEmpty(badReference))
+            {
+                MessageBox.Show(string.Format("Please review '{0}' for possible corruption",
+                                 badReference),
+                                "Bible Tagging Utility",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Warning,MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+            }
+            File.WriteAllLines(textFilePath, lines.ToArray());
         }
 
         public int BookCount
@@ -432,7 +506,7 @@ namespace BibleTaggingUtil.BibleVersions
                 offset = 39;
 
             }
-            string correctBook = bookNamesList[Array.IndexOf(Constants.ubsNames, book) -  offset];
+            string correctBook = bookNamesList[Array.IndexOf(Constants.ubsNames.Keys.ToArray(), book) -  offset];
 
             correctReference = string.Format("{0} {1}", correctBook, cv);
             return correctReference;
@@ -627,14 +701,14 @@ namespace BibleTaggingUtil.BibleVersions
             {
                 for (int i = 0; i < bookNamesList.Count; i++)
                 {
-                    bookNames.Add(Constants.ubsNames[i], bookNamesList[i]);
+                    bookNames.Add(Constants.ubsNames.Keys.ToArray()[i], bookNamesList[i]);
                 }
             }
             else if (bookNamesList.Count == 27)
             {
                 for (int i = 0; i < bookNamesList.Count; i++)
                 {
-                    bookNames.Add(Constants.ubsNames[i + 39], bookNamesList[i]);
+                    bookNames.Add(Constants.ubsNames.Keys.ToArray()[i + 39], bookNamesList[i]);
                 }
             }
 

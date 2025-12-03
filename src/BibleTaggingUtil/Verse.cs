@@ -214,7 +214,7 @@ namespace BibleTaggingUtil
             return result;
         }
 
-        public VerseWord GetWordFromStrong(string strong)
+        public VerseWord GetWordFromStrong(string strong, int position)
         {
             VerseWord result = null;
             if (!string.IsNullOrEmpty(strong))
@@ -227,6 +227,18 @@ namespace BibleTaggingUtil
                         if (verse[i].StrongString.Contains(strong))
                         {
                             result = verse[i];
+                            if(position > 1)
+                            {
+                                VerseWord temp = result;
+                                while (position > 1)
+                                {
+                                    // look for the next occurence
+                                    position--;
+                                    temp = GetWordFromStrong(strong, result.WordIndex, false);
+                                    if (temp == null) break;
+                                    result = temp;
+                                }
+                            }
                             break;
                         }
                     }

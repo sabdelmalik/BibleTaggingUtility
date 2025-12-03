@@ -91,14 +91,14 @@ namespace BibleTaggingUtil.BibleVersions
                     {
                         for (int i = 0; i < bookNamesList.Count; i++)
                         {
-                            bookNames.Add(Constants.ubsNames[i], bookNamesList[i]);
+                            bookNames.Add(Constants.ubsNames.Keys.ToArray()[i], bookNamesList[i]);
                         }
                     }
                     else if (bookNamesList.Count == 27)
                     {
                         for (int i = 0; i < bookNamesList.Count; i++)
                         {
-                            bookNames.Add(Constants.ubsNames[i + 39], bookNamesList[i]);
+                            bookNames.Add(Constants.ubsNames.Keys.ToArray()[i + 39], bookNamesList[i]);
                         }
                     }
 

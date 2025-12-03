@@ -12204,7 +12204,7 @@ Job.33.19#01=L	וְ/הוּכַ֣ח	ve./hu.Khach	and/ he is chastened	H9001/{H319
 Job.33.19#02=L	בְּ֭/מַכְאוֹב	Be./makh.'ov	with/ pain	H9003/{H4341}	HR/Ncmsa			H4341			H9003=ב=in/{H4341=מַכְאוֹב=pain}					
 Job.33.19#03=L	עַל\־	'al-	on	{H5921A}\H9014	HR			H5921A			{H5921A=עַל=upon}\H9014=־=link					
 Job.33.19#04=L	מִשְׁכָּב֑/וֹ	mish.ka.V/o	bed/ his	{H4904}/H9023	HNcmsc/Sp3ms			H4904			{H4904=מִשְׁכָּב=bed}/H9023=Ps3m=his					
-Job.33.19#05=Q(K)	וְ/ר֖וֹב	ve./riv	and/ [the] multitude of	H9002/{H7230}	HC/Ncmsc	K= ve./riv (וְ/רִיב) "and/ [the] strife of" (H9002/H7379=HC/Ncbsc)	L= וְ/רֹ֖יב ¦ ;	H7230	H7379		H9002=ו=and/{H7230=רֹב=abundance}					
+Job.33.19#05=Q(K)	וְ/רִיב	ve./riv	and/ [the] strife of	H9002/{H7379}	HC/Ncbsc	K= ve./riv (וְ/רִיב) "and/ [the] strife of" (H9002/H7379=HC/Ncbsc)	L= וְ/רֹ֖יב ¦ ;	H7379	H7230		H9002=ו=and/{H7379=רִיב=strife}					
 Job.33.19#06=L	עֲצָמָ֣י/ו	'a.tza.Ma/v	bones/ his	{H6106G}/H9023	HNcmpc/Sp3ms			H6106G			{H6106G=עֶ֫צֶם=: bone»bone:1_bone;_limb}/H9023=Ps3m=his					
 Job.33.19#07=L	אֵתָֽן\׃	'e.Tan	[is] constant	{H0386}\H9016	HAamsa			H0386			{H0386=אֵיתָן=strong}\H9016=׃=verseEnd					
 																
@@ -13487,7 +13487,7 @@ Eng (Heb) Ref & Type	Hebrew	Transliteration	Translation	dStrongs	Grammar	Meaning
 Job.36.19#01=L	הֲ/יַעֲרֹ֣ךְ	ha./ya.'a.Rokh	¿/ will it set in order	H9008/{H6186A}	HTi/Vqi3ms			H6186A			H9008=ה=¿/{H6186A=עָרַךְ=to arrange}					
 Job.36.19#02=L	שׁ֭וּעֲ/ךָ	Shu.'a./kha	opulence/ your	{H7769}/H9021	HNcmsc/Sp2ms			H7769			{H7769=שׁוּעַ=cry}/H9021=Ps2m=your					
 Job.36.19#03=L	לֹ֣א	lo'	not	{H3808}	HTn			H3808			{H3808=לֹא=not}					
-Job.36.19#04=L	בְ/צָ֑ר	ve./Tzar	in/ distress	H9003/{H6862B}	HR/Aamsa			H6862B	H1222		H9003=ב=in/{H6862B=צַר=distress}					
+Job.36.19#04=L	בְצָ֑ר	bets-ar'	gold	{H1222}	HNcmsa			H1222	H6862B		{H1222=בְּצַר=gold}					
 Job.36.19#05=L	וְ֝/כֹ֗ל	ve./Khol	and/ all	H9002/{H3605}	HC/Ncmsc			H3605			H9002=ו=and/{H3605=כֹּל=all}					
 Job.36.19#06=L	מַאֲמַצֵּי\־	ma.'a.ma.tzei-	[the] efforts of	{H3981}\H9014	HNcmpc			H3981			{H3981=מַאֲמָץ=power}\H9014=־=link					
 Job.36.19#07=L	כֹֽחַ\׃	Kho.ach	strength	{H3581B}\H9016	HNcmsa			H3581B			{H3581B=כֹּחַ=strength}\H9016=׃=verseEnd					
@@ -18147,7 +18147,7 @@ Psa.10.10#01=Q(K)	יִדְכֶּ֥ה	va.da.khah	he is crushed	{H1794}	HVqi3ms	K=
 Psa.10.10#02=L	יָשֹׁ֑חַ	ya.Sho.ach	he is bowed down	{H7817}	HVqi3ms			H7817			{H7817=שָׁחַח=to bow}					
 Psa.10.10#03=L	וְ/נָפַ֥ל	ve./na.Fal	and/ he falls	H9001/{H5307G}	Hc/Vqq3ms			H5307G			H9001=ו=&/{H5307G=נָפַל=: fall»to fall:1_fall;_drop;_fail}					
 Psa.10.10#04=L	בַּ֝/עֲצוּמָ֗י/ו	ba./'a.tzu.Ma/v	among/ mighty [ones]/ his	H9003/{H6099}/H9023	HR/Aampc/Sp3ms			H6099			H9003=ב=in/{H6099=עָצוּם=mighty}/H9023=Ps3m=his					
-Psa.10.10#05=Q(K)	חֵ֣יל/ /כָּאִֽים\׃	chel/ /ka.'im	an army/ /of disheartened [people]	{H2428A}/ /{H3512B}\H9016	HNcmsc//Ncmpa	K= chel.ka.'im (חֶלְכָּאִים\׃) "unfortunate people" (H2489\H9016=HNcmpa)	L= חֵ֣לכָּאִֽים\׃ ¦ ;	H2428A, H3512B	H2489, H2426		{H2428A=חַ֫יִל=: soldiers»strength:2_soldiers;_army}/ /{H3512B=כָּאֶה=disheartened}\H9016=׃=verseEnd					
+Psa.10.10#05=Q(K)	חֶלְכָּאִים\׃	chel.ka.'im	unfortunate people	{H2489}\H9016	HNcmpa	K= chel.ka.'im (חֶלְכָּאִים\׃) "unfortunate people" (H2489\H9016=HNcmpa)	L= חֵ֣לכָּאִֽים\׃ ¦ ;	H2489	H2489, H2426		{H2489=חֵלְכָה=helpless}\H9016=׃=verseEnd					
 																
 # Psa.10.11	'a.Mar (אָמַ֣ר)	be.li.bo (בְּ֭לִבּוֹ)	Sha.khach (שָׁ֣כַֽח)	'El (אֵ֑ל)	his.Tir (הִסְתִּ֥יר)	pa.Nav (פָּ֝נָ֗יו)	bal- (בַּל־)	ra.'Ah (רָאָ֥ה)	la.Ne.tzach (לָנֶֽצַח׃)							
 #_Translation	he says	in/ heart/ his	he has forgotten	God	he has hidden	face/ his	not	he sees	to/ perpetuity							
@@ -35273,7 +35273,7 @@ Psa.75.6(75.7)#03=L	מִ֭/מּוֹצָא	Mi./mo.tza'	[is] from/ [the] going out
 Psa.75.6(75.7)#04=L	וּ/מִֽ/מַּעֲרָ֑ב	u./mi./ma.'a.Rav	and/ from/ [the] setting place	H9002/H9006/{H4628}	HC/R/Ncmsa			H4628			H9002=ו=and/H9006=מ=from/{H4628=מַעֲרָב=west}					
 Psa.75.6(75.7)#05=L	וְ֝/לֹ֗א	ve./Lo'	and/ not	H9002/{H3808}	HC/Tn			H3808_B			H9002=ו=and/{H3808=לֹא=not}					
 Psa.75.6(75.7)#06=L	מִ/מִּדְבַּ֥ר	mi./mid.Bar	from/ [the] wilderness	H9006/{H4057B}	HR/Ncmsc			H4057B			H9006=מ=from/{H4057B=מִדְבָּר=wilderness}					
-Psa.75.6(75.7)#07=L	הָרִֽים\׃	ha.Rim	exaltation	{H7311A}\H9016	HVhcc			H7311A	H2022G		{H7311A=רוּם=to exalt}\H9016=׃=verseEnd					
+Psa.75.6(75.7)#07=L	הָרִֽים\׃	ha.Rim	mountains	{H2022G}\H9016	HNcmpa			H2022G	H7311A		{H2022G=הַר=: mount}\H9016=׃=verseEnd					
 																
 # Psa.75.7 (Heb: 75.8)	ki- (כִּֽי־)	'E.lo.Him (אֱלֹהִ֥ים)	sho.Fet (שֹׁפֵ֑ט)	zeh (זֶ֥ה)	yash.Pil (יַ֝שְׁפִּ֗יל)	ve.Zeh (וְזֶ֣ה)	ya.Rim (יָרִֽים׃)									
 #_Translation	for	God	[is the] judge	this one	he brings low	and/ this one	he lifts up									

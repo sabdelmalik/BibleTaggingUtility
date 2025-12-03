@@ -71,7 +71,8 @@ namespace BibleTaggingUtil.OsisXml
                 var cm = System.Reflection.MethodBase.GetCurrentMethod();
                 var name = cm.DeclaringType.FullName + "." + cm.Name;
                 Tracing.TraceException(name, ex.Message);
-                MessageBox.Show("Exception Encountered\r\n" + ex.Message, "Fatal Error!");
+                MessageBox.Show("Exception Encountered\r\n" + ex.Message, "Fatal Error!",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 throw;
             }
 

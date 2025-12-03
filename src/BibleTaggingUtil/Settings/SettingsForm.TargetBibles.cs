@@ -40,7 +40,7 @@ namespace BibleTaggingUtil.Settings
                  cbVersification.Text = Properties.TargetBibles.Default.Versification;
             }
             else
-                cbVersification.SelectedIndex = 0;
+                cbVersification.Text = "KJV";
 
 
 
@@ -78,7 +78,7 @@ namespace BibleTaggingUtil.Settings
 
             if (bibles.Count == 0)
             {
-                MessageBox.Show("No valid Bible folder found at:\r\n" + targetBiblesPath);
+                MessageBox.Show("No valid Bible folder found at:\r\n" + targetBiblesPath, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 return;
             }
             Properties.TargetBibles.Default.TargetBiblesFolder = targetBiblesPath;

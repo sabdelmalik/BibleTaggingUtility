@@ -12,6 +12,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -512,7 +513,7 @@ namespace BibleTaggingUtil.TranslationTags
 
             foreach ((string verseRef, List<TranslatorWord> verseWords) in words)
             {
-                if (verseRef == "1Th 1:3")
+                if (verseRef == "2Th 2:13")
                 {
                     int x = 0;
                 }
@@ -719,9 +720,48 @@ namespace BibleTaggingUtil.TranslationTags
                                 if (outputTable.ContainsKey(WordByWord)) outputTable[WordByWord] += owd.WordByWord + "; ";
                                 if (outputTable.ContainsKey(Lexicon)) outputTable[Lexicon] += owd.DictForm + "; ";
                                 if (outputTable.ContainsKey(Gloss)) outputTable[Gloss] += owd.DictGloss + "; ";
-
-
                             }
+
+                            if (verseRef == "2Th 2:13")
+                            {
+                                if (araWordNo == "#19" && word.Word == "مِنَ")
+                                {
+                                    outputTable[Strongs] = "G0575; ";
+                                    outputTable[AncientWord] = "ἀπ᾽; ";
+                                    outputTable[Lexicon] = "ἀπ᾽; ";
+                                    outputTable[Gloss] = "from; ";
+                                    outputTable[Transliteration] = "ap᾽; ";
+                                }
+                                else if (araWordNo == "#20" && word.Word == "الْبَدْءِ")
+                                {
+                                    outputTable[Strongs] = "G0746; ";
+                                    outputTable[AncientWord] = "ἀρχῆς; ";
+                                    outputTable[Lexicon] = "ἀρχῆς; ";
+                                    outputTable[Gloss] = "beginning; ";
+                                    outputTable[Transliteration] = "archēs; ";
+                                }
+                            }
+
+                            if (verseRef == "1Pe 3:20")
+                            {
+                                if (araWordNo == "#08" && word.Word == "تَنْتَظِرُ")
+                                {
+                                    outputTable[Strongs] = "G1551; ";
+                                    outputTable[AncientWord] = "ἐξεδέχετο; ";
+                                    outputTable[Lexicon] = "ἐξεδέχετο; ";
+                                    outputTable[Gloss] = "he was awaiting; ";
+                                    outputTable[Transliteration] = "exedecheto; ";
+                                }
+                                else if (araWordNo == "#09" && word.Word == "مَرَّةً")
+                                {
+                                    outputTable[Strongs] = "G0530; ";
+                                    outputTable[AncientWord] = "ἅπαξ; ";
+                                    outputTable[Lexicon] = "ἅπαξ; ";
+                                    outputTable[Gloss] = "once; ";
+                                    outputTable[Transliteration] = "hapax; ";
+                                }
+                            }
+
 
                             //line = string.Format("{0}\t{1}\t{2}\t{3}\t{4}#{5}\t{6}\t{7}\t{8}",
                             //line = string.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}",

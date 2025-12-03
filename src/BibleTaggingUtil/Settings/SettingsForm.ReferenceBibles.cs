@@ -47,17 +47,32 @@ namespace BibleTaggingUtil.Settings
             cbMainNT.Items.AddRange(folders.ToArray());
         
             // get current sttings
-            if(!string.IsNullOrEmpty(Properties.ReferenceBibles.Default.TopReference))
+            if(string.IsNullOrEmpty(Properties.ReferenceBibles.Default.TopReference))
+            {
+                cbTopReference.Text = cbTopReference.Items.Count > 0 ? cbTopReference.Items[0].ToString() : string.Empty;
+            }
+            else
             {
                 cbTopReference.Text = Properties.ReferenceBibles.Default.TopReference;
                 topRefSet = true;
             }
-            if (!string.IsNullOrEmpty(Properties.ReferenceBibles.Default.TAOTReference))
+
+
+            if (string.IsNullOrEmpty(Properties.ReferenceBibles.Default.TAOTReference))
+            {
+                cbMainOT.Text = cbMainOT.Items.Count > 0 ? cbMainOT.Items[0].ToString() : string.Empty;
+            }
+            else
             {
                 cbMainOT.Text = Properties.ReferenceBibles.Default.TAOTReference;
                 mainOtSet = true;
             }
-            if (!string.IsNullOrEmpty(Properties.ReferenceBibles.Default.TANTReference))
+
+            if (string.IsNullOrEmpty(Properties.ReferenceBibles.Default.TANTReference))
+            {
+                cbMainNT.Text = cbMainNT.Items.Count > 0 ? cbMainNT.Items[0].ToString() : string.Empty;
+            }
+            else
             {
                 cbMainNT.Text = Properties.ReferenceBibles.Default.TANTReference;
                 mainNtSet = true;

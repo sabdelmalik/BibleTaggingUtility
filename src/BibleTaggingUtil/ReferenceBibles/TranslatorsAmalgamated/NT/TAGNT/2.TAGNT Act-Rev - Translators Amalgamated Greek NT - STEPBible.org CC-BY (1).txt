@@ -115990,7 +115990,7 @@ Rev.11.2#01=NKO	καὶ (kai)	And	G2532=CONJ	καί=and	NA28+NA27+Tyn+SBL+WH+Tr
 Rev.11.2#02=NKO	τὴν (tēn)	the	G3588=T-ASF	ὁ=the/this/who	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			el	the	#02»03:G0833	G3588_A					
 Rev.11.2#03=NKO	αὐλὴν (aulēn)	courtyard	G0833=N-ASF	αὐλή=palace/courtyard	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			patio	courtyard	#03	G0833					
 Rev.11.2#04=NKO	τὴν (tēn)	<the>	G3588=T-ASF	ὁ=the/this/who	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			el	the	#04»05:G1855	G3588_B					
-Rev.11.2#05=NK(O)	ἔξωθεν (exōthen)	outside	G1855=PREP	ἔξωθεν=outside	NA28+NA27+Tyn+SBL+WH+Treg+Byz+KJV	ἔσωθεν (O=esōthen) within - G2081=ADV in: TR		exterior	outside	#05	G1855_A	G2081	v ἔσωθεν  (<i>esōthen</i>) 'within' occurs in a few manuscripts (TR) instead of ἔξωθεν  (<i>exōthen</i>) 'outside' in older manuscripts (NA28+NA27+Tyn+SBL+WH+Treg+Byz+KJV)			
+Rev.11.2#05=NK(O)	ἔξωθεν (exōthen)	outside	G1855=PREP	ἔξωθεν=outside	NA28+NA27+Tyn+SBL+WH+Treg+Byz+KJV	ἔσωθεν (O=esōthen) within - G2081=ADV in: TXR		exterior	outside	#05	G1855_A	G2081	v ἔσωθεν  (<i>esōthen</i>) 'within' occurs in a few manuscripts (TR) instead of ἔξωθεν  (<i>exōthen</i>) 'outside' in older manuscripts (NA28+NA27+Tyn+SBL+WH+Treg+Byz+KJV)			
 Rev.11.2#06=NKO	τοῦ (tou)	the	G3588=T-GSM	ὁ=the/this/who	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			de la	the	#06»07:G3485	G3588_C					
 Rev.11.2#07=NKO	ναοῦ (naou)	temple	G3485=N-GSM	ναός=temple	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			habitación divina	temple	#07	G3485					
 Rev.11.2#08=NKO	ἔκβαλε (ekbale)	do leave	G1544=V-2AAM-2S	ἐκβάλλω=to expel	NA28+NA27+Tyn+SBL+WH+Treg+TR+Byz			arroja hacia fuera	to expel	#08	G1544					

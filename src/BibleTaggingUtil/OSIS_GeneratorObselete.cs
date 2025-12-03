@@ -31,7 +31,8 @@ namespace BibleTaggingUtil
             String[] existingTagged = Directory.GetFiles(taggedFolder, "*.*");
             if(existingTagged.Length != 1)
             {
-                MessageBox.Show("Was expectin one file to convert - OSIS generation Failed");
+                MessageBox.Show("Was expecting one file to convert - OSIS generation Failed", "Error!",
+                    MessageBoxButtons.OK,MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 return;
             }
             bibleVplFile = existingTagged[0];

@@ -34,12 +34,70 @@ namespace BibleTaggingUtil.Versification
 
         private VersificationBase versification;
 
+        /// <summary>
+        /// key: book name from UBS
+        /// value: colour code
+        /// </summary>
+        private Dictionary<BookCategory, BookColourCode> bookCategoryCodes = new Dictionary<BookCategory, BookColourCode>();
+
         public VerseSelectionPanel()
         {
             InitializeComponent();
             this.ControlBox = false;
             SetVersification();
-       }
+            PopulateBookCategoryColours();
+            lbBookNames.DrawMode = DrawMode.OwnerDrawFixed;
+            lbBookNames.DrawItem += LbBookNames_DrawItem;   
+        }
+
+        private void PopulateBookCategoryColours()
+        {
+            bookCategoryCodes.Add(BookCategory.Law, new BookColourCode(Color.Indigo, Color.White));
+            bookCategoryCodes.Add(BookCategory.History, new BookColourCode(Color.Black, Color.LightGreen));
+            bookCategoryCodes.Add(BookCategory.Poetry, new BookColourCode(Color.Indigo, Color.Gold));
+            bookCategoryCodes.Add(BookCategory.MajorProphets, new BookColourCode(Color.Black, Color.White));
+            bookCategoryCodes.Add(BookCategory.MinorProphets, new BookColourCode(Color.Indigo, Color.LightBlue));
+            bookCategoryCodes.Add(BookCategory.Gospels, new BookColourCode(Color.Green, Color.Pink));
+            bookCategoryCodes.Add(BookCategory.HistoryNT, new BookColourCode(Color.Black, Color.White));
+            bookCategoryCodes.Add(BookCategory.PaulineEpistles, new BookColourCode(Color.Indigo, Color.LightBlue));
+            bookCategoryCodes.Add(BookCategory.GeneralEpistles, new BookColourCode(Color.Black, Color.White));
+            bookCategoryCodes.Add(BookCategory.Apocalypse, new BookColourCode(Color.Indigo, Color.LightSkyBlue));
+        }
+
+        private void LbBookNames_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            // Ensure there's an item to draw and the index is valid
+            if (e.Index < 0 || e.Index >= lbBookNames.Items.Count)
+                return;
+
+            // Get the item text
+            string bookName = lbBookNames.Items[e.Index].ToString();
+
+            // Determine the color based book category
+            BookCategory category = Constants.ubsNames[bookName];
+            Color textColor = bookCategoryCodes[category].Foreground;
+            Color backgroundColor = bookCategoryCodes[category].Background;
+
+            if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
+            {
+                // Item is selected
+                backgroundColor = Color.DarkBlue; // Custom background for selected item
+                textColor = Color.White; // Custom text color for selected item
+            }
+
+            // Draw the background
+            e.Graphics.FillRectangle(new SolidBrush(backgroundColor), e.Bounds);
+
+            // Draw the text
+            e.Graphics.DrawString(bookName, e.Font, new SolidBrush(textColor), e.Bounds, StringFormat.GenericDefault);
+
+            // If the item is selected, draw a focus rectangle
+            if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
+            {
+                e.DrawFocusRectangle();
+            }
+
+        }
 
         public void SetVersification()
         { 
@@ -65,11 +123,11 @@ namespace BibleTaggingUtil.Versification
 
             for (int i = 0; i < Constants.osisNames.Length; i++)
             {
-                bibleBooks.Add(Constants.ubsNames[i],
+                bibleBooks.Add(Constants.ubsNames.Keys.ToArray()[i],
                                     new BibleBook(Constants.fileNames[i],
                                                 Constants.osisAltNames[i],
                                                 Constants.osisAltNames2[i],
-                                                Constants.ubsNames[i],
+                                                Constants.ubsNames.Keys.ToArray()[i],
                                                 versification.LAST_VERSE[i]));
             }
         }
@@ -109,7 +167,7 @@ namespace BibleTaggingUtil.Versification
                 {
                     lbBookNames.Items.Clear();
                     string[] names = new string[27];
-                    Array.Copy(Constants.ubsNames, 39, names, 0, 27);
+                    Array.Copy(Constants.ubsNames.Keys.ToArray(), 39, names, 0, 27);
                     lbBookNames.Items.AddRange(names);
                     lbBookNames.SelectedIndex = 0;
                 }
@@ -117,14 +175,14 @@ namespace BibleTaggingUtil.Versification
                 {
                     lbBookNames.Items.Clear();
                     string[] names = new string[39];
-                    Array.Copy(Constants.ubsNames, names, 39);
+                    Array.Copy(Constants.ubsNames.Keys.ToArray(), names, 39);
                     lbBookNames.Items.AddRange(names);
                     lbBookNames.SelectedIndex = 0;
                 }
                 else
                 {
                     lbBookNames.Items.Clear();
-                    lbBookNames.Items.AddRange(Constants.ubsNames);
+                    lbBookNames.Items.AddRange(Constants.ubsNames.Keys.ToArray());
                     lbBookNames.SelectedIndex = 0;
                 }
             }
@@ -192,7 +250,7 @@ namespace BibleTaggingUtil.Versification
             //string verseRefAlt = string.Format("{0:s} {1:d}:{2:d}", bibleBooks[book].BookAltName, chapter, verse);
             //string verseRefAlt2 = string.Format("{0:s} {1:d}:{2:d}", bibleBooks[book].BookAltName2, chapter, verse);
             //string verseRefUBS = string.Format("{0:s} {1:d}:{2:d}", bibleBooks[book].BookUbsName, chapter, verse);
-            int bookIdx = Array.IndexOf(Constants.ubsNames, book);
+            int bookIdx = Array.IndexOf(Constants.ubsNames.Keys.ToArray(), book);
             if (this.VerseChanged != null)
             {
                 this.VerseChanged(this, new VerseChangedEventArgs(
@@ -354,10 +412,10 @@ namespace BibleTaggingUtil.Versification
                     }
                     else
                     {
-                        int currentBook = Array.IndexOf(Constants.ubsNames, book);
-                        if (currentBook < (Constants.ubsNames.Length - 1))
+                        int currentBook = Array.IndexOf(Constants.ubsNames.Keys.ToArray(), book);
+                        if (currentBook < (Constants.ubsNames.Keys.Count - 1))
                         {
-                            newBook = Constants.ubsNames[currentBook + 1];
+                            newBook = Constants.ubsNames.Keys.ToArray()[currentBook + 1];
                             newChapter = 1;
                             newVerse = 1;
                         }
@@ -415,7 +473,7 @@ namespace BibleTaggingUtil.Versification
             //else if (book == "Nah") book = "Nam";
 
 
-            int currentBook = Array.IndexOf(Constants.ubsNames, book);
+            int currentBook = Array.IndexOf(Constants.ubsNames.Keys.ToArray(), book);
             if (BookCount == 27 && currentBook >= 39)
             {
                 currentBook -= 39;
@@ -483,6 +541,15 @@ namespace BibleTaggingUtil.Versification
 
     }
 
-
+    public class BookColourCode
+    {
+        public BookColourCode(Color foreground, Color background)
+        {
+            this.Foreground = foreground;
+            this.Background = background;
+        }
+        public Color Foreground { get; }
+        public Color Background { get; }
+    }
 
 }

@@ -27,8 +27,8 @@ namespace BibleTaggingUtil
             if (Constants.osisNames.Contains(book, StringComparer.OrdinalIgnoreCase))
                 return Array.IndexOf(Constants.osisNames, book);
 
-            if (Constants.ubsNames.Contains(book, StringComparer.OrdinalIgnoreCase))
-                return Array.IndexOf(Constants.ubsNames, book);
+            if (Constants.ubsNames.Keys.Contains(book, StringComparer.OrdinalIgnoreCase))
+                return Array.IndexOf(Constants.ubsNames.Keys.ToArray(), book);
 
             if (Constants.osisAltNames.Contains(book, StringComparer.OrdinalIgnoreCase))
                 return Array.IndexOf(Constants.osisAltNames, book);

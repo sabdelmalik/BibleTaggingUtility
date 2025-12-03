@@ -15584,10 +15584,10 @@ Isa.36.12#17=L	עַל\־	'al-	on	{H5921A}\H9014	HR			H5921A_B			{H5921A=עַל=u
 Isa.36.12#18=L	הַ֣/חוֹמָ֔ה	ha./cho.Mah	the/ city wall	H9009/{H2346G}	HTd/Ncfsa			H2346G			H9009=ה=the/{H2346G=חוֹמָה=wall}					
 Isa.36.12#19=L	לֶ/אֱכֹ֣ל	le./'e.Khol	to/ eat	H9005/{H0398}	HR/Vqcc			H0398			H9005=ל=to/{H0398=אָכַל=to eat}					
 Isa.36.12#20=L	אֶת\־	'et-	<obj.>	{H0853}\H9014	HTo			H0853_B			{H0853=אֵת=[Obj.]}\H9014=־=link					
-Isa.36.12#21=Q(K)	צוֹאָתָ֗/ם	char.'ei./hem	own excrement/ their	{H6675}/H9028	HNcfsc/Sp3mp	K= char.'ei./hem (חַרְאֵי/הֶם) "own dung<s>/ their" (H2716/H9028=HNcbdc/Sp3mp)	L= חֹרָאי/הָ֗ם ¦ ;	H6675	H2716		{H6675=צֹאָה=filth}/H9028=Pp3m=their					
+Isa.36.12#21=Q(K)	חַרְאֵי/הֶם	char.'ei./hem	own dung<s>/ their	{H2716}/H9028	HNcbdc/Sp3mp	K= char.'ei./hem (חַרְאֵי/הֶם) "own dung<s>/ their" (H2716/H9028=HNcbdc/Sp3mp)	L= חֹרָאי/הָ֗ם ¦ ;	H2716	H6675		{H2716=חֲרָאִים=their dung}/H9028=Pp3m=their					
 Isa.36.12#22=L	וְ/לִ/שְׁתּ֛וֹת	ve./li/sh.Tot	and/ to/ drink	H9002/H9005/{H8354}	HC/R/Vqcc			H8354			H9002=ו=and/H9005=ל=to/{H8354=שָׁתָה=to drink}					
 Isa.36.12#23=L	אֶת\־	'et-	<obj.>	{H0853}\H9014	HTo			H0853_C			{H0853=אֵת=[Obj.]}\H9014=־=link					
-Isa.36.12#24=Q(K)	מֵימֵ֥י/ /רַגְלֵי/הֶ֖ם	mei.mei/ /rag.lei./hem	[the] water of/ /feet/ their	{H4325G}/ /{H7272}/H9028	HNcmpc//Ncfdc/Sp3mp	K= shei.nei./hem (שֵׁינֵי/הֶם) "own urine<s>/ their" (H7890/H9028=HNcbdc/Sp3mp)	L= שֵׁיֵ֥נַיְֵ/הֶ֖ם ¦ ;	H4325G, H7272	H7890		{H4325G=מַי=water}/ /{H7272=רֶ֫גֶל=foot}/H9028=Pp3m=their					
+Isa.36.12#24=Q(K)	שֵׁינֵי/הֶם	shei.nei./hem	own urine<s>/ their	{H7890}/H9028	HNcbdc/Sp3mp	K= shei.nei./hem (שֵׁינֵי/הֶם) "own urine<s>/ their" (H7890/H9028=HNcbdc/Sp3mp)	L= שֵׁיֵ֥נַיְֵ/הֶ֖ם ¦ ;	H7890, H7272	H4325G		{H7890=שַׁיִן=urine}/H9028=Pp3m=their					
 Isa.36.12#25=L	עִמָּ/כֶֽם\׃	'i.ma./Khem	with/ you	{H5973A}/H9036\H9016	HRd/Sp2mp			H5973A			{H5973A=עִם=with}/H9036=Op2m=you\H9016=׃=verseEnd					
 																
 # Isa.36.13	vai.ya.'a.Mod (וַֽיַּעֲמֹד֙)	rav- (רַב־)	sha.Keh (שָׁקֵ֔ה)	vai.yik.Ra' (וַיִּקְרָ֥א)	ve.kol- (בְקוֹל־)	ga.Dol (גָּד֖וֹל)	ye.hu.Dit (יְהוּדִ֑ית)	vai.Yo.mer (וַיֹּ֕אמֶר)	shim.'U (שִׁמְע֗וּ)	'et- (אֶת־)						
@@ -66558,7 +66558,7 @@ Jer.52.15#13=L	מֶ֣לֶךְ	Me.lekh	[the] king of	{H4428G}	HNcmsc			H4428G			{
 Jer.52.15#14=L	בָּבֶ֔ל	ba.Vel	Babylon	{H0894}	HNpl			H0894			{H0894=בָּבֶ֫ל, בָּבֶל=Babylon»Babylon@Gen.10.10-Rev}					
 Jer.52.15#15=L	וְ/אֵ֖ת	ve./'Et	and/ <obj.>	H9002/{H0853}	HC/To			H0853_C			H9002=ו=and/{H0853=אֵת=[Obj.]}					
 Jer.52.15#16=L	יֶ֣תֶר	Ye.ter	[the] rest of	{H3499A}	HNcmsc			H3499A_B			{H3499A=יֶ֫תֶר=remainder}					
-Jer.52.15#17=L	הָֽ/אָמ֑וֹן	ha./'a.Mon	the/ craftsman	H9009/{H0525}	HTd/Ncmsa			H0525	H0527		H9009=ה=the/{H0525=אָמוֹן=artisan}					
+Jer.52.15#17=L	הָֽ/אָמ֑וֹן	ha./'a.Mon	the/ multitude	H9009/{H0527}	HTd/Ncmsa			H0527	H0525		H9009=ה=the/{H0527=אָמוֹן=multitude}					
 Jer.52.15#18=L	הֶגְלָ֕ה	heg.Lah	he took into exile	{H1540K}	HVhp3ms			H1540K			{H1540K=גָּלָה=: remove»to reveal:2_remove;_exile}					
 Jer.52.15#19=L	נְבוּזַרְאֲדָ֖ן	ne.vu.zar.'a.Dan	Nebuzaradan	{H5018}	HNpm			H5018			{H5018=נְבוּזַרְאֲדָן=Nebuzaradan»Nebuzaradan@2Ki.25.8-Jer}					
 Jer.52.15#20=L	רַב\־	rav-	[the] chief of	{H7227B}\H9014	HNcmsc			H7227B			{H7227B=רַב=chief}\H9014=־=link					
@@ -84701,7 +84701,7 @@ Ezk.23.42#06=L	אֲנָשִׁים֙	'a.na.Shim	men	{H0582}	HNcmpa			H0582	H0376	
 Ezk.23.42#07=L	מֵ/רֹ֣ב	me./Ro	from/ [the] multitude of	H9006/{H7230}	HR/Ncmsc			H7230			H9006=מ=from/{H7230=רֹב=abundance}					
 Ezk.23.42#08=L	אָדָ֔ם	'a.Dam	humankind	{H0120G}	HNcmsa			H0120G			{H0120G=אָדָם=man}					
 Ezk.23.42#09=L	מוּבָאִ֥ים	mu.va.'Im	[were] brought	{H0935P}	HVHsmpa			H0935P			{H0935P=בּוֹא=: bring»to come (in):2_bring;_take_in}					
-Ezk.23.42#10=Q(K)	סָבָאִ֖ים	soa.'im	Sabeans	{H5436}	HNcmpa	K= soa.'im (סוֹבָאִים) "drunkards" (H5433B=HVqrmpa)	L= סָובָאִ֖ים ¦ ;	H5436	H5433B		{H5436=סְבָאִים=Sabean»Sheba@Gen.10.7-Jol}					
+Ezk.23.42#10=Q(K)	סוֹבָאִים	soa.'im	drunkards	{H5433B}	HVqrmpa	K= soa.'im (סוֹבָאִים) "drunkards" (H5433B=HVqrmpa)	L= סָובָאִ֖ים ¦ ;	H5433B	H5436		{H5433B=סָבָא=drunkard»Sheba@Gen.10.7-Jol}					
 Ezk.23.42#11=L	מִ/מִּדְבָּ֑ר	mi./mid.Bar	from/ [the] wilderness	H9006/{H4057B}	HR/Ncmsa			H4057B			H9006=מ=from/{H4057B=מִדְבָּר=wilderness}					
 Ezk.23.42#12=L	וַֽ/יִּתְּנ֤וּ	va/i.yi.te.Nu	and/ they put	H9001/{H5414H}	Hc/Vqw3mp			H5414H			H9001=ו=&/{H5414H=נָתַן=: put»to give:2_put;_set;_appoint}					
 Ezk.23.42#13=L	צְמִידִים֙	tze.mi.Dim	bracelets	{H6781A}	HNcmpa			H6781A			{H6781A=צָמִיד=bracelet}					
@@ -88830,7 +88830,7 @@ Ezk.30.16#12=L	יוֹמָֽם\׃	yo.Mam	daytime	{H3119}\H9016	HD			H3119			{H311
 																
 Eng (Heb) Ref & Type	Hebrew	Transliteration	Translation	dStrongs	Grammar	Meaning Variants	Spelling Variants	Root dStrong+Instance	Alternative Strongs+Instance	Conjoin word	Expanded Strong tags					
 Ezk.30.17#01=L	בַּח֥וּרֵי	ba.Chu.rei	[the] young men of	{H0970}	HNcmpc			H0970			{H0970=בָּחוּר=youth}					
-Ezk.30.17#02=L	אָ֛וֶן	'A.ven	On	{H0204}	HNpl			H0204	H0205, H0206		{H0204=אֹן=On»On@Gen.41.45-Ezk}					
+Ezk.30.17#02=L	אָ֛וֶן	'A.ven	On	{H0206}	HNpl			H0206	H0205, H0204		{H0206=אָ֫וֶן=On»On@Gen.41.45-Ezk}					
 Ezk.30.17#03=L	וּ/פִי\־	u./fi-	and/ Pi-	H9002/{H6364}+\H9014	HC/Npl			H6364_A			H9002=ו=and/{H6364=פִּי־בֶ֫סֶת=Pi-beseth»Pi-beseth@Ezk.30.17}+\H9014=־=link					
 Ezk.30.17#04=L	בֶ֖סֶת	Ve.set	beseth	{H6364}	HNpl			H6364_b			{H6364=פִּי־בֶ֫סֶת=Pi-beseth»Pi-beseth@Ezk.30.17}					
 Ezk.30.17#05=L	בַּ/חֶ֣רֶב	ba./Che.rev	by the/ sword	H9003/{H2719}	HRd/Ncfsa			H2719			H9003=ב=in/{H2719=חֶ֫רֶב=sword}					
@@ -120282,7 +120282,7 @@ Eng (Heb) Ref & Type	Hebrew	Transliteration	Translation	dStrongs	Grammar	Meaning
 Amo.5.26#01=L	וּ/נְשָׂאתֶ֗ם	u./ne.sa.Tem	and/ you will lift up	H9001/{H5375G}	Hc/Vqq2mp			H5375G			H9001=ו=&/{H5375G=נָשָׂא=: raise»to lift:1_raise;_take_up}					
 Amo.5.26#02=L	אֵ֚ת	'et	<obj.>	{H0853}	HTo			H0853_A			{H0853=אֵת=[Obj.]}					
 Amo.5.26#03=L	סִכּ֣וּת	si.Kut	Sikkuth	{H5522}	HNpm			H5522			{H5522=סִכּוּת=Sikkuth»Sikkuth@Amo.5.26}					
-Amo.5.26#04=L	מַלְכְּ/כֶ֔ם	mal.ke./Khem	king/ your	{H4428G}/H9026	HNcmsc/Sp2mp			H4428G	H4432		{H4428G=מֶ֫לֶךְ=king}/H9026=Pp2m=your					
+Amo.5.26#04=L	מַלְכְּ/כֶ֔ם	mal.ke./Khem	Molech/ your	{H4432}/H9026	HNpt/Sp2mp			H4432	H4428G		{H4432=מֹ֫לֶךְ=Molech}/H9026=Pp2m=your					
 Amo.5.26#05=L	וְ/אֵ֖ת	ve./'Et	and/ <obj.>	H9002/{H0853}	HC/To			H0853_B			H9002=ו=and/{H0853=אֵת=[Obj.]}					
 Amo.5.26#06=L	כִּיּ֣וּן	ki.Yun	Kiyyun	{H3594}	HNpt			H3594			{H3594=כִּיּוּן=Kiyyun»Kiyyun@Amo.5.26}					
 Amo.5.26#07=L	צַלְמֵי/כֶ֑ם	tzal.mei./Khem	images/ your	{H6754}/H9026	HNcmpc/Sp2mp			H6754			{H6754=צֶ֫לֶם=image}/H9026=Pp2m=your					
@@ -128348,7 +128348,7 @@ Zep.1.5#08=L	הַ/מִּֽשְׁתַּחֲוִים֙	ha./mish.ta.cha.Vim	those/ 
 Zep.1.5#09=L	הַ/נִּשְׁבָּעִ֣ים	ha./nish.ba.'Im	those/ [who] swear an oath	H9009/{H7650}	HTd/VNrmpa			H7650_A			H9009=ה=the/{H7650=שָׁבַע=to swear}					
 Zep.1.5#10=L	לַֽ/יהוָ֔ה	la./Yah.weh	to/ Yahweh	H9005/{H3068G}	HR/Npt			H3068G			H9005=ל=to/{H3068G=יהוה=LORD»LORD@Gen.1.1-Heb}					
 Zep.1.5#11=L	וְ/הַ/נִּשְׁבָּעִ֖ים	ve./ha./nish.ba.'Im	and/ those/ [who] swear an oath	H9002/H9009/{H7650}	HC/Td/VNrmpa			H7650_B			H9002=ו=and/H9009=ה=the/{H7650=שָׁבַע=to swear}					
-Zep.1.5#12=L	בְּ/מַלְכָּֽם\׃	be./mal.Kam	by/ Milcom	H9003/{H4428K}\H9016	HR/Npt			H4428K	H4445B		H9003=ב=in/{H4428K=מֶ֫לֶךְ=Milcom»Molech@Lev.18.21-Act}\H9016=׃=verseEnd					
+Zep.1.5#12=L	בְּ/מַלְכָּֽם\׃	be./mal.Kam	by/ Milcom	H9003/{H4445B}\H9016	HR/Npt			H4445B	H4428K		H9003=ב=in/{H4445B=מִלכֹּם=Milcom»Molech@Lev.18.21-Act}\H9016=׃=verseEnd					
 																
 # Zep.1.6	ve.'Et (וְאֶת־)	ha.ne.so.Gim (הַנְּסוֹגִ֖ים)	me.'a.cha.Rei (מֵאַחֲרֵ֣י)	Yah.weh (יְהוָ֑ה)	va.'a.Sher (וַאֲשֶׁ֛ר)	lo'- (לֹֽא־)	vik.Shu (בִקְשׁ֥וּ)	'et- (אֶת־)	Yah.weh (יְהוָ֖ה)	ve.Lo' (וְלֹ֥א)						
 #_Translation	and/ <obj.>	those/ [who] have turned back	from/ after	Yahweh	and/ [those] who	not	they have sought	<obj.>	Yahweh	and/ not						

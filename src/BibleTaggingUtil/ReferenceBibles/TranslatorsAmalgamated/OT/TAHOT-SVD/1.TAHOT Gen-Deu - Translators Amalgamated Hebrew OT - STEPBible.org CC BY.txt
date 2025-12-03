@@ -5640,7 +5640,7 @@ Gen.10.4#02=L	יָוָ֖ן	ya.Van	Javan	{H3120G}	HNpm			H3120G			{H3120G=יָו�
 Gen.10.4#03=L	אֱלִישָׁ֣ה	'e.li.Shah	[were] Elishah	{H0473G}	HNpm			H0473G			{H0473G=אֱלִישָׁה=Elishah»Elishah@Gen.10.4-1Ch}					
 Gen.10.4#04=L	וְ/תַרְשִׁ֑ישׁ	ve./tar.Shish	and/ Tarshish	H9002/{H8659G}	HC/Npm			H8659G			H9002=ו=and/{H8659G=תַּרְשִׁישׁ=Tarshish»Tarshish@Gen.10.4-1Ch}					
 Gen.10.4#05=L	כִּתִּ֖ים	ki.Tim	Kittim	{H3794G}	HNpl			H3794G			{H3794G=כִּתִּי=Kittim»Kittim@Gen.10.4-1Ch}					
-Gen.10.4#06=L	וְ/דֹדָנִֽים\׃	ve./do.da.Nim	and/ Dodanim	H9002/{H1721}\H9016	HC/Npm			H1721			H9002=ו=and/{H1721=רוֹדָנִים=Dodanim»Dodanim@Gen.10.4-1Ch}\H9016=׃=verseEnd					
+Gen.10.4#06=L	וְ/דֹדָנִֽים\׃	ve./do.da.Nim	and/ Dodanim	H9002/{H1721}\H9016	HC/Npm			H1721			H9002=ו=and/{H1721=דֹדָנִֽים=Dodanim»Dodanim@Gen.10.4-1Ch}\H9016=׃=verseEnd					
 																
 # Gen.10.5	Me.'e.leh (מֵ֠אֵלֶּה)	nif.re.Du (נִפְרְד֞וּ)	'i.Yei (אִיֵּ֤י)	ha.go.Yim (הַגּוֹיִם֙)	be.'ar.tzo.Tam (בְּאַרְצֹתָ֔ם)	'ish (אִ֖ישׁ)	lil.sho.No (לִלְשֹׁנ֑וֹ)	le.mish.pe.cho.Tam (לְמִשְׁפְּחֹתָ֖ם)	be.go.ye.Hem (בְּגוֹיֵהֶֽם׃)							
 #_Translation	from/ these	they separated	[the] coastlands of	the/ nations	in/ own lands/ their	each	to/ own language/ its	to/ clans/ their	in/ nations/ their							
@@ -37893,7 +37893,7 @@ Exo.3.20#02=L	אֶת\־	'et-	<obj.>	{H0853}\H9014	HTo			H0853_A			{H0853=אֵת=
 Exo.3.20#03=L	יָדִ/י֙	ya.D/i	hand/ my	{H3027G}/H9020	HNcbsc/Sp1bs			H3027G			{H3027G=יָד=: hand»hand:1_hand;_arm[anatomy]}/H9020=Ps1c=my					
 Exo.3.20#04=L	וְ/הִכֵּיתִ֣י	ve./hi.kei.Ti	and/ I will strike	H9001/{H5221}	Hc/Vhq1cs			H5221			H9001=ו=&/{H5221=נָכָה=to smite}					
 Exo.3.20#05=L	אֶת\־	'et-	<obj.>	{H0853}\H9014	HTo			H0853_B			{H0853=אֵת=[Obj.]}\H9014=־=link					
-Exo.3.20#06=L	מִצְרַ֔יִם	mitz.Ra.yim	Egypt	{H4713}	HNpl			H4713	H4714G		{H4713=מִצְרִי=Egyptian»Egypt@Gen.12.10-Rev}					
+Exo.3.20#06=L	מִצְרַ֔יִם	mitz.Ra.yim	Egypt	{H4714G}	HNpl			H4714G	H4713		{H4714G=מִצְרַ֫יִם=Egypt»Egypt@Gen.12.10-Rev}					
 Exo.3.20#07=L	בְּ/כֹל֙	be./Khol	with/ all	H9003/{H3605}	HR/Ncmsc			H3605			H9003=ב=in/{H3605=כֹּל=all}					
 Exo.3.20#08=L	נִפְלְאֹתַ֔/י	nif.le.'o.Ta/i	wonders/ my	{H6381}/H9020	HVNrfpc/Sp1bs			H6381			{H6381=פָּלָא=to wonder}/H9020=Ps1c=my					
 Exo.3.20#09=L	אֲשֶׁ֥ר	'a.Sher	which	{H0834A}	HTr			H0834A			{H0834A=אֲשֶׁר=which}					
@@ -123177,7 +123177,7 @@ Eng (Heb) Ref & Type	Hebrew	Transliteration	Translation	dStrongs	Grammar	Meaning
 Deu.10.6#01=L	וּ/בְנֵ֣י	u./ve.Nei	and/ [the] people of	H9002/{H1121G}	HC/Ncmpc			H1121G_A			H9002=ו=and/{H1121G=בֵּן=: descendant»son:2_descendant;_people}					
 Deu.10.6#02=L	יִשְׂרָאֵ֗ל	Yis.ra.'El	Israel	{H3478}	HNpl			H3478			{H3478=יִשְׂרָאֵל=Israel»Israel@Gen.25.26-Rev}					
 Deu.10.6#03=L	נָֽסְע֛וּ	na.se.'U	they set out	{H5265}	HVqp3cp			H5265			{H5265=נָסַע=to set out}					
-Deu.10.6#04=L	מִ/בְּאֵרֹ֥ת	mi./be.'e.Rot	from/ Beeroth	H9006/{H0881H}	HR/Npl			H0881H	H0885+		H9006=מ=from/{H0881H=בְּאֵרוֹת=Beeroth»Bene-jaakan@Num.33.31-Deu}					
+Deu.10.6#04=L	מִ/בְּאֵרֹ֥ת	mi./be.'e.Rot	from/ Beeroth	H9006/{H0885}	HR/Npl			H0885	H0881H+		H9006=מ=from/{H0885H=בְּאֵרוֹת=Beeroth»Bene-jaakan@Num.33.31-Deu}					
 Deu.10.6#05=L	בְּנֵי\־	be.nei-	Bene-	{H1142H}+\H9014	HNpl			H1142H_a	H0885+		{H1142H=בְּנֵי יַעֲקָ֑ן=Bene-jaakan»Bene-jaakan@Num.33.31-Deu}+\H9014=־=link					
 Deu.10.6#06=L	יַעֲקָ֖ן	ya.'a.Kan	Yaaqan	{H1142H}	HNpl			H1142H_b	H0885		{H1142H=בְּנֵי יַעֲקָ֑ן=Bene-jaakan»Bene-jaakan@Num.33.31-Deu}					
 Deu.10.6#07=L	מוֹסֵרָ֑ה	mo.se.Rah	Moserah	{H4149A}	HNpl			H4149A			{H4149A=מוֹסֵרָה=Moserah»Moserah@Deu.10.6}					

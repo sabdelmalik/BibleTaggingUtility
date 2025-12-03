@@ -387,6 +387,24 @@ namespace BibleTaggingUtil.Editor
                 }
               
                 oldTestament = (verse[0].Testament == BibleTestament.OT);
+
+                // key: strongs number, value: occurance count
+                var counts = new Dictionary<string, int>();
+                var strongsMultiOccurances = new List<(string Strongs, int Occurrence)>();
+                for (int i = 0; i < verse.Count; i++)
+                {
+                    StrongsCluster sc = verse[i].Strong;
+                    foreach (StrongsNumber sn in sc.Strongs)
+                    {
+                        if (!counts.ContainsKey(sn.ToString()))
+                            counts[sn.ToString()] = 0;
+
+                        counts[sn.ToString()]++;
+                        strongsMultiOccurances.Add((sn.ToString(), counts[sn.ToString()]));
+                    }
+                }
+
+                int strongsIndex = 0;
                 for (int i = 0; i < verse.Count; i++)
                 {
                     verseWords[i] = verse[i].Word;
@@ -399,20 +417,13 @@ namespace BibleTaggingUtil.Editor
                         List<VerseWord> aw = new List<VerseWord>();
                         foreach(StrongsNumber s in strongs.Strongs)
                         {
-                            aw.Add(verse.AncientVerse.GetWordFromStrong(s.ToStringD()));
+                            aw.Add(verse.AncientVerse.GetWordFromStrong(s.ToString(), strongsMultiOccurances[strongsIndex].Occurrence));
+                            strongsIndex++;
                         }
                         //VerseWord aw = verse.AncientVerse.GetWordFromStrong(verseTags[i]);
                         ancientWords[i] = new GridAncientWord( aw, oldTestament, verse.AncientVerse);
                         ancientMeanings[i] = new GridAncientMeaning( aw, oldTestament, verse.AncientVerse);
                     }
-                    /*                    for (int j = 0; j < verse[i].Strong.Count; j++)
-                                                //verseTags[i] += "<" + verse[i].Strong[j] + "> ";
-                                                verseTags[i] += verse[i].Strong[j];
-                                            if (verseTags[i] == null)
-                                                verseTags[i] = string.Empty;
-                                            else
-                                                verseTags[i] = verseTags[i].Trim();
-                        */
                 }
 
                 int col = -1;
@@ -428,17 +439,25 @@ namespace BibleTaggingUtil.Editor
                 }
 
                 string[] wordNumber = new string[verseWords.Length];
+                Verse[] ancientVerse = new Verse[verseWords.Length];
                 for (int i = 0; i < verseWords.Length; i++)
-                    wordNumber[i] = (i+1).ToString();
+                {
+                    wordNumber[i] = (i + 1).ToString();
+                    ancientVerse[i] = verse.AncientVerse;
+                }
 
                 this.ColumnCount = verseWords.Length;
                 this.Rows.Add(verseWords);
                 
+                this.Rows.Add(ancientVerse);
+                Rows[1].Visible = false;
+                
+                if(Properties.TargetBibles.Default.ShowAncientMeaning && ancientMeanings is not null)
+                    this.Rows.Add(ancientMeanings);
+               
                 if(Properties.TargetBibles.Default.ShowAncientWord && ancientWords is not null)
                     this.Rows.Add(ancientWords);
 
-                if(Properties.TargetBibles.Default.ShowAncientMeaning && ancientMeanings is not null)
-                    this.Rows.Add(ancientMeanings);
 
                 this.Rows.Add(wordNumber);
 
@@ -540,6 +559,7 @@ namespace BibleTaggingUtil.Editor
             }
         }
 
+        
 
         /// <summary>
         /// 
@@ -561,11 +581,12 @@ namespace BibleTaggingUtil.Editor
                     StrongsCluster tag = ((StrongsCluster)this[i, Rows.Count - 1].Value);
  
                     verse[i] = new VerseWord((string)this[i, 0].Value, tag, reference);
-                    if((Properties.TargetBibles.Default.ShowAncientWord ||
+                    if ((Properties.TargetBibles.Default.ShowAncientWord ||
                         Properties.TargetBibles.Default.ShowAncientMeaning) &&
                         this.Rows.Count > 3)
-                    {
-                        verse.AncientVerse = ((GridAncientWord)(this[i, 1].Value)).AncientVerse;
+                     {
+                        if (this[i, 1].Value is not null)
+                            verse.AncientVerse = (Verse)(this[i, 1].Value);
                     }
                     if (osis)
                     {
