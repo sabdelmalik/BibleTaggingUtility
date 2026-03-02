@@ -376,6 +376,7 @@ namespace BibleTaggingUtil.Editor
 
                 string[] verseWords = new string[verse.Count];
                 string[] verseTags = new string[verse.Count];
+                string[] verseMorphs = new string[verse.Count];
                 StrongsCluster[] strongsClusters = new StrongsCluster[verse.Count];
 
                 GridAncientWord[] ancientWords = null;
@@ -409,6 +410,7 @@ namespace BibleTaggingUtil.Editor
                 {
                     verseWords[i] = verse[i].Word;
                     verseTags[i] = verse[i].Strong.ToString();
+                    verseMorphs[i] = verse[i].Strong.ToStringMorphs();
                     StrongsCluster strongs = verse[i].Strong;
                     strongsClusters[i] = verse[i].Strong;
 
@@ -452,12 +454,15 @@ namespace BibleTaggingUtil.Editor
                 this.Rows.Add(ancientVerse);
                 Rows[1].Visible = false;
                 
-                if(Properties.TargetBibles.Default.ShowAncientMeaning && ancientMeanings is not null)
+                if(Properties.TargetBibles.Default.ShowAncientMeaning && ancientMeanings is not null && ancientMeanings.Length != 0)
                     this.Rows.Add(ancientMeanings);
                
-                if(Properties.TargetBibles.Default.ShowAncientWord && ancientWords is not null)
+                if(Properties.TargetBibles.Default.ShowAncientWord && ancientWords is not null && ancientWords.Length != 0)
                     this.Rows.Add(ancientWords);
 
+
+                if(Properties.TargetBibles.Default.ShowAncientMorphology && verseMorphs is not null && verseMorphs.Length != 0)
+                    this.Rows.Add(verseMorphs);
 
                 this.Rows.Add(wordNumber);
 

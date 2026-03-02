@@ -50,7 +50,7 @@ namespace BibleTaggingUtil
                 if (includeTags)
                 {
                     verse += " " + words[i].Strong.ToStringBracketed();
- /*                   for (int j = 0; j < words[i].Strong.Count; j++)
+ /*                 for (int j = 0; j < words[i].Strong.Count; j++)
                     {
                         verse += (" <" + words[i].Strong[j].ToString()) + ">";
                     }

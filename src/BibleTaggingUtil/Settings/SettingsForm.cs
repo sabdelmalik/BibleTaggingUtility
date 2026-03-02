@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
+using Properties = BibleTaggingUtil.Properties;
 
 namespace BibleTaggingUtil.Settings
 {

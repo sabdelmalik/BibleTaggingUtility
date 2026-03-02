@@ -300,7 +300,10 @@ namespace BibleTaggingUtil.BibleVersions
 
         protected virtual void ParseLine(string line)
         {
-
+            if (line.StartsWith("Phi 1:1"))
+            {
+                   int x = 0;
+            }
             Match mTx = Regex.Match(line, @"^([0-9A-Za-z]+)\s([0-9]+):([0-9]+)\s*(.*)");
 
             string book = string.Empty;
@@ -332,6 +335,58 @@ namespace BibleTaggingUtil.BibleVersions
 
             BibleTestament testament = Utils.GetTestament(reference);
 
+                Verse verseWords = new Verse();
+            try
+                {
+                // better implemetation is to use regex to split verse into words and tags, but this should work for most cases. We can always improve it later if we find some edge cases that are not handled by this implementation.
+                string pattern = @"([^<>]+)[ \t]((<[A-Za-z_0-9=\-#]*>[ \t]*)+)";
+                MatchCollection matches = Regex.Matches(verse, pattern);
+                int index = 0;
+                foreach (Match match in matches) {
+                    if (match.Success)
+                    {
+                        string word = match.Groups[1].Value;
+                        string strongsTag = match.Groups[2].Value;
+                        List<string> strongs = new List<string>();
+                        List<string> morph = new List<string>();
+                        // do we have morphology? i.e. do we have = in the strongs?
+                        if (strongsTag.Contains('='))
+                        {
+                            // The target Bible already has morphology in the strongs tags.
+                            // We need to preseve the morphology bysetting SaveMorphology to true
+                            Properties.TargetBibles.Default.SaveMorphology = true; 
+
+                            var ms = Regex.Matches(strongsTag, @"<([GHa-zA-Z0-9_#]+)=([A-Za-z0-9\-]+)>");
+                            foreach (Match m in ms)
+                            {
+                                strongs.Add(m.Groups[1].Value.Trim());
+                                if (m.Groups.Count > 1)
+                                    morph.Add(m.Groups[2].Value.Trim());
+                            }
+                        }
+                        else
+                        {
+                            var ms = Regex.Matches(strongsTag, @"<([GHa-zA-Z0-9_]+)>");
+                            foreach (Match m in ms)
+                            {
+                                strongs.Add(m.Groups[1].Value.Trim());
+                            }
+                        }
+
+                        VerseWord verseWord = new VerseWord(word, new StrongsCluster(strongs, morph), reference);
+                        verseWords[index++] = verseWord;
+                        //taggedEntries.Add(new TaggedEntry(word, lemma, morph));
+                    }
+                }
+            }
+            catch(Exception ex) 
+            {
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
+            }
+
+
             string[] verseParts = verse.Split(' ');
             List<string> words = new List<string>();
             List<string> tags= new List<string>();
@@ -339,13 +394,12 @@ namespace BibleTaggingUtil.BibleVersions
             string tmpTag = string.Empty;
             for (int i = 0; i < verseParts.Length; i++)
             {
+
+
                 string versePart = verseParts[i].Trim();
                 if (string.IsNullOrEmpty(versePart))
                     continue; // some extra space
-                if(versePart.Contains("infants"))
-                {
-                    int x = 0;
-                }
+
                 if (i == 0 || versePart[0] != '<' ) // add i == 0 test because a verse can not start with a tag.
                 {
                     // this is a word
@@ -442,13 +496,13 @@ namespace BibleTaggingUtil.BibleVersions
             for (int i = 0; i < vTags.Length; i++)
                 vTags[i] = vTags[i].Replace("<", "").Replace(">", "");
 
-            Verse verseWords = new Verse();
+           // Verse verseWords = new Verse();
  
-            for (int i = 0; i < vWords.Length; i++)
-            {
-                string[] splitTags = vTags[i].Split(' ');
-                verseWords[i] = new VerseWord(vWords[i], new StrongsCluster(splitTags), reference);
-            }
+            //for (int i = 0; i < vWords.Length; i++)
+            //{
+            //    string[] splitTags = vTags[i].Split(' ');
+            //    verseWords[i] = new VerseWord(vWords[i], new StrongsCluster(splitTags), reference);
+            //}
 
             if (book.StartsWith("Ps") && verseNo.Trim() == "1")
                 verseWords.HasPsalmTitle = hasPsalmTitle;

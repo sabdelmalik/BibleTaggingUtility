@@ -531,5 +531,82 @@ namespace BibleTaggingUtil.Editor
                 }
             }
         }
+
+        /// <summary>
+        /// Highlights strongs numbers overused by dgvTarget tags row
+        /// </summary>
+        /// <param name="dgvTarget"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        internal void HighlightOverusedStrongs(TargetGridView dgvTarget)
+        {
+            if (this.Rows.Count == 0 || dgvTarget.Rows.Count == 0)
+                return;
+            int tagsRowIndex = this.Rows.Count - 1;
+            int targetTagsRowIndex = dgvTarget.Rows.Count - 1;
+
+            // In this grid, a strongs number may be used multiple times
+            // we want to ensure the number of times a strongs number is used in dgvTarget does not exceed the number of times it appears in this grid
+            // if it does, we highlight the excess usage in this and dgvTarget
+
+            // Count the occurrences of each strongs number in this grid
+            Dictionary<string, int> tagCounts = new Dictionary<string, int>();
+            for (int i = 1; i < this.ColumnCount; i++)
+            {
+                StrongsCluster tag = (StrongsCluster)this.Rows[tagsRowIndex].Cells[i].Value;
+                if (!tag.IsTagLable)
+                {
+                    string tagStr = tag.ToStringS();
+                    if (!tagCounts.ContainsKey(tagStr))
+                        tagCounts.Add(tagStr, 0);
+                    tagCounts[tagStr]++;
+                }
+            }
+            // Count the occurrences of each strongs number in dgvTarget
+            Dictionary<string, List<int>> targetTagCounts = new Dictionary<string, List<int>>();
+            for (int j = 0; j < dgvTarget.ColumnCount; j++)
+            {
+                StrongsCluster targetTag = (StrongsCluster)dgvTarget.Rows[targetTagsRowIndex].Cells[j].Value;
+                if (!targetTag.IsTagLable)
+                {
+                    string tagStr = targetTag.ToStringS();
+                    if (!targetTagCounts.ContainsKey(tagStr))
+                        targetTagCounts.Add(tagStr, new List<int>());
+                    targetTagCounts[tagStr].Add(j);
+                }
+            }
+            // Highlight excess usage
+            foreach (var kvp in targetTagCounts)
+            {
+                string tagStr = kvp.Key;
+                if (string.IsNullOrEmpty(tagStr))
+                    continue;
+                List<int> targetColumns = kvp.Value;
+                int countInThis = tagCounts.ContainsKey(tagStr) ? tagCounts[tagStr] : 0;
+                if (targetColumns.Count > countInThis)
+                {
+                    // Highlight excess usage in dgvTarget
+                    for (int i = 0 /*countInThis*/; i < targetColumns.Count; i++)
+                    {
+                        int colIndex = targetColumns[i];
+                        dgvTarget.Rows[targetTagsRowIndex].Cells[colIndex].Style.BackColor = Color.LightSalmon;
+                    }
+                    // Highlight excess usage in this grid
+                    int excessCount = targetColumns.Count - countInThis;
+                    for (int i = 1; i < this.ColumnCount && excessCount > 0; i++)
+                    {
+                        StrongsCluster tag = (StrongsCluster)this.Rows[tagsRowIndex].Cells[i].Value;
+                        if (tag.ToStringS() == tagStr && !tag.IsTagLable)
+                        {
+                            this.Rows[tagsRowIndex].Cells[i].Style.BackColor = Color.LightSalmon;
+                            //excessCount--;
+                        }
+                    }
+                }
+            }
+
+
+
+
+        }
     }
 }

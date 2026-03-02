@@ -26,6 +26,26 @@ namespace BibleTaggingUtil.Strongs
             }
         }
 
+        public StrongsCluster(List<string> strongsNums, List<string> morph)
+        {
+            strongs = new List<StrongsNumber>();
+            if (morph.Count == strongsNums.Count)
+            {
+                for (int i = 0; i < strongsNums.Count; i++)
+                {
+                    strongs.Add(new StrongsNumber(strongsNums[i], morph[i]));
+                }
+            }
+            else
+            {
+                for (int i = 0; i < strongsNums.Count; i++)
+                {
+                    strongs.Add(new StrongsNumber(strongsNums[i]));
+                }
+
+            }
+        }
+
         public StrongsCluster(string[] strongsNums)
         {
             strongs = new List<StrongsNumber>();
@@ -150,9 +170,18 @@ namespace BibleTaggingUtil.Strongs
         {
             string result = string.Empty;
 
-            foreach (StrongsNumber num in strongs)
+            if (strongs.Count == 0)
+                result = "<>";
+            else
+            for (int i=0;  i < strongs.Count; i++)
             {
-                result += ("<" + num.ToString() + "> ");
+                StrongsNumber num = strongs[i];
+                if (Properties.TargetBibles.Default.SaveMorphology && !string.IsNullOrEmpty(num.Morph))
+                {
+                    result += $"<{num.ToString()}={num.Morph}> ";
+                }
+                else
+                    result += $"<{num.ToString()}> ";
             }
 
             return result.Trim();
@@ -198,6 +227,19 @@ namespace BibleTaggingUtil.Strongs
 
             return result.Trim();
         }
+
+        public string ToStringMorphs()
+        {
+            string result = string.Empty;
+
+            foreach (StrongsNumber num in strongs)
+            {
+                result += num.Morph + " ";
+            }
+
+            return result.Trim();
+        }
+
         #region IEnumerable
 
         private class StrongsEnumerator : IEnumerator

@@ -32,6 +32,13 @@ namespace BibleTaggingUtil.Strongs
 
         private string occurance;
 
+        public string Morph { get; set; }
+
+        public StrongsNumber(string st, string morph) : this(st)
+        {
+            Morph = morph;
+        }
+
         public StrongsNumber(string st) 
         {
             Prefix = string.Empty;

@@ -96,6 +96,9 @@ namespace BibleTaggingUtil.Editor
                         this.Columns[i].DisplayIndex = i;
                 }
 
+                if (Properties.ReferenceBibles.Default.TopRightToLeft)
+                    this.Rows[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
 
                 this.ClearSelection();
 

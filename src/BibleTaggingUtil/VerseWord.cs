@@ -30,9 +30,22 @@ namespace BibleTaggingUtil
             this.Word = english;
             this.Strong = strong;
             this.dStrong = dStrong;
-            this.Transliteration = transliteration;
-            Morphology = morphology;
             RootStrong = rootStrong;
+            Morphology = morphology;
+            if (this.Testament == BibleTestament.NT)
+            {
+                if (Strong.Strongs.Count == 1)
+                {
+                    Strong.Strongs[0].Morph = morphology;
+                }
+                if (dStrong.Strongs.Count == 1)
+                {
+                    dStrong.Strongs[0].Morph = morphology;
+                }
+            }
+
+
+            this.Transliteration = transliteration;
             WordType = wordType;
             AltVerseNumber = altVerseNumber;
             WordNumber = wordNumber;
@@ -113,6 +126,8 @@ namespace BibleTaggingUtil
             this.Word = word;
             this.Strong = strong;
         }
+
+
 
         /// <summary>
         /// 

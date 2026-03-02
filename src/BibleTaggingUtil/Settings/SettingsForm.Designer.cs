@@ -38,6 +38,8 @@ namespace BibleTaggingUtil.Settings
             nudSavePeriod = new System.Windows.Forms.NumericUpDown();
             tabControl1 = new System.Windows.Forms.TabControl();
             targetBible = new System.Windows.Forms.TabPage();
+            checkBoxSaveMorphology = new System.Windows.Forms.CheckBox();
+            checkBoxAncientMorph = new System.Windows.Forms.CheckBox();
             groupBox4 = new System.Windows.Forms.GroupBox();
             checkBoxAncientLex = new System.Windows.Forms.CheckBox();
             checkBoxAncientMeaning = new System.Windows.Forms.CheckBox();
@@ -53,6 +55,7 @@ namespace BibleTaggingUtil.Settings
             referenceBibles = new System.Windows.Forms.TabPage();
             groupBox3 = new System.Windows.Forms.GroupBox();
             cbMainNT = new System.Windows.Forms.ComboBox();
+            checkbNdStrong = new System.Windows.Forms.CheckBox();
             checkbNtRefSkip = new System.Windows.Forms.CheckBox();
             groupBox2 = new System.Windows.Forms.GroupBox();
             cbMainOT = new System.Windows.Forms.ComboBox();
@@ -93,7 +96,6 @@ namespace BibleTaggingUtil.Settings
             translationTagsFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
             ttRefBibleSkip = new System.Windows.Forms.ToolTip(components);
             targetBiblesFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
-            checkbNdStrong = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)nudSavePeriod).BeginInit();
             tabControl1.SuspendLayout();
             targetBible.SuspendLayout();
@@ -200,6 +202,8 @@ namespace BibleTaggingUtil.Settings
             // 
             // targetBible
             // 
+            targetBible.Controls.Add(checkBoxSaveMorphology);
+            targetBible.Controls.Add(checkBoxAncientMorph);
             targetBible.Controls.Add(groupBox4);
             targetBible.Controls.Add(cbVersification);
             targetBible.Controls.Add(label15);
@@ -217,6 +221,30 @@ namespace BibleTaggingUtil.Settings
             targetBible.TabIndex = 4;
             targetBible.Text = "Target Bible";
             targetBible.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxSaveMorphology
+            // 
+            checkBoxSaveMorphology.AutoSize = true;
+            checkBoxSaveMorphology.Location = new System.Drawing.Point(449, 401);
+            checkBoxSaveMorphology.Margin = new System.Windows.Forms.Padding(4);
+            checkBoxSaveMorphology.Name = "checkBoxSaveMorphology";
+            checkBoxSaveMorphology.Size = new System.Drawing.Size(180, 29);
+            checkBoxSaveMorphology.TabIndex = 13;
+            checkBoxSaveMorphology.Text = "Save Morphology";
+            checkBoxSaveMorphology.UseVisualStyleBackColor = true;
+            checkBoxSaveMorphology.CheckedChanged += checkBoxSaveMorphology_CheckedChanged;
+            // 
+            // checkBoxAncientMorph
+            // 
+            checkBoxAncientMorph.AutoSize = true;
+            checkBoxAncientMorph.Location = new System.Drawing.Point(217, 401);
+            checkBoxAncientMorph.Margin = new System.Windows.Forms.Padding(4);
+            checkBoxAncientMorph.Name = "checkBoxAncientMorph";
+            checkBoxAncientMorph.Size = new System.Drawing.Size(187, 29);
+            checkBoxAncientMorph.TabIndex = 13;
+            checkBoxAncientMorph.Text = "Show Morphology";
+            checkBoxAncientMorph.UseVisualStyleBackColor = true;
+            checkBoxAncientMorph.CheckedChanged += checkBoxAncientMorph_CheckedChanged;
             // 
             // groupBox4
             // 
@@ -386,6 +414,18 @@ namespace BibleTaggingUtil.Settings
             cbMainNT.Size = new System.Drawing.Size(339, 33);
             cbMainNT.TabIndex = 1;
             cbMainNT.SelectedIndexChanged += cbMainNT_SelectedIndexChanged;
+            // 
+            // checkbNdStrong
+            // 
+            checkbNdStrong.AutoSize = true;
+            checkbNdStrong.Location = new System.Drawing.Point(232, 95);
+            checkbNdStrong.Margin = new System.Windows.Forms.Padding(4);
+            checkbNdStrong.Name = "checkbNdStrong";
+            checkbNdStrong.Size = new System.Drawing.Size(144, 29);
+            checkbNdStrong.TabIndex = 2;
+            checkbNdStrong.Text = "Use dStrongs";
+            checkbNdStrong.UseVisualStyleBackColor = true;
+            checkbNdStrong.CheckedChanged += CheckbNdStrongs_CheckedChanged;
             // 
             // checkbNtRefSkip
             // 
@@ -811,18 +851,6 @@ namespace BibleTaggingUtil.Settings
             tableLayoutPanel2.Size = new System.Drawing.Size(815, 95);
             tableLayoutPanel2.TabIndex = 5;
             // 
-            // checkbNdStrong
-            // 
-            checkbNdStrong.AutoSize = true;
-            checkbNdStrong.Location = new System.Drawing.Point(232, 95);
-            checkbNdStrong.Margin = new System.Windows.Forms.Padding(4);
-            checkbNdStrong.Name = "checkbNdStrong";
-            checkbNdStrong.Size = new System.Drawing.Size(144, 29);
-            checkbNdStrong.TabIndex = 2;
-            checkbNdStrong.Text = "Use dStrongs";
-            checkbNdStrong.UseVisualStyleBackColor = true;
-            checkbNdStrong.CheckedChanged += CheckbNdStrongs_CheckedChanged;
-            // 
             // SettingsForm
             // 
             AcceptButton = btnOK;
@@ -929,5 +957,7 @@ namespace BibleTaggingUtil.Settings
         private System.Windows.Forms.CheckBox checkBoxAncientLex;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.CheckBox checkbNdStrong;
+        private System.Windows.Forms.CheckBox checkBoxAncientMorph;
+        private System.Windows.Forms.CheckBox checkBoxSaveMorphology;
     }
 }

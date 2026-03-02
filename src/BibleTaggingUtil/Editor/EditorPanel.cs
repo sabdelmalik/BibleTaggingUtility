@@ -309,7 +309,7 @@ namespace BibleTaggingUtil.Editor
                         // TODO handle osis save
                     }
                     else
-                         dgvTarget.SaveVerse(oldReference);
+                        dgvTarget.SaveVerse(oldReference);
                 }
 
 
@@ -1283,6 +1283,12 @@ namespace BibleTaggingUtil.Editor
         {
             // highlight columns in the dgvTOTHT where the strong's numbers are not used in dgvTarget
             dgvTOTHT.HighlightUnusedStrongs(dgvTarget);
+        }
+
+        private void btnOverused_Click(object sender, EventArgs e)
+        {
+            // highlight columns in the dgvTOTHT where the strong's numbers are overused used in dgvTarget
+            dgvTOTHT.HighlightOverusedStrongs(dgvTarget);
         }
     }
 }

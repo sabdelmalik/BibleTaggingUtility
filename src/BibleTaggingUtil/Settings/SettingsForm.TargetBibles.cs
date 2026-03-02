@@ -22,6 +22,8 @@ namespace BibleTaggingUtil.Settings
             checkBoxTR_Byz.Checked = Properties.TargetBibles.Default.UseGrkMeaningVar;
             checkBoxAncientLex.Checked = Properties.TargetBibles.Default.ShowAncientWord;
             checkBoxAncientMeaning.Checked = Properties.TargetBibles.Default.ShowAncientMeaning;
+            checkBoxAncientMorph.Checked = Properties.TargetBibles.Default.ShowAncientMorphology;
+            checkBoxSaveMorphology.Checked = Properties.TargetBibles.Default.SaveMorphology;
             if (string.IsNullOrEmpty(targetBiblesFolder) )
             {
                 tbTargetBiblesFolder.Text = string.Empty;
@@ -119,6 +121,17 @@ namespace BibleTaggingUtil.Settings
         private void checkBoxAncientLex_CheckedChanged(object sender, EventArgs e)
         {
             Properties.TargetBibles.Default.ShowAncientWord = checkBoxAncientLex.Checked;
+            changedFlags.TargetBibleChanged = true;
+        }
+
+        private void checkBoxAncientMorph_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.TargetBibles.Default.ShowAncientMorphology = checkBoxAncientMorph.Checked;
+            changedFlags.TargetBibleChanged = true;
+        }
+        private void checkBoxSaveMorphology_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.TargetBibles.Default.SaveMorphology = checkBoxSaveMorphology.Checked;
             changedFlags.TargetBibleChanged = true;
         }
 

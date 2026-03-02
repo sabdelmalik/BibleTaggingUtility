@@ -35,6 +35,7 @@ namespace BibleTaggingUtil.Editor
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            btnOverused = new System.Windows.Forms.Button();
             btnUnused = new System.Windows.Forms.Button();
             checkBsStrongHighlight = new System.Windows.Forms.CheckBox();
             picRefresh = new System.Windows.Forms.PictureBox();
@@ -93,6 +94,7 @@ namespace BibleTaggingUtil.Editor
             // 
             // panel1
             // 
+            panel1.Controls.Add(btnOverused);
             panel1.Controls.Add(btnUnused);
             panel1.Controls.Add(checkBsStrongHighlight);
             panel1.Controls.Add(picRefresh);
@@ -116,15 +118,27 @@ namespace BibleTaggingUtil.Editor
             panel1.Size = new System.Drawing.Size(1889, 90);
             panel1.TabIndex = 8;
             // 
+            // btnOverused
+            // 
+            btnOverused.BackColor = System.Drawing.Color.LightSalmon;
+            btnOverused.Location = new System.Drawing.Point(1655, 22);
+            btnOverused.Name = "btnOverused";
+            btnOverused.Size = new System.Drawing.Size(100, 50);
+            btnOverused.TabIndex = 25;
+            btnOverused.Text = "Overused";
+            btnOverused.UseVisualStyleBackColor = false;
+            btnOverused.Click += btnOverused_Click;
+            // 
             // btnUnused
             // 
-            btnUnused.Location = new System.Drawing.Point(1549, 22);
+            btnUnused.BackColor = System.Drawing.Color.LightCoral;
+            btnUnused.Location = new System.Drawing.Point(1539, 22);
             btnUnused.Name = "btnUnused";
-            btnUnused.Size = new System.Drawing.Size(130, 50);
+            btnUnused.Size = new System.Drawing.Size(100, 50);
             btnUnused.TabIndex = 24;
             btnUnused.Text = "Unused";
             toolTip1.SetToolTip(btnUnused, "Highlight Strong's not used in the Target");
-            btnUnused.UseVisualStyleBackColor = true;
+            btnUnused.UseVisualStyleBackColor = false;
             btnUnused.Click += btnUnused_Click;
             // 
             // checkBsStrongHighlight
@@ -630,5 +644,6 @@ namespace BibleTaggingUtil.Editor
         private System.Windows.Forms.PictureBox picBack;
         private System.Windows.Forms.PictureBox picForward;
         private System.Windows.Forms.Button btnUnused;
+        private System.Windows.Forms.Button btnOverused;
     }
 }

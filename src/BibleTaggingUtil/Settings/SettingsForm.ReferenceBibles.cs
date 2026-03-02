@@ -182,10 +182,9 @@ namespace BibleTaggingUtil.Settings
 
         private void checkBoxTopRTL_CheckedChanged(object sender, EventArgs e)
         {
-            Properties.ReferenceBibles.Default.TopRightToLeft = checkBoxRTL.Checked;
+            Properties.ReferenceBibles.Default.TopRightToLeft = checkBoxTopRTL.Checked;
             changedFlags.TopRefChanged = true;
         }
-
 
     }
 }
