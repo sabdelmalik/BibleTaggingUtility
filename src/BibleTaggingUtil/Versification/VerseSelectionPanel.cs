@@ -241,6 +241,20 @@ namespace BibleTaggingUtil.Versification
 
         public void FireVerseChanged()
         {
+            var cm = System.Reflection.MethodBase.GetCurrentMethod();
+            var name = cm.DeclaringType.FullName + "." + cm.Name;
+           
+            bool lbBookNamesIsNull = lbBookNames == null;    
+            if (lbBookNamesIsNull)
+            {
+                Tracing.TraceError(name, "lbBookNames Is Null");
+                return; 
+            }
+            else if (lbBookNames.SelectedItem == null)
+            {
+                Tracing.TraceError(name, "lbBookNames.SelectedItem Is Null");
+                return;
+            }
             string book = lbBookNames.SelectedItem.ToString();
             int[] lastVerse = bibleBooks[book].LastVerse;
             int chapter = lbChapters.SelectedIndex + 1;
@@ -269,8 +283,10 @@ namespace BibleTaggingUtil.Versification
             get { return lbBookNames.SelectedIndex; }
             set
             {
+                if (lbBookNames.Items.Count == 0)
+                    return;
                 if (value > lbBookNames.Items.Count - 1)
-                    lbBookNames.SelectedIndex = 0;
+                    lbBookNames.SelectedIndex =  0;
                 else
                     lbBookNames.SelectedIndex = value;
             }
@@ -280,6 +296,8 @@ namespace BibleTaggingUtil.Versification
             get { return lbChapters.SelectedIndex; }
             set
             {
+                if (lbChapters.Items.Count == 0)
+                    return;
                 if (value > lbChapters.Items.Count - 1)
                     lbChapters.SelectedIndex = 0;
                 else
@@ -291,6 +309,8 @@ namespace BibleTaggingUtil.Versification
             get { return lbVerses.SelectedIndex; }
             set
             {
+                if (lbVerses.Items.Count == 0)
+                    return;
                 if (value > lbVerses.Items.Count - 1)
                     lbVerses.SelectedIndex = 0;
                 else

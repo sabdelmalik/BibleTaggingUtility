@@ -225,7 +225,11 @@ namespace BibleTaggingUtil
                 {
                     var cm = System.Reflection.MethodBase.GetCurrentMethod();
                     var name = cm.DeclaringType.FullName + "." + cm.Name;
-                    Tracing.TraceException(name, ex.Message);
+                    Tracing.TraceException(name, ex.ToString());
+                    Properties.MainSettings.Default.LastBook = 0;
+                    Properties.MainSettings.Default.LastChapter = 0;
+                    Properties.MainSettings.Default.LastVerse = 0;
+                    Properties.MainSettings.Default.Save();
                     HandleException(ex);
                 }
             }).Start();
@@ -401,10 +405,14 @@ namespace BibleTaggingUtil
                     if (!Directory.Exists(taggedFolder))
                     {
                         DialogResult res = ShowMessageBox(
-                            "Tagged folder does not exist\r\nSelect another Bible Folder?",
+                            $"Tagged folder does not exist\r\nSelect another Bible Folder?\r\n{taggedFolder}",
                             "Error!", MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         if (res == DialogResult.Yes)
                         {
+                            Properties.TargetBibles.Default.TargetBiblesFolder = string.Empty;
+                            Properties.TargetBibles.Default.TargetBible = string.Empty;
+                            Properties.TargetBibles.Default.Save();
+
                             GetSettings(startup: false);
                             //biblesFolder = string.Empty;
                         }

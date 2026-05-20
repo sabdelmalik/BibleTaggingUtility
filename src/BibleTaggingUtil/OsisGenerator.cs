@@ -100,7 +100,7 @@ namespace BibleTaggingUtil
             sw.WriteLine("<div type=\"bookGroup\">");
             foreach (string reference in targetVersion.Bible.Keys)
             {
-                if(reference == "ACT 26:14")
+                if(reference == "Prov 30:9")
                 {
                     int x = 0;
                 }

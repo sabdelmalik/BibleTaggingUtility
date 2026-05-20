@@ -366,6 +366,13 @@ namespace BibleTaggingUtil.BibleVersions
                         }
                         else
                         {
+                            if (bibleName == "KJV")
+                            {
+                                strongsTag = strongsTag.Replace("<", "").Replace(">", "").Trim();
+                                if (strongsTag.Length > 4)
+                                    strongsTag = strongsTag.Substring(strongsTag.Length - 4);
+                                strongsTag = testament == BibleTestament.OT ? $"<H{strongsTag}>" : $"<G{strongsTag}>";
+                            }
                             var ms = Regex.Matches(strongsTag, @"<([GHa-zA-Z0-9_]+)>");
                             foreach (Match m in ms)
                             {

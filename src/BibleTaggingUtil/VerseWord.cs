@@ -221,6 +221,7 @@ namespace BibleTaggingUtil
                 else
                 {
                     string strongStr = string.Empty;
+                    string morphStr = string.Empty;
                     int validCount = 0;
                     foreach (StrongsNumber number in Strong.Strongs)
                     {
@@ -247,6 +248,8 @@ namespace BibleTaggingUtil
                                 strongStr += string.Format(" strong:{0}", number.ToStringD());
                             else
                                 strongStr += string.Format(" strong:{0}", number.ToStringS());
+                            if(!string.IsNullOrEmpty(number.Morph))
+                                morphStr += $" {number.Morph}";
                         }
                     }
                     if (!string.IsNullOrEmpty(strongStr))
@@ -276,7 +279,9 @@ namespace BibleTaggingUtil
                                 break;
                         }
 
-                        result = string.Format("{0}<w lemma=\"{1}\">{2}</w>{3}", prefix, strongStr.Trim(), w, suffix);
+                        result = morphStr == string.Empty ?
+                            $"{prefix}<w lemma=\"{strongStr.Trim()}\">{w}</w>{suffix}" :
+                            $"{prefix}<w lemma=\"{strongStr.Trim()}\" morph=\"{morphStr.Trim()}\">{w}</w>{suffix}";
                     }
                     else
                         result = string.Format("<w>{0}</w>", Word);

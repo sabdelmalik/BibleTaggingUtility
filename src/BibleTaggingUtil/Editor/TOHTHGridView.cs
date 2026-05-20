@@ -569,9 +569,14 @@ namespace BibleTaggingUtil.Editor
                 if (!targetTag.IsTagLable)
                 {
                     string tagStr = targetTag.ToStringS();
-                    if (!targetTagCounts.ContainsKey(tagStr))
-                        targetTagCounts.Add(tagStr, new List<int>());
-                    targetTagCounts[tagStr].Add(j);
+                    // tagStr may contain multiple strongs numbers separated by space, we need to count each of them separately
+                    string[] tagStrs = tagStr.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (string ts in tagStrs)
+                    {
+                         if (!targetTagCounts.ContainsKey(ts))
+                            targetTagCounts.Add(ts, new List<int>());
+                        targetTagCounts[ts].Add(j);
+                    }
                 }
             }
             // Highlight excess usage
