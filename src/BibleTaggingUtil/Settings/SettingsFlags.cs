@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace BibleTaggingUtil.Settings
 {
+    public enum ColumnWidthMode
+    {
+        Default,
+        Auto,
+        Fixed
+    };
+
     internal class SettingsFlags
     {
         public bool TopRefChanged {  get; set; }

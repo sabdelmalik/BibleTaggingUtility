@@ -31,6 +31,14 @@ namespace BibleTaggingUtil.Editor
 
         public TargetGridView()
         {
+            // Enable double buffering
+            this.DoubleBuffered = true;
+
+            // Force control to redraw when resized and reduce background flickering
+            this.SetStyle(ControlStyles.OptimizedDoubleBuffer |
+                          ControlStyles.AllPaintingInWmPaint |
+                          ControlStyles.UserPaint, true);
+
             this.ContextMenuStrip = new ContextMenuStrip();
             this.ContextMenuStrip.Opening += ContextMenuStrip_Opening;
             this.ContextMenuStrip.ItemClicked += ContextMenuStrip_ItemClicked;
@@ -416,15 +424,31 @@ namespace BibleTaggingUtil.Editor
 
                     if (verse.AncientVerse != null)
                     {
-                        List<VerseWord> aw = new List<VerseWord>();
-                        foreach(StrongsNumber s in strongs.Strongs)
+                        bool extended = Properties.ReferenceBibles.Default.ExtendedTaggingOT;
+                        if (extended)
                         {
-                            aw.Add(verse.AncientVerse.GetWordFromStrong(s.ToString(), strongsMultiOccurances[strongsIndex].Occurrence));
-                            strongsIndex++;
+                            List<TahotSubWord> aw = new List<TahotSubWord>();
+                            foreach (StrongsNumber s in strongs.Strongs)
+                            {
+                                aw.Add(verse.AncientVerse.GeSubtWordFromStrong(s.ToString(), strongsMultiOccurances[strongsIndex].Occurrence));
+                                strongsIndex++;
+                            }
+                            //VerseWord aw = verse.AncientVerse.GetWordFromStrong(verseTags[i]);
+                            ancientWords[i] = new GridAncientWord(aw, oldTestament, verse.AncientVerse);
+                            ancientMeanings[i] = new GridAncientMeaning(aw, oldTestament, verse.AncientVerse);
                         }
-                        //VerseWord aw = verse.AncientVerse.GetWordFromStrong(verseTags[i]);
-                        ancientWords[i] = new GridAncientWord( aw, oldTestament, verse.AncientVerse);
-                        ancientMeanings[i] = new GridAncientMeaning( aw, oldTestament, verse.AncientVerse);
+                        else
+                        {
+                            List<VerseWord> aw = new List<VerseWord>();
+                            foreach (StrongsNumber s in strongs.Strongs)
+                            {
+                                aw.Add(verse.AncientVerse.GetWordFromStrong(s.ToString(), strongsMultiOccurances[strongsIndex].Occurrence));
+                                strongsIndex++;
+                            }
+                            //VerseWord aw = verse.AncientVerse.GetWordFromStrong(verseTags[i]);
+                            ancientWords[i] = new GridAncientWord(aw, oldTestament, verse.AncientVerse);
+                            ancientMeanings[i] = new GridAncientMeaning(aw, oldTestament, verse.AncientVerse);
+                        }
                     }
                 }
 
@@ -574,6 +598,7 @@ namespace BibleTaggingUtil.Editor
         {
             var cm = System.Reflection.MethodBase.GetCurrentMethod();
             var name = cm.DeclaringType.FullName + "." + cm.Name;
+            Tracing.TraceEntry(name, reference);
 
             bool osis = Properties.MainSettings.Default.Osis;
 
@@ -621,6 +646,7 @@ namespace BibleTaggingUtil.Editor
                 Tracing.TraceException(name, ex);
                 throw;
             }
+            Tracing.TraceExit(name);
         }
         #endregion Save & Update
 
@@ -1019,22 +1045,44 @@ namespace BibleTaggingUtil.Editor
         public GridAncientWord(List<VerseWord> ancientVerseWord, bool oldTestament, Verse ancientVerse)
         {
             AncientVerseWord = ancientVerseWord;
+            AncientVerseSubWord = null;
+            OldTestament = oldTestament;
+            AncientVerse = ancientVerse;
+        }
+
+        public GridAncientWord(List<TahotSubWord> ancientVerseSubWord, bool oldTestament, Verse ancientVerse)
+        {
+            AncientVerseWord = null;
+            AncientVerseSubWord = ancientVerseSubWord;
             OldTestament = oldTestament;
             AncientVerse = ancientVerse;
         }
 
         public List<VerseWord> AncientVerseWord { get; }
+        public List<TahotSubWord> AncientVerseSubWord { get; }
+
         public bool OldTestament { get; }
         public Verse AncientVerse { get; }
         public override string ToString()
         {
             string result = string.Empty;
-            foreach (VerseWord w in AncientVerseWord)
+            if(AncientVerseWord != null)
             {
-                if (OldTestament)
-                   result += (w is null) ? string.Empty : w.Hebrew + " ";
-                else
-                    result += (w is null) ? string.Empty : w.Greek + " ";
+                foreach (VerseWord w in AncientVerseWord)
+                {
+                    if (OldTestament)
+                        result += (w is null) ? string.Empty : w.Hebrew + " ";
+                    else
+                        result += (w is null) ? string.Empty : w.Greek + " ";
+                }
+            }
+            else if (AncientVerseSubWord != null)
+            {
+                foreach (TahotSubWord w in AncientVerseSubWord)
+                {
+                    if (OldTestament)
+                        result += (w is null) ? string.Empty : w.Hebrew + " ";
+                }
             }
             return result.Trim();
         }
@@ -1046,19 +1094,40 @@ namespace BibleTaggingUtil.Editor
         public GridAncientMeaning(List<VerseWord> ancientVerseWord, bool oldTestament, Verse ancientVerse)
         {
             AncientVerseWord = ancientVerseWord;
+            AncientVerseSubWord = null;
+            OldTestament = oldTestament;
+            AncientVerse = ancientVerse;
+        }
+
+        public GridAncientMeaning(List<TahotSubWord> ancientVerseSubWord, bool oldTestament, Verse ancientVerse)
+        {
+            AncientVerseWord = null;
+            AncientVerseSubWord = ancientVerseSubWord;
             OldTestament = oldTestament;
             AncientVerse = ancientVerse;
         }
 
         public List<VerseWord> AncientVerseWord { get; }
+        public List<TahotSubWord> AncientVerseSubWord { get; }
         public bool OldTestament { get; }
         public Verse AncientVerse { get; }
         public override string ToString()
         {
             string result = string.Empty;
-            foreach (VerseWord w in AncientVerseWord)
+            if (AncientVerseWord != null)
             {
-                result += (w is null) ? string.Empty : w.Word + " ";
+                foreach (VerseWord w in AncientVerseWord)
+                {
+                    result += (w is null) ? string.Empty : w.Word + " ";
+                }
+            }
+            else if (AncientVerseSubWord != null)
+            {
+                foreach (TahotSubWord w in AncientVerseSubWord)
+                {
+                    result += (w is null) ? string.Empty : w.English + " ";
+                }
+
             }
             return result.Trim();
         }

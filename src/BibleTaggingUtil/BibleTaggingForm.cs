@@ -67,6 +67,7 @@ namespace BibleTaggingUtil
         {
             InitializeComponent();
 
+            // Enables smooth, lag-free rendering
             dockPanel.DocumentStyle = DocumentStyle.DockingWindow;
             m_deserializeDockContent = new DeserializeDockContent(GetContentFromPersistString);
 

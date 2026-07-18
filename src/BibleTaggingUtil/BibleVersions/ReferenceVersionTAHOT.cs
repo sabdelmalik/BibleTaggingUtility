@@ -371,7 +371,13 @@ namespace BibleTaggingUtil.BibleVersions
             if (line.StartsWith('#'))  // commented out line
                 return;
 
-            line = line.Replace("//", "/").Replace("/ /", "/");
+            //if(line.StartsWith("Gen.30.11#03"))
+            if(line.StartsWith("Gen.35.22#14"))
+            {
+                int x = 0;
+            }
+            //line = line.Replace("//", "/").Replace("/ /", "/");
+            line = line.Replace("/ /", "//");
             /*
              * Heb (&Eng) Ref & Type	Hebrew	Transliteration	English translation	dStrongs = Lexical = Gloss	Grammar	Meaning Variants	Spelling Variants	Conjoin word	sStrong+Instance	Alt Strongs
              * 
@@ -428,10 +434,23 @@ namespace BibleTaggingUtil.BibleVersions
                             chapterNum, //.TrimStart('0'),
                             verseNum); //.TrimStart('0'));
 
-                    string[] heberewTemp = hebrewRaw.Split('\\');
-                    string hebrew = heberewTemp[0].Replace("/", " ");
+                    //string[] heberewTemp = hebrewRaw.Split('\\');
+                    //string hebrew = heberewTemp[0].Replace("/", " ");
+                    string[] heberewTemp = hebrewRaw.Replace("/", " ").Split('\\');
+                    string hebrew = string.Empty;
+                    for (int i = 0; i < heberewTemp.Length; i++)
+                    {
+                        string h = heberewTemp[i];
+                        if (h == "׃") // soof pasuq
+                            break;
+                        if (h == "פ" || // paseq
+                            h == "ס")   // samech sofit
+                            continue;
+                        hebrew += h + '\\';
+                    }
+                    hebrew = hebrew.TrimEnd('\\').Trim().TrimEnd('\\');
 
-                    if(verseRef == "Psa 22:16" && wordNum == "07")
+                    if (verseRef == "Psa 22:16" && wordNum == "07")
                     {
                         int n = 0;
                     }
@@ -450,6 +469,13 @@ namespace BibleTaggingUtil.BibleVersions
                     {
                         bool root = false;
                         string exEntry = exPart.Trim();
+                        if (string.IsNullOrEmpty(exEntry))
+                        {
+                            strg += ";";
+                            lex += ";";
+                            gloss += ";";
+                            continue;
+                        }
                         // is it the root
                         int strt = exEntry.IndexOf("{");
                         int end = exEntry.IndexOf("}");

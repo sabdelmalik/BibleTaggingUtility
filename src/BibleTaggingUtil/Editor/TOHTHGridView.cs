@@ -1,7 +1,10 @@
 ﻿using BibleTaggingUtil.BibleVersions;
+using BibleTaggingUtil.Settings;
 using BibleTaggingUtil.Strongs;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
@@ -9,6 +12,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BibleTaggingUtil.Editor
 {
@@ -17,6 +21,19 @@ namespace BibleTaggingUtil.Editor
         public ReferenceVersionTAGNT BibleNT { get; set; }
         public ReferenceVersionTAHOT BibleOT { get; set; }
         public string SearchTag { get; internal set; }
+
+        private BindingSource myGridBinder = new BindingSource();
+
+        public TOHTHGridView()
+        {
+            // Enable double buffering
+            this.DoubleBuffered = true;
+
+            // Force control to redraw when resized and reduce background flickering
+            this.SetStyle(ControlStyles.OptimizedDoubleBuffer |
+                          ControlStyles.AllPaintingInWmPaint |
+                          ControlStyles.UserPaint, true);
+        }
 
         protected override void OnCellEnter(DataGridViewCellEventArgs e)
         {
@@ -97,7 +114,27 @@ namespace BibleTaggingUtil.Editor
         }
         private void UpdateOT(Verse verseWords)
         {
-            this.Rows.Clear();
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
+            var cm = System.Reflection.MethodBase.GetCurrentMethod();
+            var name = cm.DeclaringType.FullName + "." + cm.Name;
+            Tracing.TraceEntry(name);
+
+            //this.Rows.Clear();
+            //if (DataSource is BindingSource bs)
+            //{
+            //    if (bs.DataSource is DataTable dt)
+            //        dt.Rows.Clear();
+            //}
+
+            if (DataSource is DataTable dt)
+            {
+                dt.Rows.Clear();
+            }
+            else
+            {
+                this.Rows.Clear();
+            }
             if (verseWords == null)
                 return;
 
@@ -117,36 +154,61 @@ namespace BibleTaggingUtil.Editor
             StrongsCluster tagLable = new StrongsCluster("TAG");
             try
             {
-                words.Add("ENG");
-                hebrew.Add("HEB");
-                altVerseNumber.Add("ALT");
-                wordNumber.Add("W #");
-                wordType.Add("TYP");
-                lexicalForm.Add("LEX");
-                gloss.Add("GLS");
-                morphology.Add("GMR");
-                meaningVar.Add("VAR");
-                transliteration.Add("XLT");
-                altStrongs.Add("A_S");
-                rootStrongs.Add("STG");
+                words.Add("ENG");               // English translation in/ beginning
+                hebrew.Add("HEB");              // Hebrew בְּ/רֵאשִׁ֖ית
+                altVerseNumber.Add("ALT");      // Alternate verse number
+                wordNumber.Add("W #");          // Word number in TAHOT
+                wordType.Add("TYP");            // Type L=Leningrad text; Q=Qere scribal corrections; K=original text; R=Restored text
+                lexicalForm.Add("LEX");         // lexical form in Heberew (from Expanded Strong tags: H9003=ב=in/{H7225G=רֵאשִׁית=: beginning»first:1_beginning}) 
+                gloss.Add("GLS");               // English gloss (from Expanded Strong tags: H9003=ב=in/{H7225G=רֵאשִׁית=: beginning»first:1_beginning})
+                morphology.Add("GMR");          // Grammar HR/Ncfsa
+                meaningVar.Add("VAR");          // Meaning Variants
+                transliteration.Add("XLT");     // Transliteration be./re.Shit
+                altStrongs.Add("A_S");          // Alternative Strong
+                rootStrongs.Add("STG");         // dStrong H9003/{H7225G}
                 tags.Add(tagLable);
-
+                bool extended = Properties.ReferenceBibles.Default.ExtendedTaggingOT;
                 for (int i = 0; i < verseWords.Count; i++)
                 {
                     VerseWord verseWord = verseWords[i];
-                    words.Add(verseWord.Word);
-                    hebrew.Add(verseWord.Hebrew);
-                    morphology.Add(verseWord.Morphology);
-                    transliteration.Add(verseWord.Transliteration);
-                    rootStrongs.Add(verseWord.RootStrong);
-                    altStrongs.Add(verseWord.AltStrongs);
-                    wordType.Add(verseWord.WordType);
-                    altVerseNumber.Add(verseWord.AltVerseNumber);
-                    wordNumber.Add(verseWord.WordNumber);
-                    meaningVar.Add(verseWord.MeaningVar);
-                    lexicalForm.Add(verseWord.DictForm);
-                    gloss.Add(verseWord.DictGloss);
-                    tags.Add(verseWord.Strong);
+                    if (extended)
+                    {
+                        Tracing.TraceInfo(name, $"Extended Processing word {i + 1}/{verseWords.Count}: {verseWord.Hebrew} with {verseWord.TahotSubWords.Count} sub-words");
+                        foreach (var sw in verseWord.TahotSubWords)
+                        {
+                            words.Add(sw.English);
+                            hebrew.Add(sw.Hebrew);
+                            morphology.Add(sw.Morphology);
+                            transliteration.Add(sw.Transliteration);
+                            rootStrongs.Add(sw.RootStrongs);
+                            altStrongs.Add(sw.AltStrongs);
+                            wordType.Add(sw.WordType);
+                            altVerseNumber.Add(sw.AltWordNumber);
+                            wordNumber.Add(sw.WordNumber);
+                            meaningVar.Add(sw.MeaningVariant);
+                            lexicalForm.Add(sw.LexicalForm);
+                            gloss.Add(sw.Gloss);
+                            tags.Add(sw.Tag);
+                        }
+
+                    }
+                    else
+                    {
+                        Tracing.TraceInfo(name, $"Processing word {i + 1}/{verseWords.Count}: {verseWord.Hebrew} without sub-word expansion");
+                        words.Add(verseWord.Word);
+                        hebrew.Add(verseWord.Hebrew);
+                        morphology.Add(verseWord.Morphology);
+                        transliteration.Add(verseWord.Transliteration);
+                        rootStrongs.Add(verseWord.RootStrong);
+                        altStrongs.Add(verseWord.AltStrongs);
+                        wordType.Add(verseWord.WordType);
+                        altVerseNumber.Add(verseWord.AltVerseNumber);
+                        wordNumber.Add(verseWord.WordNumber);
+                        meaningVar.Add(verseWord.MeaningVar);
+                        lexicalForm.Add(verseWord.DictForm);
+                        gloss.Add(verseWord.DictGloss);
+                        tags.Add(verseWord.Strong);
+                    }
                     /*
                                         if (verseWord.Strong.Count > 0)
                                         {
@@ -203,26 +265,74 @@ namespace BibleTaggingUtil.Editor
                     ;
                 }
 
-                //this.ColumnCount = verseWords.Count;
-                this.ColumnCount = words.Count;
+                Tracing.TraceInfo(name, "Finished processing words. Total columns to display: " + words.Count);
+                var first = stopwatch.Elapsed;
+                stopwatch.Restart();
+                var table = BuildTable(
+                    extended,
+                    words,
+                    hebrew,
+                    altVerseNumber, // remove when extended to speed-up painting
+                    wordNumber,
+                    wordType,       // remove when extended to speed-up painting
+                    lexicalForm,
+                    gloss,
+                    morphology,
+                    //int morphRow = 7; // becomes 5 when extended
+                    meaningVar,     // remove when extended to speed-up painting
+                    transliteration,// remove when extended to speed-up painting
+                    altStrongs,     // remove when extended to speed-up painting
+                    rootStrongs,
+                    tags);
 
-                this.Rows.Add(words.ToArray());
-                this.Rows.Add(hebrew.ToArray());
-                this.Rows.Add(altVerseNumber.ToArray());
-                this.Rows.Add(wordNumber.ToArray());
-                this.Rows.Add(wordType.ToArray());
 
-                this.Rows.Add(lexicalForm.ToArray());
-                this.Rows.Add(gloss.ToArray());
+                Tracing.TraceInfo(name, "Adding rows to grid. This may take some time for verses with many words and extended tagging enabled");
+               
+                ColumnWidthMode columnWidthMode = (ColumnWidthMode)Properties.ReferenceBibles.Default.ColumnWidthMode;
+                int columnWidth = Properties.ReferenceBibles.Default.FixedColumnWidth;
 
-                this.Rows.Add(morphology.ToArray());
-                int morfRow = 7;
-                this.Rows.Add(meaningVar.ToArray());
-                this.Rows.Add(transliteration.ToArray());
-                this.Rows.Add(altStrongs.ToArray());
-                this.Rows.Add(rootStrongs.ToArray());
-                this.Rows.Add(tags.ToArray());
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
 
+                var second = stopwatch.Elapsed;
+                stopwatch.Restart();
+
+                SuspendLayout();
+                DataBindings.Clear();
+                DataSource = null;
+                Columns.Clear();    // if this line is commented out, then, for Gen 1:2: populating the grid goes from 3ms to 7ms
+
+                //DataSource = myGridBinder;  // this approach slow down populating the grid
+                //myGridBinder.DataSource = table;
+
+                DataSource = table;
+                if(columnWidthMode == ColumnWidthMode.Fixed)
+                {
+                    // for Gen 1:2: the following loop adds 3 ms
+                    foreach (DataGridViewColumn col in Columns)
+                    {
+                        col.Width = columnWidth; // Default width in pixels
+                    }
+                }
+
+                Tracing.TraceInfo(name, "Finished adding rows to grid. Starting to auto size columns");
+                if (columnWidthMode == ColumnWidthMode.Auto)
+                {
+                    AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
+                    Tracing.TraceInfo(name, "Finished auto sizing columns");
+                } 
+                ResumeLayout();
+
+                int morphRow = 7;
+                //if(extended)
+                //morphRow = 5;
+
+                var third = stopwatch.Elapsed;
+                stopwatch.Restart();
+
+                Tracing.TraceInfo(name, "Finished adding rows to grid. Starting to color code special words and search tags");
+                //this.Rows[1].DefaultCellStyle.ForeColor = Color.Black;
+                //this.Rows[this.RowCount - 1].DefaultCellStyle.ForeColor = Color.Black;
+                this.DefaultCellStyle.ForeColor = Color.Black;
                 for (int i = 0; i < words.Count; i++)
                 {
                     string word = (string)this.Rows[1].Cells[i].Value;
@@ -232,11 +342,11 @@ namespace BibleTaggingUtil.Editor
                         this.Rows[1].Cells[i].Style.ForeColor = Color.Red;
                         this.Rows[this.RowCount - 1].Cells[i].Style.ForeColor = Color.Red;
                     }
-                    else
-                    {
-                        this.Rows[1].Cells[i].Style.ForeColor = Color.Black;
-                        this.Rows[this.RowCount - 1].Cells[i].Style.ForeColor = Color.Black;
-                    }
+        //            else
+        //            {
+        //                this.Rows[1].Cells[i].Style.ForeColor = Color.Black;
+        //                this.Rows[this.RowCount - 1].Cells[i].Style.ForeColor = Color.Black;
+        //            }
                     if (SearchTag != null && tag.ToString().Contains(SearchTag))
                     {
                         this.Rows[this.RowCount - 1].Cells[i].Style.ForeColor = Color.Maroon;
@@ -247,18 +357,19 @@ namespace BibleTaggingUtil.Editor
                 }
 
                 // Color code repeated words with same strongs number and different morphology
+                Tracing.TraceInfo(name, "Starting to color code repeated words with same strongs number and different morphology");
                 int colourIndex = 0;
                 List<Color> colours = new List<Color>() { Color.Green, Color.Blue, Color.Red, Color.Brown, Color.DarkOrange, Color.Maroon };
                 Dictionary<string, int> repeated = new Dictionary<string, int>();
                 for (int i = 1; i < words.Count; i++)
                 {
                     StrongsCluster tag = (StrongsCluster)this.Rows[this.RowCount - 1].Cells[i].Value;
-                    string morf = (string)this.Rows[morfRow].Cells[i].Value;
+                    string morph = (string)this.Rows[morphRow].Cells[i].Value;
                     for (int j = i + 1; j < words.Count; j++)
                     {
                         StrongsCluster tag2 = (StrongsCluster)this.Rows[this.RowCount - 1].Cells[j].Value;
-                        string morf2 = (string)this.Rows[morfRow].Cells[j].Value;
-                        if (tag.ToStringS() == tag2.ToStringS() && morf != morf2 && !tag.IsTagLable)
+                        string morph2 = (string)this.Rows[morphRow].Cells[j].Value;
+                        if (tag.ToStringS() == tag2.ToStringS() && morph != morph2 && !tag.IsTagLable)
                         {
                             if (!repeated.ContainsKey(tag.ToStringS()))
                             {
@@ -266,18 +377,19 @@ namespace BibleTaggingUtil.Editor
                                 colourIndex = (colourIndex + 1) % colours.Count;
                             }
                             Color foreColor = colours[repeated[tag.ToStringS()]];
-                            this.Rows[morfRow].Cells[i].Style.ForeColor = foreColor;
-                            this.Rows[morfRow].Cells[i].Style.BackColor = Color.LightGray;
-                            this.Rows[morfRow].Cells[j].Style.ForeColor = foreColor;
-                            this.Rows[morfRow].Cells[j].Style.BackColor = Color.LightGray;
+                            this.Rows[morphRow].Cells[i].Style.ForeColor = foreColor;
+                            this.Rows[morphRow].Cells[i].Style.BackColor = Color.LightGray;
+                            this.Rows[morphRow].Cells[j].Style.ForeColor = foreColor;
+                            this.Rows[morphRow].Cells[j].Style.BackColor = Color.LightGray;
                         }
                     }
                 }
+                var fourth = stopwatch.Elapsed;
+                stopwatch.Stop();
+                Tracing.TraceExit(name);
             }
             catch (Exception ex)
             {
-                var cm = System.Reflection.MethodBase.GetCurrentMethod();
-                var name = cm.DeclaringType.FullName + "." + cm.Name;
                 Tracing.TraceException(name, ex.Message);
             }
 
@@ -287,6 +399,62 @@ namespace BibleTaggingUtil.Editor
             this.Rows[0].ReadOnly = true;
             this.Rows[1].ReadOnly = true;
 
+        }
+        private DataTable BuildTable(
+                    bool extended,
+                    List<string> words,
+                    List<string> hebrew,
+                    List<string> altVerseNumber,
+                    List<string> wordNumber,
+                    List<string> wordType,
+                    List<string> lexicalForm,
+                    List<string> gloss,
+                    List<string> morphology,
+                    //int morphRow = 7;
+                    List<string> meaningVar,
+                    List<string> transliteration,
+                    List<string> altStrongs,
+                    List<string> rootStrongs,
+                    List<StrongsCluster> tags)
+        {
+            var cm = System.Reflection.MethodBase.GetCurrentMethod();
+            var name = cm.DeclaringType.FullName + "." + cm.Name;
+            Tracing.TraceEntry(name);
+
+            var table = new DataTable();
+            int columnCount = words.Count;
+            // Create columns
+            for (int c = 0; c < columnCount; c++)
+                table.Columns.Add("", typeof(object));   // no names
+
+            // Add each array as a row
+            table.Rows.Add(words.ToArray());
+            table.Rows.Add(hebrew.ToArray());
+            //if(!extended)
+                table.Rows.Add(altVerseNumber.ToArray());
+            table.Rows.Add(wordNumber.ToArray());
+            //if (!extended)
+                table.Rows.Add(wordType.ToArray());
+            table.Rows.Add(lexicalForm.ToArray());
+            table.Rows.Add(gloss.ToArray());
+            table.Rows.Add(morphology.ToArray());
+            //if (!extended)
+                table.Rows.Add(meaningVar.ToArray());
+            //if (!extended)
+                table.Rows.Add(transliteration.ToArray());
+            //if (!extended)
+                table.Rows.Add(altStrongs.ToArray());
+            table.Rows.Add(rootStrongs.ToArray());
+            table.Rows.Add(tags.ToArray());
+
+            Tracing.TraceExit(name);
+            return table;
+        }
+
+        protected override void OnDataBindingComplete(DataGridViewBindingCompleteEventArgs e)
+        {
+            //Columns.Cast<DataGridViewColumn>().ToList().ForEach(c => c.Width = 200);
+            base.OnDataBindingComplete(e);
         }
 
         protected override void OnCellFormatting(DataGridViewCellFormattingEventArgs e)
@@ -306,32 +474,32 @@ namespace BibleTaggingUtil.Editor
             //base.OnCellFormatting(e);
         }
 
-        private Morphology.NT morfNT = new Morphology.NT();
-        private Morphology.OT morfOT = new Morphology.OT();
-        private string GetMorphologyDetails(string lang, string morf)
+        private Morphology.NT morphNT = new Morphology.NT();
+        private Morphology.OT morphOT = new Morphology.OT();
+        private string GetMorphologyDetails(string lang, string morph)
         {
             string result = string.Empty;
             if (lang == "GRK")
             {
-                if (morf.Contains("/"))
+                if (morph.Contains("/"))
                 {
-                    string[] parts = morf.Split('/');
+                    string[] parts = morph.Split('/');
 
                     foreach (string m in parts)
                     {
-                        result += m.Trim() + ":\r\n" + morfNT.GetMorphologyDetails(m.Trim()) + "\r\n";
+                        result += m.Trim() + ":\r\n" + morphNT.GetMorphologyDetails(m.Trim()) + "\r\n";
                     }
                 }
                 else
                 {
-                    result = morfNT.GetMorphologyDetails(morf);
+                    result = morphNT.GetMorphologyDetails(morph);
                 }
             }
             else
             {
                 try
                 {
-                    result = morfOT.GetMorphologyDetails(morf);
+                    result = morphOT.GetMorphologyDetails(morph);
                 }
                 catch (Exception ex)
                 {
@@ -436,7 +604,7 @@ namespace BibleTaggingUtil.Editor
                 this.Rows.Add(wordType.ToArray());
                 int typeRow = 8;
                 this.Rows.Add(morphology.ToArray());
-                int morfRow = 9;
+                int morphRow = 9;
                 this.Rows.Add(transliteration.ToArray());
                 this.Rows.Add(altStrongs.ToArray());
                 this.Rows.Add(rootStrongs.ToArray());
@@ -468,12 +636,12 @@ namespace BibleTaggingUtil.Editor
                 for (int i = 1; i < words.Count; i++)
                 {
                     StrongsCluster tag = (StrongsCluster)this.Rows[this.RowCount - 1].Cells[i].Value;
-                    string morf = (string)this.Rows[morfRow].Cells[i].Value;
+                    string morph = (string)this.Rows[morphRow].Cells[i].Value;
                     for (int j = i + 1; j < words.Count; j++)
                     {
                         StrongsCluster tag2 = (StrongsCluster)this.Rows[this.RowCount - 1].Cells[j].Value;
-                        string morf2 = (string)this.Rows[morfRow].Cells[j].Value;
-                        if (tag.ToStringS() == tag2.ToStringS() && morf != morf2 && !tag.IsTagLable)
+                        string morph2 = (string)this.Rows[morphRow].Cells[j].Value;
+                        if (tag.ToStringS() == tag2.ToStringS() && morph != morph2 && !tag.IsTagLable)
                         {
                             if (!repeated.ContainsKey(tag.ToStringS()))
                             {
@@ -481,10 +649,10 @@ namespace BibleTaggingUtil.Editor
                                 colourIndex = (colourIndex + 1) % colours.Count;
                             }
                             Color foreColor = colours[repeated[tag.ToStringS()]];
-                            this.Rows[morfRow].Cells[i].Style.ForeColor = foreColor;
-                            this.Rows[morfRow].Cells[i].Style.BackColor = Color.LightGray;
-                            this.Rows[morfRow].Cells[j].Style.ForeColor = foreColor;
-                            this.Rows[morfRow].Cells[j].Style.BackColor = Color.LightGray;
+                            this.Rows[morphRow].Cells[i].Style.ForeColor = foreColor;
+                            this.Rows[morphRow].Cells[i].Style.BackColor = Color.LightGray;
+                            this.Rows[morphRow].Cells[j].Style.ForeColor = foreColor;
+                            this.Rows[morphRow].Cells[j].Style.BackColor = Color.LightGray;
                         }
                     }
                 }

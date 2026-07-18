@@ -13,6 +13,7 @@ namespace BibleTaggingUtil
     [Serializable()]
     public class VerseWord : ICloneable
     {
+        public readonly List<TahotSubWord> TahotSubWords = new List<TahotSubWord>();
         public VerseWord(string ancientWord, string english, StrongsCluster strong,  StrongsCluster dStrong, string transliteration, string reference, string morphology = "", string rootStrong = "", string wordType = "", string altVerseNumber = "", string wordNumber = "", string meaningVar = "", string dictForm = "", string dictGloss = "", string altStrongs = "", string conjoin = "")
         {
             this.Reference = reference;
@@ -116,6 +117,80 @@ namespace BibleTaggingUtil
                     string x = reference;
                 }
             }
+
+            if (this.Testament == BibleTestament.OT)
+            {
+                string[] englishWords = english.Split(new char[] { '/' }, StringSplitOptions.TrimEntries);
+                string[] hebrewWords = ancientWord.Split(new char[] { ' ' }, StringSplitOptions.TrimEntries);
+                string[] lexicalForms = DictForm.Split(';');
+                string[] glosses = DictGloss.Split(';');
+                string[] morphs = morphology.Split('/');
+                string[] transliterations = transliteration.Split(';');
+                string[] rootStrongs = rootStrong.Split(';');
+                string[][] arrays = { englishWords, hebrewWords, lexicalForms, glosses, morphs, transliterations, rootStrongs};
+                bool allSameLength = arrays.All(a => a.Length == arrays[0].Length);
+                if(!allSameLength)
+                {
+                    int x = 0;
+                    throw new Exception("All arrays must be the same length for verse " + reference);
+                }
+                string root = string.Empty;
+                for (int i = 0; i < englishWords.Length; i++)
+                {
+                    string strg = rootStrongs[i];
+                    bool isRoot = false;
+                    if (strg.Contains('{'))
+                    {
+                        isRoot = true;
+                        strg = strg.Replace("{","").Replace("}","");
+                        if (this.Strong.ToString().Contains('_'))
+                        {
+                            if (this.Strong.Count != 1)
+                            {
+                                int x = 0;
+                                throw new Exception("Expected exactly one strong number for verse " + reference);
+                            }
+                            string suffix = this.Strong[0].ToString().Substring(this.Strong[0].ToString().IndexOf('_'));
+                            strg += suffix;
+                        }
+                        root = strg;
+                    }
+                    TahotSubWords.Add(new TahotSubWord(
+                        englishWords[i].Replace("{", "").Replace("}", ""),
+                        hebrewWords[i].Replace("{", "").Replace("}", ""),
+                        altVerseNumber,
+                        wordNumber,
+                        wordType,
+                        lexicalForms[i].Replace("{", "").Replace("}", ""),
+                        glosses[i].Replace("{", "").Replace("}", ""),
+                        morphs[i].Replace("{", "").Replace("}", ""),
+                        meaningVar,
+                        transliterations[i].Replace("{", "").Replace("}", ""),
+                        altStrongs,
+                        strg,
+                        new StrongsCluster(new string[] { strg }),
+                        isRoot
+                    ));
+                }
+                if(root == string.Empty)
+                {
+                    int x = 0;
+                    throw new Exception($"Expected a root strong number for word# {wordNumber} of verse {reference}");
+                }
+                // Append the rootto the other etries
+                if(TahotSubWords.Count > 1)
+                {
+                    foreach (TahotSubWord subWord in TahotSubWords)
+                    {
+                        if (!subWord.IsRoot)
+                        {
+                            subWord.RootStrongs += "-" + root;
+                            subWord.Tag = new StrongsCluster(new string[] { subWord.RootStrongs });
+                        }
+                    }
+                }
+            }
+
         }
 
         public VerseWord(string word, StrongsCluster strong, string reference)

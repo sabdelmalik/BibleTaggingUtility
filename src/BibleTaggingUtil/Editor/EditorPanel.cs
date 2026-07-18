@@ -188,8 +188,17 @@ namespace BibleTaggingUtil.Editor
                 dgvTarget.ColumnCount = 0;
                 dgvTopVersion.Rows.Clear();
                 dgvTopVersion.ColumnCount = 0;
-                dgvTOTHT.Rows.Clear();
-                dgvTOTHT.ColumnCount = 0;
+                if (dgvTOTHT.DataSource is DataTable)
+                {
+                    DataTable dt = (DataTable)dgvTOTHT.DataSource;
+                    dt.Columns.Clear();
+                    dt.Rows.Clear();
+                }
+                else
+                {
+                    dgvTOTHT.Rows.Clear();
+                    dgvTOTHT.ColumnCount = 0;
+                }
             }
         }
 

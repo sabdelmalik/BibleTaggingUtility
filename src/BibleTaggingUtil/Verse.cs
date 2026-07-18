@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
+using System.DirectoryServices;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -227,7 +228,7 @@ namespace BibleTaggingUtil
                         if (verse[i].StrongString.Contains(strong))
                         {
                             result = verse[i];
-                            if(position > 1)
+                            if (position > 1)
                             {
                                 VerseWord temp = result;
                                 while (position > 1)
@@ -252,6 +253,55 @@ namespace BibleTaggingUtil
             }
             return result;
         }
+
+        public TahotSubWord GeSubtWordFromStrong(string strong, int position)
+        {
+            TahotSubWord result = null;
+            if (!string.IsNullOrEmpty(strong))
+            {
+                try
+                {
+                    // search forward
+                    for (int i = 0; i < verse.Count; i++)
+                    {
+                        if (verse[i].TahotSubWords != null && verse[i].TahotSubWords.Count > 0)
+                        {
+                            var subwords = verse[i].TahotSubWords;
+                            for (int j = 0; j < subwords.Count; j++)
+                            {
+                                if (subwords[j].RootStrongs.StartsWith(strong))
+                                {
+                                    result = subwords[j];
+                                    //if (position > 1)
+                                    //{
+                                    //    TahotSubWord temp = result;
+                                    //    while (position > 1)
+                                    //    {
+                                    //        // look for the next occurence
+                                    //        position--;
+                                    //        temp = GetWordFromStrong(strong, result.WordIndex, false);
+                                    //        if (temp == null) break;
+                                    //        result = temp;
+                                    //    }
+                                    //}
+                                    break;
+                                }
+                            }
+                        }
+                        if (result != null)
+                            break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                    var name = cm.DeclaringType.FullName + "." + cm.Name;
+                    Tracing.TraceException(name, ex.Message);
+                }
+            }
+            return result;
+        }
+
 
         /// <summary>
         /// Creates a deep copy of itself

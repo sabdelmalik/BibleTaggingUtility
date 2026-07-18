@@ -83,7 +83,24 @@ namespace BibleTaggingUtil.Settings
             checkbNtRefSkip.Checked = Properties.ReferenceBibles.Default.NtRefSkip;
             checkbNdStrong.Checked = Properties.ReferenceBibles.Default.dStrongs;
             checkBoxTopRTL.Checked = Properties.ReferenceBibles.Default.TopRightToLeft;
-
+            checkBoxExtendedTaggingOT.Checked = Properties.ReferenceBibles.Default.ExtendedTaggingOT;
+            ColumnWidthMode columnWidthMode = (ColumnWidthMode)Properties.ReferenceBibles.Default.ColumnWidthMode;
+            nudColumnWidth.Value = Properties.ReferenceBibles.Default.FixedColumnWidth;
+            switch (columnWidthMode)
+            {
+                case ColumnWidthMode.Auto:
+                    rbColunnWidthAuto.Checked = true;
+                    nudColumnWidth.Visible = false;
+                    break;
+                case ColumnWidthMode.Default:
+                    rbColunnWidthDefault.Checked = true;
+                    nudColumnWidth.Visible = false;
+                    break;
+                case ColumnWidthMode.Fixed:
+                    rbColunnWidthFixed.Checked = true;
+                    nudColumnWidth.Visible = true;
+                    break;
+            }
         }
         public string ReferenceTopVersionPath
         {
@@ -159,6 +176,41 @@ namespace BibleTaggingUtil.Settings
         private void CheckbOtRefSkip_CheckedChanged(object sender, System.EventArgs e)
         {
             Properties.ReferenceBibles.Default.OtRefSkip = checkbOtRefSkip.Checked;
+            changedFlags.MainOtChanged = true;
+        }
+
+        private void checkBoxExtendedTaggingOT_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.ReferenceBibles.Default.ExtendedTaggingOT = checkBoxExtendedTaggingOT.Checked;
+            changedFlags.MainOtChanged = true;
+        }
+
+        private void rbColunnWidthDefault_CheckedChanged(object sender, EventArgs e)
+        {
+            nudColumnWidth.Visible = true;
+            Properties.ReferenceBibles.Default.ColumnWidthMode = (int)ColumnWidthMode.Default;
+            changedFlags.MainOtChanged = true;
+        }
+
+
+        private void rbColunnWidthAuto_CheckedChanged(object sender, EventArgs e)
+        {
+            nudColumnWidth.Visible = false;
+            Properties.ReferenceBibles.Default.ColumnWidthMode = (int)ColumnWidthMode.Auto;
+            changedFlags.MainOtChanged = true;
+        }
+
+        private void rbColunnWidthFixed_CheckedChanged(object sender, EventArgs e)
+        {
+            nudColumnWidth.Visible = true;
+            Properties.ReferenceBibles.Default.ColumnWidthMode = (int)ColumnWidthMode.Fixed;
+            Properties.ReferenceBibles.Default.FixedColumnWidth = (int)nudColumnWidth.Value;
+            changedFlags.MainOtChanged = true;
+        }
+
+        private void nudColumnWidth_ValueChanged(object sender, EventArgs e)
+        {
+            Properties.ReferenceBibles.Default.FixedColumnWidth = (int)nudColumnWidth.Value;
             changedFlags.MainOtChanged = true;
         }
 

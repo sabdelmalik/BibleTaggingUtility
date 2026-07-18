@@ -300,7 +300,7 @@ namespace BibleTaggingUtil.BibleVersions
 
         protected virtual void ParseLine(string line)
         {
-            if (line.StartsWith("Phi 1:1"))
+            if (line.StartsWith("Gen 12:1"))
             {
                    int x = 0;
             }
@@ -360,7 +360,7 @@ namespace BibleTaggingUtil.BibleVersions
                             foreach (Match m in ms)
                             {
                                 strongs.Add(m.Groups[1].Value.Trim());
-                                if (m.Groups.Count > 1)
+                                if (m.Groups.Count > 2)
                                     morph.Add(m.Groups[2].Value.Trim());
                             }
                         }
