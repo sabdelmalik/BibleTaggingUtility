@@ -60,13 +60,14 @@ namespace BibleTaggingUtil.Settings
 
         private void ProcessTargetBibles()
         {
-            List<string> bibles = new List<string>();
+            StartLabel:
+              List<string> bibles = new List<string>();
 
             string targetBiblesPath = tbTargetBiblesFolder.Text;
             if (string.IsNullOrEmpty(targetBiblesPath)) return;
 
             string[] biblesFolders = Directory.GetDirectories(targetBiblesPath);
-            foreach (string biblePath in biblesFolders)
+            foreach (string biblePath  in biblesFolders)
             {
                 if (Directory.Exists(Path.Combine(biblePath, "tagged")) &&
                     Directory.GetFiles(Path.Combine(biblePath, "tagged")).Length == 1 &&
@@ -76,11 +77,38 @@ namespace BibleTaggingUtil.Settings
                     if (conf.Contains("[Tagging]"))
                         bibles.Add(Path.GetFileName(biblePath));
                 }
+                else
+                {
+                    string temp = biblePath;
+                    // Did they selected the tagged folder, in error and did it contain OldTagged
+                    if (temp.EndsWith("OldTagged"))
+                        temp = Path.GetDirectoryName(temp);
+                    if (temp.EndsWith("tagged"))
+                        temp = Path.GetDirectoryName(temp);
+                    // are we at an actual target folder,
+                    if(Directory.Exists(Path.Combine(temp, "tagged")) && 
+                        Directory.GetFiles(Path.Combine(temp, "tagged")).Length == 1 &&
+                        File.Exists(Path.Combine(temp, "BiblesConfig.txt")))
+                    {
+                        tbTargetBiblesFolder.Text = Path.GetDirectoryName(temp);
+                        goto StartLabel;
+                    }
+                }
             }
 
             if (bibles.Count == 0)
             {
-                MessageBox.Show("No valid Bible folder found at:\r\n" + targetBiblesPath, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                MessageBox.Show(
+$@"No valid Bible folder found at:
+
+{targetBiblesPath}
+
+Please Select the main Bibles folder
+Bibles folder contains one or more specific Bible folder.
+Each specifc Bible folder contains:
+a configurations file 'BiblesConfig.txt'
+and a sub folder 'tagged'",
+                    "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 return;
             }
             Properties.TargetBibles.Default.TargetBiblesFolder = targetBiblesPath;

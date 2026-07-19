@@ -101,6 +101,8 @@ namespace BibleTaggingUtil.BibleVersions
                         while (reader.Peek() >= 0)
                         {
                             var line = reader.ReadLine().Trim(' ');
+                            if (line.StartsWith('#'))
+                                continue;
                             if (!string.IsNullOrEmpty(line))
                             {
                                 if (string.IsNullOrEmpty(textReferencePattern))

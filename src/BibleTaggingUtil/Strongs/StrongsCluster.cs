@@ -55,6 +55,24 @@ namespace BibleTaggingUtil.Strongs
             }
         }
 
+        public StrongsCluster(string[] strongsNums, string[] morphs)
+        {
+            strongs = new List<StrongsNumber>();
+            bool includeMorphs = strongsNums.Length == morphs.Length;
+            for (int i = 0; i < strongsNums.Length; i++)
+            {
+                    if (includeMorphs)
+                    {
+                        strongs.Add(new StrongsNumber(strongsNums[i], morphs[i]));
+                    }
+                    else
+                    {
+                        strongs.Add(new StrongsNumber(strongsNums[i]));
+                    }
+            }
+        }
+
+
         public StrongsCluster(string lable)
         {
             tagLable = true;

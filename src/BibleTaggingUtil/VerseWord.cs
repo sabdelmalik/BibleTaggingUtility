@@ -155,6 +155,9 @@ namespace BibleTaggingUtil
                         }
                         root = strg;
                     }
+                    string morph = morphs[i].Replace("{", "").Replace("}", "");
+                    if (i == 0 && morph.StartsWith('H') && morph.Length >1)
+                        morph = morph.Substring(1);
                     TahotSubWords.Add(new TahotSubWord(
                         englishWords[i].Replace("{", "").Replace("}", ""),
                         hebrewWords[i].Replace("{", "").Replace("}", ""),
@@ -163,12 +166,12 @@ namespace BibleTaggingUtil
                         wordType,
                         lexicalForms[i].Replace("{", "").Replace("}", ""),
                         glosses[i].Replace("{", "").Replace("}", ""),
-                        morphs[i].Replace("{", "").Replace("}", ""),
+                        morph,
                         meaningVar,
                         transliterations[i].Replace("{", "").Replace("}", ""),
                         altStrongs,
                         strg,
-                        new StrongsCluster(new string[] { strg }),
+                        new StrongsCluster(new string[] { strg }, new string[] { morph }),
                         isRoot
                     ));
                 }
@@ -185,7 +188,7 @@ namespace BibleTaggingUtil
                         if (!subWord.IsRoot)
                         {
                             subWord.RootStrongs += "-" + root;
-                            subWord.Tag = new StrongsCluster(new string[] { subWord.RootStrongs });
+                            subWord.Tag = new StrongsCluster(new string[] { subWord.RootStrongs }, new string[] { subWord.Morphology });
                         }
                     }
                 }
