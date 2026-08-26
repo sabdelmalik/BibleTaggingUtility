@@ -12,7 +12,7 @@ namespace BibleTaggingUtil.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.14.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "18.7.0.0")]
     internal sealed partial class TargetBibles : global::System.Configuration.ApplicationSettingsBase {
         
         private static TargetBibles defaultInstance = ((TargetBibles)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new TargetBibles())));
@@ -128,6 +128,42 @@ namespace BibleTaggingUtil.Properties {
             }
             set {
                 this["SaveMorphology"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IndividualBooks {
+            get {
+                return ((bool)(this["IndividualBooks"]));
+            }
+            set {
+                this["IndividualBooks"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CurrentBook {
+            get {
+                return ((string)(this["CurrentBook"]));
+            }
+            set {
+                this["CurrentBook"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("taggedX")]
+        public string IndividualTaggedFolderName {
+            get {
+                return ((string)(this["IndividualTaggedFolderName"]));
+            }
+            set {
+                this["IndividualTaggedFolderName"] = value;
             }
         }
     }

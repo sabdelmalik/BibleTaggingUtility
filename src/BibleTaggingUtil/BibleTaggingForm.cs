@@ -191,9 +191,9 @@ namespace BibleTaggingUtil
                 GetSettings(startup: true);
                 if (Properties.ReferenceBibles.Default.Configured)
                     break;
-                DialogResult result = MessageBox.Show("Incomplete Settings! \r\n Do you want to retry settings",
+                DialogResult result = MessageBox.Show("Incomplete Settings! \r\n Do you want to retry settings?",
                     "Settings",
-                    MessageBoxButtons.YesNo, 
+                    MessageBoxButtons.YesNo,
                     MessageBoxIcon.None, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 if (result == DialogResult.No)
                 {
@@ -471,8 +471,22 @@ namespace BibleTaggingUtil
                 }
                 else { break; }
             }
+            
+            while (true)
+            {
+                if (LoadTarget())
+                    break;
 
-            LoadTarget();
+                DialogResult result = MessageBox.Show("A target file must be selected! \r\n Do you want to retry?",
+                    "Settings",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.None, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                if (result == DialogResult.No)
+                {
+                    Application.Exit();
+                    return;
+                }
+            }
 
             StartGui();
 
@@ -607,7 +621,7 @@ namespace BibleTaggingUtil
                     int idx = reference.IndexOf(' ');
                     string bk = reference.Substring(0, idx);
 
-                    int bkIdx = target.GetBookIndex(bk);
+                    int bkIdx = Utils.GetBookIndexFromBook(bk);
                     if (bkIdx > 38 && referenceTAGNT != null && referenceTAGNT.Bible != null && referenceTAGNT.Bible.Count > 0)
                     {
                         string ntbk = referenceTAGNT.GetBookNameFromIndex(bkIdx);
@@ -675,7 +689,7 @@ namespace BibleTaggingUtil
             if (!result)
             {
                 string refName = Path.GetFileName(folderPath);
-                MessageBox.Show("Loading " + refName + " failed", "Error!", MessageBoxButtons.OK, 
+                MessageBox.Show("Loading " + refName + " failed", "Error!", MessageBoxButtons.OK,
                     MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
             }
             else
@@ -990,8 +1004,9 @@ namespace BibleTaggingUtil
             }
         }
 
-        private void LoadTarget()
+        private bool LoadTarget()
         {
+            bool result = false;
             WaitCursorControl(true);
             string targetBibleName = Properties.TargetBibles.Default.TargetBible;
             string targetBiblesFolder = Properties.TargetBibles.Default.TargetBiblesFolder;
@@ -1005,8 +1020,27 @@ namespace BibleTaggingUtil
             config.ReadBiblesConfig(bibleFolder);
 
             string taggedFolder = Path.Combine(bibleFolder, "tagged");
+            bool individual = Properties.TargetBibles.Default.IndividualBooks;
+            SetMenuItemVisible(selectTaggedBookFileToolStripMenuItem, individual);
+            if (individual)
+            {
+                string temp = Path.Combine(bibleFolder, "taggedX");
+                if (Directory.Exists(temp))
+                {
+                    taggedFolder = temp;
+                }
+                else
+                {
+                    var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                    var name = cm.DeclaringType.FullName + "." + cm.Name;
+                    Tracing.TraceInfo(name, $"Folder '{temp} does not exist!'");
+                    individual = false;
+                }
+            }
+
             string[] files = Directory.GetFiles(taggedFolder);
-            if (files.Length > 0)
+
+            if (!individual && files.Length == 1)
             {
                 string ext = Path.GetExtension(files[0]);
                 Properties.MainSettings.Default.Osis = false;
@@ -1031,9 +1065,98 @@ namespace BibleTaggingUtil
                 AddAncientWords();
 
                 VerseSelectionPanel.SetBookCount(target.BookCount);
+                result = true;
+            }
+            else if (individual && files.Length > 0)
+            {
+                string bookFile = GetBookFile(files);
+                if (!string.IsNullOrEmpty(bookFile))
+                {
+                    target.LoadBibleFile(bookFile, true, false);
+
+                    AddAncientWords();
+
+                    VerseSelectionPanel.SetBookNames(target.UbsBookNames);
+
+                    Properties.TargetBibles.Default.CurrentBook = bookFile;
+                    Properties.TargetBibles.Default.Save();
+                    result = true;
+                }
             }
 
             WaitCursorControl(false);
+            return result;
+        }
+
+        void SetMenuItemVisible(ToolStripMenuItem menuItem, bool visible)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => { SetMenuItemVisible(menuItem, visible); }));
+            }
+            else
+            {
+                menuItem.Visible = visible;
+            }
+
+        }
+        private void selectTaggedBookFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string targetBibleName = Properties.TargetBibles.Default.TargetBible;
+            string targetBiblesFolder = Properties.TargetBibles.Default.TargetBiblesFolder;
+            string bibleFolder = Path.Combine(targetBiblesFolder, targetBibleName);
+            string taggedFolder = Path.Combine(bibleFolder, "taggedX");
+            string[] files = Directory.GetFiles(taggedFolder);
+
+            string bookFile = GetBookFile(files, true);
+
+            if (!string.IsNullOrEmpty(bookFile))
+            {
+                WaitCursorControl(true);
+
+                editorPanel.ClearCurrentVerse();
+
+                target.LoadBibleFile(bookFile, true, false);
+
+                AddAncientWords();
+
+                VerseSelectionPanel.SetBookNames(target.UbsBookNames);
+
+                Properties.TargetBibles.Default.CurrentBook = bookFile;
+                Properties.TargetBibles.Default.Save();
+
+                WaitCursorControl(false);
+            }
+        }
+
+        private string GetBookFile(string[] files, bool forceDialog = false)
+        {
+            string currentFile = Properties.TargetBibles.Default.CurrentBook;
+            
+            // ensure we are on the main thread
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => { GetBookFile(files, forceDialog); }));
+            }
+            else
+            {
+                if (forceDialog || 
+                    string.IsNullOrEmpty(currentFile) ||
+                    !System.IO.File.Exists(currentFile))
+                {
+                    var taggedFileSelectionForm = new TaggedFileSelectionForm(files);
+                    taggedFileSelectionForm.TopMost = true;
+                    DialogResult result = taggedFileSelectionForm.ShowDialog(this);
+                    if (result == DialogResult.OK)
+                    {
+                        currentFile = taggedFileSelectionForm.SelctedFile;
+                        Properties.TargetBibles.Default.CurrentBook = currentFile;
+                        Properties.TargetBibles.Default.Save();
+                    }
+                }
+
+            }
+            return Properties.TargetBibles.Default.CurrentBook;
         }
         private void UpdateBibles(SettingsFlags flags)
         {
@@ -1414,8 +1537,8 @@ namespace BibleTaggingUtil
                 targetFolder = Path.Combine(modulesFolder, targetFolderName);
 
                 // copy config file if exists
-                string sourceConfigFile = Path.Combine(biblesFolder, configFileName); 
-                if(System.IO.File.Exists(sourceConfigFile))
+                string sourceConfigFile = Path.Combine(biblesFolder, configFileName);
+                if (System.IO.File.Exists(sourceConfigFile))
                 {
                     string targetConfigFile = Path.Combine(configFolder, configFileName);
                     System.IO.File.Copy(sourceConfigFile, targetConfigFile, true);
@@ -1720,10 +1843,10 @@ namespace BibleTaggingUtil
                 Reference = reference;
             }
 
-            public string Reference {  get; }
+            public string Reference { get; }
             public int TagntWordNum { get; }
-            public string Greek {  get; }
-            public string Lexicon {  get; }
+            public string Greek { get; }
+            public string Lexicon { get; }
             public string Strongs { get; }
             public string AltStrongs { get; }
 
@@ -1754,13 +1877,13 @@ namespace BibleTaggingUtil
         Dictionary<string, List<AltData>> variences = new Dictionary<string, List<AltData>>();
         Dictionary<string, List<AltData>> variences2 = new Dictionary<string, List<AltData>>();
         Dictionary<string, List<AltData>> variences3 = new Dictionary<string, List<AltData>>();
-        List<AltData> altStrongs = new List<AltData> ();
-        List<AltData> alt2Strongs = new List<AltData> ();
-        List<AltData> alt3Strongs = new List<AltData> ();
-        List<AltData> altMultiStrongs = new List<AltData> ();
-        List<string> lexStrongs = new List<string> ();
-        List<string> lexStrongs2 = new List<string> ();
-        List<string> lexStrongs3 = new List<string> ();
+        List<AltData> altStrongs = new List<AltData>();
+        List<AltData> alt2Strongs = new List<AltData>();
+        List<AltData> alt3Strongs = new List<AltData>();
+        List<AltData> altMultiStrongs = new List<AltData>();
+        List<string> lexStrongs = new List<string>();
+        List<string> lexStrongs2 = new List<string>();
+        List<string> lexStrongs3 = new List<string>();
         private void generateAltStrongsTableStripMenuItem_Click(object sender, EventArgs e)
         {
             altStrongs.Clear();
@@ -1791,7 +1914,7 @@ namespace BibleTaggingUtil
                                 altStrongs.Add(new AltData(reference, word.WordIndex, word.Strong.ToStringD(), word.AltStrongs, word.Greek, word.DictForm));
                         }
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         int x = 0;
                     }
@@ -1847,7 +1970,7 @@ namespace BibleTaggingUtil
             {
                 foreach ((string gr, string ast) in m)
                 {
-     
+
                     if (ast != s && !ast.Contains(','))
                     {
                         sb4.Append($"{s}\t{gr}\t{ast}\t{{\"{gr}\", \"{ast}\"}},");
@@ -1862,14 +1985,14 @@ namespace BibleTaggingUtil
             altMap.Clear();
             foreach (AltData data in alt2Strongs)
             {
-                     string grk = data.Greek.Replace(".", "").
-                Replace(",", "").
-                Replace(";", "").
-                Replace(";", "").
-                Replace(":", "").
-                Replace("·", "").
-                Replace("¶", "");
-               if (altMap.ContainsKey(data.Strongs))
+                string grk = data.Greek.Replace(".", "").
+           Replace(",", "").
+           Replace(";", "").
+           Replace(";", "").
+           Replace(":", "").
+           Replace("·", "").
+           Replace("¶", "");
+                if (altMap.ContainsKey(data.Strongs))
                 {
                     SortedDictionary<string, string> mapped = altMap[data.Strongs];
 
@@ -1890,8 +2013,8 @@ namespace BibleTaggingUtil
             {
                 foreach ((string gr, string ast) in m)
                 {
-                        sb4.Append($"{s}\t{gr}\t{ast}");
-                        sb4.Append("\r\n");
+                    sb4.Append($"{s}\t{gr}\t{ast}");
+                    sb4.Append("\r\n");
                 }
             }
             System.IO.File.WriteAllText(@"C:\tmp\Alt2StrongMap.txt", sb4.ToString());
@@ -1967,9 +2090,9 @@ namespace BibleTaggingUtil
                 foreach (string id in variences.Keys)
                 {
                     foreach (AltData data in variences[id])
-                    { 
-                        sb.Append(data.ToString()); 
-                        sb.Append("\r\n"); 
+                    {
+                        sb.Append(data.ToString());
+                        sb.Append("\r\n");
                     }
                     sb.Append("==========================================\r\n");
                 }
@@ -1977,5 +2100,6 @@ namespace BibleTaggingUtil
 
 
         }
+
     }
 }

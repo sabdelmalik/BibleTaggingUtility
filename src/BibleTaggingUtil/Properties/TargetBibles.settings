@@ -29,5 +29,14 @@
     <Setting Name="SaveMorphology" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="IndividualBooks" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="CurrentBook" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="IndividualTaggedFolderName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">taggedX</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

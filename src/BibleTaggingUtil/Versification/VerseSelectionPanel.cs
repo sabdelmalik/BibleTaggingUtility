@@ -32,6 +32,8 @@ namespace BibleTaggingUtil.Versification
 
         private int bookCount = 66;
 
+        private List<string> bookNames = null;
+
         private VersificationBase versification;
 
         /// <summary>
@@ -154,6 +156,21 @@ namespace BibleTaggingUtil.Versification
             }
 
         }
+
+        public void SetBookNames(List<string> names)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => { SetBookNames(names); }));
+            }
+            else
+            {
+                bookNames = names;
+                BookCount = names.Count;
+            }
+
+        }
+
         public int BookCount
         {
             get
@@ -177,6 +194,12 @@ namespace BibleTaggingUtil.Versification
                     string[] names = new string[39];
                     Array.Copy(Constants.ubsNames.Keys.ToArray(), names, 39);
                     lbBookNames.Items.AddRange(names);
+                    lbBookNames.SelectedIndex = 0;
+                }
+                else if (bookNames != null)
+                {
+                    lbBookNames.Items.Clear();
+                    lbBookNames.Items.AddRange(bookNames.ToArray());
                     lbBookNames.SelectedIndex = 0;
                 }
                 else

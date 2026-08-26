@@ -47,6 +47,9 @@
     <Compile Update="Settings\SettingsForm.TranslationTags.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="TaggedFileSelectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Versification\VerseSelectionPanel.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -24,6 +24,8 @@ namespace BibleTaggingUtil.Settings
             checkBoxAncientMeaning.Checked = Properties.TargetBibles.Default.ShowAncientMeaning;
             checkBoxAncientMorph.Checked = Properties.TargetBibles.Default.ShowAncientMorphology;
             checkBoxSaveMorphology.Checked = Properties.TargetBibles.Default.SaveMorphology;
+            checkBoxIndividual.Checked = Properties.TargetBibles.Default.IndividualBooks;
+
             if (string.IsNullOrEmpty(targetBiblesFolder) )
             {
                 tbTargetBiblesFolder.Text = string.Empty;
@@ -166,6 +168,12 @@ and a sub folder 'tagged'",
         private void checkBoxAncientMeaning_CheckedChanged(object sender, EventArgs e)
         {
             Properties.TargetBibles.Default.ShowAncientMeaning = checkBoxAncientMeaning.Checked;
+            changedFlags.TargetBibleChanged = true;
+        }
+
+        private void checkBoxIndividual_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.TargetBibles.Default.IndividualBooks = checkBoxIndividual.Checked;
             changedFlags.TargetBibleChanged = true;
         }
 

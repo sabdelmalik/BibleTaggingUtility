@@ -81,14 +81,25 @@ namespace BibleTaggingUtil.BibleVersions
                 return LoadBibleFileInternal(textFilePath, more);
         }
 
+        public List<string> UbsBookNames 
+        { 
+            get 
+            { 
+                return bookNames.Keys.ToList(); 
+            } 
+        }
         protected virtual bool LoadBibleFileInternal(string textFilePath, bool more)
         {
             Tracing.TraceEntry(MethodBase.GetCurrentMethod().Name, textFilePath, more);
             bool result = false;
+            bool individual = Properties.TargetBibles.Default.IndividualBooks;
 
-            if (this is TargetVersion)
+            if (this is TargetVersion && !individual)
             {
-                FixFileIfCorrupt(textFilePath);
+                // ensure this is not the Individual folder
+                string individuaTaggedFolder = Properties.TargetBibles.Default.IndividualTaggedFolderName;
+                if(individuaTaggedFolder != null && !textFilePath.Contains(individuaTaggedFolder))
+                    FixFileIfCorrupt(textFilePath);
             }
 
             if (File.Exists(textFilePath))
@@ -121,7 +132,7 @@ namespace BibleTaggingUtil.BibleVersions
                                 }
                                 ParseLine(line);
                             }
-                        }
+                                       }
 
                     }
                 }
@@ -130,24 +141,37 @@ namespace BibleTaggingUtil.BibleVersions
 
             if(!more && !(new int[] {66, 39, 27 }).Contains(bookNamesList.Count))
             {
-                Tracing.TraceError(MethodBase.GetCurrentMethod().Name, string.Format("{0}:Book Names Count = {1}. Was expecting 66, 39 or 27",
+                if(!individual && this is TargetVersion)
+                {
+                    Tracing.TraceError(MethodBase.GetCurrentMethod().Name, string.Format("{0}:Book Names Count = {1}. Was expecting 66, 39 or 27",
                                         Path.GetFileName(textFilePath), bookNamesList.Count));
-                return false;
+                    return false;
+                }
             }
 
-
-            if (bookNamesList.Count == 66 || bookNamesList.Count == 39)
+            if (individual && this is TargetVersion)
             {
                 for (int i = 0; i < bookNamesList.Count; i++)
                 {
-                    bookNames.Add(Constants.ubsNames.Keys.ToArray()[i], bookNamesList[i]);
+                    int idx = Utils.GetBookIndexFromBook(bookNamesList[i]);
+                    bookNames.Add(Constants.ubsNames.Keys.ToArray()[idx], bookNamesList[i]);
                 }
             }
-            else if (bookNamesList.Count == 27)
+            else
             {
-               for (int i = 0; i < bookNamesList.Count; i++)
+                if (bookNamesList.Count == 66 || bookNamesList.Count == 39)
                 {
-                    bookNames.Add(Constants.ubsNames.Keys.ToArray()[i+39], bookNamesList[i]);
+                    for (int i = 0; i < bookNamesList.Count; i++)
+                    {
+                        bookNames.Add(Constants.ubsNames.Keys.ToArray()[i], bookNamesList[i]);
+                    }
+                }
+                else if (bookNamesList.Count == 27)
+                {
+                    for (int i = 0; i < bookNamesList.Count; i++)
+                    {
+                        bookNames.Add(Constants.ubsNames.Keys.ToArray()[i + 39], bookNamesList[i]);
+                    }
                 }
             }
             return result;
@@ -262,6 +286,10 @@ namespace BibleTaggingUtil.BibleVersions
             {
                 //Tracing.TraceError(MethodBase.GetCurrentMethod().Name, "Could not detect text reference: " + line);
                 return false;
+            }
+            if (line.ToLower().Contains("gen"))
+            {
+                int o = 0;
             }
 
             String book = mTx.Groups[1].Value;
@@ -543,7 +571,20 @@ namespace BibleTaggingUtil.BibleVersions
         public string GetBookNameFromIndex(int index)
         {
             string bookName = string.Empty;
-            if (index < 66)
+
+            bool individual = Properties.TargetBibles.Default.IndividualBooks;
+            if(individual)
+            {
+                foreach(string book in bookNamesList)
+                {
+                    if(Utils.GetBookIndexFromBook(book) == index)
+                    {
+                        bookName = book;
+                        break;
+                    }
+                }
+            }
+            else if (index < 66)
             {
                 if (index < bookNamesList.Count)
                     bookName = bookNamesList[index];
@@ -554,10 +595,15 @@ namespace BibleTaggingUtil.BibleVersions
         }
 
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reference">reference using UBS book name</param>
+        /// <returns></returns>
         public string GetCorrectReference(string reference)
         {
             string correctReference = string.Empty;
+            bool individual = Properties.TargetBibles.Default.IndividualBooks;
 
             int space = reference.IndexOf(' ');
             string book = reference.Substring(0, space);
@@ -569,8 +615,25 @@ namespace BibleTaggingUtil.BibleVersions
                 offset = 39;
 
             }
-            string correctBook = bookNamesList[Array.IndexOf(Constants.ubsNames.Keys.ToArray(), book) -  offset];
 
+            string correctBook = string.Empty;
+            if (individual)
+            {
+                int index = Utils.GetBookIndexFromBook(book);
+                foreach(string b in bookNamesList)
+                {
+                    if(index == Utils.GetBookIndexFromBook(b))
+                    {
+                        correctBook = b;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                int index = Array.IndexOf(Constants.ubsNames.Keys.ToArray(), book) - offset;
+                correctBook = bookNamesList[index];
+            }
             correctReference = string.Format("{0} {1}", correctBook, cv);
             return correctReference;
         }

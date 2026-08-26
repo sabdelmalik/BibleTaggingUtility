@@ -29,7 +29,15 @@ namespace BibleTaggingUtil.Restore
             this.Text = string.Format("{0}: Restore from old tagged files", bibleName);
             string targetBibleFolder = Path.Combine(Properties.TargetBibles.Default.TargetBiblesFolder,
                             bibleName);
-            taggedFolder = Path.Combine(targetBibleFolder, "tagged");
+            bool individual = Properties.TargetBibles.Default.IndividualBooks;
+            if (individual)
+            {
+                taggedFolder = Path.Combine(targetBibleFolder, "taggedX");
+            }
+            else
+            {
+                taggedFolder = Path.Combine(targetBibleFolder, "tagged");
+            }
             oldTaggedFolder = Path.Combine(taggedFolder, "OldTagged");
 
             string[] files = Directory.GetFiles(oldTaggedFolder);

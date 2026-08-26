@@ -1158,7 +1158,7 @@ namespace BibleTaggingUtil.Editor
 
             string reference = tbCurrentReference.Text;
 
-            int bkIndex = Utils.GetBookIndex(reference);
+            int bkIndex = Utils.GetBookIndexFromReference(reference);
             string targetBook = container.Target.GetBookNameFromIndex(bkIndex);
 
             int space = reference.IndexOf(' ');

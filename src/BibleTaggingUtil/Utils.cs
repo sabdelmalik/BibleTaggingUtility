@@ -17,12 +17,17 @@ namespace BibleTaggingUtil
     {
         public static BibleTestament GetTestament(string reference)
         {
-            return (GetBookIndex(reference) < 39)? BibleTestament.OT : BibleTestament.NT;   
+            return (GetBookIndexFromReference(reference) < 39)? BibleTestament.OT : BibleTestament.NT;   
         }
-        public static int GetBookIndex(string reference)
+
+        public static int GetBookIndexFromReference(string reference)
         {
             int space = reference.IndexOf(' ');
             string book = space > 0 ? reference.Substring(0, space) : "UKN";
+            return GetBookIndexFromBook(book);
+        }
+        public static int GetBookIndexFromBook(string book)
+        {
 
             if (Constants.osisNames.Contains(book, StringComparer.OrdinalIgnoreCase))
                 return Array.IndexOf(Constants.osisNames, book);
@@ -67,8 +72,8 @@ namespace BibleTaggingUtil
 
             if (ref1 == ref2) { return true; }
 
-            int index1 = GetBookIndex(ref1);
-            int index2 = GetBookIndex(ref2);
+            int index1 = GetBookIndexFromReference(ref1);
+            int index2 = GetBookIndexFromReference(ref2);
 
             string[] ref1Parts = ref1.Split(' ');
             string[] ref2Parts = ref2.Split(' ');

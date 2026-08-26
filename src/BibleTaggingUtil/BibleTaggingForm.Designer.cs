@@ -56,11 +56,12 @@ namespace BibleTaggingUtil
             translatorsTagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             exportTranslatorTagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            concordanceUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            generateAltStrongsTableStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             openFileDialog = new System.Windows.Forms.OpenFileDialog();
             folderBrowserDialog3 = new System.Windows.Forms.FolderBrowserDialog();
             waitCursorAnimation = new System.Windows.Forms.PictureBox();
-            concordanceUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            generateAltStrongsTableStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            selectTaggedBookFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)waitCursorAnimation).BeginInit();
             SuspendLayout();
@@ -75,11 +76,11 @@ namespace BibleTaggingUtil
             dockPanel.DockTopPortion = 150D;
             dockPanel.Font = new System.Drawing.Font("Tahoma", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.World);
             dockPanel.Location = new System.Drawing.Point(0, 37);
-            dockPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            dockPanel.Margin = new System.Windows.Forms.Padding(4);
             dockPanel.Name = "dockPanel";
             dockPanel.RightToLeftLayout = true;
             dockPanel.ShowAutoHideContentOnHover = false;
-            dockPanel.Size = new System.Drawing.Size(1459, 649);
+            dockPanel.Size = new System.Drawing.Size(1326, 649);
             dockPanel.TabIndex = 0;
             // 
             // menuStrip1
@@ -88,43 +89,43 @@ namespace BibleTaggingUtil
             menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { fileToolStripMenuItem, editToolStripMenuItem, generateSWORDFilesToolStripMenuItem, usfmToolStripMenuItem, oSISToolStripMenuItem, translatorsTagsToolStripMenuItem, aboutToolStripMenuItem, concordanceUpdatesToolStripMenuItem });
             menuStrip1.Location = new System.Drawing.Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Padding = new System.Windows.Forms.Padding(8, 4, 0, 4);
-            menuStrip1.Size = new System.Drawing.Size(1459, 37);
+            menuStrip1.Padding = new System.Windows.Forms.Padding(7, 4, 0, 4);
+            menuStrip1.Size = new System.Drawing.Size(1326, 37);
             menuStrip1.TabIndex = 2;
             menuStrip1.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
             // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { reloadTargetToolStripMenuItem, saveUpdatedTartgetToolStripMenuItem, restoreToolStripMenuItem, settingsToolStripMenuItem });
+            fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { reloadTargetToolStripMenuItem, saveUpdatedTartgetToolStripMenuItem, restoreToolStripMenuItem, selectTaggedBookFileToolStripMenuItem, settingsToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            fileToolStripMenuItem.Size = new System.Drawing.Size(57, 29);
+            fileToolStripMenuItem.Size = new System.Drawing.Size(54, 29);
             fileToolStripMenuItem.Text = "File";
             // 
             // reloadTargetToolStripMenuItem
             // 
             reloadTargetToolStripMenuItem.Name = "reloadTargetToolStripMenuItem";
-            reloadTargetToolStripMenuItem.Size = new System.Drawing.Size(233, 34);
+            reloadTargetToolStripMenuItem.Size = new System.Drawing.Size(300, 34);
             reloadTargetToolStripMenuItem.Text = "Reload Target";
             reloadTargetToolStripMenuItem.Click += reloadTargetToolStripMenuItem_Click;
             // 
             // saveUpdatedTartgetToolStripMenuItem
             // 
             saveUpdatedTartgetToolStripMenuItem.Name = "saveUpdatedTartgetToolStripMenuItem";
-            saveUpdatedTartgetToolStripMenuItem.Size = new System.Drawing.Size(233, 34);
+            saveUpdatedTartgetToolStripMenuItem.Size = new System.Drawing.Size(300, 34);
             saveUpdatedTartgetToolStripMenuItem.Text = "Save Updatest";
             saveUpdatedTartgetToolStripMenuItem.Click += saveUpdatedTartgetToolStripMenuItem_Click;
             // 
             // restoreToolStripMenuItem
             // 
             restoreToolStripMenuItem.Name = "restoreToolStripMenuItem";
-            restoreToolStripMenuItem.Size = new System.Drawing.Size(233, 34);
+            restoreToolStripMenuItem.Size = new System.Drawing.Size(300, 34);
             restoreToolStripMenuItem.Text = "Restore";
             restoreToolStripMenuItem.Click += restoreToolStripMenuItem_Click;
             // 
             // settingsToolStripMenuItem
             // 
             settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            settingsToolStripMenuItem.Size = new System.Drawing.Size(233, 34);
+            settingsToolStripMenuItem.Size = new System.Drawing.Size(300, 34);
             settingsToolStripMenuItem.Text = "Settings";
             settingsToolStripMenuItem.Click += settingsToolStripMenuItem_Click;
             // 
@@ -132,27 +133,27 @@ namespace BibleTaggingUtil
             // 
             editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { serachReportToolStripMenuItem, tAHOTEnglishToolStripMenuItem });
             editToolStripMenuItem.Name = "editToolStripMenuItem";
-            editToolStripMenuItem.Size = new System.Drawing.Size(60, 29);
+            editToolStripMenuItem.Size = new System.Drawing.Size(58, 29);
             editToolStripMenuItem.Text = "Edit";
             // 
             // serachReportToolStripMenuItem
             // 
             serachReportToolStripMenuItem.Name = "serachReportToolStripMenuItem";
-            serachReportToolStripMenuItem.Size = new System.Drawing.Size(358, 34);
+            serachReportToolStripMenuItem.Size = new System.Drawing.Size(340, 34);
             serachReportToolStripMenuItem.Text = "Serach Report (Experimental)";
             serachReportToolStripMenuItem.Click += serachReportToolStripMenuItem_Click;
             // 
             // tAHOTEnglishToolStripMenuItem
             // 
             tAHOTEnglishToolStripMenuItem.Name = "tAHOTEnglishToolStripMenuItem";
-            tAHOTEnglishToolStripMenuItem.Size = new System.Drawing.Size(358, 34);
+            tAHOTEnglishToolStripMenuItem.Size = new System.Drawing.Size(340, 34);
             tAHOTEnglishToolStripMenuItem.Text = "TAHOT English";
             tAHOTEnglishToolStripMenuItem.Click += tAHOTEnglishToolStripMenuItem_Click;
             // 
             // generateSWORDFilesToolStripMenuItem
             // 
             generateSWORDFilesToolStripMenuItem.Name = "generateSWORDFilesToolStripMenuItem";
-            generateSWORDFilesToolStripMenuItem.Size = new System.Drawing.Size(218, 29);
+            generateSWORDFilesToolStripMenuItem.Size = new System.Drawing.Size(207, 29);
             generateSWORDFilesToolStripMenuItem.Text = "Generate SWORD Files";
             generateSWORDFilesToolStripMenuItem.Click += generateSWORDFilesToolStripMenuItem_Click;
             // 
@@ -160,27 +161,27 @@ namespace BibleTaggingUtil
             // 
             usfmToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { generateUSFMFilesToolStripMenuItem, convertUSFMToOSISToolStripMenuItem, generateSWORDFilesUsfmToolStripMenuItem });
             usfmToolStripMenuItem.Name = "usfmToolStripMenuItem";
-            usfmToolStripMenuItem.Size = new System.Drawing.Size(77, 29);
+            usfmToolStripMenuItem.Size = new System.Drawing.Size(75, 29);
             usfmToolStripMenuItem.Text = "USFM";
             // 
             // generateUSFMFilesToolStripMenuItem
             // 
             generateUSFMFilesToolStripMenuItem.Name = "generateUSFMFilesToolStripMenuItem";
-            generateUSFMFilesToolStripMenuItem.Size = new System.Drawing.Size(304, 34);
+            generateUSFMFilesToolStripMenuItem.Size = new System.Drawing.Size(294, 34);
             generateUSFMFilesToolStripMenuItem.Text = "Generate USFM Files";
             generateUSFMFilesToolStripMenuItem.Click += generateUSFMFilesToolStripMenuItem_Click;
             // 
             // convertUSFMToOSISToolStripMenuItem
             // 
             convertUSFMToOSISToolStripMenuItem.Name = "convertUSFMToOSISToolStripMenuItem";
-            convertUSFMToOSISToolStripMenuItem.Size = new System.Drawing.Size(304, 34);
+            convertUSFMToOSISToolStripMenuItem.Size = new System.Drawing.Size(294, 34);
             convertUSFMToOSISToolStripMenuItem.Text = "Convert USFM to OSIS";
             convertUSFMToOSISToolStripMenuItem.Click += convertUSFMToOSISToolStripMenuItem_Click;
             // 
             // generateSWORDFilesUsfmToolStripMenuItem
             // 
             generateSWORDFilesUsfmToolStripMenuItem.Name = "generateSWORDFilesUsfmToolStripMenuItem";
-            generateSWORDFilesUsfmToolStripMenuItem.Size = new System.Drawing.Size(304, 34);
+            generateSWORDFilesUsfmToolStripMenuItem.Size = new System.Drawing.Size(294, 34);
             generateSWORDFilesUsfmToolStripMenuItem.Text = "Generate SWORD Files";
             generateSWORDFilesUsfmToolStripMenuItem.Click += generateSWORDFilesUsfmToolStripMenuItem_Click;
             // 
@@ -194,14 +195,14 @@ namespace BibleTaggingUtil
             // generateOSISToolStripMenuItem
             // 
             generateOSISToolStripMenuItem.Name = "generateOSISToolStripMenuItem";
-            generateOSISToolStripMenuItem.Size = new System.Drawing.Size(304, 34);
+            generateOSISToolStripMenuItem.Size = new System.Drawing.Size(293, 34);
             generateOSISToolStripMenuItem.Text = "Generate OSIS";
             generateOSISToolStripMenuItem.Click += generateOSISToolStripMenuItem_Click;
             // 
             // generateSWORDFilesOsisToolStripMenuItem
             // 
             generateSWORDFilesOsisToolStripMenuItem.Name = "generateSWORDFilesOsisToolStripMenuItem";
-            generateSWORDFilesOsisToolStripMenuItem.Size = new System.Drawing.Size(304, 34);
+            generateSWORDFilesOsisToolStripMenuItem.Size = new System.Drawing.Size(293, 34);
             generateSWORDFilesOsisToolStripMenuItem.Text = "Generate SWORD Files";
             generateSWORDFilesOsisToolStripMenuItem.Click += generateSWORDFilesOsisToolStripMenuItem_Click;
             // 
@@ -209,22 +210,36 @@ namespace BibleTaggingUtil
             // 
             translatorsTagsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { exportTranslatorTagsToolStripMenuItem });
             translatorsTagsToolStripMenuItem.Name = "translatorsTagsToolStripMenuItem";
-            translatorsTagsToolStripMenuItem.Size = new System.Drawing.Size(166, 29);
+            translatorsTagsToolStripMenuItem.Size = new System.Drawing.Size(157, 29);
             translatorsTagsToolStripMenuItem.Text = "Translators Tags ";
             // 
             // exportTranslatorTagsToolStripMenuItem
             // 
             exportTranslatorTagsToolStripMenuItem.Name = "exportTranslatorTagsToolStripMenuItem";
-            exportTranslatorTagsToolStripMenuItem.Size = new System.Drawing.Size(193, 34);
+            exportTranslatorTagsToolStripMenuItem.Size = new System.Drawing.Size(188, 34);
             exportTranslatorTagsToolStripMenuItem.Text = "Export TT";
             exportTranslatorTagsToolStripMenuItem.Click += exportTranslatorTagsToolStripMenuItem_Click;
             // 
             // aboutToolStripMenuItem
             // 
             aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            aboutToolStripMenuItem.Size = new System.Drawing.Size(79, 29);
+            aboutToolStripMenuItem.Size = new System.Drawing.Size(78, 29);
             aboutToolStripMenuItem.Text = "About";
             aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
+            // 
+            // concordanceUpdatesToolStripMenuItem
+            // 
+            concordanceUpdatesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { generateAltStrongsTableStripMenuItem });
+            concordanceUpdatesToolStripMenuItem.Name = "concordanceUpdatesToolStripMenuItem";
+            concordanceUpdatesToolStripMenuItem.Size = new System.Drawing.Size(203, 29);
+            concordanceUpdatesToolStripMenuItem.Text = "Concordance Updates";
+            // 
+            // generateAltStrongsTableStripMenuItem
+            // 
+            generateAltStrongsTableStripMenuItem.Name = "generateAltStrongsTableStripMenuItem";
+            generateAltStrongsTableStripMenuItem.Size = new System.Drawing.Size(307, 34);
+            generateAltStrongsTableStripMenuItem.Text = "GenerateAltStrongsTable";
+            generateAltStrongsTableStripMenuItem.Click += generateAltStrongsTableStripMenuItem_Click;
             // 
             // openFileDialog
             // 
@@ -233,7 +248,7 @@ namespace BibleTaggingUtil
             // waitCursorAnimation
             // 
             waitCursorAnimation.Image = (System.Drawing.Image)resources.GetObject("waitCursorAnimation.Image");
-            waitCursorAnimation.Location = new System.Drawing.Point(569, 254);
+            waitCursorAnimation.Location = new System.Drawing.Point(517, 254);
             waitCursorAnimation.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             waitCursorAnimation.Name = "waitCursorAnimation";
             waitCursorAnimation.Size = new System.Drawing.Size(111, 111);
@@ -242,31 +257,25 @@ namespace BibleTaggingUtil
             waitCursorAnimation.TabStop = false;
             waitCursorAnimation.Visible = false;
             // 
-            // concordanceUpdatesToolStripMenuItem
+            // selectTaggedBookFileToolStripMenuItem
             // 
-            concordanceUpdatesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { generateAltStrongsTableStripMenuItem });
-            concordanceUpdatesToolStripMenuItem.Name = "concordanceUpdatesToolStripMenuItem";
-            concordanceUpdatesToolStripMenuItem.Size = new System.Drawing.Size(214, 29);
-            concordanceUpdatesToolStripMenuItem.Text = "Concordance Updates";
-            // 
-            // generateAltStrongsTableStripMenuItem
-            // 
-            generateAltStrongsTableStripMenuItem.Name = "generateAltStrongsTableStripMenuItem";
-            generateAltStrongsTableStripMenuItem.Size = new System.Drawing.Size(321, 34);
-            generateAltStrongsTableStripMenuItem.Text = "GenerateAltStrongsTable";
-            generateAltStrongsTableStripMenuItem.Click += generateAltStrongsTableStripMenuItem_Click;
+            selectTaggedBookFileToolStripMenuItem.Name = "selectTaggedBookFileToolStripMenuItem";
+            selectTaggedBookFileToolStripMenuItem.Size = new System.Drawing.Size(300, 34);
+            selectTaggedBookFileToolStripMenuItem.Text = "Select Tagged Book File";
+            selectTaggedBookFileToolStripMenuItem.Visible = false;
+            selectTaggedBookFileToolStripMenuItem.Click += selectTaggedBookFileToolStripMenuItem_Click;
             // 
             // BibleTaggingForm
             // 
-            AutoScaleDimensions = new System.Drawing.SizeF(11F, 25F);
+            AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(1459, 686);
+            ClientSize = new System.Drawing.Size(1326, 686);
             Controls.Add(waitCursorAnimation);
             Controls.Add(dockPanel);
             Controls.Add(menuStrip1);
             IsMdiContainer = true;
             MainMenuStrip = menuStrip1;
-            Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            Margin = new System.Windows.Forms.Padding(4);
             Name = "BibleTaggingForm";
             Load += BibleTaggingForm_Load;
             menuStrip1.ResumeLayout(false);
@@ -310,6 +319,7 @@ namespace BibleTaggingUtil
         private System.Windows.Forms.ToolStripMenuItem restoreToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem concordanceUpdatesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem generateAltStrongsTableStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem selectTaggedBookFileToolStripMenuItem;
     }
 }
 

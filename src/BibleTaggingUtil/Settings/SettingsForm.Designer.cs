@@ -38,6 +38,7 @@ namespace BibleTaggingUtil.Settings
             nudSavePeriod = new System.Windows.Forms.NumericUpDown();
             tabControl1 = new System.Windows.Forms.TabControl();
             targetBible = new System.Windows.Forms.TabPage();
+            checkBoxIndividual = new System.Windows.Forms.CheckBox();
             checkBoxSaveMorphology = new System.Windows.Forms.CheckBox();
             checkBoxAncientMorph = new System.Windows.Forms.CheckBox();
             groupBox4 = new System.Windows.Forms.GroupBox();
@@ -211,6 +212,7 @@ namespace BibleTaggingUtil.Settings
             // 
             // targetBible
             // 
+            targetBible.Controls.Add(checkBoxIndividual);
             targetBible.Controls.Add(checkBoxSaveMorphology);
             targetBible.Controls.Add(checkBoxAncientMorph);
             targetBible.Controls.Add(groupBox4);
@@ -230,6 +232,17 @@ namespace BibleTaggingUtil.Settings
             targetBible.TabIndex = 4;
             targetBible.Text = "Target Bible";
             targetBible.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxIndividual
+            // 
+            checkBoxIndividual.AutoSize = true;
+            checkBoxIndividual.Location = new System.Drawing.Point(217, 478);
+            checkBoxIndividual.Name = "checkBoxIndividual";
+            checkBoxIndividual.Size = new System.Drawing.Size(216, 29);
+            checkBoxIndividual.TabIndex = 17;
+            checkBoxIndividual.Text = "Tag Individul book File";
+            checkBoxIndividual.UseVisualStyleBackColor = true;
+            checkBoxIndividual.CheckedChanged += checkBoxIndividual_CheckedChanged;
             // 
             // checkBoxSaveMorphology
             // 
@@ -1064,5 +1077,6 @@ namespace BibleTaggingUtil.Settings
         private System.Windows.Forms.RadioButton rbColunnWidthAuto;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.NumericUpDown nudColumnWidth;
+        private System.Windows.Forms.CheckBox checkBoxIndividual;
     }
 }
