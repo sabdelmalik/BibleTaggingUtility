@@ -28,7 +28,7 @@ namespace BibleTaggingUtil
             AssemblyName assemblyName = assembly.GetName();
             Version version = assemblyName.Version;
             string author = "Sami Abdel Malik";
-            string copyright = "Copyright © 2023 by Sami Abdel Malik";
+            string copyright = AssemblyCopyright; //"Copyright © 2023 by Sami Abdel Malik";
             string title = "Bible Text Tagging with Strong's Numbers";
 
             textBoxAbout1.Text = "\r\n" +title + "\r\n";
@@ -41,6 +41,19 @@ namespace BibleTaggingUtil
             //textBoxAbout2.Text += "https://github.com/STEPBible/STEPBible-Data/tree/master/Translators%20Amalgamated%20OT%2BNT";
 
             textBoxAbout1.Select(0, 0);
+        }
+
+        private string AssemblyCopyright
+        {
+            get
+            {
+                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
+                if (attributes.Length == 0)
+                {
+                    return "";
+                }
+                return ((AssemblyCopyrightAttribute)attributes[0]).Copyright;
+            }
         }
 
         private void btnOK_Click(object sender, EventArgs e)

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace BibleTaggingUtil
@@ -134,6 +136,43 @@ namespace BibleTaggingUtil
                 Replace(": ", " ").
                 Replace("؟", ".").
                 Replace("!", ".");
+
+            return result;
+        }
+
+        public static bool IsReferenceAramaic(string refernce)
+        {
+            string referencePattern = @"^([0-9A-Za-z]+)\s([0-9]+):([0-9]+)";
+            Match mTx = Regex.Match(refernce, referencePattern);
+            if (!mTx.Success)
+            {
+                Tracing.TraceError(MethodBase.GetCurrentMethod().Name, "Incorrect reference format: " + refernce);
+                return false;
+            }
+
+            String book = mTx.Groups[1].Value;
+            string chapter = mTx.Groups[2].Value;
+            string verse = mTx.Groups[3].Value;
+
+            return IsAramaic(book, chapter, verse);
+        }
+
+        public static bool IsAramaic(string book, string chapter, string verse)
+        {
+            bool result = false;
+            int ch = 0;
+            int vs = 0;
+            if (!int.TryParse(chapter, out ch))
+                return result;
+            if (!int.TryParse(verse, out vs))
+                return result;
+            if ((book == "Gen" && ch == 31 && vs == 47) ||
+                (book == "Ezr" && ((ch == 4 && vs >= 8) || (ch == 5) || (ch == 6 && vs <= 18))) ||
+                (book == "Ezr" && (ch >= 7 && vs >= 12 && vs <= 26)) ||
+                (book == "Pro" && ch == 31 && vs == 2) ||
+                (book == "Jer" && ch == 10 && vs == 11) ||
+                (book == "Dan" && ((ch == 2 && vs >= 4) || (ch > 2 && ch < 7) || (ch == 7 && vs <= 28))))
+                result = true;
 
             return result;
         }

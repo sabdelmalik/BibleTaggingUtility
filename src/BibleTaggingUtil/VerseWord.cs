@@ -122,6 +122,17 @@ namespace BibleTaggingUtil
             {
                 string[] englishWords = english.Split(new char[] { '/' }, StringSplitOptions.TrimEntries);
                 string[] hebrewWords = ancientWord.Split(new char[] { ' ' }, StringSplitOptions.TrimEntries);
+                if (Utils.IsReferenceAramaic(this.Reference) && 
+                    englishWords.Length == 2 && 
+                    hebrewWords.Length == 2 && 
+                    hebrewWords[1] == "א")
+                {
+                    if (englishWords[0] == "<the>")
+                    {
+                        englishWords[0] = englishWords[1];
+                        englishWords[1] = "<the>";
+                    }
+                }
                 string[] lexicalForms = DictForm.Split(';');
                 string[] glosses = DictGloss.Split(';');
                 string[] morphs = morphology.Split('/');
