@@ -344,6 +344,9 @@ namespace BibleTaggingUtil.Editor
 
                     SaveVerse(CurrentVerseReferece);
                     Update(CurrentVerse);
+
+                    this[col, Rows.Count - 1].Selected = true;
+                    this.CurrentCell = this[col, Rows.Count - 1];
                     FireRefernceHighlightRequest((StrongsCluster)this[col, Rows.Count - 1].Value);
                     FireVerseViewChanged();
                 }

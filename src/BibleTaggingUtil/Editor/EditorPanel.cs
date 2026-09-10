@@ -218,7 +218,7 @@ namespace BibleTaggingUtil.Editor
             if (osis && firstEvent)
             {
                 firstEvent = false;
-                picEnableEdit.Hide();
+                btnEnableEdit.Hide();
 
             }
 
@@ -1020,13 +1020,6 @@ namespace BibleTaggingUtil.Editor
             dgvTarget.Undo();
         }
 
-        private void picSave_Click(object sender, EventArgs e)
-        {
-            if (osis)
-                container.OsisTarget.Save("");
-            else
-                container.Target.SaveUpdates();
-        }
 
         private void picDecreaseFont_Click(object sender, EventArgs e)
         {
@@ -1046,11 +1039,6 @@ namespace BibleTaggingUtil.Editor
             dgvTarget.DefaultCellStyle.Font = new System.Drawing.Font(font.Name, font.Size + 1);
             font = dgvTOTHT.DefaultCellStyle.Font;
             dgvTOTHT.DefaultCellStyle.Font = new System.Drawing.Font(font.Name, font.Size + 1);
-        }
-
-        private void picEnableEdit_Click(object sender, EventArgs e)
-        {
-            dgvTarget.Rows[0].ReadOnly = false;
         }
 
         private void picFindTagForward_Click(object sender, EventArgs e)
@@ -1181,7 +1169,7 @@ namespace BibleTaggingUtil.Editor
             }
             else
             {
-                picSave.Visible = v;
+                btnSave.Visible = v;
             }
 
         }
@@ -1298,6 +1286,20 @@ namespace BibleTaggingUtil.Editor
         {
             // highlight columns in the dgvTOTHT where the strong's numbers are overused used in dgvTarget
             dgvTOTHT.HighlightOverusedStrongs(dgvTarget);
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            if (osis)
+                container.OsisTarget.Save("");
+            else
+                container.Target.SaveUpdates();
+        }
+
+        private void btnEnableEdit_Click(object sender, EventArgs e)
+        {
+            dgvTarget.Rows[0].ReadOnly = false;
+            TargetDirty = true;
         }
     }
 }

@@ -321,7 +321,7 @@ namespace BibleTaggingUtil.Editor
                     Tracing.TraceInfo(name, "Finished auto sizing columns");
                 } 
                 ResumeLayout();
-
+                int typeRow = 4; // Type L=Leningrad text; Q=Qere scribal corrections; K=original text; R=Restored text
                 int morphRow = 7;
                 //if(extended)
                 //morphRow = 5;
@@ -352,6 +352,16 @@ namespace BibleTaggingUtil.Editor
                         this.Rows[this.RowCount - 1].Cells[i].Style.ForeColor = Color.Maroon;
                         if (RowCount > 2)
                             this.Rows[this.RowCount - 2].Cells[i].Style.BackColor = Color.Yellow;
+                    }
+
+                    // higlight columns wher the type does not have 'L'
+                    string type = (string)this.Rows[typeRow].Cells[i].Value;
+                    if (i> 0 && type.Contains("X"))
+                    {
+                        for (int j = 0; j < this.RowCount; j++)
+                        {
+                            this.Rows[j].Cells[i].Style.BackColor = Color.LightGray;
+                        }
                     }
 
                 }

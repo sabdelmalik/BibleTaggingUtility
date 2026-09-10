@@ -91,6 +91,8 @@ namespace BibleTaggingUtil
             referenceTopVersion = new ReferenceTopVersion(this);
             referenceTOTHT = new ReferenceVersionTAHOT(this);
             referenceTAGNT = new ReferenceVersionTAGNT(this);
+            // for debugging, to allow the user to select a different target folder and target bible
+            // Properties.TargetBibles.Default.CurrentBook = string.Empty;
         }
 
         #region Form Events
@@ -466,16 +468,27 @@ namespace BibleTaggingUtil
                     if (res == DialogResult.No)
                     {
                         Application.Exit();
+                        return;
                     }
                     GetSettings(startup: true);
+                    if(shuttingDown)
+                    {
+                        return;
+                    }
                 }
                 else { break; }
             }
             
             while (true)
             {
+                bool individual = Properties.TargetBibles.Default.IndividualBooks;
                 if (LoadTarget())
                     break;
+
+                if (shuttingDown)
+                {
+                    return;
+                }
 
                 DialogResult result = MessageBox.Show("A target file must be selected! \r\n Do you want to retry?",
                     "Settings",
@@ -984,6 +997,28 @@ namespace BibleTaggingUtil
                 }
                 target.ActivatePeriodicTimer();
 
+                if (settingsForm.ChangedFlags.TargetBibleChanged)
+                {
+                    bool indivdual = Properties.TargetBibles.Default.IndividualBooks;
+                    string currentBook = Properties.TargetBibles.Default.CurrentBook;
+                    if (indivdual & string.IsNullOrEmpty(currentBook))
+                    {
+                        string targetBibleName = Properties.TargetBibles.Default.TargetBible;
+                        string targetBiblesFolder = Properties.TargetBibles.Default.TargetBiblesFolder;
+                        string bibleFolder = Path.Combine(targetBiblesFolder, targetBibleName);
+                        string taggedFolderX = Path.Combine(bibleFolder, "taggedX");
+                        if (!Directory.Exists(taggedFolderX))
+                        {
+                            Directory.CreateDirectory(taggedFolderX);
+                        }
+                        string[] files = Directory.GetFiles(taggedFolderX);
+                        GetBookFileOrQuit(files);
+                        if (shuttingDown)
+                            return;
+
+                    }
+                }
+
                 if (!startup)
                 {
                     new Thread(() =>
@@ -1004,6 +1039,61 @@ namespace BibleTaggingUtil
             }
         }
 
+        private bool shuttingDown = false;
+        private string GetBookFileOrQuit(string[] files)
+        {
+            string currentBook = string.Empty;
+            if (files.Length == 0)
+            {
+                Properties.TargetBibles.Default.CurrentBook = string.Empty;
+                Properties.TargetBibles.Default.IndividualBooks = false;
+                Properties.TargetBibles.Default.Save();
+                MessageBox.Show("No tagged files found in the 'taggedX' folder.\r\nIndividual book selection flag reset.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+            }
+            else
+            {
+                while (string.IsNullOrEmpty(currentBook))
+                {
+                    currentBook = GetBookFile(files, true);
+                    if (string.IsNullOrEmpty(currentBook))
+                    {
+                        DialogResult res = ShowMessageBox("A book must be selected\r\nYes: to select a Book\r\nNo: to reset individual book selection\r\nCancel: to exit the application`.",
+                            "Book File Not Selected", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                        if (res == DialogResult.Cancel)
+                        {
+                            shuttingDown = true;
+                            ExitApplication();
+                            break;
+                        }
+                        else if (res == DialogResult.No)
+                        {
+                            Properties.TargetBibles.Default.IndividualBooks = false;
+                            Properties.TargetBibles.Default.CurrentBook = string.Empty;
+                            Properties.TargetBibles.Default.Save();
+                            MessageBox.Show("Individual book selection flag reset.", "Information.", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                            break;
+                        }
+                    }
+                    else { break; }
+                }
+            }
+            return currentBook;
+        }
+
+        private void ExitApplication()
+        {
+            if (InvokeRequired)
+            {
+                // Call this same method but append THREAD2 to the text
+                Action safeWrite = delegate { ExitApplication(); };
+                Invoke(safeWrite);
+            }
+            else
+            {
+                Application.Exit();
+            }
+        }
+
         private bool LoadTarget()
         {
             bool result = false;
@@ -1020,32 +1110,74 @@ namespace BibleTaggingUtil
             config.ReadBiblesConfig(bibleFolder);
 
             string taggedFolder = Path.Combine(bibleFolder, "tagged");
+            string taggedFolderX = Path.Combine(bibleFolder, "taggedX");
             bool individual = Properties.TargetBibles.Default.IndividualBooks;
             SetMenuItemVisible(selectTaggedBookFileToolStripMenuItem, individual);
+            string[] filesX = { };
             if (individual)
             {
-                string temp = Path.Combine(bibleFolder, "taggedX");
-                if (Directory.Exists(temp))
+                if (!Directory.Exists(taggedFolderX))
                 {
-                    taggedFolder = temp;
+                    Directory.CreateDirectory(taggedFolderX);
+                    var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                    var name = cm.DeclaringType.FullName + "." + cm.Name;
+                    Tracing.TraceInfo(name, $"Folder '{taggedFolderX}' does not exist! Created One");
+                    individual = false;
+                    Properties.TargetBibles.Default.IndividualBooks = individual;
+                    Properties.TargetBibles.Default.Save();
+                    MessageBox.Show(
+                        $"Folder '{taggedFolderX}' does not exist!'\r\nIndividual book selection flag reset.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 }
-                else
+            }
+            string[] files = Directory.GetFiles(taggedFolder);
+
+            if (individual)
+            {
+                filesX = Directory.GetFiles(taggedFolderX);
+                if (filesX.Length == 0)
                 {
                     var cm = System.Reflection.MethodBase.GetCurrentMethod();
                     var name = cm.DeclaringType.FullName + "." + cm.Name;
-                    Tracing.TraceInfo(name, $"Folder '{temp} does not exist!'");
+                    Tracing.TraceInfo(name, $"Folder '{taggedFolderX}' is Empty!'");
                     individual = false;
+                    Properties.TargetBibles.Default.IndividualBooks = individual;
+                    Properties.TargetBibles.Default.Save();
+                    MessageBox.Show(
+                        $"Folder '{taggedFolderX}' is Empty!'\r\nIndividual book selection flag reset.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 }
             }
 
-            string[] files = Directory.GetFiles(taggedFolder);
+            if(individual)
+            {
+                string currentBook = Properties.TargetBibles.Default.CurrentBook;
+                if (string.IsNullOrEmpty(currentBook) || !System.IO.File.Exists(currentBook))
+                {
+                    currentBook = GetBookFileOrQuit(filesX);
+                    if (shuttingDown)
+                        return false;
+                }
 
+                if (!string.IsNullOrEmpty(currentBook))
+                {
+                    target.LoadBibleFile(currentBook, true, false);
+
+                    AddAncientWords();
+
+                    VerseSelectionPanel.SetBookNames(target.UbsBookNames);
+
+                    Properties.TargetBibles.Default.CurrentBook = currentBook;
+                    Properties.TargetBibles.Default.Save();
+                    result = true;
+                }
+            }
+            // are we still in the individual mode?
+            individual = Properties.TargetBibles.Default.IndividualBooks;
             if (!individual && files.Length == 1)
             {
                 string ext = Path.GetExtension(files[0]);
                 Properties.MainSettings.Default.Osis = false;
 
-                //               if (Properties.MainSettings.Default.Osis)
+                // if (Properties.MainSettings.Default.Osis)
                 if (ext.ToLower() == ".xml")
                 {
                     Properties.MainSettings.Default.Osis = true;
@@ -1066,22 +1198,6 @@ namespace BibleTaggingUtil
 
                 VerseSelectionPanel.SetBookCount(target.BookCount);
                 result = true;
-            }
-            else if (individual && files.Length > 0)
-            {
-                string bookFile = GetBookFile(files);
-                if (!string.IsNullOrEmpty(bookFile))
-                {
-                    target.LoadBibleFile(bookFile, true, false);
-
-                    AddAncientWords();
-
-                    VerseSelectionPanel.SetBookNames(target.UbsBookNames);
-
-                    Properties.TargetBibles.Default.CurrentBook = bookFile;
-                    Properties.TargetBibles.Default.Save();
-                    result = true;
-                }
             }
 
             WaitCursorControl(false);
@@ -1140,19 +1256,29 @@ namespace BibleTaggingUtil
             }
             else
             {
-                if (forceDialog || 
-                    string.IsNullOrEmpty(currentFile) ||
-                    !System.IO.File.Exists(currentFile))
+                if (files.Length > 0)
                 {
-                    var taggedFileSelectionForm = new TaggedFileSelectionForm(files);
-                    taggedFileSelectionForm.TopMost = true;
-                    DialogResult result = taggedFileSelectionForm.ShowDialog(this);
-                    if (result == DialogResult.OK)
+                    if (forceDialog ||
+                        string.IsNullOrEmpty(currentFile) ||
+                        !System.IO.File.Exists(currentFile))
                     {
-                        currentFile = taggedFileSelectionForm.SelctedFile;
-                        Properties.TargetBibles.Default.CurrentBook = currentFile;
-                        Properties.TargetBibles.Default.Save();
+                        var taggedFileSelectionForm = new TaggedFileSelectionForm(files);
+                        taggedFileSelectionForm.TopMost = true;
+                        DialogResult result = taggedFileSelectionForm.ShowDialog(this);
+                        if (result == DialogResult.OK)
+                        {
+                            currentFile = taggedFileSelectionForm.SelctedFile;
+                            Properties.TargetBibles.Default.CurrentBook = currentFile;
+                            Properties.TargetBibles.Default.Save();
+                        }
                     }
+                }
+                else
+                {
+                    Properties.TargetBibles.Default.CurrentBook = string.Empty;
+                    Properties.TargetBibles.Default.IndividualBooks = false;
+                    Properties.TargetBibles.Default.Save();
+                    MessageBox.Show("No tagged files found in the 'taggedX' folder.\r\nIndividual book selection flag reset.", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 }
 
             }
