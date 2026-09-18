@@ -1,22 +1,27 @@
-﻿using Microsoft.VisualBasic.Devices;
+﻿using BibleTaggingUtil.BibleVersions;
+using BibleTaggingUtil.Strongs;
+using Microsoft.VisualBasic.Devices;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.Runtime.ConstrainedExecution;
+using System.Runtime.Intrinsics.X86;
+using System.Security.Cryptography.X509Certificates;
+using System.Security.Policy;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
-using BibleTaggingUtil.BibleVersions;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading;
-using System.ComponentModel;
 using System.Xml.Linq;
-using static WeifenLuo.WinFormsUI.Docking.DockPanel;
-using System.Reflection;
-using System.Text.RegularExpressions;
-using BibleTaggingUtil.Strongs;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
+using static WeifenLuo.WinFormsUI.Docking.DockPanel;
 
 namespace BibleTaggingUtil.Editor
 {
@@ -150,7 +155,7 @@ namespace BibleTaggingUtil.Editor
                 int colIndex = SelectedCells[0].ColumnIndex;
                 for (int i = 1; i < this.SelectedCells.Count; i++)
                 {
-                    if(Math.Abs(SelectedCells[i].ColumnIndex - colIndex) != 1)
+                    if (Math.Abs(SelectedCells[i].ColumnIndex - colIndex) != 1)
                     {
                         mergeOk = false;
                         break;
@@ -159,15 +164,15 @@ namespace BibleTaggingUtil.Editor
                 }
 
 
-                    if (sameRow)
+                if (sameRow)
                 {
                     this.ContextMenuStrip.Items.Clear();
                     ToolStripMenuItem mergeMenuItem = new ToolStripMenuItem(MERGE_CONTEXT_MENU);
                     ToolStripMenuItem swapMenuItem = new ToolStripMenuItem(SWAP_CONTEXT_MENU);
 
-                    if(mergeOk)
+                    if (mergeOk)
                         this.ContextMenuStrip.Items.Add(mergeMenuItem);
-                    if(this.SelectedCells.Count == 2)
+                    if (this.SelectedCells.Count == 2)
                         this.ContextMenuStrip.Items.Add(swapMenuItem);
                     e.Cancel = false;
                 }
@@ -180,8 +185,8 @@ namespace BibleTaggingUtil.Editor
 
                     if (tag == null)
                         return;
-//                    if (string.IsNullOrEmpty(text))
-//                        return;
+                    //                    if (string.IsNullOrEmpty(text))
+                    //                        return;
 
                     this.ContextMenuStrip.Items.Clear();
 
@@ -330,7 +335,7 @@ namespace BibleTaggingUtil.Editor
                     if (e.ClickedItem.Text == REVERSE_CONTEXT_MENU)
                     {
                         StrongsNumber temp = strongsCluster[0];
-                        strongsCluster[0] = strongsCluster[strongsCluster.Count -1];
+                        strongsCluster[0] = strongsCluster[strongsCluster.Count - 1];
                         strongsCluster[strongsCluster.Count - 1] = temp;
                     }
                     else if (e.ClickedItem.Text == DELETE_LEFT_CONTEXT_MENU)
@@ -339,7 +344,7 @@ namespace BibleTaggingUtil.Editor
                     }
                     else if (e.ClickedItem.Text == DELETE_RIGHT_CONTEXT_MENU)
                     {
-                        strongsCluster.DeleteAt(strongsCluster.Count-1);
+                        strongsCluster.DeleteAt(strongsCluster.Count - 1);
                     }
 
                     SaveVerse(CurrentVerseReferece);
@@ -398,7 +403,7 @@ namespace BibleTaggingUtil.Editor
                     ancientWords = new GridAncientWord[verse.Count];
                     ancientMeanings = new GridAncientMeaning[verse.Count];
                 }
-              
+
                 oldTestament = (verse[0].Testament == BibleTestament.OT);
 
                 // key: strongs number, value: occurance count
@@ -478,18 +483,18 @@ namespace BibleTaggingUtil.Editor
 
                 this.ColumnCount = verseWords.Length;
                 this.Rows.Add(verseWords);
-                
+
                 this.Rows.Add(ancientVerse);
                 Rows[1].Visible = false;
-                
-                if(Properties.TargetBibles.Default.ShowAncientMeaning && ancientMeanings is not null && ancientMeanings.Length != 0)
+
+                if (Properties.TargetBibles.Default.ShowAncientMeaning && ancientMeanings is not null && ancientMeanings.Length != 0)
                     this.Rows.Add(ancientMeanings);
-               
-                if(Properties.TargetBibles.Default.ShowAncientWord && ancientWords is not null && ancientWords.Length != 0)
+
+                if (Properties.TargetBibles.Default.ShowAncientWord && ancientWords is not null && ancientWords.Length != 0)
                     this.Rows.Add(ancientWords);
 
 
-                if(Properties.TargetBibles.Default.ShowAncientMorphology && verseMorphs is not null && verseMorphs.Length != 0)
+                if (Properties.TargetBibles.Default.ShowAncientMorphology && verseMorphs is not null && verseMorphs.Length != 0)
                     this.Rows.Add(verseMorphs);
 
                 this.Rows.Add(wordNumber);
@@ -508,9 +513,9 @@ namespace BibleTaggingUtil.Editor
                     string word = (string)this.Rows[0].Cells[i].Value;
                     StrongsCluster tag = (StrongsCluster)this.Rows[tRow].Cells[i].Value;
                     StrongsCluster nextTag = new StrongsCluster();
-                    if(i < verseWords.Length - 1)
+                    if (i < verseWords.Length - 1)
                     {
-                        nextTag = (StrongsCluster)this.Rows[tRow].Cells[i+1].Value;
+                        nextTag = (StrongsCluster)this.Rows[tRow].Cells[i + 1].Value;
                     }
                     if (tag == null)
                         continue;
@@ -530,9 +535,9 @@ namespace BibleTaggingUtil.Editor
 
                     if (tag.ToString().Contains(tagToHighlight) || tag.ToString().Contains("0000") || (tag.ToString() == string.Empty && tagToHighlight == "<>"))
                     {
-                        this.Rows[tRow].Cells[i].Style.ForeColor= Color.Maroon;
+                        this.Rows[tRow].Cells[i].Style.ForeColor = Color.Maroon;
                         if (RowCount > 2)
-                            this.Rows[tRow-1].Cells[i].Style.BackColor = Color.Yellow;
+                            this.Rows[tRow - 1].Cells[i].Style.BackColor = Color.Yellow;
                     }
                     else if (!string.IsNullOrEmpty(tag.ToString()) && tag.ToString() == nextTag.ToString())
                     {
@@ -541,10 +546,123 @@ namespace BibleTaggingUtil.Editor
                     }
 
                     //if (direction.ToLower() == "rtl")
-                    if(Properties.TargetBibles.Default.RightToLeft)
+                    if (Properties.TargetBibles.Default.RightToLeft)
                         this.Columns[i].DisplayIndex = verseWords.Length - i - 1;
                     else
                         this.Columns[i].DisplayIndex = i;
+                }
+
+                if (Bible.BibleName.ToUpper().Contains("NIV"))
+                {
+                    //string[] wordsToHiglight = { "were:", "through", "Ard", "the" };
+                    //string[] wordsToHiglight = { "Abel", "‘Let’s", "go", "out", "to", "the", "field.’", "While"};
+                    //string[] wordsToHiglight = { "hope", "Lord", "," };
+                    string reference = Utils.GetUbsReference(verse.VerseWords[0].Reference);
+
+                    if (nivLXX.Keys.Contains(reference))
+                    {
+                        // wordsToHiglight is a test case to generate code
+                        // but the code should be generic enough to handle any wordsToHiglight array
+                        // wordsToHiglight may be togther in one cell seperated by a space,
+                        // or be ditributed accreoss adjacent cells,
+                        // so we need to find the first cell that contains the first wordToHighlight and the cell that contains the last word to highlight
+                        // The first and last entry in the wordsToHighlight array act as delimiters.
+                        // In the test case, we find the first cell that contains "were:" and is followed by a cell that contains "through"
+                        // Then the cell containing "through" will be the first cell to highlight,
+                        // we need see if the cell containing through also contains only "through" or also contains "Mard"
+                        // and we progress untill we find all adjacent cells that contain the words in the wordsToHighlight array,
+                        // Then we highlight all the columns (whole columns) of the adjacent cells excluding the first and the last.
+                        List<string> wordsToHiglight = nivLXX[reference];
+                        if (wordsToHiglight != null && wordsToHiglight.Count > 0)
+                        {
+                            int firstIndex = -1;
+                            int lastIndex = -1;
+                            int n = verseWords.Length;
+
+                            // Find the first cell that contains the first target word.
+                            for (int i = 0; i < n; i++)
+                            {
+                                if(wordsToHiglight[0] == "-1")
+                                {
+                                    firstIndex = 0;
+                                    break;
+                                }
+                                string cellText = (this.Rows[0].Cells[i].Value as string) ?? string.Empty;
+                                if (cellText.IndexOf(wordsToHiglight[0], StringComparison.OrdinalIgnoreCase) >= 0)
+                                {
+                                    string nextCellText = (i + 1 < n) ? (this.Rows[0].Cells[i + 1].Value as string) ?? string.Empty : string.Empty;
+                                    if (nextCellText.IndexOf(wordsToHiglight[1], StringComparison.OrdinalIgnoreCase) >= 0)
+                                    {
+                                        firstIndex = i;
+                                        break;
+                                    }
+                                }
+                            }
+
+
+                            // Find the last cell that contains the last target word.
+                            for (int i = n - 1; i >= 0; i--)
+                            {
+                                if(wordsToHiglight[wordsToHiglight.Count - 1] == "-1")
+                                {
+                                    lastIndex = n - 1;
+                                    break;
+                                }
+                                string cellText = (this.Rows[0].Cells[i].Value as string) ?? string.Empty;
+                                if (cellText.IndexOf(wordsToHiglight[wordsToHiglight.Count - 1], StringComparison.OrdinalIgnoreCase) >= 0)
+                                {
+                                    string prevCellText = (i - 1 >= 0) ? (this.Rows[0].Cells[i - 1].Value as string) ?? string.Empty : string.Empty;
+                                    if (prevCellText.IndexOf(wordsToHiglight[wordsToHiglight.Count - 2], StringComparison.OrdinalIgnoreCase) >= 0)
+                                    {
+                                        lastIndex = i;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            // Fallback: try to locate the whole phrase in a single cell if either end wasn't found independently.
+                            if (firstIndex == -1 || lastIndex == -1)
+                            {
+                                string phrase = string.Join(" ", wordsToHiglight);
+                                for (int i = 0; i < n; i++)
+                                {
+                                    string cellText = (this.Rows[0].Cells[i].Value as string) ?? string.Empty;
+                                    if (cellText.IndexOf(phrase, StringComparison.OrdinalIgnoreCase) >= 0)
+                                    {
+                                        firstIndex = lastIndex = i;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            // If both indices were found and there is at least one column strictly between them, highlight full columns (exclude boundaries).
+                            if (firstIndex != -1 && lastIndex != -1)// && Math.Abs(lastIndex - firstIndex) > 1)
+                            {
+
+                                int start = Math.Min(firstIndex, lastIndex) + 1;
+                                int end = Math.Max(firstIndex, lastIndex) - 1;
+                                if (wordsToHiglight[0] == "-1")
+                                    start = 0;
+                                if (wordsToHiglight[wordsToHiglight.Count - 1] == "-1")
+                                    end = this.Columns.Count - 1;
+
+                                for (int colIndex = start; colIndex <= end; colIndex++)
+                                {
+                                    // Highlight every row in the column (complete column).
+                                    for (int rowIndex = 0; rowIndex < this.Rows.Count; rowIndex++)
+                                    {
+                                        // Skip null cells defensively.
+                                        var cell = this.Rows[rowIndex].Cells[colIndex];
+                                        if (cell != null)
+                                        {
+                                            cell.Style.BackColor = Color.LightGray;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        //////////////////////////
+                    }
                 }
 
                 if (col >= 0)
@@ -552,19 +670,19 @@ namespace BibleTaggingUtil.Editor
 
                 this.ClearSelection();
 
-                if(Properties.TargetBibles.Default.RightToLeft)
+                if (Properties.TargetBibles.Default.RightToLeft)
                     this.Rows[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                 if (Properties.TargetBibles.Default.ShowAncientWord && ancientWords is not null && oldTestament)
                     this.Rows[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 
-                this.Rows[this.Rows.Count -1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                this.Rows[this.Rows.Count - 1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 this.Rows[0].ReadOnly = true;
-                this[0,tRow].Selected = true;
+                this[0, tRow].Selected = true;
                 this.CurrentCell = this[0, tRow];
-                if(!string.IsNullOrEmpty(((StrongsCluster)this[0, tRow].Value).ToString()))
+
+                if (!string.IsNullOrEmpty(((StrongsCluster)this[0, tRow].Value).ToString()))
                     FireRefernceHighlightRequest((StrongsCluster)this[0, tRow].Value);
                 //this.Rows[tRow].ReadOnly = true;
-
             }
             catch (Exception ex)
             {
@@ -574,12 +692,45 @@ namespace BibleTaggingUtil.Editor
             }
         }
 
+        Dictionary<string, List<string>> nivLXX = new Dictionary<string, List<string>>()
+        {
+            { "Gen 4:8", new List<string>(){"Abel", "‘Let’s", "go", "out", "to", "the", "field.’", "While"}},
+            {"Num 26:40", new List<string>(){"were:", "through", "Ard", "the" }},
+            {"Jdg 16:13", new List<string>(){"loom", "and", "tighten", "...", "-1"}},
+            {"1Sa 14:41", new List<string>(){"Israel,",	"‘Why", "have", "...", "fault,",  "respond"}},
+            {"2Sa 12:16", new List<string>(){"lying", "in", "sackcloth", "on"}},
+            {"2Sa 13:34", new List<string>(){"down",   "the", "side", "of", "the", "hill.", "...", "of", "Horonaim", "on"}},
+            {"2Sa 15:8", new List<string>(){"Lord",	"in", "Hebron", "’"}},
+            {"2Sa 23:33", new List<string>(){"-1", "son", "of", "Shammah"}},
+            {"2Sa 24:17", new List<string>(){"I,", "the", "shepherd", "have"}},
+            {"1Ch 4:13", new List<string>(){"Hathath", "and", "Meonothai", "-1"}},
+            {"1Ch 6:27", new List<string>(){"Elkanah", "his", "son", "and", "Samuel", "his"}},//6:12
+            {"1Ch 6:28", new List<string>(){"Samuel", "Joel", "the"}},//6:13
+            {"1Ch 6:59", new List<string>(){"Ashan,",  "Juttah",  "and"}},//6:44
+            {"1Ch 6:60", new List<string>(){"given" ,  "Gibeon", "Geba",}},//6:45
+            {"1Ch 6:77", new List<string>(){"received", "Jokneam", "Kartah", "Rimmono"}},//6:62
+            {"1Ch 7:25", new List<string>(){"Resheph", "his", "son", "Telah"}},
+            {"1Ch 8:29", new List<string>(){"-1", "Jeiel", "the"}},
+            {"1Ch 8:30", new List<string>(){"Baal", "Ner", "Nadab"}},
+            {"1Ch 9:41", new List<string>(){"Tahrea",  "and", "Ahaz", "-1"}},
+            {"1Ch 21:17", new List<string>(){"I,", "the", "shepherd", "have"}},
+            {"1Ch 25:9", new List<string>(){"Joseph,", "his", "sons", "and", "relatives", "12"}},
+            {"2Ch 15:8", new List<string>(){"of", "Azariah", "son", "of", "Oded"}},
+            {"Ezr 8:5", new List<string>(){"of",  "Zattu",  "Shekaniah"}},
+            {"Ezr 8:10", new List<string>(){"of",  "Bani,", "Shelomith"}},
+            {"Est 3:7", new List<string>(){"month",   "And", "the", "lot", "fell",    "on",  "the"}},
+            {"Psa 25:21", new List<string>(){"hope", "Lord", ","}},
+            {"Psa 56:7", new List<string>(){"do", "not", "let"}},
+            {"Psa 145:13", new List<string>(){"generations.",  "The", "Lord", "...", "-1"}},
+            {"Ecc 9:2", new List<string>(){"good", "and", "the", "bad,", "the"}},
+            {"Isa 53:11", new List<string>(){ "suffered,", "he",  "will", "see", "the", "light", "of", "life", "and" } }
+        };
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="verse"></param>
-        public void SaveVerse(Verse verse)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="verse"></param>
+    public void SaveVerse(Verse verse)
         {
             if (Properties.MainSettings.Default.Osis)
                 OsisBible.Bible[verse[0].Reference] = verse;

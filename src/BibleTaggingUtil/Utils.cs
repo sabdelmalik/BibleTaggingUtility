@@ -46,6 +46,51 @@ namespace BibleTaggingUtil
             throw new Exception(string.Format("Failed to find '{0}' in any book list!", book));
 
         }
+        public static string GetUbsReference(string reference)
+        {
+            string result = string.Empty;
+            // the reference can be in the form of "Gen 1:1" or "Gen.1.1"
+            // extract the book, chapter and verse from the reference base on its format
+            // convert the book name to its UBS equivalent if it is not already in that format
+            // reconstruct the reference and return it
+            bool dotFormat = reference.Contains(".");
+            if (dotFormat)
+            {
+                string[] parts = reference.Split('.');
+                if (parts.Length == 3)
+                {
+                    string book = parts[0];
+                    string chapter = parts[1];
+                    string verse = parts[2];
+                    int bkIndex = GetBookIndexFromBook(book);
+                    book = Constants.ubsNames.Keys.ToArray()[bkIndex];
+                    result = $"{book}.{chapter}.{verse}";
+                }
+            }
+            else
+            {
+                string[] parts = reference.Split(' ');
+                if (parts.Length == 2)
+                {
+                    string book = parts[0];
+                    string[] chapterVerse = parts[1].Split(':');
+                    if (chapterVerse.Length == 2)
+                    {
+                        string chapter = chapterVerse[0];
+                        string verse = chapterVerse[1];
+                        int bkIndex = GetBookIndexFromBook(book);
+                        book = Constants.ubsNames.Keys.ToArray()[bkIndex];
+                        result = $"{book} {chapter}:{verse}";
+                    }
+                }
+            }
+
+
+
+            return result;
+        }
+
+
 
         public static string GetVerseText(Verse words, bool includeTags)
         {
