@@ -412,6 +412,25 @@ namespace BibleTaggingUtil.Versification
             }
         }
 
+        public string GetLastRef()
+        {
+            string result = string.Empty;
+            try
+            {
+                string book = lbBookNames.Items[lbBookNames.Items.Count - 1].ToString();
+                int lastChapter = bibleBooks[book].LastVerse.Length;
+                int lastVerse = bibleBooks[book].LastVerse[lastChapter - 1];
+                result = string.Format("{0} {1}:{2}", book, lastChapter, lastVerse);
+            }
+            catch (Exception ex)
+            {
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
+            }
+            return result;
+
+        }
         public string GetNextRef(string currentReference)
         {
             string result = string.Empty;
@@ -455,10 +474,12 @@ namespace BibleTaggingUtil.Versification
                     }
                     else
                     {
-                        int currentBook = Array.IndexOf(Constants.ubsNames.Keys.ToArray(), book);
-                        if (currentBook < (Constants.ubsNames.Keys.Count - 1))
+
+                        //int currentBook = Array.IndexOf(Constants.ubsNames.Keys.ToArray(), book);
+                        int currentBook = lbBookNames.FindString(book);
+                        if (currentBook < lbBookNames.Items.Count - 1)//(Constants.ubsNames.Keys.Count - 1))
                         {
-                            newBook = Constants.ubsNames.Keys.ToArray()[currentBook + 1];
+                            newBook = lbBookNames.Items[currentBook + 1].ToString(); //Constants.ubsNames.Keys.ToArray()[currentBook + 1];
                             newChapter = 1;
                             newVerse = 1;
                         }
@@ -516,11 +537,12 @@ namespace BibleTaggingUtil.Versification
             //else if (book == "Nah") book = "Nam";
 
 
-            int currentBook = Array.IndexOf(Constants.ubsNames.Keys.ToArray(), book);
-            if (BookCount == 27 && currentBook >= 39)
-            {
-                currentBook -= 39;
-            }
+            int currentBook = lbBookNames.FindString(book);
+            //int currentBook = Array.IndexOf(Constants.ubsNames.Keys.ToArray(), book);
+            //if (BookCount == 27 && currentBook >= 39)
+            //{
+            //    currentBook -= 39;
+            //}
 
             SetSelectedIndex(currentBook, currentChapter - 1, currentVerse - 1);
         }

@@ -1129,6 +1129,7 @@ namespace BibleTaggingUtil.Editor
         private void cbTagToFind_SelectedIndexChanged(object sender, EventArgs e)
         {
             dgvTarget.SearchTag = cbTagToFind.Text;
+            container.LastSearcReference = string.Empty;
         }
 
         private void picRefresh_Click(object sender, EventArgs e)

@@ -98,15 +98,30 @@ namespace BibleTaggingUtil
 
             for (int i = 0; i < words.Count; i++)
             {
-                verse += " " + words[i].Word;
-                if (includeTags)
+                bool extended = Properties.ReferenceBibles.Default.ExtendedTaggingOT;
+                if (extended && words[i].TahotSubWords.Count > 0)
                 {
-                    verse += " " + words[i].Strong.ToStringBracketed();
- /*                 for (int j = 0; j < words[i].Strong.Count; j++)
+                    for (int j = 0; j < words[i].TahotSubWords.Count; j++)
                     {
-                        verse += (" <" + words[i].Strong[j].ToString()) + ">";
+                        verse += " " + words[i].TahotSubWords[j].English;
+                        if (includeTags)
+                        {
+                            verse += " " + words[i].TahotSubWords[j].Tag.ToStringBracketed();
+                        }
                     }
- */
+                }
+                else
+                {
+                    verse += " " + words[i].Word;
+                    if (includeTags)
+                    {
+                        verse += " " + words[i].Strong.ToStringBracketed();
+                        /*                 for (int j = 0; j < words[i].Strong.Count; j++)
+                                           {
+                                               verse += (" <" + words[i].Strong[j].ToString()) + ">";
+                                           }
+                        */
+                    }
                 }
             }
 

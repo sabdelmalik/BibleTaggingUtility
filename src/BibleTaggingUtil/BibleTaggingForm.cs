@@ -1325,26 +1325,28 @@ namespace BibleTaggingUtil
         }
 
         Dictionary<string, string> foundArabicWords = new Dictionary<string, string>();
+        public string LastSearcReference { get; set; } = string.Empty;
         public void FindVerse(BibleVersion version, string tag, bool singleTag = false)
         {
             try
             {
+                bool individual = Properties.TargetBibles.Default.IndividualBooks;
+                string lastReference = verseSelectionPanel.GetLastRef();
+
                 string newRef = editorPanel.CurrentVerseRef;
-                while (true)
+                if(newRef == LastSearcReference)
                 {
                     newRef = verseSelectionPanel.GetNextRef(newRef);
-                    if (newRef == "Rev 22:21")
-                    {
-                        verseSelectionPanel.GotoVerse(newRef);
-                        break;
-                    }
-
+                    LastSearcReference = newRef;
+                }
+                while (true)
+                {
+                    // get the text of the current verse including the tags
                     string text = string.Empty;
-
                     try
                     {
                         string bookName = newRef.Substring(0, 3);
-                        string targetRef = newRef.Replace(bookName, Target[bookName]);
+                        string targetRef = newRef.Replace(bookName, version[bookName]);
                         text = Utils.GetVerseText(version.Bible[targetRef], true);
                     }
                     catch (Exception ex)
@@ -1359,6 +1361,7 @@ namespace BibleTaggingUtil
                         if (text.Contains("<>"))
                         {
                             verseSelectionPanel.GotoVerse(newRef);
+                            LastSearcReference = newRef;
                             break;
 
                         }
@@ -1380,6 +1383,7 @@ namespace BibleTaggingUtil
                                 continue;
                             foundArabicWords[word] = arabicWord;
                             verseSelectionPanel.GotoVerse(newRef);
+                            LastSearcReference = newRef;
                             break;
                         }
 
@@ -1388,8 +1392,19 @@ namespace BibleTaggingUtil
                     {
                         foundArabicWords.Clear();
                         verseSelectionPanel.GotoVerse(newRef);
+                        LastSearcReference = newRef;
                         break;
                     }
+                    // if last verse, we are done
+                    if (newRef == lastReference)
+                    {
+                        verseSelectionPanel.GotoVerse(newRef);
+                        LastSearcReference = newRef;
+                        break;
+                    }
+
+                    // goto next verse
+                    newRef = verseSelectionPanel.GetNextRef(newRef);
                 }
             }
             catch (Exception ex)
