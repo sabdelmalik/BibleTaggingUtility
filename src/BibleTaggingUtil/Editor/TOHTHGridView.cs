@@ -526,6 +526,7 @@ namespace BibleTaggingUtil.Editor
         /// <param name="verseWords"></param>
         private void UpdateNT(Verse verseWords)
         {
+            this.DataSource = null;
             this.Rows.Clear();
             if (verseWords == null)
                 return;

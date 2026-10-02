@@ -67,6 +67,10 @@ namespace BibleTaggingUtil.BibleVersions
 
         public virtual bool LoadBibleFile(string textFilePath, bool newBible, bool more)
         {
+            var cm = System.Reflection.MethodBase.GetCurrentMethod();
+            var name = cm.DeclaringType.FullName + "." + cm.Name;
+            Tracing.TraceInfo(name, $"Entry");
+
             if (newBible)
             {
                 bible.Clear();
@@ -252,6 +256,16 @@ namespace BibleTaggingUtil.BibleVersions
                 return bookNamesList.Count;
             }
         }
+
+        public List<string> BookNames
+        {
+            get
+            {
+                return bookNamesList;
+            }
+        }
+
+
         public Dictionary<string, Verse> Bible { get { return bible; } }
 
         public string this[string ubsName]

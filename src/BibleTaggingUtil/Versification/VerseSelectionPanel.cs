@@ -179,6 +179,7 @@ namespace BibleTaggingUtil.Versification
             }
             set
             {
+                //lbBookNames.SelectedIndexChanged -= lbBookNames_SelectedIndexChanged;
                 bookCount = value;
                 if (bookCount == 27)
                 {
@@ -196,11 +197,20 @@ namespace BibleTaggingUtil.Versification
                     lbBookNames.Items.AddRange(names);
                     lbBookNames.SelectedIndex = 0;
                 }
+                else if (bookCount == 66)
+                {
+                    lbBookNames.Items.Clear();
+                    string[] names = new string[66];
+                    Array.Copy(Constants.ubsNames.Keys.ToArray(), names, 66);
+                    lbBookNames.Items.AddRange(names);
+                    lbBookNames.SelectedIndex = 0;
+                }
                 else if (bookNames != null)
                 {
                     lbBookNames.Items.Clear();
                     lbBookNames.Items.AddRange(bookNames.ToArray());
                     lbBookNames.SelectedIndex = 0;
+                    lbBookNames.SelectedItem = lbBookNames.Items[0];
                 }
                 else
                 {
@@ -208,6 +218,7 @@ namespace BibleTaggingUtil.Versification
                     lbBookNames.Items.AddRange(Constants.ubsNames.Keys.ToArray());
                     lbBookNames.SelectedIndex = 0;
                 }
+                //lbBookNames.SelectedIndexChanged += lbBookNames_SelectedIndexChanged;
             }
         }
 
@@ -228,7 +239,24 @@ namespace BibleTaggingUtil.Versification
         }
         private void lbBookNames_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string book = lbBookNames.SelectedItem.ToString();
+            string book = string.Empty;
+            if (lbBookNames.SelectedItem == null)
+            { 
+                if (lbBookNames.Items.Count > 0)
+                {
+                    lbBookNames.SelectedIndex = 0;
+                    book = lbBookNames.SelectedItem.ToString();
+                }
+                else
+                {
+                    return;
+                }
+                    
+            }
+            else
+            {
+                book = lbBookNames.SelectedItem.ToString();
+            }
             int[] lastVerse = bibleBooks[book].LastVerse;
             string[] chapters = new string[lastVerse.Length];
             for (int i = 0; i < lastVerse.Length; i++)

@@ -1,35 +1,33 @@
-﻿using System;
+﻿using BibleTaggingUtil.BibleVersions;
+using BibleTaggingUtil.Editor;
+using BibleTaggingUtil.Restore;
+using BibleTaggingUtil.Settings;
+using BibleTaggingUtil.Strongs;
+using BibleTaggingUtil.TranslationTags;
+using BibleTaggingUtil.Versification;
+using Microsoft.VisualBasic.Logging;
+using SM.Bible.Formats.USFM;
+using SM.Bible.Formats.USFM2OSIS;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
-using System.IO;
-
-using WeifenLuo.WinFormsUI.Docking;
 using System.Diagnostics;
-using System.Threading;
-
-using BibleTaggingUtil.Editor;
-using SM.Bible.Formats.USFM;
-using SM.Bible.Formats.USFM2OSIS;
-using System.Reflection;
-
-using BibleTaggingUtil.BibleVersions;
+using System.Drawing;
+using System.Drawing.Text;
+using System.IO;
+using System.Linq;
 using System.Linq.Expressions;
-using static System.Net.WebRequestMethods;
-using Microsoft.VisualBasic.Logging;
-using System.Xml.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
-using BibleTaggingUtil.TranslationTags;
-using BibleTaggingUtil.Settings;
-using BibleTaggingUtil.Versification;
-using BibleTaggingUtil.Restore;
-using BibleTaggingUtil.Strongs;
-using System.Drawing.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Windows.Forms;
+using System.Xml.Linq;
+using WeifenLuo.WinFormsUI.Docking;
+using static System.Net.WebRequestMethods;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace BibleTaggingUtil
 {
@@ -63,6 +61,9 @@ namespace BibleTaggingUtil
         private SettingsForm settingsForm = new SettingsForm();
         private RestoreTarget restoreTarget = null;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BibleTaggingForm"/> class.
+        /// </summary>
         public BibleTaggingForm()
         {
             InitializeComponent();
@@ -187,7 +188,7 @@ namespace BibleTaggingUtil
             #endregion WinFormUI setup
 
 
-
+            // Load reference bibles settings, if not configured, prompt user to configure
             while (!Properties.ReferenceBibles.Default.Configured)
             {
                 GetSettings(startup: true);
@@ -367,41 +368,9 @@ namespace BibleTaggingUtil
             {
                 while (true)
                 {
-                    //if (string.IsNullOrEmpty(biblesFolder) && !Directory.Exists(biblesFolder))
-                    //{
-                    //    GetBiblesFolder();
-                    //    biblesFolder = Properties.MainSettings.Default.BiblesFolder;
-                    //    if (string.IsNullOrEmpty(biblesFolder))
-                    //    {
-                    //        CloseForm();
-                    //        return;
-                    //    }
-                    //}
-
                     // Load configuration
                     config = ConfigurationHolder.Instance;
                     string confResult = config.ReadBiblesConfig(biblesFolder);
-                    //if (!string.IsNullOrEmpty(confResult))
-                    //{
-                    //    MessageBox.Show(confResult);
-                    //    GetBiblesFolder();
-                    //    biblesFolder = Properties.MainSettings.Default.BiblesFolder;
-                    //    if (string.IsNullOrEmpty(biblesFolder))
-                    //    {
-                    //        CloseForm();
-                    //        return;
-                    //    }
-                    //    else
-                    //    {
-                    //        confResult = config.ReadBiblesConfig(biblesFolder);
-                    //        if (!string.IsNullOrEmpty(confResult))
-                    //        {
-                    //            MessageBox.Show(confResult);
-                    //            CloseForm();
-                    //            return;
-                    //        }
-                    //    }
-                    //}
 
                     taggedFolder = Path.GetDirectoryName(config.TaggedBible);
 
@@ -414,9 +383,11 @@ namespace BibleTaggingUtil
                         {
                             Properties.TargetBibles.Default.TargetBiblesFolder = string.Empty;
                             Properties.TargetBibles.Default.TargetBible = string.Empty;
+                            Properties.TargetBibles.Default.IndividualBooks = false;
+                            Properties.TargetBibles.Default.CurrentBook = string.Empty;
                             Properties.TargetBibles.Default.Save();
 
-                            GetSettings(startup: false);
+                            GetSettings(startup: true);
                             //biblesFolder = string.Empty;
                         }
                         else
@@ -974,67 +945,76 @@ namespace BibleTaggingUtil
 
         private void GetSettings(bool startup = false)
         {
-            int priodicSaveTime = Properties.MainSettings.Default.PeriodicSaveTime;
-            if (priodicSaveTime > 0)
+            if (InvokeRequired)
             {
-                settingsForm.PeriodicSaveEnabled = true;
-                settingsForm.SavePeriod = priodicSaveTime;
+                Invoke(new Action(() => { GetSettings(startup); }));
             }
             else
             {
-                settingsForm.PeriodicSaveEnabled = false;
-            }
-            DialogResult result = settingsForm.ShowDialog();
-            if (result == DialogResult.OK)
-            {
-                if (settingsForm.PeriodicSaveEnabled)
+                int priodicSaveTime = Properties.MainSettings.Default.PeriodicSaveTime;
+                if (priodicSaveTime > 0)
                 {
-                    Properties.MainSettings.Default.PeriodicSaveTime = settingsForm.SavePeriod;
+                    settingsForm.PeriodicSaveEnabled = true;
+                    settingsForm.SavePeriod = priodicSaveTime;
                 }
                 else
                 {
-                    Properties.MainSettings.Default.PeriodicSaveTime = 0;
+                    settingsForm.PeriodicSaveEnabled = false;
                 }
-                target.ActivatePeriodicTimer();
-
-                if (settingsForm.ChangedFlags.TargetBibleChanged)
+                settingsForm.TopMost = true;
+                settingsForm.StartPosition = FormStartPosition.CenterParent;
+                DialogResult result = settingsForm.ShowDialog(this);
+                if (result == DialogResult.OK)
                 {
-                    bool indivdual = Properties.TargetBibles.Default.IndividualBooks;
-                    string currentBook = Properties.TargetBibles.Default.CurrentBook;
-                    if (indivdual & string.IsNullOrEmpty(currentBook))
+                    if (settingsForm.PeriodicSaveEnabled)
                     {
-                        string targetBibleName = Properties.TargetBibles.Default.TargetBible;
-                        string targetBiblesFolder = Properties.TargetBibles.Default.TargetBiblesFolder;
-                        string bibleFolder = Path.Combine(targetBiblesFolder, targetBibleName);
-                        string taggedFolderX = Path.Combine(bibleFolder, "taggedX");
-                        if (!Directory.Exists(taggedFolderX))
-                        {
-                            Directory.CreateDirectory(taggedFolderX);
-                        }
-                        string[] files = Directory.GetFiles(taggedFolderX);
-                        GetBookFileOrQuit(files);
-                        if (shuttingDown)
-                            return;
-
+                        Properties.MainSettings.Default.PeriodicSaveTime = settingsForm.SavePeriod;
                     }
-                }
-
-                if (!startup)
-                {
-                    new Thread(() =>
+                    else
                     {
-                        try
+                        Properties.MainSettings.Default.PeriodicSaveTime = 0;
+                    }
+                    target.ActivatePeriodicTimer();
+
+                    if (settingsForm.ChangedFlags.TargetBibleChanged)
+                    {
+                        bool indivdual = Properties.TargetBibles.Default.IndividualBooks;
+                        string currentBook = Properties.TargetBibles.Default.CurrentBook;
+                        if (indivdual & string.IsNullOrEmpty(currentBook))
                         {
-                            UpdateBibles(settingsForm.ChangedFlags);
+                            string targetBibleName = Properties.TargetBibles.Default.TargetBible;
+                            string targetBiblesFolder = Properties.TargetBibles.Default.TargetBiblesFolder;
+                            string bibleFolder = Path.Combine(targetBiblesFolder, targetBibleName);
+                            string taggedFolderX = Path.Combine(bibleFolder, "taggedX");
+                            if (!Directory.Exists(taggedFolderX))
+                            {
+                                Directory.CreateDirectory(taggedFolderX);
+                            }
+                            string[] files = Directory.GetFiles(taggedFolderX);
+                            GetBookFileOrQuit(files);
+                            if (shuttingDown)
+                                return;
+
                         }
-                        catch (Exception ex)
+                    }
+
+                    if (!startup)
+                    {
+                        new Thread(() =>
                         {
-                            var cm = System.Reflection.MethodBase.GetCurrentMethod();
-                            var name = cm.DeclaringType.FullName + "." + cm.Name;
-                            Tracing.TraceException(name, ex.Message);
-                            HandleException(ex);
-                        }
-                    }).Start();
+                            try
+                            {
+                                UpdateBibles(settingsForm.ChangedFlags);
+                            }
+                            catch (Exception ex)
+                            {
+                                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                                Tracing.TraceException(name, ex.Message);
+                                HandleException(ex);
+                            }
+                        }).Start();
+                    }
                 }
             }
         }
@@ -1042,6 +1022,10 @@ namespace BibleTaggingUtil
         private bool shuttingDown = false;
         private string GetBookFileOrQuit(string[] files)
         {
+            var cm = System.Reflection.MethodBase.GetCurrentMethod();
+            var name = cm.DeclaringType.FullName + "." + cm.Name;
+            Tracing.TraceInfo(name, $"Entry");
+
             string currentBook = string.Empty;
             if (files.Length == 0)
             {
@@ -1077,6 +1061,7 @@ namespace BibleTaggingUtil
                     else { break; }
                 }
             }
+            Tracing.TraceInfo(name, $"returning '{currentBook}'");
             return currentBook;
         }
 
@@ -1096,6 +1081,10 @@ namespace BibleTaggingUtil
 
         private bool LoadTarget()
         {
+            var cm = System.Reflection.MethodBase.GetCurrentMethod();
+            var name = cm.DeclaringType.FullName + "." + cm.Name;
+            Tracing.TraceInfo(name, $"LoadTarget - Entry");
+
             bool result = false;
             WaitCursorControl(true);
             string targetBibleName = Properties.TargetBibles.Default.TargetBible;
@@ -1119,8 +1108,6 @@ namespace BibleTaggingUtil
                 if (!Directory.Exists(taggedFolderX))
                 {
                     Directory.CreateDirectory(taggedFolderX);
-                    var cm = System.Reflection.MethodBase.GetCurrentMethod();
-                    var name = cm.DeclaringType.FullName + "." + cm.Name;
                     Tracing.TraceInfo(name, $"Folder '{taggedFolderX}' does not exist! Created One");
                     individual = false;
                     Properties.TargetBibles.Default.IndividualBooks = individual;
@@ -1136,8 +1123,6 @@ namespace BibleTaggingUtil
                 filesX = Directory.GetFiles(taggedFolderX);
                 if (filesX.Length == 0)
                 {
-                    var cm = System.Reflection.MethodBase.GetCurrentMethod();
-                    var name = cm.DeclaringType.FullName + "." + cm.Name;
                     Tracing.TraceInfo(name, $"Folder '{taggedFolderX}' is Empty!'");
                     individual = false;
                     Properties.TargetBibles.Default.IndividualBooks = individual;
@@ -1152,13 +1137,15 @@ namespace BibleTaggingUtil
                 string currentBook = Properties.TargetBibles.Default.CurrentBook;
                 if (string.IsNullOrEmpty(currentBook) || !System.IO.File.Exists(currentBook))
                 {
+                    Tracing.TraceInfo(name, $"Calling GetBookFileOrQuit");
                     currentBook = GetBookFileOrQuit(filesX);
                     if (shuttingDown)
                         return false;
                 }
-
+                Tracing.TraceInfo(name, $"currentBook: {currentBook}");
                 if (!string.IsNullOrEmpty(currentBook))
                 {
+                    Tracing.TraceInfo(name, $"calling target.LoadBibleFile with '{currentBook}'");
                     target.LoadBibleFile(currentBook, true, false);
 
                     AddAncientWords();
@@ -1861,6 +1848,7 @@ namespace BibleTaggingUtil
                 target.LoadBibleFile(files[0], true, false);
                 WaitCursorControl(false);
                 VerseSelectionPanel.SetBookCount(target.BookCount);
+                //VerseSelectionPanel.SetBookNames(target.BookNames);
             }
         }
 
