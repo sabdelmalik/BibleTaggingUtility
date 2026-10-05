@@ -30,6 +30,19 @@ namespace BibleTaggingUtil
         }
         public static int GetBookIndexFromBook(string book)
         {
+            // if book is all caps, change it to title case
+            if (book == book.ToUpper())
+            {
+                // if book starts with a number, keep the number as is and capitalize the first letter of the rest of the book name
+                if (char.IsDigit(book[0]))
+                {
+                    book = book.Substring(0,2) + book.Substring(2).ToLower();
+                }
+                else
+                {
+                    book = book.Substring(0, 1) + book.Substring(1).ToLower();
+                } //return GetBookIndexFromBook(book);    
+            }
 
             if (Constants.osisNames.Contains(book, StringComparer.OrdinalIgnoreCase))
                 return Array.IndexOf(Constants.osisNames, book);

@@ -98,13 +98,13 @@ namespace BibleTaggingUtil.BibleVersions
             bool result = false;
             bool individual = Properties.TargetBibles.Default.IndividualBooks;
 
-            if (this is TargetVersion && !individual)
-            {
-                // ensure this is not the Individual folder
-                string individuaTaggedFolder = Properties.TargetBibles.Default.IndividualTaggedFolderName;
-                if(individuaTaggedFolder != null && !textFilePath.Contains(individuaTaggedFolder))
+            //if (this is TargetVersion && !individual)
+            //{
+            //    // ensure this is not the Individual folder
+            //    string individuaTaggedFolder = Properties.TargetBibles.Default.IndividualTaggedFolderName;
+            //    if(individuaTaggedFolder != null && !textFilePath.Contains(individuaTaggedFolder))
                     FixFileIfCorrupt(textFilePath);
-            }
+            //}
 
             if (File.Exists(textFilePath))
             {
@@ -153,8 +153,10 @@ namespace BibleTaggingUtil.BibleVersions
                 }
             }
 
+            bookNames.Clear();
             if (individual && this is TargetVersion)
             {
+                Tracing.TraceInfo(MethodBase.GetCurrentMethod().Name, string.Format("Individual books detected. Book Names Count = {0}", bookNamesList.Count));
                 for (int i = 0; i < bookNamesList.Count; i++)
                 {
                     int idx = Utils.GetBookIndexFromBook(bookNamesList[i]);
@@ -181,7 +183,54 @@ namespace BibleTaggingUtil.BibleVersions
             return result;
         }
 
+        List<string> referenceTracker = new List<string>();
         private void FixFileIfCorrupt(string textFilePath)
+        {
+            try
+            {
+                bool excessLineDetected = false;
+                StringBuilder sb = new StringBuilder();
+
+                string[] lines = File.ReadAllLines(textFilePath);
+                foreach (string line in lines)
+                {
+                    Match mTx = Regex.Match(line, @"^([0-9A-Za-z]+)\s([0-9]+):([0-9]+)\s*(.*)");
+                    if (mTx.Success)
+                    {
+                        string chapter = mTx.Groups[2].Value.Trim();
+                        string verseNo = mTx.Groups[3].Value.Trim();
+                        String book = mTx.Groups[1].Value;
+                        string referenceA = string.Format("{0} {1}:{2}", book, chapter, verseNo);
+                        // ensure we are using ubs book names consistently
+                        string reference = Utils.GetUbsReference(referenceA);
+                        //Tracing.TraceInfo(MethodBase.GetCurrentMethod().Name, $"passed reference: {referenceA}, adjusted reference: {reference} ");
+                        if (!referenceTracker.Contains(reference))
+                        {
+                            referenceTracker.Add(reference);
+                            sb.AppendLine(line);
+                        }
+                        else
+                        {
+                            excessLineDetected = true;
+                        }
+                    }
+                }
+                // if we detected excess lines, then write the fixed file back to disk
+                if (excessLineDetected)
+                {
+                    File.WriteAllText(textFilePath, sb.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                var name = cm.DeclaringType.FullName + "." + cm.Name;
+                Tracing.TraceException(name, ex.Message);
+                throw;
+            }
+        }
+
+        private void FixFileIfCorrupt1(string textFilePath)
         {
             string[] ntLastBookAbbreviations = { "rev", "rv", "re", "apoc" };
             string[] otLastBookAbbreviations = { "mal", "ml", "malachi" };

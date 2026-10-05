@@ -605,26 +605,37 @@ namespace BibleTaggingUtil
                     int idx = reference.IndexOf(' ');
                     string bk = reference.Substring(0, idx);
 
+                
                     int bkIdx = Utils.GetBookIndexFromBook(bk);
-                    if (bkIdx > 38 && referenceTAGNT != null && referenceTAGNT.Bible != null && referenceTAGNT.Bible.Count > 0)
+                    try
                     {
-                        string ntbk = referenceTAGNT.GetBookNameFromIndex(bkIdx);
-                        string ntCorrectReference = $"{ntbk}{reference.Substring(idx)}";
-                        if (referenceTAGNT.Bible.ContainsKey(ntCorrectReference))
+                        if (bkIdx > 38 && referenceTAGNT != null && referenceTAGNT.Bible != null && referenceTAGNT.Bible.Count > 0)
                         {
-                            v.AncientVerse = referenceTAGNT.Bible[ntCorrectReference];
+                            string ntbk = referenceTAGNT.GetBookNameFromIndex(bkIdx);
+                            string ntCorrectReference = $"{ntbk}{reference.Substring(idx)}";
+                            if (referenceTAGNT.Bible.ContainsKey(ntCorrectReference))
+                            {
+                                v.AncientVerse = referenceTAGNT.Bible[ntCorrectReference];
+                            }
                         }
-                    }
-                    else if (referenceTOTHT != null && referenceTOTHT.Bible != null && referenceTOTHT.Bible.Count > 0)
-                    {
-                        string otbk = referenceTOTHT.GetBookNameFromIndex(bkIdx);
-                        string otCorrectReference = $"{otbk}{reference.Substring(idx)}";
+                        else if (referenceTOTHT != null && referenceTOTHT.Bible != null && referenceTOTHT.Bible.Count > 0)
+                        {
+                            string otbk = referenceTOTHT.GetBookNameFromIndex(bkIdx);
+                            string otCorrectReference = $"{otbk}{reference.Substring(idx)}";
 
-                        if (referenceTOTHT.Bible.ContainsKey(otCorrectReference))
-                        {
-                            v.AncientVerse = referenceTOTHT.Bible[otCorrectReference];
+                            if (referenceTOTHT.Bible.ContainsKey(otCorrectReference))
+                            {
+                                v.AncientVerse = referenceTOTHT.Bible[otCorrectReference];
+                            }
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        var cm = System.Reflection.MethodBase.GetCurrentMethod();
+                        var name = cm.DeclaringType.FullName + "." + cm.Name;
+                        Tracing.TraceException(name, ex.Message);
+                    }
+
                 }
                 UpdateTargetGrid();
             }
