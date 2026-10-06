@@ -216,8 +216,19 @@ namespace BibleTaggingUtil.BibleVersions
                     }
                 }
                 // if we detected excess lines, then write the fixed file back to disk
-                if (excessLineDetected)
+                if (excessLineDetected && sb.Length > 0)
                 {
+                    // 1. Backup the original file
+                    //    the backup file will be saved to .\OldTagged folder appending the word Bad to the file Name
+                    string backupFolder = Path.Combine(Path.GetDirectoryName(textFilePath), "OldTagged");
+                    if (!Directory.Exists(backupFolder))
+                        Directory.CreateDirectory(backupFolder);
+                    // Create a backup file name
+                    string backupFileName = Path.Combine(backupFolder, Path.GetFileNameWithoutExtension(textFilePath) + "_Bad" + Path.GetExtension(textFilePath));
+
+                    File.Move(textFilePath, backupFileName, true);
+
+                    // 2. Write the fixed file back to disk
                     File.WriteAllText(textFilePath, sb.ToString());
                 }
             }
