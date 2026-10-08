@@ -183,14 +183,13 @@ namespace BibleTaggingUtil.BibleVersions
             return result;
         }
 
-        List<string> referenceTracker = new List<string>();
         private void FixFileIfCorrupt(string textFilePath)
         {
+            List<string> referenceTracker = new List<string>();
+            bool excessLineDetected = false;
+            StringBuilder sb = new StringBuilder();
             try
             {
-                bool excessLineDetected = false;
-                StringBuilder sb = new StringBuilder();
-
                 string[] lines = File.ReadAllLines(textFilePath);
                 foreach (string line in lines)
                 {

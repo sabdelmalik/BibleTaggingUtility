@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -16,10 +17,10 @@ namespace BibleTaggingUtil.BibleVersions
 
         public TargetVersion(BibleTaggingForm container) : base(container, 31104) { }
 
-        public void SaveUpdates()
+        public bool SaveUpdates()
         {
             Tracing.TraceEntry(MethodBase.GetCurrentMethod().Name);
-
+            bool result = false;
             try
             {
                 if (saveTimer != null && saveTimer.Enabled)
@@ -31,10 +32,9 @@ namespace BibleTaggingUtil.BibleVersions
                 lock (this)
                 {
                     if (!container.EditorPanel.TargetDirty)
-                        return;
+                        return true;
 
                     container.WaitCursorControl(true);
-                    container.EditorPanel.TargetDirty = false;
                     container.EditorPanel.SaveCurrentVerse();
 
                     if (bible.Count > 0)
@@ -72,8 +72,51 @@ namespace BibleTaggingUtil.BibleVersions
                         {
                             // move current book to old folder
                             string src = currentbook;
-                            string fName = Path.GetFileName(currentbook);
-                            string dst = Path.Combine(oldTaggedFolder, fName);
+                            string fName = Path.GetFileNameWithoutExtension(currentbook);
+                            string ext = Path.GetExtension(currentbook);
+                            string dst = Path.Combine(oldTaggedFolder, fName + ext);
+                            while (System.IO.File.Exists(dst))
+                            {
+                                // append an underscore followed by an alpha character to the end of the fName until we find a unique name
+                                // 1. Find the last underscore in the fName
+                                int lastUnderscoreIndex = fName.LastIndexOf('_');
+                                // 2. If there is no underscore, append "_a" to the fName
+                                if (lastUnderscoreIndex == -1)
+                                {
+                                    fName += "_a";
+                                }
+                                else
+                                {
+                                    // 3. If there is an underscore, check if the last character is a letter
+                                    char lastChar = fName[fName.Length - 1];
+                                    if (char.IsLetter(lastChar))
+                                    {
+                                        // 4. If the last character is a letter, increment it to the next letter in the alphabet
+                                        if (lastChar == 'z')
+                                        {
+                                            // delete oldest
+                                            fName = fName.Substring(0, lastUnderscoreIndex) + "_a";
+                                            dst = Path.Combine(oldTaggedFolder, fName + ext);
+                                            if(System.IO.File.Exists(dst))
+                                            {
+                                                System.IO.File.Delete(dst);
+                                            }
+                                            break; // exit the loop, as we have deleted the oldest file and can now use this name
+                                        }
+                                        else
+                                        {
+                                            fName = fName.Substring(0, fName.Length - 1) + (char)(lastChar + 1);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // 5. If the last character is not a letter, append "_a" to the fName
+                                        fName += "_a";
+                                    }
+                                }
+                                dst = Path.Combine(oldTaggedFolder, fName + ext);
+                            }
+
                             File.Move(src, dst);
 
                             // construct the updated file name
@@ -124,15 +167,19 @@ namespace BibleTaggingUtil.BibleVersions
                     container.WaitCursorControl(false);
                 }
 
+                container.EditorPanel.TargetDirty = false;
+                result = true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 var cm = System.Reflection.MethodBase.GetCurrentMethod();
                 var name = cm.DeclaringType.FullName + "." + cm.Name;
                 Tracing.TraceException(name, ex.Message);
+                result = false;
             }
             container.WaitCursorControl(false);
-
+            Tracing.TraceExit(MethodBase.GetCurrentMethod().Name);
+            return result;
         }
 
         #region Priodic Save

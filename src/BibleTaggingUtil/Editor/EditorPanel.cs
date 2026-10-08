@@ -1294,7 +1294,12 @@ namespace BibleTaggingUtil.Editor
             if (osis)
                 container.OsisTarget.Save("");
             else
-                container.Target.SaveUpdates();
+            {
+                if (!container.Target.SaveUpdates())
+                {
+                    MessageBox.Show("Error saving target file. Please check the log for details.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
 
         private void btnEnableEdit_Click(object sender, EventArgs e)
