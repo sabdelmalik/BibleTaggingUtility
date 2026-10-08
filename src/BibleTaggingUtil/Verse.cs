@@ -38,7 +38,7 @@ namespace BibleTaggingUtil
             get 
             {
                 bool result = false;
-                if (verse[0].Reference.StartsWith("Ps") && verse[0].Reference.EndsWith(":1"))
+                if (verse.Count > 0 && verse[0].Reference.StartsWith("Ps") && verse[0].Reference.EndsWith(":1"))
                 {
                     foreach(VerseWord vw in verse.Values)
                     {
@@ -54,11 +54,6 @@ namespace BibleTaggingUtil
             }
             set
             {
-                if (verse.Count > 0 && verse[0].Reference == "Psa 18:1")
-                {
-                    int a = 0;
-                }
-
                 hasPsalmTitle = value; 
             }
         }
