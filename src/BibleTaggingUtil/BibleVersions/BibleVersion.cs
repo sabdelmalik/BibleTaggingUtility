@@ -98,13 +98,11 @@ namespace BibleTaggingUtil.BibleVersions
             bool result = false;
             bool individual = Properties.TargetBibles.Default.IndividualBooks;
 
-            //if (this is TargetVersion && !individual)
-            //{
-            //    // ensure this is not the Individual folder
-            //    string individuaTaggedFolder = Properties.TargetBibles.Default.IndividualTaggedFolderName;
-            //    if(individuaTaggedFolder != null && !textFilePath.Contains(individuaTaggedFolder))
-                    FixFileIfCorrupt(textFilePath);
-            //}
+            // We fix files only for TargetVersion because we don't want to modify the reference versions. The reference versions are used for comparison and we want to keep them intact.
+            if (this is TargetVersion && !FixFileIfCorrupt(textFilePath))
+            {
+                return false;
+            }
 
             if (File.Exists(textFilePath))
             {
@@ -183,13 +181,14 @@ namespace BibleTaggingUtil.BibleVersions
             return result;
         }
 
-        private void FixFileIfCorrupt(string textFilePath)
+        private bool FixFileIfCorrupt(string textFilePath)
         {
-            List<string> referenceTracker = new List<string>();
+            bool result = true;
             bool excessLineDetected = false;
-            StringBuilder sb = new StringBuilder();
+            List<string> referenceTracker = new List<string>();
             try
             {
+                StringBuilder sb = new StringBuilder();
                 string[] lines = File.ReadAllLines(textFilePath);
                 foreach (string line in lines)
                 {
@@ -202,7 +201,11 @@ namespace BibleTaggingUtil.BibleVersions
                         string referenceA = string.Format("{0} {1}:{2}", book, chapter, verseNo);
                         // ensure we are using ubs book names consistently
                         string reference = Utils.GetUbsReference(referenceA);
-                        //Tracing.TraceInfo(MethodBase.GetCurrentMethod().Name, $"passed reference: {referenceA}, adjusted reference: {reference} ");
+                        if(string.IsNullOrEmpty(reference))
+                        {
+                            Tracing.TraceError(MethodBase.GetCurrentMethod().Name, "Could not detect ubs reference: " + referenceA);
+                            return false;
+                        }
                         if (!referenceTracker.Contains(reference))
                         {
                             referenceTracker.Add(reference);
@@ -213,6 +216,15 @@ namespace BibleTaggingUtil.BibleVersions
                             excessLineDetected = true;
                         }
                     }
+                    else
+                    {
+                        // this is not supposed to happen.
+                        // we should trace the offending line 
+                        // and return false to indicate that the file is corrupt and needs to be fixed manually.
+                        Tracing.TraceError(MethodBase.GetCurrentMethod().Name, "Could not detect verse reference: " + line);
+                        return false;
+                    }
+
                 }
                 // if we detected excess lines, then write the fixed file back to disk
                 if (excessLineDetected && sb.Length > 0)
@@ -238,6 +250,7 @@ namespace BibleTaggingUtil.BibleVersions
                 Tracing.TraceException(name, ex.Message);
                 throw;
             }
+            return result;
         }
 
         private void FixFileIfCorrupt1(string textFilePath)

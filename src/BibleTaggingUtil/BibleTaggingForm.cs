@@ -1157,7 +1157,12 @@ namespace BibleTaggingUtil
                 if (!string.IsNullOrEmpty(currentBook))
                 {
                     Tracing.TraceInfo(name, $"calling target.LoadBibleFile with '{currentBook}'");
-                    target.LoadBibleFile(currentBook, true, false);
+                    if(!target.LoadBibleFile(currentBook, true, false))
+                    {
+                        MessageBox.Show($"Loading '{currentBook}' failed - see trace file for details", "Error!", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        return false;
+                    }
 
                     AddAncientWords();
 
@@ -1190,7 +1195,14 @@ namespace BibleTaggingUtil
                     osisTarget.LoadBibleFile(files[0], true, false);
                 }
                 else
-                    target.LoadBibleFile(files[0], true, false);
+                {
+                    if(!target.LoadBibleFile(files[0], true, false))
+                    {
+                        MessageBox.Show($"Loading '{files[0]}' failed - see trace file for details", "Error!", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        return false;
+                    }
+                }
 
                 AddAncientWords();
 
@@ -1230,7 +1242,12 @@ namespace BibleTaggingUtil
 
                 editorPanel.ClearCurrentVerse();
 
-                target.LoadBibleFile(bookFile, true, false);
+                if(!target.LoadBibleFile(bookFile, true, false))
+                    {
+                    MessageBox.Show($"Loading '{bookFile}' failed - see trace file for details", "Error!", MessageBoxButtons.OK,
+                        MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    return;
+                }
 
                 AddAncientWords();
 
@@ -1847,20 +1864,6 @@ namespace BibleTaggingUtil
                     HandleException(ex);
                 }
             }).Start();
-            return;
-            string taggedFolder = Path.GetDirectoryName(config.TaggedBible);
-            string taggedFolderParent = Path.GetDirectoryName(taggedFolder);
-            string bibleName = Path.GetFileName(taggedFolderParent);
-            string[] files = Directory.GetFiles(taggedFolder);
-            if (files.Length > 0)
-            {
-                WaitCursorControl(true);
-                target.BibleName = bibleName;
-                target.LoadBibleFile(files[0], true, false);
-                WaitCursorControl(false);
-                VerseSelectionPanel.SetBookCount(target.BookCount);
-                //VerseSelectionPanel.SetBookNames(target.BookNames);
-            }
         }
 
         internal void EnableSaveButton(bool v)

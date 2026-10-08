@@ -18,7 +18,10 @@ namespace BibleTaggingUtil.BibleVersions
             try
             {
                 string refFile = Properties.ReferenceBibles.Default.TopReference;
-                LoadBibleFile(refFile, true, false);
+                if(!LoadBibleFile(refFile, true, false))
+                {
+                    Tracing.TraceException("ReferenceTopVersion.Load", $"Failed to load reference top version file: {refFile}");
+                }
             }
             catch (Exception ex)
             {

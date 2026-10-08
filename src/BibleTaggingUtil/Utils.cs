@@ -24,6 +24,19 @@ namespace BibleTaggingUtil
 
         public static int GetBookIndexFromReference(string reference)
         {
+            // reference can be in the form of "Gen 1:1" or "Gen.1.1"
+            if(reference.Contains("."))
+            {
+                string[] parts = reference.Split('.');
+                if (parts.Length > 0)
+                {
+                    return GetBookIndexFromBook(parts[0]);
+                }
+                else
+                {
+                    throw new Exception(string.Format("Invalid reference format: {0}", reference));
+                }
+            }
             int space = reference.IndexOf(' ');
             string book = space > 0 ? reference.Substring(0, space) : "UKN";
             return GetBookIndexFromBook(book);
@@ -141,36 +154,167 @@ namespace BibleTaggingUtil
             return verse.Trim();
         }
 
+        /// <summary>
+        /// Determines whether two Bible references are equal.
+        /// </summary>
+        /// <param name="ref1"></param>
+        /// <param name="ref2"></param>
+        /// <returns></returns>
         public static bool AreReferencesEqual(string ref1, string ref2)
         {
-            int c1 = 0, v1 = 0, c2 = 0, v2 = 0;
-
-            if (ref1 == ref2) { return true; }
-
-            int index1 = GetBookIndexFromReference(ref1);
-            int index2 = GetBookIndexFromReference(ref2);
-
-            string[] ref1Parts = ref1.Split(' ');
-            string[] ref2Parts = ref2.Split(' ');
-
-            if (ref1Parts.Length != 2 || ref2Parts.Length != 2)
-                return false;
-
-            if (index1 == index2 && ref1Parts[1] == ref2Parts[1])
+            // references can be in the form of "Gen 1:1" or "Gen.1.1"
+            if (ref1 == ref2)
                 return true;
 
-            string[] chapterVerse1 = ref1Parts[1].Split(":");
-            string[] chapterVerse2 = ref2Parts[1].Split(":");
-            if (int.TryParse(chapterVerse1[0], out c1) &&
-                int.TryParse(chapterVerse1[1], out v1) &&
-                int.TryParse(chapterVerse2[0], out c2) &&
-                int.TryParse(chapterVerse2[1], out v2) &&
-                c1 == c2 && v1 == v2 && index1 == index2)
+            try
             {
-                return true;
+                int index1 = GetBookIndexFromReference(ref1);
+                int index2 = GetBookIndexFromReference(ref2);
+
+                if (index1 != index2)
+                    return false;
+
+                // here we know that the book is the same, so we need to check the chapter and verse
+                if (!TryParseChapterVerse(ref1, out int ch1, out int v1))
+                    return false;
+
+                if (!TryParseChapterVerse(ref2, out int ch2, out int v2))
+                    return false;
+
+                return ch1 == ch2 && v1 == v2;
+            }
+            catch (Exception ex)
+            {
+                Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Parses the chapter and verse numbers out of a reference string.
+        /// Supports both "Gen 1:1" and "Gen.1.1" formats.
+        /// </summary>
+        private static bool TryParseChapterVerse(string reference, out int chapter, out int verse)
+        {
+            chapter = 0;
+            verse = 0;
+
+            ReadOnlySpan<char> span = reference.AsSpan();
+
+            if (reference.Contains('.'))
+            {
+                int firstDot = span.IndexOf('.');
+                if (firstDot < 0)
+                    return false;
+
+                int secondDot = span.Slice(firstDot + 1).IndexOf('.');
+                if (secondDot < 0)
+                    return false;
+                secondDot += firstDot + 1;
+
+                ReadOnlySpan<char> chapterSpan = span.Slice(firstDot + 1, secondDot - firstDot - 1);
+                ReadOnlySpan<char> verseSpan = span.Slice(secondDot + 1);
+
+                return int.TryParse(chapterSpan, out chapter) && int.TryParse(verseSpan, out verse);
+            }
+            else
+            {
+                int space = span.IndexOf(' ');
+                if (space < 0)
+                    return false;
+
+                ReadOnlySpan<char> rest = span.Slice(space + 1);
+                int colon = rest.IndexOf(':');
+                if (colon < 0)
+                    return false;
+
+                ReadOnlySpan<char> chapterSpan = rest.Slice(0, colon);
+                ReadOnlySpan<char> verseSpan = rest.Slice(colon + 1);
+
+                return int.TryParse(chapterSpan, out chapter) && int.TryParse(verseSpan, out verse);
+            }
+        }
+        public static bool AreReferencesEqual1(string ref1, string ref2)
+        {
+            // references can be in the form of "Gen 1:1" or "Gen.1.1"
+            bool result = false;
+            bool result1 = false;
+            bool result2 = false;
+            try
+            {
+                if (ref1 == ref2)
+                {
+                    result = true;
+                }
+                else
+                {
+                    int ch1 = 0, v1 = 0, ch2 = 0, v2 = 0;
+
+                    // get the book index for each reference
+                    int index1 = GetBookIndexFromReference(ref1);
+                    int index2 = GetBookIndexFromReference(ref2);
+
+                    if (ref1.Contains("."))
+                    {
+                        string[] parts1 = ref1.Split('.');
+                        if (parts1.Length == 3)
+                        {
+                            if (int.TryParse(parts1[0], out ch1))
+                            {
+                                result1 = int.TryParse(parts1[1], out v1);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        string[] parts1 = ref1.Split(' ');
+                        if (parts1.Length == 2)
+                        {
+                            string[] chapterVerse1 = parts1[1].Split(":");
+                            if (chapterVerse1.Length == 2)
+                            {
+                                if (int.TryParse(chapterVerse1[0], out ch1))
+                                {
+                                    result1 = int.TryParse(chapterVerse1[1], out v1);
+                                }
+                            }
+                        }
+                    }
+                    if (ref2.Contains("."))
+                    {
+                        string[] parts2 = ref2.Split('.');
+                        if (parts2.Length == 3)
+                        {
+                            if (int.TryParse(parts2[0], out ch2))
+                            {
+                                result2 = int.TryParse(parts2[1], out v2);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        string[] parts2 = ref2.Split(' ');
+                        if (parts2.Length == 2)
+                        {
+                            string[] chapterVerse2 = parts2[1].Split(":");
+                            if (chapterVerse2.Length == 2)
+                            {
+                                if (int.TryParse(chapterVerse2[0], out ch2))
+                                    result2 = int.TryParse(chapterVerse2[1], out v2);
+                            }
+                        }
+                    }
+
+                    result = result1 && result2 && index1 == index2 && ch1 == ch2 && v1 == v2;
+                }
+            }
+            catch (Exception ex)
+            {
+                Tracing.TraceException(MethodBase.GetCurrentMethod().Name, ex.Message);
+                result = false;
             }
 
-            return false;
+            return result;
         }
 
         public static string RemoveDiacritics(string lineToClean)
