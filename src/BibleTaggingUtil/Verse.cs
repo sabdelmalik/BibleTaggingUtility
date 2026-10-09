@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
@@ -22,17 +23,23 @@ namespace BibleTaggingUtil
 
         private bool hasPsalmTitle = false;
 
-        public Dictionary<int, VerseWord> VerseWords
+
+        /// <summary>
+        /// Gets the dictionary of verse words.
+        /// ensuring that it is read-only so that it cannot be modified externally.
+        /// </summary>
+        public IReadOnlyDictionary<int, VerseWord> VerseWords
         {
-            get
-            {
-                return verse;
-            }
+            get { return new ReadOnlyDictionary<int, VerseWord>(verse); }
         }
+
         public Verse() { Dirty = false; }
 
         public bool Dirty { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the verse contains a title for the Psalm.
+        /// </summary>
         public bool HasPsalmTitle 
         {
             get 
