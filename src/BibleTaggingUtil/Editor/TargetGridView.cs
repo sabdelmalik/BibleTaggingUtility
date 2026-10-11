@@ -252,6 +252,7 @@ namespace BibleTaggingUtil.Editor
 
                     this[firstMergeIndex, Rows.Count - 1].Selected = true;
                     this.CurrentCell = this[firstMergeIndex, Rows.Count - 1];
+                    CenterSelectedColumn(firstMergeIndex);
                     if (!string.IsNullOrEmpty(((StrongsCluster)this[firstMergeIndex, Rows.Count - 1].Value).ToString()))
                         FireRefernceHighlightRequest((StrongsCluster)this[firstMergeIndex, Rows.Count - 1].Value);
                     FireVerseViewChanged();
@@ -277,6 +278,7 @@ namespace BibleTaggingUtil.Editor
 
                     this[firstSwapIndex, Rows.Count - 1].Selected = true;
                     this.CurrentCell = this[firstSwapIndex, Rows.Count - 1];
+                    CenterSelectedColumn(firstSwapIndex);
                     if (!string.IsNullOrEmpty(((StrongsCluster)this[firstSwapIndex, Rows.Count - 1].Value).ToString()))
                         FireRefernceHighlightRequest((StrongsCluster)this[firstSwapIndex, Rows.Count - 1].Value);
                     FireVerseViewChanged();
@@ -301,6 +303,7 @@ namespace BibleTaggingUtil.Editor
 
                     this[splitIndex, Rows.Count - 1].Selected = true;
                     this.CurrentCell = this[splitIndex, Rows.Count - 1];
+                    CenterSelectedColumn(splitIndex);
                     if (!string.IsNullOrEmpty(((StrongsCluster)this[splitIndex, Rows.Count - 1].Value).ToString()))
                         FireRefernceHighlightRequest((StrongsCluster)this[splitIndex, Rows.Count - 1].Value);
                     FireVerseViewChanged();
@@ -362,6 +365,54 @@ namespace BibleTaggingUtil.Editor
                 var name = cm.DeclaringType.FullName + "." + cm.Name;
                 Tracing.TraceException(name, ex.Message);
                 throw;
+            }
+        }
+
+        private void CenterSelectedColumn(int targetColumnIndex)
+        {
+            // Condition from your requirement: check if column index is > half the total columns
+            //if (targetColumnIndex <= Columns.Count / 2)
+            //{
+            //    // Optional default behavior: just make sure it's in view normally
+            //    return ;
+            //}
+
+            // Get the total display width of the DataGridView client area (excluding row headers)
+            int gridWidth = ClientSize.Width - (RowHeadersVisible ? RowHeadersWidth : 0);
+            int targetCenter = gridWidth / 2;
+
+            int accumulatedWidth = 0;
+            int firstVisibleColIndex = targetColumnIndex;
+
+            // Work backwards from the selected column to find which column 
+            // should be at the far-left edge so that the target column sits in the middle.
+            for (int i = targetColumnIndex; i >= 0; i--)
+            {
+                if (Columns[i].Visible)
+                {
+                    // Include half of the target column's width so its true center aligns with the viewpoint center
+                    if (i == targetColumnIndex)
+                    {
+                        accumulatedWidth += Columns[i].Width / 2;
+                    }
+                    else
+                    {
+                        accumulatedWidth += Columns[i].Width;
+                    }
+
+                    // Once the physical column widths bridge the gap to the center point, we've found our leftmost column
+                    if (accumulatedWidth >= targetCenter)
+                    {
+                        firstVisibleColIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            // Safely assign the left-most visible column index to scroll the grid
+            if (firstVisibleColIndex >= 0 && firstVisibleColIndex < Columns.Count)
+            {
+                FirstDisplayedScrollingColumnIndex = firstVisibleColIndex;
             }
         }
 

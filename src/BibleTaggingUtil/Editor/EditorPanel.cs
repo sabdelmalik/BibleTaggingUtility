@@ -457,7 +457,7 @@ namespace BibleTaggingUtil.Editor
         }
 
         /// <summary>
-        /// Cleean Arabic text
+        /// Clean Arabic text
         ///     - replace ??? and 0000 tags with an empty string
         ///     - combine Psalms header words "لإِمَامِ" and "الْمُغَنِّينَ"
         ///     - join the "يَا" with the following word
@@ -781,18 +781,6 @@ namespace BibleTaggingUtil.Editor
                     string[] tags1 = tag.ToString().Split(' ');   // dStrong + position   new string[tags.Length];
                     string[] tags2 = tag.ToStringS().Split(' ');  // sStrong new string[tags.Length];
 
-                    /*                    for (int i = 0; i < tags.Length; i++)
-                                        {
-                                            string t = tags[i].Replace("<", "").Replace(">", "");
-                                            // remove d strong
-                                            if (char.IsLetter(t[t.Length-1]))
-                                                t = t.Substring(0, t.Length-1);
-                                            tags1[i] = t;
-                                            tags2[i] = tags[i];
-                    //                        while (tags2[i][1] == '0')
-                    //                            tags2[i] = tags2[i].Remove(1, 1);
-                                        }
-                    */
                     SetHighlightedCell(dgvTOTHT, tags1, tags2, firstHalf);
                     SetHighlightedCell(dgvTopVersion, tags1, tags2, firstHalf);
 
@@ -878,6 +866,7 @@ namespace BibleTaggingUtil.Editor
                 if (dgv != dgvTarget)
                 {
                     dgv.CurrentCell = dgv.Rows[tagsRow].Cells[cells[0]];
+                    CenterSelectedColumn(dgv, cells[0]);
                 }
                 dgv.Rows[tagsRow].Cells[cells[0]].Style.BackColor = Color.Gold;
             }
@@ -887,6 +876,10 @@ namespace BibleTaggingUtil.Editor
                 {
                     dgv.Rows[tagsRow].Cells[cells[i]].Style.BackColor = Color.Gold;
                 }
+                // if we only have two cells, select the first one,
+                // otherwise select the middle cell
+                int mid = (cells.Count == 2) ? 0 : cells.Count / 2;
+                CenterSelectedColumn(dgv, cells[mid]);
                 //if (dgv != dgvTarget)
                 //    if (firstHalf)
                 //        dgv.CurrentCell = dgv.Rows[tagsRow].Cells[cells[0]];
@@ -896,6 +889,55 @@ namespace BibleTaggingUtil.Editor
             if (dgv != dgvTarget)
                 dgv.ClearSelection();
         }
+
+        private void CenterSelectedColumn(DataGridView dgv, int targetColumnIndex)
+        {
+            // Condition from your requirement: check if column index is > half the total columns
+            if (targetColumnIndex <= dgv.Columns.Count / 2)
+            {
+                // Optional default behavior: just make sure it's in view normally
+                return;
+            }
+
+            // Get the total display width of the DataGridView client area (excluding row headers)
+            int gridWidth = dgv.ClientSize.Width - (dgv.RowHeadersVisible ? dgv.RowHeadersWidth : 0);
+            int targetCenter = gridWidth / 2;
+
+            int accumulatedWidth = 0;
+            int firstVisibleColIndex = targetColumnIndex;
+
+            // Work backwards from the selected column to find which column 
+            // should be at the far-left edge so that the target column sits in the middle.
+            for (int i = targetColumnIndex; i >= 0; i--)
+            {
+                if (dgv.Columns[i].Visible)
+                {
+                    // Include half of the target column's width so its true center aligns with the viewpoint center
+                    if (i == targetColumnIndex)
+                    {
+                        accumulatedWidth += dgv.Columns[i].Width / 2;
+                    }
+                    else
+                    {
+                        accumulatedWidth += dgv.Columns[i].Width;
+                    }
+
+                    // Once the physical column widths bridge the gap to the center point, we've found our leftmost column
+                    if (accumulatedWidth >= targetCenter)
+                    {
+                        firstVisibleColIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            // Safely assign the left-most visible column index to scroll the grid
+            if (firstVisibleColIndex >= 0 && firstVisibleColIndex < dgv.Columns.Count)
+            {
+                dgv.FirstDisplayedScrollingColumnIndex = firstVisibleColIndex;
+            }
+        }
+
 
         private List<int> GetCellsToHighlight(DataGridView dgv, string[] tags)
         {
