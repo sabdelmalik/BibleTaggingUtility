@@ -377,13 +377,18 @@ namespace BibleTaggingUtil.Editor
             //    return ;
             //}
 
+            // do not center if the target column is already fully visible
+            if (FirstDisplayedScrollingColumnIndex <= targetColumnIndex && targetColumnIndex < FirstDisplayedScrollingColumnIndex + DisplayedColumnCount(false))
+            {
+                return;
+            }
+
             // Get the total display width of the DataGridView client area (excluding row headers)
             int gridWidth = ClientSize.Width - (RowHeadersVisible ? RowHeadersWidth : 0);
             int targetCenter = gridWidth / 2;
 
             int accumulatedWidth = 0;
             int firstVisibleColIndex = targetColumnIndex;
-
             // Work backwards from the selected column to find which column 
             // should be at the far-left edge so that the target column sits in the middle.
             for (int i = targetColumnIndex; i >= 0; i--)

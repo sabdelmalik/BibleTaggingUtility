@@ -847,7 +847,11 @@ namespace BibleTaggingUtil.Editor
 
             int selectedCellColumn = -1;
             if (dgv == dgvTarget)
+            {
                 selectedCellColumn = dgvTarget.SelectedCells[0].ColumnIndex;
+                if (selectedCellColumn > 0)
+                    CenterSelectedColumn(dgv, selectedCellColumn);
+            }
 
             List<int> cells = new List<int>();
             // first try with dStrong + position
