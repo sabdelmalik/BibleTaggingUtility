@@ -14,7 +14,22 @@ namespace BibleTaggingUtil
     public class VerseWord : ICloneable
     {
         public readonly List<TahotSubWord> TahotSubWords = new List<TahotSubWord>();
-        public VerseWord(string ancientWord, string english, StrongsCluster strong,  StrongsCluster dStrong, string transliteration, string reference, string morphology = "", string rootStrong = "", string wordType = "", string altVerseNumber = "", string wordNumber = "", string meaningVar = "", string dictForm = "", string dictGloss = "", string altStrongs = "", string conjoin = "")
+        public VerseWord(string ancientWord, 
+            string english, 
+            StrongsCluster strong,  
+            StrongsCluster dStrong, 
+            string transliteration, 
+            string reference, 
+            string morphology = "", 
+            string rootStrong = "", 
+            string wordType = "", 
+            string altVerseNumber = "", 
+            string wordNumber = "", 
+            string meaningVar = "", 
+            string dictForm = "", 
+            string dictGloss = "", 
+            string altStrongs = "", 
+            string conjoin = "")
         {
             this.Reference = reference;
             if (Reference == "Luk 24:11")

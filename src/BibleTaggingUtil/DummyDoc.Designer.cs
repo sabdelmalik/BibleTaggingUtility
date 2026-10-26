@@ -27,108 +27,103 @@ namespace BibleTaggingUtil
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DummyDoc));
-            this.mainMenu = new System.Windows.Forms.MenuStrip();
-            this.menuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuItemCheckTest = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextMenuTabPage = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.menuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuItem4 = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuItem5 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.mainMenu.SuspendLayout();
-            this.contextMenuTabPage.SuspendLayout();
-            this.SuspendLayout();
+            mainMenu = new System.Windows.Forms.MenuStrip();
+            menuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            menuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            menuItemCheckTest = new System.Windows.Forms.ToolStripMenuItem();
+            contextMenuTabPage = new System.Windows.Forms.ContextMenuStrip(components);
+            menuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            menuItem4 = new System.Windows.Forms.ToolStripMenuItem();
+            menuItem5 = new System.Windows.Forms.ToolStripMenuItem();
+            toolTip = new System.Windows.Forms.ToolTip(components);
+            richTextBox1 = new System.Windows.Forms.RichTextBox();
+            mainMenu.SuspendLayout();
+            contextMenuTabPage.SuspendLayout();
+            SuspendLayout();
             // 
             // mainMenu
             // 
-            this.mainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuItem1});
-            this.mainMenu.Location = new System.Drawing.Point(0, 4);
-            this.mainMenu.Name = "mainMenu";
-            this.mainMenu.Size = new System.Drawing.Size(448, 24);
-            this.mainMenu.TabIndex = 1;
-            this.mainMenu.Visible = false;
+            mainMenu.ImageScalingSize = new System.Drawing.Size(24, 24);
+            mainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { menuItem1 });
+            mainMenu.Location = new System.Drawing.Point(0, 4);
+            mainMenu.Name = "mainMenu";
+            mainMenu.Size = new System.Drawing.Size(448, 24);
+            mainMenu.TabIndex = 1;
+            mainMenu.Visible = false;
             // 
             // menuItem1
             // 
-            this.menuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuItem2,
-            this.menuItemCheckTest});
-            this.menuItem1.MergeAction = System.Windows.Forms.MergeAction.Insert;
-            this.menuItem1.MergeIndex = 1;
-            this.menuItem1.Name = "menuItem1";
-            this.menuItem1.Size = new System.Drawing.Size(89, 20);
-            this.menuItem1.Text = "&MDI Document";
+            menuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { menuItem2, menuItemCheckTest });
+            menuItem1.MergeAction = System.Windows.Forms.MergeAction.Insert;
+            menuItem1.MergeIndex = 1;
+            menuItem1.Name = "menuItem1";
+            menuItem1.Size = new System.Drawing.Size(150, 20);
+            menuItem1.Text = "&MDI Document";
             // 
             // menuItem2
             // 
-            this.menuItem2.Name = "menuItem2";
-            this.menuItem2.Size = new System.Drawing.Size(127, 22);
-            this.menuItem2.Text = "Test";
-            this.menuItem2.Click += new System.EventHandler(this.menuItem2_Click);
+            menuItem2.Name = "menuItem2";
+            menuItem2.Size = new System.Drawing.Size(196, 34);
+            menuItem2.Text = "Test";
+            menuItem2.Click += menuItem2_Click;
             // 
             // menuItemCheckTest
             // 
-            this.menuItemCheckTest.Name = "menuItemCheckTest";
-            this.menuItemCheckTest.Size = new System.Drawing.Size(127, 22);
-            this.menuItemCheckTest.Text = "Check Test";
-            this.menuItemCheckTest.Click += new System.EventHandler(this.menuItemCheckTest_Click);
+            menuItemCheckTest.Name = "menuItemCheckTest";
+            menuItemCheckTest.Size = new System.Drawing.Size(196, 34);
+            menuItemCheckTest.Text = "Check Test";
+            menuItemCheckTest.Click += menuItemCheckTest_Click;
             // 
             // contextMenuTabPage
             // 
-            this.contextMenuTabPage.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuItem3,
-            this.menuItem4,
-            this.menuItem5});
-            this.contextMenuTabPage.Name = "contextMenuTabPage";
-            this.contextMenuTabPage.Size = new System.Drawing.Size(116, 70);
+            contextMenuTabPage.ImageScalingSize = new System.Drawing.Size(24, 24);
+            contextMenuTabPage.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { menuItem3, menuItem4, menuItem5 });
+            contextMenuTabPage.Name = "contextMenuTabPage";
+            contextMenuTabPage.Size = new System.Drawing.Size(241, 133);
             // 
             // menuItem3
             // 
-            this.menuItem3.Name = "menuItem3";
-            this.menuItem3.Size = new System.Drawing.Size(115, 22);
-            this.menuItem3.Text = "Option &1";
+            menuItem3.Name = "menuItem3";
+            menuItem3.Size = new System.Drawing.Size(240, 32);
+            menuItem3.Text = "Option &1";
             // 
             // menuItem4
             // 
-            this.menuItem4.Name = "menuItem4";
-            this.menuItem4.Size = new System.Drawing.Size(115, 22);
-            this.menuItem4.Text = "Option &2";
+            menuItem4.Name = "menuItem4";
+            menuItem4.Size = new System.Drawing.Size(240, 32);
+            menuItem4.Text = "Option &2";
             // 
             // menuItem5
             // 
-            this.menuItem5.Name = "menuItem5";
-            this.menuItem5.Size = new System.Drawing.Size(115, 22);
-            this.menuItem5.Text = "Option &3";
+            menuItem5.Name = "menuItem5";
+            menuItem5.Size = new System.Drawing.Size(240, 32);
+            menuItem5.Text = "Option &3";
             // 
             // richTextBox1
             // 
-            this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBox1.Location = new System.Drawing.Point(0, 4);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(448, 389);
-            this.richTextBox1.TabIndex = 2;
-            this.richTextBox1.Text = "";
+            richTextBox1.Location = new System.Drawing.Point(0, 89);
+            richTextBox1.Name = "richTextBox1";
+            richTextBox1.Size = new System.Drawing.Size(448, 304);
+            richTextBox1.TabIndex = 2;
+            richTextBox1.Text = "";
             // 
             // DummyDoc
             // 
-            this.ClientSize = new System.Drawing.Size(448, 393);
-            this.Controls.Add(this.richTextBox1);
-            this.Controls.Add(this.mainMenu);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MainMenuStrip = this.mainMenu;
-            this.Name = "DummyDoc";
-            this.Padding = new System.Windows.Forms.Padding(0, 4, 0, 0);
-            this.TabPageContextMenuStrip = this.contextMenuTabPage;
-            this.mainMenu.ResumeLayout(false);
-            this.mainMenu.PerformLayout();
-            this.contextMenuTabPage.ResumeLayout(false);
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            ClientSize = new System.Drawing.Size(448, 393);
+            Controls.Add(richTextBox1);
+            Controls.Add(mainMenu);
+            Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
+            MainMenuStrip = mainMenu;
+            Name = "DummyDoc";
+            Padding = new System.Windows.Forms.Padding(0, 4, 0, 0);
+            TabPageContextMenuStrip = contextMenuTabPage;
+            mainMenu.ResumeLayout(false);
+            mainMenu.PerformLayout();
+            contextMenuTabPage.ResumeLayout(false);
+            ResumeLayout(false);
+            PerformLayout();
 
         }
         #endregion

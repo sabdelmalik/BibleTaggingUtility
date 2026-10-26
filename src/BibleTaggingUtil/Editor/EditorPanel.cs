@@ -894,14 +894,28 @@ namespace BibleTaggingUtil.Editor
                 dgv.ClearSelection();
         }
 
+        /// <summary>
+        /// Centers the specified column in the visible area of the DataGridView.
+        /// </summary>
+        /// <param name="dgv">The DataGridView to be manipulated.</param>
+        /// <param name="targetColumnIndex">The index of the column to center.</param>
         private void CenterSelectedColumn(DataGridView dgv, int targetColumnIndex)
         {
-            // Condition from your requirement: check if column index is > half the total columns
-            if (targetColumnIndex <= dgv.Columns.Count / 2)
+            if(cbDisableAutoPosition.Checked)
+                return;
+
+            // if the target column is in the visible area of the grid, we don't need to scroll
+            if (targetColumnIndex >= dgv.FirstDisplayedScrollingColumnIndex &&
+                targetColumnIndex < dgv.FirstDisplayedScrollingColumnIndex + dgv.DisplayedColumnCount(false))
             {
-                // Optional default behavior: just make sure it's in view normally
                 return;
             }
+            // Condition from your requirement: check if column index is > half the total columns
+            //if (targetColumnIndex <= dgv.Columns.Count / 2)
+            //{
+            //    // Optional default behavior: just make sure it's in view normally
+            //    return;
+            //}
 
             // Get the total display width of the DataGridView client area (excluding row headers)
             int gridWidth = dgv.ClientSize.Width - (dgv.RowHeadersVisible ? dgv.RowHeadersWidth : 0);

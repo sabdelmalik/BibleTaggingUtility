@@ -24,6 +24,10 @@ namespace BibleTaggingUtil.Editor
 
         private BindingSource myGridBinder = new BindingSource();
 
+        int typeRow;
+        int morphRow;
+        int altStrongsRow;
+
         public TOHTHGridView()
         {
             // Enable double buffering
@@ -46,7 +50,7 @@ namespace BibleTaggingUtil.Editor
             {
                 if (e.Button == MouseButtons.Left &&
                                 e.Clicks == 1 &&
-                                e.RowIndex == this.Rows.Count - 1 &&
+                                (e.RowIndex == this.Rows.Count - 1 || e.RowIndex == altStrongsRow)&&
                                 e.ColumnIndex > 0 &&
                                 this.SelectedCells.Count > 0)
                 {
@@ -89,7 +93,14 @@ namespace BibleTaggingUtil.Editor
                     }
                     else
                     {
-                        tag = this.Rows[rowIndex].Cells[e.ColumnIndex].Value as StrongsCluster;
+                        if (e.RowIndex == altStrongsRow)
+                        {
+                            string[] strongs = new string[] { this.Rows[rowIndex].Cells[e.ColumnIndex].Value.ToString() };
+                            string[] morphs = new string[] { this.Rows[morphRow].Cells[e.ColumnIndex].Value.ToString() };
+                            tag = new StrongsCluster(strongs, morphs);
+                        }
+                        else
+                            tag = this.Rows[rowIndex].Cells[e.ColumnIndex].Value as StrongsCluster;
                     }
                     DragData data = new DragData(1, e.ColumnIndex, tag, this);
                     this.DoDragDrop(data, DragDropEffects.Copy);
@@ -321,8 +332,13 @@ namespace BibleTaggingUtil.Editor
                     Tracing.TraceInfo(name, "Finished auto sizing columns");
                 } 
                 ResumeLayout();
-                int typeRow = 4; // Type L=Leningrad text; Q=Qere scribal corrections; K=original text; R=Restored text
-                int morphRow = 7;
+                //int typeRow = 4; // Type L=Leningrad text; Q=Qere scribal corrections; K=original text; R=Restored text
+                //int morphRow = 7;
+                // get the type row "TYP" and morph row "GMR" indexes from the first column in the table, in case the order of the rows changes in the future
+                typeRow = table.Rows.IndexOf(table.Rows.Cast<DataRow>().FirstOrDefault(r => r[0].ToString() == "TYP"));
+                morphRow = table.Rows.IndexOf(table.Rows.Cast<DataRow>().FirstOrDefault(r => r[0].ToString() == "GMR"));
+                // also get the index of the "A_S" row for rootStrongs
+                altStrongsRow = table.Rows.IndexOf(table.Rows.Cast<DataRow>().FirstOrDefault(r => r[0].ToString() == "A_S"));
                 //if(extended)
                 //morphRow = 5;
 

@@ -35,6 +35,7 @@ namespace BibleTaggingUtil.Editor
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            cbDisableAutoPosition = new System.Windows.Forms.CheckBox();
             btnEnableEdit = new System.Windows.Forms.Button();
             btnSave = new System.Windows.Forms.Button();
             btnOverused = new System.Windows.Forms.Button();
@@ -92,6 +93,7 @@ namespace BibleTaggingUtil.Editor
             // 
             // panel1
             // 
+            panel1.Controls.Add(cbDisableAutoPosition);
             panel1.Controls.Add(btnEnableEdit);
             panel1.Controls.Add(btnSave);
             panel1.Controls.Add(btnOverused);
@@ -113,8 +115,18 @@ namespace BibleTaggingUtil.Editor
             panel1.Location = new System.Drawing.Point(0, 985);
             panel1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             panel1.Name = "panel1";
-            panel1.Size = new System.Drawing.Size(1876, 90);
+            panel1.Size = new System.Drawing.Size(1988, 90);
             panel1.TabIndex = 8;
+            // 
+            // cbDisableAutoPosition
+            // 
+            cbDisableAutoPosition.AutoSize = true;
+            cbDisableAutoPosition.Location = new System.Drawing.Point(1794, 33);
+            cbDisableAutoPosition.Name = "cbDisableAutoPosition";
+            cbDisableAutoPosition.Size = new System.Drawing.Size(198, 29);
+            cbDisableAutoPosition.TabIndex = 29;
+            cbDisableAutoPosition.Text = "DisableAutoPosition";
+            cbDisableAutoPosition.UseVisualStyleBackColor = true;
             // 
             // btnEnableEdit
             // 
@@ -345,7 +357,7 @@ namespace BibleTaggingUtil.Editor
             // splitContainerMainEditor.Panel2
             // 
             splitContainerMainEditor.Panel2.Controls.Add(splitContainer1);
-            splitContainerMainEditor.Size = new System.Drawing.Size(1876, 985);
+            splitContainerMainEditor.Size = new System.Drawing.Size(1988, 985);
             splitContainerMainEditor.SplitterDistance = 232;
             splitContainerMainEditor.SplitterWidth = 5;
             splitContainerMainEditor.TabIndex = 4;
@@ -380,7 +392,7 @@ namespace BibleTaggingUtil.Editor
             dgvTopVersion.RowTemplate.Height = 29;
             dgvTopVersion.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             dgvTopVersion.ShowCellToolTips = false;
-            dgvTopVersion.Size = new System.Drawing.Size(1876, 196);
+            dgvTopVersion.Size = new System.Drawing.Size(1988, 196);
             dgvTopVersion.TabIndex = 4;
             // 
             // tbTopVersion
@@ -393,7 +405,7 @@ namespace BibleTaggingUtil.Editor
             tbTopVersion.Margin = new System.Windows.Forms.Padding(4);
             tbTopVersion.Name = "tbTopVersion";
             tbTopVersion.ReadOnly = true;
-            tbTopVersion.Size = new System.Drawing.Size(1876, 36);
+            tbTopVersion.Size = new System.Drawing.Size(1988, 36);
             tbTopVersion.TabIndex = 3;
             tbTopVersion.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -414,7 +426,7 @@ namespace BibleTaggingUtil.Editor
             // 
             splitContainer1.Panel2.Controls.Add(dgvTarget);
             splitContainer1.Panel2.Controls.Add(tbTarget);
-            splitContainer1.Size = new System.Drawing.Size(1876, 748);
+            splitContainer1.Size = new System.Drawing.Size(1988, 748);
             splitContainer1.SplitterDistance = 477;
             splitContainer1.SplitterWidth = 5;
             splitContainer1.TabIndex = 3;
@@ -450,7 +462,7 @@ namespace BibleTaggingUtil.Editor
             dgvTOTHT.RowHeadersWidth = 51;
             dgvTOTHT.RowTemplate.Height = 29;
             dgvTOTHT.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            dgvTOTHT.Size = new System.Drawing.Size(1876, 402);
+            dgvTOTHT.Size = new System.Drawing.Size(1988, 402);
             dgvTOTHT.TabIndex = 4;
             // 
             // tableLayoutPanel1
@@ -468,7 +480,7 @@ namespace BibleTaggingUtil.Editor
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new System.Drawing.Size(1876, 75);
+            tableLayoutPanel1.Size = new System.Drawing.Size(1988, 75);
             tableLayoutPanel1.TabIndex = 6;
             // 
             // tbTH
@@ -477,11 +489,11 @@ namespace BibleTaggingUtil.Editor
             tbTH.Dock = System.Windows.Forms.DockStyle.Fill;
             tbTH.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold);
             tbTH.ForeColor = System.Drawing.SystemColors.HighlightText;
-            tbTH.Location = new System.Drawing.Point(566, 4);
+            tbTH.Location = new System.Drawing.Point(600, 4);
             tbTH.Margin = new System.Windows.Forms.Padding(4);
             tbTH.Name = "tbTH";
             tbTH.ReadOnly = true;
-            tbTH.Size = new System.Drawing.Size(742, 36);
+            tbTH.Size = new System.Drawing.Size(787, 36);
             tbTH.TabIndex = 5;
             tbTH.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -491,11 +503,11 @@ namespace BibleTaggingUtil.Editor
             tbTH_Next.Dock = System.Windows.Forms.DockStyle.Fill;
             tbTH_Next.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold);
             tbTH_Next.ForeColor = System.Drawing.SystemColors.HighlightText;
-            tbTH_Next.Location = new System.Drawing.Point(1316, 4);
+            tbTH_Next.Location = new System.Drawing.Point(1395, 4);
             tbTH_Next.Margin = new System.Windows.Forms.Padding(4);
             tbTH_Next.Name = "tbTH_Next";
             tbTH_Next.ReadOnly = true;
-            tbTH_Next.Size = new System.Drawing.Size(556, 36);
+            tbTH_Next.Size = new System.Drawing.Size(589, 36);
             tbTH_Next.TabIndex = 5;
             tbTH_Next.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -509,7 +521,7 @@ namespace BibleTaggingUtil.Editor
             tbTH_Previous.Margin = new System.Windows.Forms.Padding(4);
             tbTH_Previous.Name = "tbTH_Previous";
             tbTH_Previous.ReadOnly = true;
-            tbTH_Previous.Size = new System.Drawing.Size(554, 36);
+            tbTH_Previous.Size = new System.Drawing.Size(588, 36);
             tbTH_Previous.TabIndex = 5;
             tbTH_Previous.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -547,7 +559,7 @@ namespace BibleTaggingUtil.Editor
             dgvTarget.SearchTag = null;
             dgvTarget.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             dgvTarget.ShowCellToolTips = false;
-            dgvTarget.Size = new System.Drawing.Size(1876, 230);
+            dgvTarget.Size = new System.Drawing.Size(1988, 230);
             dgvTarget.TabIndex = 2;
             // 
             // tbTarget
@@ -560,7 +572,7 @@ namespace BibleTaggingUtil.Editor
             tbTarget.Margin = new System.Windows.Forms.Padding(4);
             tbTarget.Name = "tbTarget";
             tbTarget.ReadOnly = true;
-            tbTarget.Size = new System.Drawing.Size(1876, 36);
+            tbTarget.Size = new System.Drawing.Size(1988, 36);
             tbTarget.TabIndex = 6;
             tbTarget.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -568,7 +580,7 @@ namespace BibleTaggingUtil.Editor
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(1876, 1075);
+            ClientSize = new System.Drawing.Size(1988, 1075);
             Controls.Add(splitContainerMainEditor);
             Controls.Add(panel1);
             Margin = new System.Windows.Forms.Padding(4);
@@ -637,5 +649,6 @@ namespace BibleTaggingUtil.Editor
         private System.Windows.Forms.Button btnOverused;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnEnableEdit;
+        private System.Windows.Forms.CheckBox cbDisableAutoPosition;
     }
 }

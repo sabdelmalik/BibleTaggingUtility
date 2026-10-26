@@ -433,6 +433,10 @@ namespace BibleTaggingUtil.BibleVersions
                     string verseRef = string.Format("{0} {1}:{2}", bookName,
                             chapterNum, //.TrimStart('0'),
                             verseNum); //.TrimStart('0'));
+                    if(verseRef == "Ezk 47:18" && wordNum == "17")
+                    {
+                        int n = 0;
+                    }
 
                     //string[] heberewTemp = hebrewRaw.Split('\\');
                     //string hebrew = heberewTemp[0].Replace("/", " ");
@@ -551,7 +555,7 @@ namespace BibleTaggingUtil.BibleVersions
                     }
 
                     int wordNumber= bible[currentVerseRef].Count;
-                    bible[currentVerseRef][wordNumber] = new VerseWord(hebrew, english, strongsList, strongsList, transliteration, currentVerseRef, grammar, dStrong, wordType, altVerseNum, wordNum, meaningVar, lex, gloss);
+                    bible[currentVerseRef][wordNumber] = new VerseWord(hebrew, english, strongsList, strongsList, transliteration, currentVerseRef, grammar, dStrong, wordType, altVerseNum, wordNum, meaningVar, lex, gloss, altStrongs: altdStrong);
                 }
                 else // not a word line
                     return;
